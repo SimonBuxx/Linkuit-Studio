@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# QMake User files
+*.pro.user
+
 # Compiled Object files
 *.slo
 *.lo
