@@ -5,3 +5,16 @@ OrGate::OrGate(uint8_t pInputCount, Direction pDirection):
 {
     mComponentText = components::gates::OR_TEXT;
 }
+
+OrGate::OrGate(const OrGate& pObj):
+    AbstractGate(pObj.mInputCount, pObj.mDirection)
+{
+    mComponentText = pObj.mComponentText;
+    mWidth = pObj.mWidth;
+    mHeight = pObj.mHeight;
+};
+
+BaseComponent* OrGate::CloneBaseComponent() const
+{
+    return new OrGate(*this);
+}

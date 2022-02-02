@@ -1,23 +1,24 @@
 #ifndef RECTCOMPONENT_H
 #define RECTCOMPONENT_H
 
-#include <QGraphicsItem>
-#include <QGraphicsSceneMouseEvent>
-#include <QPainter>
-#include <QStyleOptionGraphicsItem>
-
+#include "BaseComponent.h"
 #include "Configuration.h"
 
 /// \brief Base class for all rectangular components
-class RectComponent : public QGraphicsItem
+class RectComponent : public BaseComponent
 {
+    Q_OBJECT
 public:
     RectComponent(void);
+    virtual BaseComponent* CloneBaseComponent() const override = 0;
 
     QRectF boundingRect(void) const override;
     QPainterPath shape(void) const override;
 
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
+
+signals:
+    void ItemMovedSignal(QPointF pNewPosition);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;

@@ -2,82 +2,118 @@
 #include "Components/Gates/AndGate.h"
 #include "Components/Gates/OrGate.h"
 #include "Components/Gates/XorGate.h"
+#include "HelperFunctions.h"
 
 CoreLogic::CoreLogic(View &pView):
     mView(pView)
 {
     ConnectToView();
+    mView.Init();
 }
 
 void CoreLogic::ConnectToView()
 {
     QObject::connect(this, &CoreLogic::ControlModeChangedSignal, &mView, &View::OnControlModeChanged);
+    QObject::connect(this, &CoreLogic::ComponentTypeChangedSignal, &mView, &View::OnComponentTypeChanged);
 }
 
 void CoreLogic::EnterControlMode(ControlMode pMode)
 {
-    switch (pMode)
-    {
-        case ControlMode::EDIT:
-        {
-            mAddComponent = Component::NONE;
-            break;
-        }
-        case ControlMode::ADD_AND_GATE:
-        {
-            mAddComponent = Component::AND_GATE;
-            break;
-        }
-        case ControlMode::ADD_OR_GATE:
-        {
-            mAddComponent = Component::OR_GATE;
-            break;
-        }
-        case ControlMode::ADD_XOR_GATE:
-        {
-            mAddComponent = Component::XOR_GATE;
-            break;
-        }
-        default:
-        {
-            return;
-        }
-    }
     mControlMode = pMode;
     emit ControlModeChangedSignal(pMode);
+    if (mControlMode == ControlMode::ADD)
+    {
+        emit ComponentTypeChangedSignal(mComponentType);
+    }
+}
+
+void CoreLogic::EnterAddControlMode(ComponentType pComponentType)
+{
+    EnterControlMode(ControlMode::ADD);
+    SetComponentType(pComponentType);
+}
+
+ComponentType CoreLogic::GetComponentType()
+{
+    return mComponentType;
+}
+
+void CoreLogic::SetComponentType(ComponentType pComponentType)
+{
+    mComponentType = pComponentType;
+    emit ComponentTypeChangedSignal(mComponentType);
 }
 
 QGraphicsItem* CoreLogic::GetItem()
 {
-#warning save reference to the component in core logic
-    switch(mAddComponent)
+    QGraphicsItem* item;
+
+    switch(mComponentType)
     {
-        case Component::AND_GATE:
+        case ComponentType::AND_GATE:
         {
-            return new AndGate(mAddInputCount, mAddDirection);
+            item = new AndGate(mComponentInputCount, mComponentDirection);
+            break;
         }
-        case Component::OR_GATE:
+        case ComponentType::OR_GATE:
         {
-            return new OrGate(mAddInputCount, mAddDirection);
+            item = new OrGate(mComponentInputCount, mComponentDirection);
+            break;
         }
-        case Component::XOR_GATE:
+        case ComponentType::XOR_GATE:
         {
-            return new XorGate(mAddInputCount, mAddDirection);
+            item = new XorGate(mComponentInputCount, mComponentDirection);
+            break;
         }
         default:
         {
-            return nullptr;
+            item = nullptr;
+            break;
         }
     }
+
+    return item;
 }
 
-bool CoreLogic::IsInAddMode()
+void CoreLogic::CopySelectedComponents()
 {
-#warning refactor
-    return (mControlMode == ControlMode::ADD_AND_GATE || mControlMode == ControlMode::ADD_OR_GATE || mControlMode == ControlMode::ADD_XOR_GATE);
+    QList<QGraphicsItem*> componentsToCopy = mView.Scene()->selectedItems();
+    mView.Scene()->clearSelection();
+    for (auto& orig : componentsToCopy)
+    {
+        // Create a copy of the original component
+        BaseComponent* copiedComponent = static_cast<BaseComponent*>(orig)->CloneBaseComponent();
+        Q_ASSERT(copiedComponent);
+
+        // Paste the copied component one grid cell below and to the right
+        copiedComponent->setPos(SnapToGrid(orig->pos() + QPointF(canvas::GRID_SIZE, canvas::GRID_SIZE)));
+        copiedComponent->setSelected(true);
+        mView.Scene()->addItem(copiedComponent);
+    }
 }
 
 ControlMode CoreLogic::GetControlMode()
 {
     return mControlMode;
+}
+
+void CoreLogic::DeleteSelectedComponents()
+{
+#warning Push to undo stack
+    QList<QGraphicsItem*> componentsToDelete = mView.Scene()->selectedItems();
+    for (auto& comp : componentsToDelete)
+    {
+        mView.Scene()->removeItem(comp);
+        delete comp; // Do NOT delete here if undo/redo implemented
+    }
+}
+
+void CoreLogic::Undo()
+{
+
+}
+
+void CoreLogic::Redo()
+{
+
 }

@@ -26,11 +26,18 @@ void GraphicsView::AddSelectedComponent(QPointF pPosition)
     {
         mView.Scene()->addItem(item);
     }
+    else
+    {
+        delete item;
+    }
 }
 
 View::View(CoreLogic &pCoreLogic):
     mGraphicsView(*this, pCoreLogic),
     mCoreLogic(pCoreLogic)
+{}
+
+void View::Init()
 {
     setFrameStyle(Plain | NoFrame);
 
@@ -60,6 +67,11 @@ QGraphicsScene* View::Scene(void)
     return mScene;
 }
 
+QList<QGraphicsItem*> View::Components(void)
+{
+    return mScene->items();
+}
+
 void View::OnControlModeChanged(ControlMode pNewMode)
 {
     switch (pNewMode)
@@ -69,24 +81,37 @@ void View::OnControlModeChanged(ControlMode pNewMode)
             mEditButton->setChecked(true);
             break;
         }
-        case ControlMode::ADD_AND_GATE:
+        default:
+        {
+            break;
+        }
+    }
+    mScene->clearSelection();
+}
+
+void View::OnComponentTypeChanged(ComponentType pNewType)
+{
+    switch (pNewType)
+    {
+        case ComponentType::AND_GATE:
         {
             mAddAndGateButton->setChecked(true);
             break;
         }
-        case ControlMode::ADD_OR_GATE:
+        case ComponentType::OR_GATE:
         {
             mAddOrGateButton->setChecked(true);
             break;
         }
-        case ControlMode::ADD_XOR_GATE:
+        case ComponentType::XOR_GATE:
         {
             mAddXorGateButton->setChecked(true);
             break;
         }
         default:
         {
-            return;
+            mEditButton->setChecked(true);
+            break;
         }
     }
 }

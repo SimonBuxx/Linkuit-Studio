@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
     app.setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
 
     QGraphicsScene scene;
-#warning add constants for scene size
-    scene.setSceneRect(QRectF(-16000, -16000, 32000, 32000));
+    scene.setSceneRect(canvas::DIMENSIONS);
+
     MainWindow window(scene);
     window.show();
 

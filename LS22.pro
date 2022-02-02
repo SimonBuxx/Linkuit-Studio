@@ -5,6 +5,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++14
 
 HEADERS += \
+    Components/BaseComponent.h \
     Components/Gates/AbstractGate.h \
     Components/Gates/AndGate.h \
     Components/Gates/OrGate.h \
@@ -18,6 +19,7 @@ HEADERS += \
     Configuration.h
 
 SOURCES += \
+    Components/BaseComponent.cpp \
     Components/Gates/AbstractGate.cpp \
     Components/Gates/AndGate.cpp \
     Components/Gates/OrGate.cpp \

@@ -60,10 +60,12 @@ QVariant RectComponent::itemChange(GraphicsItemChange change, const QVariant &va
         QPointF newPos = value.toPointF();
         if(QApplication::mouseButtons() == Qt::LeftButton && qobject_cast<QGraphicsScene*> (scene()))
         {
+            emit ItemMovedSignal(SnapToGrid(newPos));
             return SnapToGrid(newPos);
         }
         else
         {
+            emit ItemMovedSignal(newPos);
             return newPos;
         }
     }

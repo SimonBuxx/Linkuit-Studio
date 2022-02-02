@@ -19,10 +19,20 @@ public:
     void EnterControlMode(ControlMode pMode);
     ControlMode GetControlMode(void);
 
-    bool IsInAddMode(void);
+    void SetComponentType(ComponentType pComponentType);
+    ComponentType GetComponentType(void);
+
+    void EnterAddControlMode(ComponentType pComponentType);
+
+    void Undo(void);
+    void Redo(void);
+
+    void CopySelectedComponents(void);
+    void DeleteSelectedComponents(void);
 
 signals:
     void ControlModeChangedSignal(ControlMode pNewMode);
+    void ComponentTypeChangedSignal(ComponentType pNewType);
 
 protected:
     void ConnectToView(void);
@@ -32,9 +42,9 @@ protected:
 
     ControlMode mControlMode = ControlMode::EDIT;
 
-    Component mAddComponent = Component::NONE;
-    Direction mAddDirection = components::DEFAULT_DIRECTION;
-    uint8_t mAddInputCount = components::gates::DEFAULT_INPUT_COUNT;
+    ComponentType mComponentType = ComponentType::NONE;
+    Direction mComponentDirection = components::DEFAULT_DIRECTION;
+    uint8_t mComponentInputCount = components::gates::DEFAULT_INPUT_COUNT;
 };
 
 #endif // CORELOGIC_H

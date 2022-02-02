@@ -46,21 +46,40 @@ class View : public QFrame
 public:
     View(CoreLogic &pCoreLogic);
 
+    void Init(void);
+
     void Scene(QGraphicsScene &pScene);
     QGraphicsScene* Scene(void);
+
+    /// \brief Returns a list of pointers to all scene items
+    /// \return A QList of all items in mScene
+    QList<QGraphicsItem*> Components(void);
 
 public slots:
     void ZoomIn(int32_t pLevel);
     void ZoomOut(int32_t pLevel);
+
+    /// \brief Performs all GUI adjustments to enter the new control mode
+    /// \param pNewMode: The newly entered control mode
     void OnControlModeChanged(ControlMode pNewMode);
+
+    /// \brief Checks the button associated with pNewType
+    /// \param pNewType: The type of components to be added
+    void OnComponentTypeChanged(ComponentType pNewType);
 
 protected slots:
     void SetupMatrix(void);
 
 protected:
+    /// \brief Creates all GUI components of the main window
     void CreateGui(void);
+
+    /// \brief Invokes connectors for all GUI components
     void ConnectGuiSignalsAndSlots(void);
 
+    /// \brief Creates a grid pattern for the canvas background
+    /// \param pZoomLevel: The zoom level decides whether to draw the grid or not
+    /// \return A pixel map containing a background grid tile
     QPixmap DrawGridPattern(int32_t pZoomLevel);
 
 protected:
@@ -69,6 +88,8 @@ protected:
     CoreLogic &mCoreLogic;
 
     QToolButton *mEditButton;
+    QToolButton *mDeleteButton;
+    QToolButton *mCopyButton;
     QToolButton *mAddAndGateButton;
     QToolButton *mAddOrGateButton;
     QToolButton *mAddXorGateButton;

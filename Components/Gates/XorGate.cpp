@@ -5,3 +5,16 @@ XorGate::XorGate(uint8_t pInputCount, Direction pDirection):
 {
     mComponentText = components::gates::XOR_TEXT;
 }
+
+XorGate::XorGate(const XorGate& pObj):
+    AbstractGate(pObj.mInputCount, pObj.mDirection)
+{
+    mComponentText = pObj.mComponentText;
+    mWidth = pObj.mWidth;
+    mHeight = pObj.mHeight;
+};
+
+BaseComponent* XorGate::CloneBaseComponent() const
+{
+    return new XorGate(*this);
+}

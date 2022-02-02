@@ -1,4 +1,6 @@
 #include "View.h"
+#include "HelperFunctions.h"
+#include "Components/BaseComponent.h"
 
 #include <QtWidgets>
 
@@ -10,6 +12,16 @@ void View::CreateGui()
     mEditButton->setText(tr("Edit"));
     mEditButton->setCheckable(true);
     mEditButton->setChecked(true);
+
+    mDeleteButton = new QToolButton;
+    mDeleteButton->setText(tr("Delete"));
+    mDeleteButton->setCheckable(false);
+    mDeleteButton->setChecked(false);
+
+    mCopyButton = new QToolButton;
+    mCopyButton->setText(tr("Copy"));
+    mCopyButton->setCheckable(false);
+    mCopyButton->setChecked(false);
 
     mAddAndGateButton = new QToolButton;
     mAddAndGateButton->setText(tr("And Gate"));
@@ -39,6 +51,8 @@ void View::CreateGui()
     QButtonGroup *topButtonsGroup = new QButtonGroup(this);
     topButtonsGroup->setExclusive(true);
     topButtonsGroup->addButton(mEditButton);
+    topButtonsGroup->addButton(mDeleteButton);
+    topButtonsGroup->addButton(mCopyButton);
     topButtonsGroup->addButton(mAddAndGateButton);
     topButtonsGroup->addButton(mAddOrGateButton);
     topButtonsGroup->addButton(mAddXorGateButton);
@@ -48,6 +62,8 @@ void View::CreateGui()
 
     topButtonsLayout->addStretch();
     topButtonsLayout->addWidget(mEditButton);
+    topButtonsLayout->addWidget(mDeleteButton);
+    topButtonsLayout->addWidget(mCopyButton);
     topButtonsLayout->addWidget(mAddAndGateButton);
     topButtonsLayout->addWidget(mAddOrGateButton);
     topButtonsLayout->addWidget(mAddXorGateButton);
@@ -67,19 +83,21 @@ void View::ConnectGuiSignalsAndSlots()
     QObject::connect(mEditButton, &QAbstractButton::clicked, this, [&](){
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
     });
+
     QObject::connect(mAddAndGateButton, &QAbstractButton::clicked, this, [&](){
-        mCoreLogic.EnterControlMode(ControlMode::ADD_AND_GATE);
+        mCoreLogic.EnterAddControlMode(ComponentType::AND_GATE);
     });
+
     QObject::connect(mAddOrGateButton, &QAbstractButton::clicked, this, [&](){
-        mCoreLogic.EnterControlMode(ControlMode::ADD_OR_GATE);
+        mCoreLogic.EnterAddControlMode(ComponentType::OR_GATE);
     });
+
     QObject::connect(mAddXorGateButton, &QAbstractButton::clicked, this, [&](){
-        mCoreLogic.EnterControlMode(ControlMode::ADD_XOR_GATE);
+        mCoreLogic.EnterAddControlMode(ComponentType::XOR_GATE);
     });
-    QObject::connect(mUndoButton, &QAbstractButton::clicked, this, [&](){
-        qDebug() << "Undo";
-    });
-    QObject::connect(mRedoButton, &QAbstractButton::clicked, this, [&](){
-        qDebug() << "Redo";
-    });
+
+    QObject::connect(mDeleteButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::DeleteSelectedComponents);
+    QObject::connect(mCopyButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::CopySelectedComponents);
+    QObject::connect(mUndoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Undo);
+    QObject::connect(mRedoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Redo);
 }

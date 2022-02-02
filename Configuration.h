@@ -3,42 +3,45 @@
 
 #include <QColor>
 #include <QFont>
+#include <QRectF>
 
 #include "HelperStructures.h"
 
-constexpr uint8_t MAX_UNDO_STACK_SIZE = 20;
+constexpr uint8_t MAX_UNDO_STACK_SIZE = 50;
 
 namespace gui
 {
-constexpr const char* WINDOW_TITLE = "Welcome to LS22";
+constexpr const char* WINDOW_TITLE = "LS22 - Logic Simulator 22";
 } // namespace
 
 namespace canvas
 {
-const QColor BACKGROUND_COLOR(QColor(240, 240, 240));
-const QColor GRID_COLOR(QColor(230, 230, 230));
+constexpr QColor BACKGROUND_COLOR(240, 240, 240);
+constexpr QColor GRID_COLOR(230, 230, 230);
 
-const uint8_t GRID_STROKE_WIDTH = 3;
+constexpr uint8_t GRID_STROKE_WIDTH = 3;
 constexpr uint8_t GRID_SIZE = 20;
 
 constexpr uint8_t ZOOM_SPEED = 6;
 constexpr int32_t DEFAULT_ZOOM_LEVEL = 250;
-constexpr int32_t MIN_ZOOM_LEVEL = 100;
+constexpr int32_t MIN_ZOOM_LEVEL = 75;
 constexpr int32_t MAX_ZOOM_LEVEL = 300;
 
 constexpr int32_t MIN_GRID_ZOOM_LEVEL = 200;
+
+constexpr QRectF DIMENSIONS(-16000, -16000, 32000, 32000);
 } // namespace
 
 namespace components
 {
-const QColor FILL_COLOR(Qt::white);
-const QColor BORDER_COLOR(Qt::black);
-const QColor SELECTED_BORDER_COLOR(200, 50, 50);
-const QColor HOVER_BORDER_COLOR(Qt::black);
+constexpr QColor FILL_COLOR(255, 255, 255);
+constexpr QColor BORDER_COLOR(0, 0, 0);
+constexpr QColor SELECTED_BORDER_COLOR(200, 50, 50);
+constexpr QColor HOVER_BORDER_COLOR(0, 0, 0);
 
 constexpr uint8_t BORDER_WIDTH = 3;
 
-constexpr const double TEXT_MIN_LEVEL_OF_DETAIL = 0.2f;
+constexpr double TEXT_MIN_LEVEL_OF_DETAIL = 0.2f;
 constexpr Direction DEFAULT_DIRECTION = Direction::RIGHT;
 
 namespace gates

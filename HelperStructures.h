@@ -3,7 +3,7 @@
 
 #include "Configuration.h"
 
-enum class Component
+enum class ComponentType
 {
     NONE = 0,
     AND_GATE,
@@ -22,9 +22,7 @@ enum class Direction
 enum class ControlMode
 {
     EDIT = 0,
-    ADD_AND_GATE,
-    ADD_OR_GATE,
-    ADD_XOR_GATE
+    ADD
 };
 
 #endif // HELPERSTRUCTURES_H
