@@ -33,7 +33,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
     // Add component at the current position
     if (pEvent->button() == Qt::LeftButton && mCoreLogic.GetControlMode() == ControlMode::ADD)
     {
-        AddSelectedComponent(mapToScene(pEvent->pos()));
+        mCoreLogic.AddCurrentTypeComponent(mapToScene(pEvent->pos()));
         return;
     }
 

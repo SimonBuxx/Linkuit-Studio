@@ -1,7 +1,7 @@
 #ifndef CORELOGIC_H
 #define CORELOGIC_H
 
-#include "View.h"
+#include "View/View.h"
 #include "Configuration.h"
 
 #include <QGraphicsItem>
@@ -26,6 +26,8 @@ public:
 
     void Undo(void);
     void Redo(void);
+
+    void AddCurrentTypeComponent(QPointF pPosition);
 
     void CopySelectedComponents(void);
     void DeleteSelectedComponents(void);

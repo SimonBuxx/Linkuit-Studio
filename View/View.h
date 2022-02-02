@@ -30,8 +30,6 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
     void keyPressEvent(QKeyEvent *pEvent) override;
 
-    void AddSelectedComponent(QPointF pPosition);
-
 protected:
     View &mView;
     CoreLogic &mCoreLogic;

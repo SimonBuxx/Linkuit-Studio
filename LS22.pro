@@ -15,7 +15,7 @@ HEADERS += \
     HelperFunctions.h \
     HelperStructures.h \
     MainWindow.h \
-    View.h \
+    View/View.h \
     Configuration.h
 
 SOURCES += \
@@ -26,10 +26,10 @@ SOURCES += \
     Components/Gates/XorGate.cpp \
     Components/RectComponent.cpp \
     CoreLogic.cpp \
-    EventHandling.cpp \
-    GuiHandling.cpp \
+    View/EventHandling.cpp \
+    View/GuiHandling.cpp \
     MainWindow.cpp \
-    View.cpp \
+    View/View.cpp \
     main.cpp
 
 FORMS +=

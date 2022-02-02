@@ -97,6 +97,23 @@ ControlMode CoreLogic::GetControlMode()
     return mControlMode;
 }
 
+void CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
+{
+    auto item = GetItem();
+    Q_ASSERT(item);
+
+    item->setPos(SnapToGrid(pPosition));
+
+    if (mView.Scene()->collidingItems(item).empty())
+    {
+        mView.Scene()->addItem(item);
+    }
+    else
+    {
+        delete item;
+    }
+}
+
 void CoreLogic::DeleteSelectedComponents()
 {
 #warning Push to undo stack

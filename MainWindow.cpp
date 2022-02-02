@@ -3,7 +3,7 @@
 #include "Components/Gates/XorGate.h"
 
 #include "MainWindow.h"
-#include "View.h"
+#include "View/View.h"
 #include "Configuration.h"
 
 #include <QHBoxLayout>

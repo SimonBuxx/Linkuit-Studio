@@ -1,5 +1,4 @@
 #include "View.h"
-#include "GridBuilder.h"
 #include "HelperFunctions.h"
 
 #include "Components/Gates/AndGate.h"
@@ -14,23 +13,6 @@ GraphicsView::GraphicsView(View &pView, CoreLogic &pCoreLogic):
     mView(pView),
     mCoreLogic(pCoreLogic)
 {}
-
-void GraphicsView::AddSelectedComponent(QPointF pPosition)
-{
-    auto item = mCoreLogic.GetItem();
-    Q_ASSERT(item);
-
-    item->setPos(SnapToGrid(pPosition));
-
-    if (mView.Scene()->collidingItems(item).empty())
-    {
-        mView.Scene()->addItem(item);
-    }
-    else
-    {
-        delete item;
-    }
-}
 
 View::View(CoreLogic &pCoreLogic):
     mGraphicsView(*this, pCoreLogic),
