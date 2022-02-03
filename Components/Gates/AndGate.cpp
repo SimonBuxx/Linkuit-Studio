@@ -12,6 +12,8 @@ AndGate::AndGate(const AndGate& pObj):
     mComponentText = pObj.mComponentText;
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
+    mOutputInverted = pObj.mOutputInverted;
+    mInputInverted= pObj.mInputInverted;
 };
 
 BaseComponent* AndGate::CloneBaseComponent() const

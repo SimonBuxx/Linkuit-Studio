@@ -1,4 +1,5 @@
 #include "View.h"
+#include "HelperFunctions.h"
 
 #include <QtWidgets>
 
@@ -51,6 +52,11 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
         {
             pEvent->accept();
             return;
+        }
+
+        for (auto& comp : scene()->selectedItems())
+        {
+            comp->setPos(SnapToGrid(comp->pos()));
         }
     }
 

@@ -14,6 +14,11 @@ GraphicsView::GraphicsView(View &pView, CoreLogic &pCoreLogic):
     mCoreLogic(pCoreLogic)
 {}
 
+View* GraphicsView::GetView() const
+{
+    return &mView;
+}
+
 View::View(CoreLogic &pCoreLogic):
     mGraphicsView(*this, pCoreLogic),
     mCoreLogic(pCoreLogic)
@@ -90,12 +95,22 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddXorGateButton->setChecked(true);
             break;
         }
+        case ComponentType::NOT_GATE:
+        {
+            mAddNotGateButton->setChecked(true);
+            break;
+        }
         default:
         {
             mEditButton->setChecked(true);
             break;
         }
     }
+}
+
+void View::OnComponentPositionChanged(QPointF pOffset)
+{
+    mCoreLogic.OnSelectedComponentsMoved(pOffset);
 }
 
 void View::SetupMatrix()

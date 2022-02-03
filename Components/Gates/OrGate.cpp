@@ -12,6 +12,8 @@ OrGate::OrGate(const OrGate& pObj):
     mComponentText = pObj.mComponentText;
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
+    mOutputInverted = pObj.mOutputInverted;
+    mInputInverted= pObj.mInputInverted;
 };
 
 BaseComponent* OrGate::CloneBaseComponent() const

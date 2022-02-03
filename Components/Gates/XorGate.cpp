@@ -12,6 +12,8 @@ XorGate::XorGate(const XorGate& pObj):
     mComponentText = pObj.mComponentText;
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
+    mOutputInverted = pObj.mOutputInverted;
+    mInputInverted= pObj.mInputInverted;
 };
 
 BaseComponent* XorGate::CloneBaseComponent() const

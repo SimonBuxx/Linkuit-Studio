@@ -22,6 +22,9 @@ protected:
 
     uint8_t mInputCount;
     Direction mDirection;
+
+    bool mOutputInverted = false;
+    std::vector<bool> mInputInverted;
 };
 
 #endif // ABSTRACTGATE_H

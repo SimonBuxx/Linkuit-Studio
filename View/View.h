@@ -2,6 +2,7 @@
 #define VIEW_H
 
 #include "CoreLogic.h"
+#include "Components/BaseComponent.h"
 #include "Configuration.h"
 
 #include <QFrame>
@@ -21,6 +22,7 @@ class GraphicsView : public QGraphicsView
     Q_OBJECT
 public:
     GraphicsView(View &pView, CoreLogic &pCoreLogic);
+    View* GetView(void) const;
 
 protected:
     void wheelEvent(QWheelEvent *pEvent) override;
@@ -65,6 +67,11 @@ public slots:
     /// \param pNewType: The type of components to be added
     void OnComponentTypeChanged(ComponentType pNewType);
 
+    /// \brief Called when the position of an item changed, assuming pOffset
+    /// was applied to all selected components
+    /// \param pOffset: The position offset that was applied to the components
+    void OnComponentPositionChanged(QPointF pOffset);
+
 protected slots:
     void SetupMatrix(void);
 
@@ -91,6 +98,7 @@ protected:
     QToolButton *mAddAndGateButton;
     QToolButton *mAddOrGateButton;
     QToolButton *mAddXorGateButton;
+    QToolButton *mAddNotGateButton;
     QToolButton *mUndoButton;
     QToolButton *mRedoButton;
 

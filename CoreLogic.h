@@ -2,9 +2,11 @@
 #define CORELOGIC_H
 
 #include "View/View.h"
+#include "Undo/UndoBaseType.h"
 #include "Configuration.h"
 
 #include <QGraphicsItem>
+#include <deque>
 
 class View;
 
@@ -32,12 +34,16 @@ public:
     void CopySelectedComponents(void);
     void DeleteSelectedComponents(void);
 
+    void OnSelectedComponentsMoved(QPointF pOffset);
+
 signals:
     void ControlModeChangedSignal(ControlMode pNewMode);
     void ComponentTypeChangedSignal(ComponentType pNewType);
 
 protected:
     void ConnectToView(void);
+    void AppendUndo(UndoBaseType* pUndoObject);
+    void AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue);
 
 protected:
     View &mView;
@@ -47,6 +53,11 @@ protected:
     ComponentType mComponentType = ComponentType::NONE;
     Direction mComponentDirection = components::DEFAULT_DIRECTION;
     uint8_t mComponentInputCount = components::gates::DEFAULT_INPUT_COUNT;
+
+    std::deque<UndoBaseType*> mUndoQueue;
+    std::deque<UndoBaseType*> mRedoQueue;
+
+    QRect mRubberBandRect;
 };
 
 #endif // CORELOGIC_H

@@ -8,6 +8,7 @@ HEADERS += \
     Components/BaseComponent.h \
     Components/Gates/AbstractGate.h \
     Components/Gates/AndGate.h \
+    Components/Gates/NotGate.h \
     Components/Gates/OrGate.h \
     Components/Gates/XorGate.h \
     Components/RectComponent.h \
@@ -15,6 +16,11 @@ HEADERS += \
     HelperFunctions.h \
     HelperStructures.h \
     MainWindow.h \
+    Undo/UndoAddType.h \
+    Undo/UndoBaseType.h \
+    Undo/UndoConfigureType.h \
+    Undo/UndoDeleteType.h \
+    Undo/UndoMoveType.h \
     View/View.h \
     Configuration.h
 
@@ -22,10 +28,16 @@ SOURCES += \
     Components/BaseComponent.cpp \
     Components/Gates/AbstractGate.cpp \
     Components/Gates/AndGate.cpp \
+    Components/Gates/NotGate.cpp \
     Components/Gates/OrGate.cpp \
     Components/Gates/XorGate.cpp \
     Components/RectComponent.cpp \
     CoreLogic.cpp \
+    Undo/UndoAddType.cpp \
+    Undo/UndoBaseType.cpp \
+    Undo/UndoConfigureType.cpp \
+    Undo/UndoDeleteType.cpp \
+    Undo/UndoMoveType.cpp \
     View/EventHandling.cpp \
     View/GuiHandling.cpp \
     MainWindow.cpp \
