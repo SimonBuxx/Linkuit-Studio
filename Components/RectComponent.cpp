@@ -1,11 +1,7 @@
 #include "RectComponent.h"
 
 RectComponent::RectComponent()
-{
-    setPos(0, 0);
-    setFlags(ItemIsSelectable | ItemIsMovable | ItemSendsGeometryChanges);
-    setAcceptHoverEvents(true);
-}
+{}
 
 void RectComponent::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)
 {
@@ -14,11 +10,18 @@ void RectComponent::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pO
     const double levelOfDetail = pOption->levelOfDetailFromTransform(pPainter->worldTransform());
 
     QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
-             components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap);
+             components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     pPainter->setPen(pen);
     pPainter->setBrush(QBrush(components::FILL_COLOR));
 
-    pPainter->drawRect(0, 0, mWidth, mHeight);
+    if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)
+    {
+        pPainter->drawRoundedRect(0, 0, mWidth, mHeight, 2, 2);
+    }
+    else
+    {
+        pPainter->drawRect(0, 0, mWidth, mHeight);
+    }
     PaintSpecifics(pPainter, levelOfDetail);
 }
 

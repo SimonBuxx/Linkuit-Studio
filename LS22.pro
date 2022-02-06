@@ -11,6 +11,7 @@ HEADERS += \
     Components/Gates/NotGate.h \
     Components/Gates/OrGate.h \
     Components/Gates/XorGate.h \
+    Components/LogicWire.h \
     Components/RectComponent.h \
     CoreLogic.h \
     HelperFunctions.h \
@@ -31,6 +32,7 @@ SOURCES += \
     Components/Gates/NotGate.cpp \
     Components/Gates/OrGate.cpp \
     Components/Gates/XorGate.cpp \
+    Components/LogicWire.cpp \
     Components/RectComponent.cpp \
     CoreLogic.cpp \
     Undo/UndoAddType.cpp \

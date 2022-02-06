@@ -7,7 +7,11 @@
 
 BaseComponent::BaseComponent():
     mMoveStartPoint(pos())
-{}
+{
+    setPos(0, 0);
+    setFlags(ItemIsSelectable | ItemIsMovable | ItemSendsGeometryChanges);
+    setAcceptHoverEvents(true);
+}
 
 void BaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 {

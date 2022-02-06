@@ -26,8 +26,9 @@ View::View(CoreLogic &pCoreLogic):
 
 void View::Init()
 {
-    setFrameStyle(Plain | NoFrame);
+    setFrameStyle(QFrame::Plain | QFrame::NoFrame);
 
+    mGraphicsView.setStyleSheet("QFrame{border: 2px solid #000; border-radius: 3px;}");
     mGraphicsView.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
     mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
     mGraphicsView.setOptimizationFlags(QGraphicsView::DontSavePainterState);
@@ -115,7 +116,7 @@ void View::OnComponentPositionChanged(QPointF pOffset)
 
 void View::SetupMatrix()
 {
-    double scale = std::pow(2, (mZoomLevel - 250) / 50.0f);
+    double scale = std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f);
 
     QTransform matrix;
     matrix.scale(scale, scale);
@@ -128,6 +129,7 @@ void View::ZoomIn(int32_t pLevel)
 {
     mZoomLevel += pLevel;
     mZoomLevel = std::min(mZoomLevel, canvas::MAX_ZOOM_LEVEL);
+    UpdateZoomLabel(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
     SetupMatrix();
 }
 
@@ -135,7 +137,13 @@ void View::ZoomOut(int32_t pLevel)
 {
     mZoomLevel -= pLevel;
     mZoomLevel = std::max(mZoomLevel, canvas::MIN_ZOOM_LEVEL);
+    UpdateZoomLabel(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
     SetupMatrix();
+}
+
+void View::UpdateZoomLabel(uint8_t pZoomPercentage)
+{
+    mZoomLabel->setText(QString::fromStdString(std::to_string(pZoomPercentage) + "%"));
 }
 
 QPixmap View::DrawGridPattern(int32_t pZoomLevel)
@@ -152,7 +160,15 @@ QPixmap View::DrawGridPattern(int32_t pZoomLevel)
 
     painter.begin(&pixmap);
 
-    painter.setPen(QPen(canvas::GRID_COLOR, canvas::GRID_STROKE_WIDTH));
+    if (pZoomLevel < canvas::MIN_GRID_ZOOM_LEVEL + 20)
+    {
+        int val = std::max(canvas::GRID_COLOR.red(), canvas::BACKGROUND_COLOR.red() - std::max(0, (pZoomLevel - canvas::MIN_GRID_ZOOM_LEVEL)) / 2);
+        painter.setPen(QPen(QColor(val, val, val), 2 / std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f)));
+    }
+    else
+    {
+        painter.setPen(QPen(canvas::GRID_COLOR, 2 / std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f)));
+    }
     painter.drawLine(0, 0, canvas::GRID_SIZE - 1, 0);
     painter.drawLine(0, 0, 0, canvas::GRID_SIZE - 1);
 

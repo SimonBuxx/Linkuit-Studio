@@ -6,6 +6,7 @@ AbstractGate::AbstractGate(uint8_t pInputCount, Direction pDirection):
     mInputInverted(pInputCount, false)
 {
     Q_ASSERT(mInputCount >= 1);
+
     if (mDirection == Direction::RIGHT || mDirection == Direction::LEFT)
     {
         mWidth = components::gates::GRID_WIDTH * canvas::GRID_SIZE;
@@ -20,12 +21,12 @@ AbstractGate::AbstractGate(uint8_t pInputCount, Direction pDirection):
 
 void AbstractGate::PaintSpecifics(QPainter *pPainter, const double pLevelOfDetail)
 {
-    if (pLevelOfDetail >= components::TEXT_MIN_LEVEL_OF_DETAIL)
+    if (pLevelOfDetail >= components::DESCRIPTION_TEXT_MIN_LOD)
     {
         pPainter->setFont(components::gates::FONT);
         pPainter->drawText(boundingRect(), mComponentText, Qt::AlignHCenter | Qt::AlignVCenter);
     }
-    if (pLevelOfDetail >= components::CONNECTORS_MIN_LEVEL_OF_DETAIL)
+    if (pLevelOfDetail >= components::CONNECTORS_MIN_LOD)
     {
         switch (mDirection)
         {

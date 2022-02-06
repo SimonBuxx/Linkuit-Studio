@@ -21,20 +21,30 @@ void GraphicsView::wheelEvent(QWheelEvent *pEvent)
 
 void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
 {
-    if (pEvent->button() == Qt::LeftButton && pEvent->modifiers() & Qt::ControlModifier)
+    if (pEvent->button() == Qt::LeftButton)
     {
-        // Start panning
         mIsLeftMousePressed = true;
-        mPanStart = pEvent->pos();
-        setCursor(Qt::ClosedHandCursor);
-        pEvent->accept();
-        return;
+        if (pEvent->modifiers() & Qt::ControlModifier)
+        {
+            // Start panning
+            mPanStart = pEvent->pos();
+            setCursor(Qt::ClosedHandCursor);
+            pEvent->accept();
+            return;
+        }
     }
 
     // Add component at the current position
     if (pEvent->button() == Qt::LeftButton && mCoreLogic.GetControlMode() == ControlMode::ADD)
     {
         mCoreLogic.AddCurrentTypeComponent(mapToScene(pEvent->pos()));
+        return;
+    }
+
+    // Start the preview wire at the current position
+    if (pEvent->button() == Qt::LeftButton && mCoreLogic.GetControlMode() == ControlMode::WIRE)
+    {
+        mCoreLogic.SetPreviewWireStart(mapToScene(pEvent->pos()));
         return;
     }
 
@@ -54,6 +64,14 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
             return;
         }
 
+        // Add the new wires at the current position
+        if (mCoreLogic.GetControlMode() == ControlMode::WIRE)
+        {
+            mCoreLogic.AddWires(mapToScene(pEvent->pos()));
+            return;
+        }
+
+        // Snap all potentially moved components to grid
         for (auto& comp : scene()->selectedItems())
         {
             comp->setPos(SnapToGrid(comp->pos()));
@@ -65,6 +83,11 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
 {
+    if (mIsLeftMousePressed)
+    {
+        mCoreLogic.ShowPreviewWires(mapToScene(pEvent->pos()));
+    }
+
     if (mIsLeftMousePressed && pEvent->modifiers() & Qt::ControlModifier)
     {
         // Pan the scene
@@ -89,12 +112,18 @@ void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 {
+#warning Check that hotkey actions are permitted (simulation is not running etc.)
     switch (pEvent->key())
     {
         case Qt::Key_Escape:
         {
             // Enter edit mode
             mCoreLogic.EnterControlMode(ControlMode::EDIT);
+            break;
+        }
+        case Qt::Key_Delete:
+        {
+            mCoreLogic.DeleteSelectedComponents();
             break;
         }
         default:

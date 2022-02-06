@@ -87,6 +87,8 @@ protected:
     /// \return A pixel map containing a background grid tile
     QPixmap DrawGridPattern(int32_t pZoomLevel);
 
+    void UpdateZoomLabel(uint8_t pZoomPercentage);
+
 protected:
     GraphicsView mGraphicsView;
     QGraphicsScene *mScene;
@@ -95,12 +97,15 @@ protected:
     QToolButton *mEditButton;
     QToolButton *mDeleteButton;
     QToolButton *mCopyButton;
+    QToolButton *mAddWireButton;
     QToolButton *mAddAndGateButton;
     QToolButton *mAddOrGateButton;
     QToolButton *mAddXorGateButton;
     QToolButton *mAddNotGateButton;
     QToolButton *mUndoButton;
     QToolButton *mRedoButton;
+
+    QLabel *mZoomLabel;
 
     int32_t mZoomLevel = canvas::DEFAULT_ZOOM_LEVEL;
 };

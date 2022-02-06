@@ -18,10 +18,18 @@ enum class Direction
     UP
 };
 
+enum class WireDirection
+{
+    HORIZONTAL = 0,
+    VERTICAL,
+    UNSET // For the preview wires start direction
+};
+
 enum class ControlMode
 {
     EDIT = 0,
-    ADD
+    ADD,
+    WIRE
 };
 
 enum class UndoType

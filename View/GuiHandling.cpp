@@ -23,6 +23,11 @@ void View::CreateGui()
     mCopyButton->setCheckable(false);
     mCopyButton->setChecked(false);
 
+    mAddWireButton = new QToolButton;
+    mAddWireButton->setText(tr("Wire"));
+    mAddWireButton->setCheckable(true);
+    mAddWireButton->setChecked(false);
+
     mAddAndGateButton = new QToolButton;
     mAddAndGateButton->setText(tr("And Gate"));
     mAddAndGateButton->setCheckable(true);
@@ -58,6 +63,7 @@ void View::CreateGui()
     topButtonsGroup->addButton(mEditButton);
     topButtonsGroup->addButton(mDeleteButton);
     topButtonsGroup->addButton(mCopyButton);
+    topButtonsGroup->addButton(mAddWireButton);
     topButtonsGroup->addButton(mAddAndGateButton);
     topButtonsGroup->addButton(mAddOrGateButton);
     topButtonsGroup->addButton(mAddXorGateButton);
@@ -69,6 +75,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mEditButton);
     topButtonsLayout->addWidget(mDeleteButton);
     topButtonsLayout->addWidget(mCopyButton);
+    topButtonsLayout->addWidget(mAddWireButton);
     topButtonsLayout->addWidget(mAddAndGateButton);
     topButtonsLayout->addWidget(mAddOrGateButton);
     topButtonsLayout->addWidget(mAddXorGateButton);
@@ -77,17 +84,27 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mRedoButton);
     topButtonsLayout->addStretch();
 
+    mZoomLabel = new QLabel(this);
+    mZoomLabel->setText("100%");
+    mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: #fff; font-family: \"Calibri Light\"; font-size: 16px; border: 2px solid #000; border-radius: 3px;}");
+
     QGridLayout *topLayout = new QGridLayout;
     topLayout->addLayout(topButtonsLayout, 0, 0);
     topLayout->addWidget(&mGraphicsView, 1, 0);
+    topLayout->addWidget(mZoomLabel, 1, 0, Qt::AlignBottom | Qt::AlignLeft);
     setLayout(topLayout);
 
+    mGraphicsView.stackUnder(mZoomLabel);
 }
 
 void View::ConnectGuiSignalsAndSlots()
 {
     QObject::connect(mEditButton, &QAbstractButton::clicked, this, [&](){
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
+    });
+
+    QObject::connect(mAddWireButton, &QAbstractButton::clicked, this, [&](){
+        mCoreLogic.EnterControlMode(ControlMode::WIRE);
     });
 
     QObject::connect(mAddAndGateButton, &QAbstractButton::clicked, this, [&](){

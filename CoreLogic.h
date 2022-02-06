@@ -3,6 +3,7 @@
 
 #include "View/View.h"
 #include "Undo/UndoBaseType.h"
+#include "Components/LogicWire.h"
 #include "Configuration.h"
 
 #include <QGraphicsItem>
@@ -31,6 +32,13 @@ public:
 
     void AddCurrentTypeComponent(QPointF pPosition);
 
+    void SetPreviewWireStart(QPointF pStartPoint);
+
+    /// \brief Draw preview wires to the current mouse position
+    /// \param pCurrentPoint: The current mouse position
+    void ShowPreviewWires(QPointF pCurrentPoint);
+    void AddWires(QPointF pEndPoint);
+
     void CopySelectedComponents(void);
     void DeleteSelectedComponents(void);
 
@@ -45,6 +53,13 @@ protected:
     void AppendUndo(UndoBaseType* pUndoObject);
     void AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue);
 
+    // Helper functions for wire processing
+
+    std::vector<BaseComponent*> FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection = WireDirection::UNSET) const;
+    LogicWire* MergeWires(LogicWire* pNewWire, LogicWire* pLeftTopAdjacent, LogicWire* pRightBottomAdjacent) const;
+    std::vector<BaseComponent*> DeleteContainedWires(LogicWire* pWire);
+    LogicWire* GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
+
 protected:
     View &mView;
 
@@ -57,7 +72,10 @@ protected:
     std::deque<UndoBaseType*> mUndoQueue;
     std::deque<UndoBaseType*> mRedoQueue;
 
-    QRect mRubberBandRect;
+    QPointF mPreviewWireStart;
+    WireDirection mWireStartDirection = WireDirection::HORIZONTAL;
+    LogicWire mHorizontalPreviewWire;
+    LogicWire mVerticalPreviewWire;
 };
 
 #endif // CORELOGIC_H
