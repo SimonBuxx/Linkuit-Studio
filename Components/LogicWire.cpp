@@ -1,10 +1,10 @@
 #include "LogicWire.h"
 
 LogicWire::LogicWire(WireDirection pDirection, uint32_t pLength):
-    mDirection(pDirection)
+    mDirection(pDirection),
+    mState(LogicState::LOW)
 {
-    // Uncomment to make wires unmovable
-    //setFlags(ItemIsSelectable);
+    setZValue(components::wires::Z_VALUE);
 
     if (mDirection == WireDirection::HORIZONTAL)
     {
@@ -23,6 +23,7 @@ LogicWire::LogicWire(const LogicWire& pObj)
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
     mDirection = pObj.mDirection;
+    mState = pObj.mState;
 };
 
 BaseComponent* LogicWire::CloneBaseComponent() const
@@ -34,8 +35,16 @@ void LogicWire::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOptio
 {
     Q_UNUSED(pWidget);
 
-    QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
-                 components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    QPen pen;
+    if (mState == LogicState::LOW)
+    {
+        pen = QPen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
+                     components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    }
+    else if (mState == LogicState::HIGH)
+    {
+        pen = QPen(Qt::white, components::BORDER_WIDTH + 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    }
     pPainter->setPen(pen);
 
     if (mDirection == WireDirection::HORIZONTAL)
@@ -81,11 +90,11 @@ QRectF LogicWire::boundingRect() const
 {
     if (mDirection == WireDirection::HORIZONTAL)
     {
-        return QRectF(0, mHeight * -0.5f, mWidth, mHeight);
+        return QRectF(-2, mHeight * -0.5f, mWidth + 4, mHeight);
     }
     else
     {
-        return QRectF(mWidth * -0.5f, 0, mWidth, mHeight);
+        return QRectF(mWidth * -0.5f, -2, mWidth, mHeight + 4);
     }
 }
 

@@ -11,6 +11,8 @@ HEADERS += \
     Components/Gates/NotGate.h \
     Components/Gates/OrGate.h \
     Components/Gates/XorGate.h \
+    Components/LogicInput.h \
+    Components/LogicOutput.h \
     Components/LogicWire.h \
     Components/RectComponent.h \
     CoreLogic.h \
@@ -32,6 +34,8 @@ SOURCES += \
     Components/Gates/NotGate.cpp \
     Components/Gates/OrGate.cpp \
     Components/Gates/XorGate.cpp \
+    Components/LogicInput.cpp \
+    Components/LogicOutput.cpp \
     Components/LogicWire.cpp \
     Components/RectComponent.cpp \
     CoreLogic.cpp \

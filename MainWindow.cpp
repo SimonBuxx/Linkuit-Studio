@@ -17,6 +17,7 @@ MainWindow::MainWindow(QGraphicsScene &pScene):
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(&mView);
+    layout->setContentsMargins(0, 10, 0, 0);
     setLayout(layout);
 
     setWindowTitle(tr(gui::WINDOW_TITLE));

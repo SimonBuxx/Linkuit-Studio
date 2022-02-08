@@ -16,10 +16,9 @@ static constexpr const char* WINDOW_TITLE = "LS22 - Logic Simulator 22";
 
 namespace canvas
 {
-static constexpr QColor BACKGROUND_COLOR(240, 240, 240);
-static constexpr QColor GRID_COLOR(230, 230, 230);
+static constexpr QColor BACKGROUND_COLOR(0, 39, 43);
+static constexpr QColor GRID_COLOR(0, 45, 50);
 
-static constexpr uint8_t GRID_STROKE_WIDTH = 3;
 static constexpr uint8_t GRID_SIZE = 20;
 
 static constexpr uint8_t ZOOM_SPEED = 5;
@@ -34,9 +33,9 @@ static constexpr QRectF DIMENSIONS(-16000, -16000, 32000, 32000);
 
 namespace components
 {
-static constexpr QColor FILL_COLOR(255, 255, 255);
-static constexpr QColor BORDER_COLOR(0, 0, 0);
-static constexpr QColor SELECTED_BORDER_COLOR(200, 50, 50);
+static constexpr QColor FILL_COLOR(0, 88, 61);
+static constexpr QColor BORDER_COLOR(0, 88, 61);
+static constexpr QColor SELECTED_BORDER_COLOR(255, 255, 255);
 
 static constexpr uint8_t BORDER_WIDTH = 2;
 
@@ -60,12 +59,18 @@ static constexpr int32_t Z_VALUE = 100;
 static const QFont FONT("Calibri Light", 25);
 } // namespace
 
+namespace inputs
+{
+static constexpr int32_t Z_VALUE = 110;
+} // namespace
+
 namespace wires
 {
 static constexpr int32_t Z_VALUE = 80;
 
 // The height or width of the wire bounding rect
 static constexpr uint8_t BOUNDING_RECT_SIZE = 20;
+
 } // namespace
 } // namespace
 

@@ -25,6 +25,8 @@ public:
 
 protected:
     WireDirection mDirection;
+
+    LogicState mState;
 };
 
 #endif // LOGICWIRE_H

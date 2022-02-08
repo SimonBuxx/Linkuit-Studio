@@ -28,7 +28,6 @@ void View::Init()
 {
     setFrameStyle(QFrame::Plain | QFrame::NoFrame);
 
-    mGraphicsView.setStyleSheet("QFrame{border: 2px solid #000; border-radius: 3px;}");
     mGraphicsView.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
     mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
     mGraphicsView.setOptimizationFlags(QGraphicsView::DontSavePainterState);
@@ -101,6 +100,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddNotGateButton->setChecked(true);
             break;
         }
+        case ComponentType::INPUT:
+        {
+            mAddInputButton->setChecked(true);
+            break;
+        }
         default:
         {
             mEditButton->setChecked(true);
@@ -162,8 +166,10 @@ QPixmap View::DrawGridPattern(int32_t pZoomLevel)
 
     if (pZoomLevel < canvas::MIN_GRID_ZOOM_LEVEL + 20)
     {
-        int val = std::max(canvas::GRID_COLOR.red(), canvas::BACKGROUND_COLOR.red() - std::max(0, (pZoomLevel - canvas::MIN_GRID_ZOOM_LEVEL)) / 2);
-        painter.setPen(QPen(QColor(val, val, val), 2 / std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f)));
+        QColor color(canvas::GRID_COLOR);
+        color.setAlpha(((pZoomLevel - canvas::MIN_GRID_ZOOM_LEVEL) * 255) / 20.0f);
+
+        painter.setPen(QPen(color, 2 / std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f)));
     }
     else
     {

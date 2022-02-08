@@ -15,7 +15,7 @@ public:
     QPainterPath shape(void) const override;
 
 protected:
-    void PaintSpecifics(QPainter *pPainter, const double pLevelOfDetail) override;
+    void PaintSpecifics(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, const double pLevelOfDetail) override;
 
 protected:
     QString mComponentText;

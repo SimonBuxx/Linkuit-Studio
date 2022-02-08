@@ -7,7 +7,9 @@ enum class ComponentType
     AND_GATE,
     OR_GATE,
     XOR_GATE,
-    NOT_GATE
+    NOT_GATE,
+    INPUT,
+    OUTPUT
 };
 
 enum class Direction
@@ -22,7 +24,13 @@ enum class WireDirection
 {
     HORIZONTAL = 0,
     VERTICAL,
-    UNSET // For the preview wires start direction
+    UNSET
+};
+
+enum class LogicState
+{
+    LOW = 0,
+    HIGH = 1
 };
 
 enum class ControlMode

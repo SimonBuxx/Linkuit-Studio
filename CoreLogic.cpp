@@ -4,6 +4,7 @@
 #include "Components/Gates/OrGate.h"
 #include "Components/Gates/XorGate.h"
 #include "Components/Gates/NotGate.h"
+#include "Components/LogicInput.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -78,6 +79,11 @@ QGraphicsItem* CoreLogic::GetItem()
         case ComponentType::NOT_GATE:
         {
             item = new NotGate(mComponentDirection);
+            break;
+        }
+        case ComponentType::INPUT:
+        {
+            item = new LogicInput();
             break;
         }
         default:

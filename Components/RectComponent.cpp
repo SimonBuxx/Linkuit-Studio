@@ -22,7 +22,7 @@ void RectComponent::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pO
     {
         pPainter->drawRect(0, 0, mWidth, mHeight);
     }
-    PaintSpecifics(pPainter, levelOfDetail);
+    PaintSpecifics(pPainter, pOption, levelOfDetail);
 }
 
 QRectF RectComponent::boundingRect() const

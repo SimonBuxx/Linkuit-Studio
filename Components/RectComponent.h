@@ -18,7 +18,7 @@ public:
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 
 protected:
-    virtual void PaintSpecifics(QPainter *pPainter, const double pLevelOfDetail) = 0;
+    virtual void PaintSpecifics(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, const double pLevelOfDetail) = 0;
 };
 
 #endif // RECTCOMPONENT_H

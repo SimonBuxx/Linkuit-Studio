@@ -48,6 +48,11 @@ void View::CreateGui()
     mAddNotGateButton->setCheckable(true);
     mAddNotGateButton->setChecked(false);
 
+    mAddInputButton = new QToolButton;
+    mAddInputButton->setText(tr("Input"));
+    mAddInputButton->setCheckable(true);
+    mAddInputButton->setChecked(false);
+
     mUndoButton = new QToolButton;
     mUndoButton->setText(tr("Undo"));
     mUndoButton->setCheckable(false);
@@ -68,6 +73,7 @@ void View::CreateGui()
     topButtonsGroup->addButton(mAddOrGateButton);
     topButtonsGroup->addButton(mAddXorGateButton);
     topButtonsGroup->addButton(mAddNotGateButton);
+    topButtonsGroup->addButton(mAddInputButton);
     topButtonsGroup->addButton(mUndoButton);
     topButtonsGroup->addButton(mRedoButton);
 
@@ -80,18 +86,20 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddOrGateButton);
     topButtonsLayout->addWidget(mAddXorGateButton);
     topButtonsLayout->addWidget(mAddNotGateButton);
+    topButtonsLayout->addWidget(mAddInputButton);
     topButtonsLayout->addWidget(mUndoButton);
     topButtonsLayout->addWidget(mRedoButton);
     topButtonsLayout->addStretch();
 
     mZoomLabel = new QLabel(this);
     mZoomLabel->setText("100%");
-    mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: #fff; font-family: \"Calibri Light\"; font-size: 16px; border: 2px solid #000; border-radius: 3px;}");
+    mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: #00583D; font-family: \"Calibri Light\"; font-size: 16px; color: #fff; border-radius: 3px;}");
 
     QGridLayout *topLayout = new QGridLayout;
     topLayout->addLayout(topButtonsLayout, 0, 0);
     topLayout->addWidget(&mGraphicsView, 1, 0);
     topLayout->addWidget(mZoomLabel, 1, 0, Qt::AlignBottom | Qt::AlignLeft);
+    topLayout->setContentsMargins(0, 0, 0, 0);
     setLayout(topLayout);
 
     mGraphicsView.stackUnder(mZoomLabel);
@@ -121,6 +129,10 @@ void View::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mAddNotGateButton, &QAbstractButton::clicked, this, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::NOT_GATE);
+    });
+
+    QObject::connect(mAddInputButton, &QAbstractButton::clicked, this, [&](){
+        mCoreLogic.EnterAddControlMode(ComponentType::INPUT);
     });
 
     QObject::connect(mDeleteButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::DeleteSelectedComponents);
