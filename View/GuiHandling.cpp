@@ -53,6 +53,11 @@ void View::CreateGui()
     mAddInputButton->setCheckable(true);
     mAddInputButton->setChecked(false);
 
+    mAddOutputButton = new QToolButton;
+    mAddOutputButton->setText(tr("Output"));
+    mAddOutputButton->setCheckable(true);
+    mAddOutputButton->setChecked(false);
+
     mUndoButton = new QToolButton;
     mUndoButton->setText(tr("Undo"));
     mUndoButton->setCheckable(false);
@@ -74,6 +79,7 @@ void View::CreateGui()
     topButtonsGroup->addButton(mAddXorGateButton);
     topButtonsGroup->addButton(mAddNotGateButton);
     topButtonsGroup->addButton(mAddInputButton);
+    topButtonsGroup->addButton(mAddOutputButton);
     topButtonsGroup->addButton(mUndoButton);
     topButtonsGroup->addButton(mRedoButton);
 
@@ -87,6 +93,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddXorGateButton);
     topButtonsLayout->addWidget(mAddNotGateButton);
     topButtonsLayout->addWidget(mAddInputButton);
+    topButtonsLayout->addWidget(mAddOutputButton);
     topButtonsLayout->addWidget(mUndoButton);
     topButtonsLayout->addWidget(mRedoButton);
     topButtonsLayout->addStretch();
@@ -133,6 +140,10 @@ void View::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mAddInputButton, &QAbstractButton::clicked, this, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::INPUT);
+    });
+
+    QObject::connect(mAddOutputButton, &QAbstractButton::clicked, this, [&](){
+        mCoreLogic.EnterAddControlMode(ComponentType::OUTPUT);
     });
 
     QObject::connect(mDeleteButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::DeleteSelectedComponents);

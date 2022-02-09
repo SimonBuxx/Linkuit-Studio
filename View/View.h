@@ -103,6 +103,7 @@ protected:
     QToolButton *mAddXorGateButton;
     QToolButton *mAddNotGateButton;
     QToolButton *mAddInputButton;
+    QToolButton *mAddOutputButton;
     QToolButton *mUndoButton;
     QToolButton *mRedoButton;
 

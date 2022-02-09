@@ -14,12 +14,17 @@ LogicInput::LogicInput(const LogicInput& pObj)
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
-    mState =pObj.mState;
+    mState = pObj.mState;
 };
 
 BaseComponent* LogicInput::CloneBaseComponent() const
 {
     return new LogicInput(*this);
+}
+
+void LogicInput::ResetZValue()
+{
+    setZValue(components::inputs::Z_VALUE);
 }
 
 void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)

@@ -31,6 +31,11 @@ BaseComponent* LogicWire::CloneBaseComponent() const
     return new LogicWire(*this);
 }
 
+void LogicWire::ResetZValue()
+{
+    setZValue(components::wires::Z_VALUE);
+}
+
 void LogicWire::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)
 {
     Q_UNUSED(pWidget);

@@ -18,6 +18,8 @@ public:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent) override;
 
+    virtual void ResetZValue(void) = 0;
+
 protected:
     uint32_t mWidth;
     uint32_t mHeight;

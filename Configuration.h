@@ -64,6 +64,11 @@ namespace inputs
 static constexpr int32_t Z_VALUE = 110;
 } // namespace
 
+namespace outputs
+{
+static constexpr int32_t Z_VALUE = 110;
+} // namespace
+
 namespace wires
 {
 static constexpr int32_t Z_VALUE = 80;

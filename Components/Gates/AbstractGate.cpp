@@ -21,6 +21,11 @@ AbstractGate::AbstractGate(uint8_t pInputCount, Direction pDirection):
     }
 }
 
+void AbstractGate::ResetZValue()
+{
+    setZValue(components::gates::Z_VALUE);
+}
+
 void AbstractGate::PaintSpecifics(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, const double pLevelOfDetail)
 {
     if (pLevelOfDetail >= components::CONNECTORS_MIN_LOD)

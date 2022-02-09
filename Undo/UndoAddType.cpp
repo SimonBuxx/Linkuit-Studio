@@ -10,6 +10,14 @@ UndoAddType::UndoAddType(std::vector<BaseComponent*> &pAddedComponents, std::vec
     mDeletedComponents(pDeletedComponents)
 {}
 
+UndoAddType::~UndoAddType()
+{
+    for (auto& comp : mDeletedComponents)
+    {
+        delete comp;
+    }
+}
+
 UndoType UndoAddType::Type() const
 {
     return UndoType::ADD;

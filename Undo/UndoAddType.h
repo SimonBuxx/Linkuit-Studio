@@ -9,6 +9,7 @@ class UndoAddType : public UndoBaseType
 public:
     UndoAddType(std::vector<BaseComponent*> &pAddedComponents);
     UndoAddType(std::vector<BaseComponent*> &pAddedComponents, std::vector<BaseComponent*> &pDeletedComponents);
+    ~UndoAddType(void);
     UndoType Type(void) const override;
 
     const std::vector<BaseComponent*>& AddedComponents(void) const;

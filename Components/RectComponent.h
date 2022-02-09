@@ -15,6 +15,8 @@ public:
     QRectF boundingRect(void) const override;
     QPainterPath shape(void) const override;
 
+    virtual void ResetZValue(void) override = 0;
+
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 
 protected:

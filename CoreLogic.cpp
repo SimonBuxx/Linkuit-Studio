@@ -5,6 +5,7 @@
 #include "Components/Gates/XorGate.h"
 #include "Components/Gates/NotGate.h"
 #include "Components/LogicInput.h"
+#include "Components/LogicOutput.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -86,6 +87,11 @@ QGraphicsItem* CoreLogic::GetItem()
             item = new LogicInput();
             break;
         }
+        case ComponentType::OUTPUT:
+        {
+            item = new LogicOutput();
+            break;
+        }
         default:
         {
             item = nullptr;
@@ -108,7 +114,7 @@ void CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
     item->setPos(SnapToGrid(pPosition));
 
-    if (mView.Scene()->collidingItems(item).empty())
+    if (FilterOutCollidingComponents(mView.Scene()->collidingItems(item)).empty())
     {
         mView.Scene()->addItem(item);
 
@@ -204,8 +210,8 @@ void CoreLogic::AddWires(QPointF pEndPoint)
         deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
 
         // Find wires left or right of the new wire (those may be partly behind the new wire)
-        auto startAdjacent = GetAdjacentWire(QPointF(item->x() - 1, item->y()), WireDirection::HORIZONTAL);
-        auto endAdjacent = GetAdjacentWire(QPointF(item->x() + item->GetLength() + 1, item->y()), WireDirection::HORIZONTAL);
+        auto startAdjacent = GetAdjacentWire(QPointF(item->x() - 2, item->y()), WireDirection::HORIZONTAL);
+        auto endAdjacent = GetAdjacentWire(QPointF(item->x() + item->GetLength() + 2, item->y()), WireDirection::HORIZONTAL);
 
         auto horizontalWire = MergeWires(item, startAdjacent, endAdjacent);
 
@@ -246,8 +252,8 @@ void CoreLogic::AddWires(QPointF pEndPoint)
         deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
 
         // Find wires above or below of the new wire (those may be partly behind the new wire)
-        auto startAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() - 1), WireDirection::VERTICAL);
-        auto endAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() + item->GetLength() + 1), WireDirection::VERTICAL);
+        auto startAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() - 2), WireDirection::VERTICAL);
+        auto endAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() + item->GetLength() + 2), WireDirection::VERTICAL);
 
         auto verticalWire = MergeWires(item, startAdjacent, endAdjacent);
 
@@ -273,6 +279,58 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     mWireStartDirection = WireDirection::UNSET;
 }
 
+void CoreLogic::MergeWiresAfterMove(QList<QGraphicsItem*> &pComponents, std::vector<BaseComponent*> &pAddedWires, std::vector<BaseComponent*> &pDeletedWires)
+{
+    auto wires = FilterForWires(pComponents);
+
+    for (auto &w : wires)
+    {
+        const auto containedWires = DeleteContainedWires(static_cast<LogicWire*>(w));
+        pDeletedWires.insert(pDeletedWires.end(), containedWires.begin(), containedWires.end());
+
+        LogicWire* startAdjacent = nullptr;
+        LogicWire* endAdjacent = nullptr;
+
+        if (static_cast<LogicWire*>(w)->GetDirection() == WireDirection::HORIZONTAL)
+        {
+            startAdjacent = GetAdjacentWire(QPointF(w->x() - 2, w->y()), WireDirection::HORIZONTAL);
+            endAdjacent = GetAdjacentWire(QPointF(w->x() + static_cast<LogicWire*>(w)->GetLength() + 2, w->y()), WireDirection::HORIZONTAL);
+
+            auto horizontalWire = MergeWires(static_cast<LogicWire*>(w), startAdjacent, endAdjacent);
+            horizontalWire->setSelected(w->isSelected());
+
+            mView.Scene()->addItem(horizontalWire);
+            pAddedWires.push_back(static_cast<BaseComponent*>(horizontalWire));
+        }
+        else
+        {
+            startAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() - 2), WireDirection::VERTICAL);
+            endAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() + static_cast<LogicWire*>(w)->GetLength() + 2), WireDirection::VERTICAL);
+
+            auto verticalWire = MergeWires(static_cast<LogicWire*>(w), startAdjacent, endAdjacent);
+            verticalWire->setSelected(w->isSelected());
+
+            mView.Scene()->addItem(verticalWire);
+            pAddedWires.push_back(static_cast<BaseComponent*>(verticalWire));
+        }
+
+        pDeletedWires.push_back(w);
+        mView.Scene()->removeItem(w);
+
+        if (startAdjacent)
+        {
+            pDeletedWires.push_back(static_cast<BaseComponent*>(startAdjacent));
+            mView.Scene()->removeItem(startAdjacent);
+        }
+
+        if (endAdjacent)
+        {
+            pDeletedWires.push_back(static_cast<BaseComponent*>(endAdjacent));
+            mView.Scene()->removeItem(endAdjacent);
+        }
+    }
+}
+
 std::vector<BaseComponent*> CoreLogic::DeleteContainedWires(LogicWire* pWire)
 {
     std::vector<BaseComponent*> deletedComponents;
@@ -281,20 +339,23 @@ std::vector<BaseComponent*> CoreLogic::DeleteContainedWires(LogicWire* pWire)
 
     if (pWire->GetDirection() == WireDirection::HORIZONTAL)
     {
-        containedComponents = mView.Scene()->items(pWire->x() - 1, pWire->y() - components::wires::BOUNDING_RECT_SIZE / 2 - 1,
-                                                   pWire->GetLength() + 2, components::wires::BOUNDING_RECT_SIZE + 2, Qt::ContainsItemShape, Qt::DescendingOrder);
+        containedComponents = mView.Scene()->items(pWire->x() - 2, pWire->y() - components::wires::BOUNDING_RECT_SIZE / 2 - 2,
+                                                   pWire->GetLength() + 4, components::wires::BOUNDING_RECT_SIZE + 4, Qt::ContainsItemShape, Qt::DescendingOrder);
     }
     else
     {
-        containedComponents = mView.Scene()->items(pWire->x() - components::wires::BOUNDING_RECT_SIZE / 2 - 1, pWire->y() - 1,
-                                                   components::wires::BOUNDING_RECT_SIZE + 2, pWire->GetLength() + 2, Qt::ContainsItemShape, Qt::DescendingOrder);
+        containedComponents = mView.Scene()->items(pWire->x() - components::wires::BOUNDING_RECT_SIZE / 2 - 2, pWire->y() - 2,
+                                                   components::wires::BOUNDING_RECT_SIZE + 4, pWire->GetLength() + 4, Qt::ContainsItemShape, Qt::DescendingOrder);
     }
     const auto containedWires = FilterForWires(containedComponents, pWire->GetDirection());
 
     for (auto &wire : containedWires)
     {
-        deletedComponents.push_back(wire);
-        mView.Scene()->removeItem(wire);
+        if (wire != pWire)
+        {
+            deletedComponents.push_back(wire);
+            mView.Scene()->removeItem(wire);
+        }
     }
 
     return deletedComponents;
@@ -327,6 +388,26 @@ std::vector<BaseComponent*> CoreLogic::FilterForWires(const QList<QGraphicsItem*
     }
 
     return wires;
+}
+
+std::vector<BaseComponent*> CoreLogic::FilterOutCollidingComponents(const QList<QGraphicsItem*> &pComponents) const
+{
+    std::vector<BaseComponent*> collidingComponents;
+
+    for (auto &comp : pComponents)
+    {
+        if (dynamic_cast<LogicWire*>(comp) == nullptr)
+        {
+            collidingComponents.push_back(static_cast<BaseComponent*>(comp));
+        }
+    }
+
+    return collidingComponents;
+}
+
+bool CoreLogic::IsCollidingComponent(QGraphicsItem* pComponent) const
+{
+    return (dynamic_cast<LogicWire*>(pComponent) == nullptr);
 }
 
 LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, LogicWire* pStartAdjacent, LogicWire* pEndAdjacent) const
@@ -381,15 +462,29 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     }
 
     QList<QGraphicsItem*> movedGraphicsItems = mView.Scene()->selectedItems();
+
     std::vector<BaseComponent*> movedComponents{};
     for (const auto& comp : movedGraphicsItems)
     {
+        if (IsCollidingComponent(comp) && !FilterOutCollidingComponents(mView.Scene()->collidingItems(comp, Qt::IntersectsItemShape)).empty())
+        {
+            // Collision, revert moving
+            for (const auto& comp : movedGraphicsItems)
+            {
+                comp->moveBy(-pOffset.x(), -pOffset.y());
+            }
+            return;
+        }
         movedComponents.push_back(static_cast<BaseComponent*>(comp));
     }
 
     if (movedComponents.size() > 0)
     {
-        AppendUndo(new UndoMoveType(movedComponents, pOffset));
+        std::vector<BaseComponent*> addedWires;
+        std::vector<BaseComponent*> deletedWires;
+
+        MergeWiresAfterMove(movedGraphicsItems, addedWires, deletedWires);
+        AppendUndo(new UndoMoveType(movedComponents, addedWires, deletedWires, pOffset));
     }
 }
 
@@ -409,6 +504,7 @@ void CoreLogic::CopySelectedComponents()
         // Paste the copied component one grid cell below and to the right
         copy->setPos(SnapToGrid(orig->pos() + QPointF(canvas::GRID_SIZE, canvas::GRID_SIZE)));
         copy->setSelected(true);
+        copy->ResetZValue();
         mView.Scene()->addItem(copy);
         addedComponents.push_back(copy);
     }
@@ -487,7 +583,17 @@ void CoreLogic::Undo()
             case UndoType::MOVE:
             {
                 const auto undoMoveObject = static_cast<UndoMoveType*>(undoObject);
-                for (const auto& comp : undoMoveObject->Components())
+                for (const auto& comp : static_cast<UndoMoveType*>(undoObject)->DeletedComponents())
+                {
+                    Q_ASSERT(comp);
+                    mView.Scene()->addItem(comp);
+                }
+                for (const auto& comp : static_cast<UndoMoveType*>(undoObject)->AddedComponents())
+                {
+                    Q_ASSERT(comp);
+                    mView.Scene()->removeItem(comp);
+                }
+                for (const auto& comp : undoMoveObject->MovedComponents())
                 {
                     Q_ASSERT(comp);
                     comp->moveBy(-undoMoveObject->Offset().x(), -undoMoveObject->Offset().y());
@@ -546,10 +652,20 @@ void CoreLogic::Redo()
             case UndoType::MOVE:
             {
                 const auto redoMoveObject = static_cast<UndoMoveType*>(redoObject);
-                for (const auto& comp : redoMoveObject->Components())
+                for (const auto& comp : redoMoveObject->MovedComponents())
                 {
                     Q_ASSERT(comp);
                     comp->moveBy(redoMoveObject->Offset().x(), redoMoveObject->Offset().y());
+                }
+                for (const auto& comp : static_cast<UndoMoveType*>(redoObject)->AddedComponents())
+                {
+                    Q_ASSERT(comp);
+                    mView.Scene()->addItem(comp);
+                }
+                for (const auto& comp : static_cast<UndoMoveType*>(redoObject)->DeletedComponents())
+                {
+                    Q_ASSERT(comp);
+                    mView.Scene()->removeItem(comp);
                 }
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;

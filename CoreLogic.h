@@ -56,9 +56,17 @@ protected:
     // Helper functions for wire processing
 
     std::vector<BaseComponent*> FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection = WireDirection::UNSET) const;
+
+    /// \brief Removes all components from the list that are wires
+    /// \param pComponents: A list of components
+    /// \return A list of components without the wires
+    std::vector<BaseComponent*> FilterOutCollidingComponents(const QList<QGraphicsItem*> &pComponents) const;
+    bool IsCollidingComponent(QGraphicsItem* pComponent) const;
     LogicWire* MergeWires(LogicWire* pNewWire, LogicWire* pLeftTopAdjacent, LogicWire* pRightBottomAdjacent) const;
     std::vector<BaseComponent*> DeleteContainedWires(LogicWire* pWire);
     LogicWire* GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
+
+    void MergeWiresAfterMove(QList<QGraphicsItem*> &pComponents, std::vector<BaseComponent*> &pAddedWires, std::vector<BaseComponent*> &pDeletedWires);
 
 protected:
     View &mView;
