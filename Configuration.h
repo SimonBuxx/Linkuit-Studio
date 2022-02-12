@@ -33,6 +33,15 @@ static constexpr QRectF DIMENSIONS(-16000, -16000, 32000, 32000);
 
 namespace components
 {
+enum zvalues
+{
+    WIRE = 0,
+    CONPOINT,
+    GATE,
+    INPUT,
+    OUTPUT
+};
+
 static constexpr QColor FILL_COLOR(0, 88, 61);
 static constexpr QColor BORDER_COLOR(0, 88, 61);
 static constexpr QColor SELECTED_BORDER_COLOR(255, 255, 255);
@@ -54,28 +63,19 @@ static constexpr const char* NOT_TEXT = "1";
 static constexpr uint8_t DEFAULT_INPUT_COUNT = 2;
 static constexpr uint8_t GRID_WIDTH = 3;
 
-static constexpr int32_t Z_VALUE = 100;
-
 static const QFont FONT("Calibri Light", 25);
-} // namespace
-
-namespace inputs
-{
-static constexpr int32_t Z_VALUE = 110;
-} // namespace
-
-namespace outputs
-{
-static constexpr int32_t Z_VALUE = 110;
 } // namespace
 
 namespace wires
 {
-static constexpr int32_t Z_VALUE = 80;
-
 // The height or width of the wire bounding rect
 static constexpr uint8_t BOUNDING_RECT_SIZE = 20;
+} // namespace
 
+namespace conpoints
+{
+static constexpr double MIN_VISIBLE_LOD = 0.2f;
+static constexpr uint32_t SIZE = 6;
 } // namespace
 } // namespace
 

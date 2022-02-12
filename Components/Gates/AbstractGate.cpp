@@ -7,7 +7,7 @@ AbstractGate::AbstractGate(uint8_t pInputCount, Direction pDirection):
 {
     Q_ASSERT(mInputCount >= 1);
 
-    setZValue(components::gates::Z_VALUE);
+    setZValue(components::zvalues::GATE);
 
     if (mDirection == Direction::RIGHT || mDirection == Direction::LEFT)
     {
@@ -23,7 +23,7 @@ AbstractGate::AbstractGate(uint8_t pInputCount, Direction pDirection):
 
 void AbstractGate::ResetZValue()
 {
-    setZValue(components::gates::Z_VALUE);
+    setZValue(components::zvalues::GATE);
 }
 
 void AbstractGate::PaintSpecifics(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, const double pLevelOfDetail)

@@ -3,7 +3,7 @@
 
 LogicOutput::LogicOutput()
 {
-    setZValue(components::outputs::Z_VALUE);
+    setZValue(components::zvalues::OUTPUT);
 
     mWidth = canvas::GRID_SIZE;
     mHeight = canvas::GRID_SIZE;
@@ -24,7 +24,7 @@ BaseComponent* LogicOutput::CloneBaseComponent() const
 
 void LogicOutput::ResetZValue()
 {
-    setZValue(components::outputs::Z_VALUE);
+    setZValue(components::zvalues::OUTPUT);
 }
 
 void LogicOutput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)
@@ -44,17 +44,17 @@ void LogicOutput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
         pPainter->setBrush(QBrush(Qt::white));
     }
 
-    pPainter->drawEllipse(canvas::GRID_SIZE * - 0.5, canvas::GRID_SIZE * - 0.5, mWidth, mHeight);
+    pPainter->drawEllipse(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
 }
 
 QRectF LogicOutput::boundingRect() const
 {
-    return QRectF(canvas::GRID_SIZE * - 0.5, canvas::GRID_SIZE * - 0.5, mWidth, mHeight);
+    return QRectF(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
 }
 
 QPainterPath LogicOutput::shape() const
 {
     QPainterPath path;
-    path.addRect(canvas::GRID_SIZE * - 0.5, canvas::GRID_SIZE * - 0.5, mWidth, mHeight);
+    path.addRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
     return path;
 }

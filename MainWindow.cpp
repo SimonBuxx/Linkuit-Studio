@@ -22,5 +22,14 @@ MainWindow::MainWindow(QGraphicsScene &pScene):
 
     setWindowTitle(tr(gui::WINDOW_TITLE));
     setWindowIcon(QIcon(":/images/icon.png"));
-    showMaximized();
+}
+
+View& MainWindow::GetView()
+{
+    return mView;
+}
+
+CoreLogic& MainWindow::GetCoreLogic()
+{
+    return mCoreLogic;
 }

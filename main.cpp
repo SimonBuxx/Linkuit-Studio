@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     scene.setSceneRect(canvas::DIMENSIONS);
 
     MainWindow window(scene);
-    window.show();
+    window.showMaximized();
 
     return app.exec();
 }

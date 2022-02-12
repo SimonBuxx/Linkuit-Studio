@@ -4,6 +4,7 @@
 #include "View/View.h"
 #include "Undo/UndoBaseType.h"
 #include "Components/LogicWire.h"
+#include "Components/ConPoint.h"
 #include "Configuration.h"
 
 #include <QGraphicsItem>
@@ -65,8 +66,17 @@ protected:
     LogicWire* MergeWires(LogicWire* pNewWire, LogicWire* pLeftTopAdjacent, LogicWire* pRightBottomAdjacent) const;
     std::vector<BaseComponent*> DeleteContainedWires(LogicWire* pWire);
     LogicWire* GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
-
     void MergeWiresAfterMove(QList<QGraphicsItem*> &pComponents, std::vector<BaseComponent*> &pAddedWires, std::vector<BaseComponent*> &pDeletedWires);
+
+    bool IsTCrossing(LogicWire* pWire1, LogicWire* pWire2) const;
+
+    /// \brief Adds neccessary ConPoints over the given wires
+    /// \param pWires: The wires to add ConPoints to
+    /// \return A vector of new ConPoints
+    std::vector<BaseComponent*> PositionConPointsOverWires(std::vector<BaseComponent*> pWires);
+
+    template<typename T>
+    bool IsComponentAtPosition(QPointF pPos);
 
 protected:
     View &mView;

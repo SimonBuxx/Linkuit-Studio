@@ -1,10 +1,11 @@
 #include "LogicWire.h"
+#include "Configuration.h"
 
 LogicWire::LogicWire(WireDirection pDirection, uint32_t pLength):
     mDirection(pDirection),
     mState(LogicState::LOW)
 {
-    setZValue(components::wires::Z_VALUE);
+    setZValue(components::zvalues::WIRE);
 
     if (mDirection == WireDirection::HORIZONTAL)
     {
@@ -33,7 +34,7 @@ BaseComponent* LogicWire::CloneBaseComponent() const
 
 void LogicWire::ResetZValue()
 {
-    setZValue(components::wires::Z_VALUE);
+    setZValue(components::zvalues::WIRE);
 }
 
 void LogicWire::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)

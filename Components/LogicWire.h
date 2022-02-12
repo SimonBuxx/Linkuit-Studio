@@ -3,7 +3,6 @@
 
 #include "BaseComponent.h"
 #include "HelperStructures.h"
-#include "Configuration.h"
 
 class LogicWire : public BaseComponent
 {

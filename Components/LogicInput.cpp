@@ -3,7 +3,7 @@
 
 LogicInput::LogicInput()
 {
-    setZValue(components::inputs::Z_VALUE);
+    setZValue(components::zvalues::INPUT);
 
     mWidth = canvas::GRID_SIZE;
     mHeight = canvas::GRID_SIZE;
@@ -24,7 +24,7 @@ BaseComponent* LogicInput::CloneBaseComponent() const
 
 void LogicInput::ResetZValue()
 {
-    setZValue(components::inputs::Z_VALUE);
+    setZValue(components::zvalues::INPUT);
 }
 
 void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)
@@ -48,22 +48,22 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
 
     if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)
     {
-        pPainter->drawRoundedRect(canvas::GRID_SIZE * - 0.5, canvas::GRID_SIZE * - 0.5, mWidth, mHeight, 2, 2);
+        pPainter->drawRoundedRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight, 2, 2);
     }
     else
     {
-        pPainter->drawRect(canvas::GRID_SIZE * - 0.5, canvas::GRID_SIZE * - 0.5, mWidth, mHeight);
+        pPainter->drawRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
     }
 }
 
 QRectF LogicInput::boundingRect() const
 {
-    return QRectF(canvas::GRID_SIZE * - 0.5, canvas::GRID_SIZE * - 0.5, mWidth, mHeight);
+    return QRectF(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
 }
 
 QPainterPath LogicInput::shape() const
 {
     QPainterPath path;
-    path.addRect(canvas::GRID_SIZE * - 0.5, canvas::GRID_SIZE * - 0.5, mWidth, mHeight);
+    path.addRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
     return path;
 }

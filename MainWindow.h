@@ -15,6 +15,9 @@ class MainWindow : public QWidget
 public:
     MainWindow(QGraphicsScene &pScene);
 
+    View& GetView(void);
+    CoreLogic& GetCoreLogic(void);
+
 protected:
     void PopulateScene(void);
 

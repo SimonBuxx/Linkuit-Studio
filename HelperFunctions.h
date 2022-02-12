@@ -1,8 +1,10 @@
 #ifndef HELPERFUNCTIONS_H
 #define HELPERFUNCTIONS_H
 
+#include "Components/ConPoint.h"
 #include "Configuration.h"
 
+#include <QGraphicsItem>
 #include <QPoint>
 
 inline QPointF SnapToGrid(QPointF pPoint)
