@@ -35,6 +35,7 @@ void View::Init()
     mGraphicsView.setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     mGraphicsView.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mGraphicsView.setStyleSheet("QGraphicsView {selection-background-color: #00272b;}");
 
     CreateGui();
     ConnectGuiSignalsAndSlots();

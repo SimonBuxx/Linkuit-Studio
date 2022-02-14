@@ -45,6 +45,8 @@ public:
 
     void OnSelectedComponentsMoved(QPointF pOffset);
 
+    void ResetSelectionCopied(void);
+
 signals:
     void ControlModeChangedSignal(ControlMode pNewMode);
     void ComponentTypeChangedSignal(ComponentType pNewType);
@@ -72,8 +74,9 @@ protected:
 
     /// \brief Adds neccessary ConPoints over the given wires
     /// \param pWires: The wires to add ConPoints to
+    /// \param pSetSelected: If true, the new ConPoints are selected
     /// \return A vector of new ConPoints
-    std::vector<BaseComponent*> PositionConPointsOverWires(std::vector<BaseComponent*> pWires);
+    std::vector<BaseComponent*> PositionConPointsOverWires(std::vector<BaseComponent*> &pWires, bool pSetSelected);
 
     template<typename T>
     bool IsComponentAtPosition(QPointF pPos);
@@ -94,6 +97,8 @@ protected:
     WireDirection mWireStartDirection = WireDirection::HORIZONTAL;
     LogicWire mHorizontalPreviewWire;
     LogicWire mVerticalPreviewWire;
+
+    bool mSelectionCopied = false;
 };
 
 #endif // CORELOGIC_H

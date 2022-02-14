@@ -9,8 +9,8 @@
 
 inline QPointF SnapToGrid(QPointF pPoint)
 {
-    return QPointF(round(pPoint.x() / canvas::GRID_SIZE) * canvas::GRID_SIZE,
-                   round(pPoint.y() / canvas::GRID_SIZE) * canvas::GRID_SIZE);
+    return QPointF(std::floor(pPoint.x() / canvas::GRID_SIZE + 0.5f) * canvas::GRID_SIZE,
+                   std::floor(pPoint.y() / canvas::GRID_SIZE + 0.5f) * canvas::GRID_SIZE);
 }
 
 #endif // HELPERFUNCTIONS_H

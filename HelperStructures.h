@@ -27,21 +27,6 @@ enum class WireDirection
     UNSET
 };
 
-enum class DiodeDirection
-{
-    HORIZONTAL = 0,
-    VERTICAL
-};
-
-enum class CrossingType
-{
-    ANY,
-    NONE,
-    L,
-    T,
-    X
-};
-
 enum class LogicState
 {
     LOW = 0,
