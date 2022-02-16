@@ -45,8 +45,6 @@ public:
 
     void OnSelectedComponentsMoved(QPointF pOffset);
 
-    void ResetSelectionCopied(void);
-
 signals:
     void ControlModeChangedSignal(ControlMode pNewMode);
     void ComponentTypeChangedSignal(ComponentType pNewType);
@@ -70,13 +68,8 @@ protected:
     LogicWire* GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
     void MergeWiresAfterMove(QList<QGraphicsItem*> &pComponents, std::vector<BaseComponent*> &pAddedWires, std::vector<BaseComponent*> &pDeletedWires);
 
-    bool IsTCrossing(LogicWire* pWire1, LogicWire* pWire2) const;
-
-    /// \brief Adds neccessary ConPoints over the given wires
-    /// \param pWires: The wires to add ConPoints to
-    /// \param pSetSelected: If true, the new ConPoints are selected
-    /// \return A vector of new ConPoints
-    std::vector<BaseComponent*> PositionConPointsOverWires(std::vector<BaseComponent*> &pWires, bool pSetSelected);
+    bool IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const;
+    bool IsNoCrossingPoint(const ConPoint* pConPoint) const;
 
     template<typename T>
     bool IsComponentAtPosition(QPointF pPos);
@@ -97,8 +90,6 @@ protected:
     WireDirection mWireStartDirection = WireDirection::HORIZONTAL;
     LogicWire mHorizontalPreviewWire;
     LogicWire mVerticalPreviewWire;
-
-    bool mSelectionCopied = false;
 };
 
 #endif // CORELOGIC_H

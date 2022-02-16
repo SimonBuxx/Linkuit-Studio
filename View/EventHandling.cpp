@@ -79,7 +79,6 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
     }
 
     QGraphicsView::mouseReleaseEvent(pEvent);
-    mCoreLogic.ResetSelectionCopied();
 }
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)

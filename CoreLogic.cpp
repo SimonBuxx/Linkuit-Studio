@@ -287,63 +287,40 @@ void CoreLogic::AddWires(QPointF pEndPoint)
         addedComponents.push_back(static_cast<BaseComponent*>(verticalWire));
     }
 
-    // Redo ConPoints on added wires
-    auto addedConPoints = PositionConPointsOverWires(addedComponents, false);
-    addedComponents.insert(addedComponents.end(), addedConPoints.begin(), addedConPoints.end());
-
-    AppendUndo(new UndoAddType(addedComponents, deletedComponents));
-    mWireStartDirection = WireDirection::UNSET;
-}
-
-#warning performance bottleneck
-std::vector<BaseComponent*> CoreLogic::PositionConPointsOverWires(std::vector<BaseComponent*> &pWires, bool pSetSelected)
-{
-    //QElapsedTimer timer;
-    //timer.start();
-
     std::vector<BaseComponent*> addedConPoints;
 
-    for (const auto& wire : pWires)
+    for (const auto& wire : addedComponents)
     {
-        if (dynamic_cast<LogicWire*>(wire) != nullptr)
+        for (const auto& collidingComp : mView.Scene()->collidingItems(wire, Qt::IntersectsItemShape))
         {
-            // Get all intersecting wires
-            for (const auto& collidingComp : mView.Scene()->collidingItems(wire))
+            if (dynamic_cast<LogicWire*>(collidingComp) != nullptr && IsTCrossing(static_cast<LogicWire*>(wire), static_cast<LogicWire*>(collidingComp)))
             {
-                if (dynamic_cast<LogicWire*>(collidingComp) != nullptr
-                        && static_cast<LogicWire*>(wire)->GetDirection() != static_cast<LogicWire*>(collidingComp)->GetDirection())
+                QPointF conPointPos;
+                if (static_cast<LogicWire*>(wire)->GetDirection() == WireDirection::HORIZONTAL)
                 {
-                    QPointF candidatePos{0, 0};
-                    if (static_cast<LogicWire*>(wire)->GetDirection() == WireDirection::HORIZONTAL)
-                    {
-                        candidatePos.setX(collidingComp->x());
-                        candidatePos.setY(wire->y());
-                    }
-                    else
-                    {
-                        candidatePos.setX(wire->x());
-                        candidatePos.setY(collidingComp->y());
-                    }
-                    if (IsTCrossing(static_cast<LogicWire*>(wire), static_cast<LogicWire*>(collidingComp)) && !IsComponentAtPosition<ConPoint>(candidatePos))
-                    {
-                        auto item = new ConPoint();
-                        item->setPos(candidatePos);
-                        item->setSelected(pSetSelected);
-                        addedConPoints.push_back(item);
-                        mView.Scene()->addItem(item);
-                    }
+                    conPointPos.setX(collidingComp->x());
+                    conPointPos.setY(wire->y());
+                }
+                else
+                {
+                    conPointPos.setX(wire->x());
+                    conPointPos.setY(collidingComp->y());
+                }
+
+                if (!IsComponentAtPosition<ConPoint>(conPointPos))
+                {
+                    auto item = new ConPoint();
+                    item->setPos(conPointPos);
+                    addedConPoints.push_back(item);
+                    mView.Scene()->addItem(item);
                 }
             }
         }
     }
 
-    //qDebug() << "Took: " << timer.elapsed() << "ms";
-    return addedConPoints;
-}
-
-void CoreLogic::ResetSelectionCopied()
-{
-    mSelectionCopied = false;
+    addedComponents.insert(addedComponents.end(), addedConPoints.begin(), addedConPoints.end());
+    AppendUndo(new UndoAddType(addedComponents, deletedComponents));
+    mWireStartDirection = WireDirection::UNSET;
 }
 
 template<typename T>
@@ -500,10 +477,10 @@ bool CoreLogic::IsCollidingComponent(QGraphicsItem* pComponent) const
     return (dynamic_cast<LogicWire*>(pComponent) == nullptr && dynamic_cast<ConPoint*>(pComponent) == nullptr);
 }
 
-bool CoreLogic::IsTCrossing(LogicWire* pWire1, LogicWire* pWire2) const
+bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const
 {
-    LogicWire* a;
-    LogicWire* b;
+    const LogicWire* a;
+    const LogicWire* b;
 
     if (pWire1->GetDirection() == WireDirection::VERTICAL && pWire2->GetDirection() == WireDirection::HORIZONTAL)
     {
@@ -524,6 +501,11 @@ bool CoreLogic::IsTCrossing(LogicWire* pWire1, LogicWire* pWire2) const
         || (a->y() < b->y() && a->x() == b->x() + b->GetLength() && a->y() + a->GetLength() > b->y())
         || (a->x() > b->x() && a->y() + a->GetLength() == b->y() && a->x() < b->x() + b->GetLength())
         || (a->x() > b->x() && a->y() == b->y() && a->x() < b->x() + b->GetLength()));
+}
+
+bool CoreLogic::IsNoCrossingPoint(const ConPoint* pConPoint) const
+{
+    return FilterForWires(mView.Scene()->items(pConPoint->pos(), Qt::IntersectsItemBoundingRect)).size() <= 1;
 }
 
 LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, LogicWire* pStartAdjacent, LogicWire* pEndAdjacent) const
@@ -584,35 +566,58 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     std::vector<BaseComponent*> addedComponents;
     std::vector<BaseComponent*> deletedComponents;
 
+    MergeWiresAfterMove(movedGraphicsItems, addedComponents, deletedComponents);
+
     for (const auto& comp : movedGraphicsItems)
     {
-        if (dynamic_cast<LogicWire*>(comp) != nullptr && !mSelectionCopied)
+        // Delete all invalid ConPoints the original position colliding with the selection
+        QRectF oldCollisionRect(comp->pos() + comp->boundingRect().topLeft() - pOffset,
+                                           comp->pos() + comp->boundingRect().bottomRight() - pOffset);
+
+        for (const auto& collidingComp : mView.Scene()->items(oldCollisionRect, Qt::IntersectsItemShape))
         {
-            // Delete all ConPoints colliding with old wire position
-            QRectF oldCollisionRect(comp->pos() + comp->boundingRect().topLeft() - pOffset,
-                                   comp->pos() + comp->boundingRect().bottomRight() - pOffset);
-
-            for (const auto& collidingComp : mView.Scene()->items(oldCollisionRect, Qt::IntersectsItemShape))
+            if (dynamic_cast<ConPoint*>(collidingComp) != nullptr && !collidingComp->isSelected() && IsNoCrossingPoint(static_cast<ConPoint*>(collidingComp)))
             {
-                if (dynamic_cast<ConPoint*>(collidingComp) != nullptr && !collidingComp->isSelected())
+                mView.Scene()->removeItem(collidingComp);
+                deletedComponents.push_back(static_cast<BaseComponent*>(collidingComp));
+            }
+        }
+
+        // Delete all ConPoints of the moved components that are not valid anymore
+        if (dynamic_cast<ConPoint*>(comp) && IsNoCrossingPoint(static_cast<ConPoint*>(comp)))
+        {
+            mView.Scene()->removeItem(comp);
+            deletedComponents.push_back(static_cast<BaseComponent*>(comp));
+        }
+
+        // Add ConPoints to all T Crossings
+        if (dynamic_cast<LogicWire*>(comp) != nullptr)
+        {
+            for (const auto& collidingComp : mView.Scene()->collidingItems(comp, Qt::IntersectsItemShape))
+            {
+                if (dynamic_cast<LogicWire*>(collidingComp) != nullptr && IsTCrossing(static_cast<LogicWire*>(comp), static_cast<LogicWire*>(collidingComp)))
                 {
-                    mView.Scene()->removeItem(collidingComp);
-                    deletedComponents.push_back(static_cast<BaseComponent*>(collidingComp));
+                    QPointF conPointPos;
+                    if (static_cast<LogicWire*>(comp)->GetDirection() == WireDirection::HORIZONTAL)
+                    {
+                        conPointPos.setX(collidingComp->x());
+                        conPointPos.setY(comp->y());
+                    }
+                    else
+                    {
+                        conPointPos.setX(comp->x());
+                        conPointPos.setY(collidingComp->y());
+                    }
+
+                    if (!IsComponentAtPosition<ConPoint>(conPointPos))
+                    {
+                        auto item = new ConPoint();
+                        item->setPos(conPointPos);
+                        addedComponents.push_back(item);
+                        mView.Scene()->addItem(item);
+                    }
                 }
             }
-
-            // Add correct ConPoints above the old wire positions
-            std::vector<BaseComponent*> collidingWires;
-            for (const auto& collidingComp : mView.Scene()->items(oldCollisionRect, Qt::IntersectsItemShape))
-            {
-                if (dynamic_cast<LogicWire*>(collidingComp) != nullptr)
-                {
-                    collidingWires.push_back(static_cast<BaseComponent*>(collidingComp));
-                }
-            }
-
-            auto addedCp = PositionConPointsOverWires(collidingWires, false);
-            addedComponents.insert(addedComponents.end(), addedCp.begin(), addedCp.end());
         }
 
         // If collision was detected
@@ -641,12 +646,6 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
     if (movedComponents.size() > 0)
     {
-        MergeWiresAfterMove(movedGraphicsItems, addedComponents, deletedComponents);
-
-        // Add ConPoints above the new wire positions
-        auto addedConPoints = PositionConPointsOverWires(addedComponents, false);
-        addedComponents.insert(addedComponents.end(), addedConPoints.begin(), addedConPoints.end());
-
         AppendUndo(new UndoMoveType(movedComponents, addedComponents, deletedComponents, pOffset));
     }
 }
@@ -673,7 +672,6 @@ void CoreLogic::CopySelectedComponents()
     }
     if (addedComponents.size() > 0)
     {
-        mSelectionCopied = true;
         AppendUndo(new UndoAddType(addedComponents));
     }
 }
@@ -684,21 +682,23 @@ void CoreLogic::DeleteSelectedComponents()
     std::vector<BaseComponent*> deletedComponents{};
     for (auto& comp : componentsToDelete)
     {
-        if (dynamic_cast<LogicWire*>(comp) != nullptr)
-        {
-            // Delete all colliding ConPoints
-            for (const auto& collidingComp : mView.Scene()->collidingItems(comp))
-            {
-                if (dynamic_cast<ConPoint*>(collidingComp) != nullptr)
-                {
-                    mView.Scene()->removeItem(collidingComp);
-                    deletedComponents.push_back(static_cast<BaseComponent*>(collidingComp));
-                }
-            }
-        }
         mView.Scene()->removeItem(comp);
         deletedComponents.push_back(static_cast<BaseComponent*>(comp));
     }
+
+    // Delete all colliding ConPoints that are not over a crossing anymore
+    for (auto& comp : FilterForWires(componentsToDelete))
+    {
+        for (const auto& collidingComp : mView.Scene()->collidingItems(comp))
+        {
+            if (dynamic_cast<ConPoint*>(collidingComp) != nullptr && IsNoCrossingPoint(static_cast<ConPoint*>(collidingComp)))
+            {
+                mView.Scene()->removeItem(collidingComp);
+                deletedComponents.push_back(static_cast<BaseComponent*>(collidingComp));
+            }
+        }
+    }
+
     if (deletedComponents.size() > 0)
     {
         AppendUndo(new UndoDeleteType(deletedComponents));

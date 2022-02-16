@@ -3,8 +3,6 @@
 #include "Configuration.h"
 #include "HelperFunctions.h"
 
-#include <QGraphicsScene>
-
 ConPoint::ConPoint():
     mState(LogicState::LOW)
 {
@@ -94,7 +92,6 @@ void ConPoint::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
     mWasSelectedBefore = false;
     mWasMoved = false;
 }
-
 
 QRectF ConPoint::boundingRect() const
 {
