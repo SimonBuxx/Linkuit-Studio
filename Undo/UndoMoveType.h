@@ -9,7 +9,7 @@ class UndoMoveType : public UndoBaseType
 public:
     UndoMoveType(std::vector<BaseComponent*> &pMovedComponents, QPointF pOffset);
     UndoMoveType(std::vector<BaseComponent*> &pMovedComponents, std::vector<BaseComponent*> &pAddedComponents, std::vector<BaseComponent*> &pDeletedComponents, QPointF pOffset);
-    UndoType Type(void) const override;
+    Undo::Type Type(void) const override;
     ~UndoMoveType(void);
 
     const std::vector<BaseComponent*>& MovedComponents(void) const;

@@ -6,11 +6,12 @@
 
 class LogicWire : public BaseComponent
 {
+    Q_OBJECT
 public:
-    LogicWire(WireDirection pDirection, uint32_t pLength);
-    LogicWire(const LogicWire& pObj);
+    LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint32_t pLength);
+    LogicWire(const LogicWire& pObj, const CoreLogic* pCoreLogic);
 
-    virtual BaseComponent* CloneBaseComponent() const override;
+    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
     QRectF boundingRect(void) const override;
     QPainterPath shape(void) const override;
@@ -23,6 +24,7 @@ public:
     uint32_t GetLength(void) const;
 
     WireDirection GetDirection(void) const;
+    bool StartsOrEndsIn(QPointF pPoint) const;
 
 protected:
     WireDirection mDirection;

@@ -8,9 +8,10 @@ class LogicInput : public BaseComponent
 {
     Q_OBJECT
 public:
-    LogicInput(void);
-    LogicInput(const LogicInput& pObj);
-    virtual BaseComponent* CloneBaseComponent() const override;
+    LogicInput(const CoreLogic* pCoreLogic);
+    LogicInput(const LogicInput& pObj, const CoreLogic* pCoreLogic);
+
+    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
     QRectF boundingRect(void) const override;
     QPainterPath shape(void) const override;

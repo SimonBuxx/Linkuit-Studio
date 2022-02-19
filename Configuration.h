@@ -77,6 +77,11 @@ namespace conpoints
 static constexpr double MIN_VISIBLE_LOD = 0.2f;
 static constexpr uint32_t SIZE = 6;
 } // namespace
+
+namespace diodes
+{
+static constexpr uint32_t SIZE = 15;
+} // namespace
 } // namespace
 
 #endif // CONFIGURATION_H

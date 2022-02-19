@@ -8,9 +8,10 @@ class LogicOutput : public BaseComponent
 {
     Q_OBJECT
 public:
-    LogicOutput(void);
-    LogicOutput(const LogicOutput& pObj);
-    virtual BaseComponent* CloneBaseComponent() const override;
+    LogicOutput(const CoreLogic* pCoreLogic);
+    LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic);
+
+    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
     QRectF boundingRect(void) const override;
     QPainterPath shape(void) const override;

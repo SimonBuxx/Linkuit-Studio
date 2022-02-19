@@ -24,7 +24,7 @@ public:
     ControlMode GetControlMode(void);
 
     void SetComponentType(ComponentType pComponentType);
-    ComponentType GetComponentType(void);
+    ComponentType GetComponentType(void) const;
 
     void EnterAddControlMode(ComponentType pComponentType);
 
@@ -35,9 +35,13 @@ public:
 
     void SetPreviewWireStart(QPointF pStartPoint);
 
-    /// \brief Draw preview wires to the current mouse position
+    /// \brief Draws preview wires to the current mouse position
     /// \param pCurrentPoint: The current mouse position
     void ShowPreviewWires(QPointF pCurrentPoint);
+
+    /// \brief Adds wires from mPreviewWireStart to pEndPoint, with the first wire being
+    /// added in mWireStartDirection direction, if two wires are added
+    /// \param pEndPoint: The end point the last drawn wire should reach
     void AddWires(QPointF pEndPoint);
 
     void CopySelectedComponents(void);
@@ -45,9 +49,16 @@ public:
 
     void OnSelectedComponentsMoved(QPointF pOffset);
 
+    bool IsSimulationRunning(void) const;
+
 signals:
     void ControlModeChangedSignal(ControlMode pNewMode);
     void ComponentTypeChangedSignal(ComponentType pNewType);
+    void MousePressedEventDefaultSignal(QMouseEvent &pEvent);
+
+public slots:
+    void OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent);
+    void OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType);
 
 protected:
     void ConnectToView(void);
@@ -58,10 +69,7 @@ protected:
 
     std::vector<BaseComponent*> FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection = WireDirection::UNSET) const;
 
-    /// \brief Removes all components from the list that are wires
-    /// \param pComponents: A list of components
-    /// \return A list of components without the wires
-    std::vector<BaseComponent*> FilterOutCollidingComponents(const QList<QGraphicsItem*> &pComponents) const;
+    std::vector<BaseComponent*> GetCollidingComponents(QGraphicsItem* &pComponent);
     bool IsCollidingComponent(QGraphicsItem* pComponent) const;
     LogicWire* MergeWires(LogicWire* pNewWire, LogicWire* pLeftTopAdjacent, LogicWire* pRightBottomAdjacent) const;
     std::vector<BaseComponent*> DeleteContainedWires(LogicWire* pWire);
@@ -70,6 +78,7 @@ protected:
 
     bool IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const;
     bool IsNoCrossingPoint(const ConPoint* pConPoint) const;
+    bool IsXCrossingPoint(QPointF pPoint) const;
 
     template<typename T>
     bool IsComponentAtPosition(QPointF pPos);

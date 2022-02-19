@@ -7,10 +7,10 @@ class NotGate : public AbstractGate
 {
     Q_OBJECT
 public:
-    NotGate(Direction pDirection);
-    NotGate(const NotGate& pObj);
+    NotGate(const CoreLogic* pCoreLogic, Direction pDirection);
+    NotGate(const NotGate& pObj, const CoreLogic* pCoreLogic);
 
-    virtual BaseComponent* CloneBaseComponent() const override;
+    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 };
 
 #endif // NOTGATE_H

@@ -1,7 +1,8 @@
 #include "LogicOutput.h"
 #include "Configuration.h"
 
-LogicOutput::LogicOutput()
+LogicOutput::LogicOutput(const CoreLogic* pCoreLogic):
+    BaseComponent(pCoreLogic)
 {
     setZValue(components::zvalues::OUTPUT);
 
@@ -10,16 +11,17 @@ LogicOutput::LogicOutput()
     mState = LogicState::LOW;
 }
 
-LogicOutput::LogicOutput(const LogicOutput& pObj)
+LogicOutput::LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic):
+    LogicOutput(pCoreLogic)
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
     mState = pObj.mState;
 };
 
-BaseComponent* LogicOutput::CloneBaseComponent() const
+BaseComponent* LogicOutput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
-    return new LogicOutput(*this);
+    return new LogicOutput(*this, pCoreLogic);
 }
 
 void LogicOutput::ResetZValue()

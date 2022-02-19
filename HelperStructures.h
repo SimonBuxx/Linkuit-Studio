@@ -33,19 +33,35 @@ enum class LogicState
     HIGH = 1
 };
 
+enum class ConnectionType
+{
+    FULL = 0,
+    DIODE_X,
+    DIODE_Y
+};
+
 enum class ControlMode
 {
     EDIT = 0,
     ADD,
-    WIRE
+    WIRE,
+    SIMULATION
 };
 
-enum class UndoType
+namespace Undo
+{
+enum class Type
 {
     MOVE = 0,
     ADD,
     DEL,
     CONFIGURE
 };
+
+enum class ConfigType
+{
+    CONNECTION_TYPE
+};
+} // namespace
 
 #endif // HELPERSTRUCTURES_H

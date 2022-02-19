@@ -7,9 +7,9 @@ class AbstractGate : public RectComponent
 {
     Q_OBJECT
 public:
-    AbstractGate(uint8_t pInputCount, Direction pDirection);
-    AbstractGate(AbstractGate& pObj);
-    virtual BaseComponent* CloneBaseComponent() const override = 0;
+    AbstractGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection);
+    AbstractGate(AbstractGate& pObj, const CoreLogic* pCoreLogic);
+    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override = 0;
 
     QRectF boundingRect(void) const override;
     QPainterPath shape(void) const override;

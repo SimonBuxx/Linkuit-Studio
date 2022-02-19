@@ -9,7 +9,7 @@ class UndoDeleteType : public UndoBaseType
 public:
     UndoDeleteType(std::vector<BaseComponent*> &pDeletedComponents);
     ~UndoDeleteType(void);
-    UndoType Type(void) const override;
+    Undo::Type Type(void) const override;
 
     const std::vector<BaseComponent*>& Components(void) const;
 

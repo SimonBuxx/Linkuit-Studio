@@ -1,7 +1,8 @@
 #include "LogicWire.h"
 #include "Configuration.h"
 
-LogicWire::LogicWire(WireDirection pDirection, uint32_t pLength):
+LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint32_t pLength):
+    BaseComponent(pCoreLogic),
     mDirection(pDirection),
     mState(LogicState::LOW)
 {
@@ -19,7 +20,8 @@ LogicWire::LogicWire(WireDirection pDirection, uint32_t pLength):
     }
 }
 
-LogicWire::LogicWire(const LogicWire& pObj)
+LogicWire::LogicWire(const LogicWire& pObj, const CoreLogic* pCoreLogic):
+    LogicWire(pCoreLogic, pObj.mDirection, pObj.GetLength())
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
@@ -27,9 +29,9 @@ LogicWire::LogicWire(const LogicWire& pObj)
     mState = pObj.mState;
 };
 
-BaseComponent* LogicWire::CloneBaseComponent() const
+BaseComponent* LogicWire::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
-    return new LogicWire(*this);
+    return new LogicWire(*this, pCoreLogic);
 }
 
 void LogicWire::ResetZValue()
@@ -90,6 +92,13 @@ uint32_t LogicWire::GetLength(void) const
 WireDirection LogicWire::GetDirection(void) const
 {
     return mDirection;
+}
+
+bool LogicWire::StartsOrEndsIn(QPointF pPoint) const
+{
+    return ((mDirection == WireDirection::HORIZONTAL && QPointF(x() + mWidth, y()) == pPoint) ||
+            (mDirection == WireDirection::VERTICAL && QPointF(x(), y() + mHeight) == pPoint) ||
+            (pos() == pPoint));
 }
 
 QRectF LogicWire::boundingRect() const

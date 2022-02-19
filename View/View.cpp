@@ -40,6 +40,9 @@ void View::Init()
     CreateGui();
     ConnectGuiSignalsAndSlots();
 
+    QObject::connect(&mGraphicsView, &GraphicsView::LeftMouseButtonPressedEvent, &mCoreLogic, &CoreLogic::OnLeftMouseButtonPressed);
+    QObject::connect(&mCoreLogic, &CoreLogic::MousePressedEventDefaultSignal, &mGraphicsView, &GraphicsView::OnMousePressedEventDefault);
+
     SetupMatrix();
 }
 

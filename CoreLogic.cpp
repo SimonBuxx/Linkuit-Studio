@@ -18,8 +18,8 @@
 
 CoreLogic::CoreLogic(View &pView):
     mView(pView),
-    mHorizontalPreviewWire(WireDirection::HORIZONTAL, 0),
-    mVerticalPreviewWire(WireDirection::VERTICAL, 0)
+    mHorizontalPreviewWire(this, WireDirection::HORIZONTAL, 0),
+    mVerticalPreviewWire(this, WireDirection::VERTICAL, 0)
 {
     ConnectToView();
     mView.Init();
@@ -47,9 +47,14 @@ void CoreLogic::EnterAddControlMode(ComponentType pComponentType)
     SetComponentType(pComponentType);
 }
 
-ComponentType CoreLogic::GetComponentType()
+ComponentType CoreLogic::GetComponentType() const
 {
     return mComponentType;
+}
+
+bool CoreLogic::IsSimulationRunning(void) const
+{
+    return (mControlMode == ControlMode::SIMULATION);
 }
 
 void CoreLogic::SetComponentType(ComponentType pComponentType)
@@ -66,32 +71,32 @@ QGraphicsItem* CoreLogic::GetItem()
     {
         case ComponentType::AND_GATE:
         {
-            item = new AndGate(mComponentInputCount, mComponentDirection);
+            item = new AndGate(this, mComponentInputCount, mComponentDirection);
             break;
         }
         case ComponentType::OR_GATE:
         {
-            item = new OrGate(mComponentInputCount, mComponentDirection);
+            item = new OrGate(this, mComponentInputCount, mComponentDirection);
             break;
         }
         case ComponentType::XOR_GATE:
         {
-            item = new XorGate(mComponentInputCount, mComponentDirection);
+            item = new XorGate(this, mComponentInputCount, mComponentDirection);
             break;
         }
         case ComponentType::NOT_GATE:
         {
-            item = new NotGate(mComponentDirection);
+            item = new NotGate(this, mComponentDirection);
             break;
         }
         case ComponentType::INPUT:
         {
-            item = new LogicInput();
+            item = new LogicInput(this);
             break;
         }
         case ComponentType::OUTPUT:
         {
-            item = new LogicOutput();
+            item = new LogicOutput(this);
             break;
         }
         default:
@@ -116,7 +121,7 @@ void CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
     item->setPos(SnapToGrid(pPosition));
 
-    if (FilterOutCollidingComponents(mView.Scene()->collidingItems(item)).empty())
+    if (GetCollidingComponents(item).empty())
     {
         mView.Scene()->addItem(item);
 
@@ -196,7 +201,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     // Add horizontal wire
     if (mPreviewWireStart.x() != snappedEndPoint.x())
     {
-        auto item = new LogicWire(WireDirection::HORIZONTAL, std::abs(mPreviewWireStart.x() - snappedEndPoint.x()));
+        auto item = new LogicWire(this, WireDirection::HORIZONTAL, std::abs(mPreviewWireStart.x() - snappedEndPoint.x()));
 
         if (mWireStartDirection == WireDirection::HORIZONTAL)
         {
@@ -243,7 +248,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     // Add vertical wire
     if (mPreviewWireStart.y() != snappedEndPoint.y())
     {
-        auto item = new LogicWire(WireDirection::VERTICAL, std::abs(mPreviewWireStart.y() - snappedEndPoint.y()));
+        auto item = new LogicWire(this, WireDirection::VERTICAL, std::abs(mPreviewWireStart.y() - snappedEndPoint.y()));
 
         if (mWireStartDirection == WireDirection::VERTICAL)
         {
@@ -309,7 +314,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
 
                 if (!IsComponentAtPosition<ConPoint>(conPointPos))
                 {
-                    auto item = new ConPoint();
+                    auto item = new ConPoint(this);
                     item->setPos(conPointPos);
                     addedConPoints.push_back(item);
                     mView.Scene()->addItem(item);
@@ -457,11 +462,11 @@ std::vector<BaseComponent*> CoreLogic::FilterForWires(const QList<QGraphicsItem*
     return wires;
 }
 
-std::vector<BaseComponent*> CoreLogic::FilterOutCollidingComponents(const QList<QGraphicsItem*> &pComponents) const
+std::vector<BaseComponent*> CoreLogic::GetCollidingComponents(QGraphicsItem* &pComponent)
 {
     std::vector<BaseComponent*> collidingComponents;
 
-    for (auto &comp : pComponents)
+    for (auto &comp : mView.Scene()->collidingItems(pComponent))
     {
         if (dynamic_cast<LogicWire*>(comp) == nullptr)
         {
@@ -505,7 +510,46 @@ bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) co
 
 bool CoreLogic::IsNoCrossingPoint(const ConPoint* pConPoint) const
 {
-    return FilterForWires(mView.Scene()->items(pConPoint->pos(), Qt::IntersectsItemBoundingRect)).size() <= 1;
+    const auto& wires = FilterForWires(mView.Scene()->items(pConPoint->pos(), Qt::IntersectsItemBoundingRect));
+
+    if (wires.size() <= 1)
+    {
+        return true;
+    }
+    else
+    {
+        for (const auto& wire : wires)
+        {
+            if (!static_cast<LogicWire*>(wire)->StartsOrEndsIn(pConPoint->pos()))
+            {
+                // T-Crossing wire found, this is no L or I crossing
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+bool CoreLogic::IsXCrossingPoint(QPointF pPoint) const
+{
+    const auto& wires = FilterForWires(mView.Scene()->items(pPoint, Qt::IntersectsItemBoundingRect));
+
+    if (wires.size() <= 1)
+    {
+        return false;
+    }
+    else
+    {
+        for (const auto& wire : wires)
+        {
+            if (static_cast<LogicWire*>(wire)->StartsOrEndsIn(pPoint))
+            {
+                // L-Crossing type wire found, this is no X crossing
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, LogicWire* pStartAdjacent, LogicWire* pEndAdjacent) const
@@ -527,7 +571,7 @@ LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, LogicWire* pStartAdjacent,
             newEnd = QPoint(pEndAdjacent->x() + pEndAdjacent->GetLength(), pNewWire->y());
         }
 
-        auto newWire = new LogicWire(WireDirection::HORIZONTAL, newEnd.x() - newStart.x());
+        auto newWire = new LogicWire(this, WireDirection::HORIZONTAL, newEnd.x() - newStart.x());
         newWire->setPos(newStart);
         return newWire;
     }
@@ -546,7 +590,7 @@ LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, LogicWire* pStartAdjacent,
             newEnd = QPoint(pNewWire->x(), pEndAdjacent->y() + pEndAdjacent->GetLength());
         }
 
-        auto newWire = new LogicWire(WireDirection::VERTICAL, newEnd.y() - newStart.y());
+        auto newWire = new LogicWire(this, WireDirection::VERTICAL, newEnd.y() - newStart.y());
         newWire->setPos(newStart);
         return newWire;
     }
@@ -568,7 +612,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
     MergeWiresAfterMove(movedGraphicsItems, addedComponents, deletedComponents);
 
-    for (const auto& comp : movedGraphicsItems)
+    for (auto& comp : movedGraphicsItems)
     {
         // Delete all invalid ConPoints the original position colliding with the selection
         QRectF oldCollisionRect(comp->pos() + comp->boundingRect().topLeft() - pOffset,
@@ -611,7 +655,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
                     if (!IsComponentAtPosition<ConPoint>(conPointPos))
                     {
-                        auto item = new ConPoint();
+                        auto item = new ConPoint(this);
                         item->setPos(conPointPos);
                         addedComponents.push_back(item);
                         mView.Scene()->addItem(item);
@@ -621,7 +665,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
         }
 
         // If collision was detected
-        if (IsCollidingComponent(comp) && !FilterOutCollidingComponents(mView.Scene()->collidingItems(comp, Qt::IntersectsItemShape)).empty())
+        if (IsCollidingComponent(comp) && !GetCollidingComponents(comp).empty())
         {
             // Collision, abort
             for (const auto& comp : movedGraphicsItems) // Revert moving
@@ -650,6 +694,59 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     }
 }
 
+void CoreLogic::OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent)
+{
+    auto snappedPos = SnapToGrid(pMappedPos);
+
+    // Add ConPoint on X crossing
+    if (mControlMode == ControlMode::EDIT && IsXCrossingPoint(snappedPos) && !IsComponentAtPosition<ConPoint>(snappedPos))
+    {
+        // Create a new ConPoint (removing will be handled by OnConnectionTypeChanged)
+        auto item = new ConPoint(this);
+        item->setPos(snappedPos);
+        std::vector<BaseComponent*> addedComponents{item};
+        mView.Scene()->addItem(item);
+        AppendUndo(new UndoAddType(addedComponents));
+        return;
+    }
+
+    // Add component at the current position
+    if (mControlMode == ControlMode::ADD)
+    {
+        AddCurrentTypeComponent(snappedPos);
+        return;
+    }
+
+    // Start the preview wire at the current position
+    if (mControlMode == ControlMode::WIRE)
+    {
+        SetPreviewWireStart(snappedPos);
+        return;
+    }
+
+    emit MousePressedEventDefaultSignal(pEvent);
+}
+
+void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType)
+{
+    Q_ASSERT(pConPoint);
+
+    if (IsXCrossingPoint(pConPoint->pos()) && pPreviousType == ConnectionType::DIODE_X)
+    {
+        pConPoint->setSelected(false);
+        pConPoint->SetConnectionType(pPreviousType); // Restore old connection type in case delete is undone
+        mView.Scene()->removeItem(pConPoint);
+
+        auto deleted = std::vector<BaseComponent*>{pConPoint};
+        AppendUndo(new UndoDeleteType(deleted));
+    }
+    else
+    {
+        auto data = std::make_shared<Undo::ConnectionTypeChangedData>(pConPoint, pPreviousType, pCurrentType);
+        AppendUndo(new UndoConfigureType(data));
+    }
+}
+
 void CoreLogic::CopySelectedComponents()
 {
     QList<QGraphicsItem*> componentsToCopy = mView.Scene()->selectedItems();
@@ -660,7 +757,7 @@ void CoreLogic::CopySelectedComponents()
     for (auto& orig : componentsToCopy)
     {
         // Create a copy of the original component
-        BaseComponent* copy = static_cast<BaseComponent*>(orig)->CloneBaseComponent();
+        BaseComponent* copy = static_cast<BaseComponent*>(orig)->CloneBaseComponent(this);
         Q_ASSERT(copy);
 
         // Paste the copied component one grid cell below and to the right
@@ -682,8 +779,12 @@ void CoreLogic::DeleteSelectedComponents()
     std::vector<BaseComponent*> deletedComponents{};
     for (auto& comp : componentsToDelete)
     {
-        mView.Scene()->removeItem(comp);
-        deletedComponents.push_back(static_cast<BaseComponent*>(comp));
+        // Do not allow deleting of ConPoints on T crossings
+        if (dynamic_cast<ConPoint*>(comp) == nullptr || IsXCrossingPoint(comp->pos()))
+        {
+            mView.Scene()->removeItem(comp);
+            deletedComponents.push_back(static_cast<BaseComponent*>(comp));
+        }
     }
 
     // Delete all colliding ConPoints that are not over a crossing anymore
@@ -731,7 +832,7 @@ void CoreLogic::Undo()
 
         switch (undoObject->Type())
         {
-            case UndoType::ADD:
+            case Undo::Type::ADD:
             {
                 for (const auto& comp : static_cast<UndoAddType*>(undoObject)->AddedComponents())
                 {
@@ -746,7 +847,7 @@ void CoreLogic::Undo()
                 AppendToUndoQueue(undoObject, mRedoQueue);
                 break;
             }
-            case UndoType::DEL:
+            case Undo::Type::DEL:
             {
                 for (const auto& comp : static_cast<UndoDeleteType*>(undoObject)->Components())
                 {
@@ -756,7 +857,7 @@ void CoreLogic::Undo()
                 AppendToUndoQueue(undoObject, mRedoQueue);
                 break;
             }
-            case UndoType::MOVE:
+            case Undo::Type::MOVE:
             {
                 const auto undoMoveObject = static_cast<UndoMoveType*>(undoObject);
                 for (const auto& comp : static_cast<UndoMoveType*>(undoObject)->DeletedComponents())
@@ -777,8 +878,20 @@ void CoreLogic::Undo()
                 AppendToUndoQueue(undoObject, mRedoQueue);
                 break;
             }
-            case UndoType::CONFIGURE:
+            case Undo::Type::CONFIGURE:
             {
+                const auto undoConfigureObject = static_cast<UndoConfigureType*>(undoObject);
+                switch (undoConfigureObject->Data()->Type())
+                {
+                    case Undo::ConfigType::CONNECTION_TYPE:
+                    {
+                        auto data = std::static_pointer_cast<Undo::ConnectionTypeChangedData>(undoConfigureObject->Data());
+                        Q_ASSERT(data->conPoint);
+                        data->conPoint->SetConnectionType(data->previousType);
+                        AppendToUndoQueue(undoObject, mRedoQueue);
+                        break;
+                    }
+                }
                 break;
             }
             default:
@@ -800,7 +913,7 @@ void CoreLogic::Redo()
 
         switch (redoObject->Type())
         {
-            case UndoType::ADD:
+            case Undo::Type::ADD:
             {
                 for (const auto& comp : static_cast<UndoAddType*>(redoObject)->AddedComponents())
                 {
@@ -815,7 +928,7 @@ void CoreLogic::Redo()
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
             }
-            case UndoType::DEL:
+            case Undo::Type::DEL:
             {
                 for (const auto& comp : static_cast<UndoDeleteType*>(redoObject)->Components())
                 {
@@ -825,7 +938,7 @@ void CoreLogic::Redo()
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
             }
-            case UndoType::MOVE:
+            case Undo::Type::MOVE:
             {
                 const auto redoMoveObject = static_cast<UndoMoveType*>(redoObject);
                 for (const auto& comp : redoMoveObject->MovedComponents())
@@ -846,8 +959,20 @@ void CoreLogic::Redo()
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
             }
-            case UndoType::CONFIGURE:
+            case Undo::Type::CONFIGURE:
             {
+                const auto undoConfigureObject = static_cast<UndoConfigureType*>(redoObject);
+                switch (undoConfigureObject->Data()->Type())
+                {
+                    case Undo::ConfigType::CONNECTION_TYPE:
+                    {
+                        auto data = std::static_pointer_cast<Undo::ConnectionTypeChangedData>(undoConfigureObject->Data());
+                        Q_ASSERT(data->conPoint);
+                        data->conPoint->SetConnectionType(data->currentType);
+                        AppendToUndoQueue(redoObject, mUndoQueue);
+                        break;
+                    }
+                }
                 break;
             }
             default:

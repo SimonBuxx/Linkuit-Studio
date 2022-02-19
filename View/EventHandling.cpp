@@ -23,6 +23,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
 {
     if (pEvent->button() == Qt::LeftButton)
     {
+        emit LeftMouseButtonPressedEvent(mapToScene(pEvent->pos()), *pEvent);
         mIsLeftMousePressed = true;
         if (pEvent->modifiers() & Qt::ControlModifier)
         {
@@ -30,25 +31,16 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
             mPanStart = pEvent->pos();
             setCursor(Qt::ClosedHandCursor);
             pEvent->accept();
-            return;
         }
-    }
-
-    // Add component at the current position
-    if (pEvent->button() == Qt::LeftButton && mCoreLogic.GetControlMode() == ControlMode::ADD)
-    {
-        mCoreLogic.AddCurrentTypeComponent(mapToScene(pEvent->pos()));
-        return;
-    }
-
-    // Start the preview wire at the current position
-    if (pEvent->button() == Qt::LeftButton && mCoreLogic.GetControlMode() == ControlMode::WIRE)
-    {
-        mCoreLogic.SetPreviewWireStart(mapToScene(pEvent->pos()));
         return;
     }
 
     QGraphicsView::mousePressEvent(pEvent);
+}
+
+void GraphicsView::OnMousePressedEventDefault(QMouseEvent &pEvent)
+{
+    QGraphicsView::mousePressEvent(&pEvent);
 }
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)

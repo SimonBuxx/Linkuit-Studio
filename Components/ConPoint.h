@@ -6,11 +6,12 @@
 
 class ConPoint : public BaseComponent
 {
+    Q_OBJECT
 public:
-    ConPoint(void);
-    ConPoint(const ConPoint& pObj);
+    ConPoint(const CoreLogic* pCoreLogic);
+    ConPoint(const ConPoint& pObj, const CoreLogic* pCoreLogic);
 
-    virtual BaseComponent* CloneBaseComponent() const override;
+    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent) override;
@@ -21,13 +22,29 @@ public:
 
     void ResetZValue(void) override;
 
+    /// \brief Returns the connection type of this ConPoint
+    /// \return This ConPoints connection type (full connection or diode)
+    ConnectionType GetConnectionType(void) const;
+
+    void SetConnectionType(ConnectionType pNewType);
+
+    /// \brief Set the connection type to the next type
+    /// \return The previous connection type
+    ConnectionType AdvanceConnectionType(void);
+
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
+
+signals:
+    void ConnectionTypeChangedSignal(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType);
+
+protected:
+    void ConnectToCoreLogic(const CoreLogic* pCoreLogic);
 
 protected:
     LogicState mState;
 
     bool mWasMoved;
-    bool mWasSelectedBefore;
+    ConnectionType mConnectionType;
 };
 
 #endif // CONPOINT_H

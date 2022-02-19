@@ -24,6 +24,12 @@ public:
     GraphicsView(View &pView, CoreLogic &pCoreLogic);
     View* GetView(void) const;
 
+signals:
+    void LeftMouseButtonPressedEvent(QPointF pMousePos, QMouseEvent &pEvent);
+
+public slots:
+    void OnMousePressedEventDefault(QMouseEvent &pEvent);
+
 protected:
     void wheelEvent(QWheelEvent *pEvent) override;
     void mousePressEvent(QMouseEvent *pEvent) override;

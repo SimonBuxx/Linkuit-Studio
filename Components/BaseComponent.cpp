@@ -5,12 +5,16 @@
 #include <QApplication>
 #include <QGraphicsScene>
 
-BaseComponent::BaseComponent():
+BaseComponent::BaseComponent(const CoreLogic* pCoreLogic):
     mMoveStartPoint(pos())
 {
+    Q_UNUSED(pCoreLogic);
     setPos(0, 0);
     setFlags(ItemIsSelectable | ItemIsMovable | ItemSendsGeometryChanges);
     setAcceptHoverEvents(true);
+    setCursor(Qt::PointingHandCursor);
+
+    // Connect to CoreLogic
 }
 
 void BaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)

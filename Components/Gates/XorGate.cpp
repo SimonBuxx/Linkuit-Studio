@@ -1,13 +1,13 @@
 #include "XorGate.h"
 
-XorGate::XorGate(uint8_t pInputCount, Direction pDirection):
-    AbstractGate(pInputCount, pDirection)
+XorGate::XorGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection):
+    AbstractGate(pCoreLogic, pInputCount, pDirection)
 {
     mComponentText = components::gates::XOR_TEXT;
 }
 
-XorGate::XorGate(const XorGate& pObj):
-    AbstractGate(pObj.mInputCount, pObj.mDirection)
+XorGate::XorGate(const XorGate& pObj, const CoreLogic* pCoreLogic):
+    XorGate(pCoreLogic, pObj.mInputCount, pObj.mDirection)
 {
     mComponentText = pObj.mComponentText;
     mWidth = pObj.mWidth;
@@ -16,7 +16,7 @@ XorGate::XorGate(const XorGate& pObj):
     mInputInverted= pObj.mInputInverted;
 };
 
-BaseComponent* XorGate::CloneBaseComponent() const
+BaseComponent* XorGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
-    return new XorGate(*this);
+    return new XorGate(*this, pCoreLogic);
 }

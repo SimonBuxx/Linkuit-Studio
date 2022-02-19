@@ -8,7 +8,7 @@ class UndoBaseType
 public:
     UndoBaseType();
     virtual ~UndoBaseType() = default;
-    virtual UndoType Type(void) const = 0;
+    virtual Undo::Type Type(void) const = 0;
 };
 
 #endif // UNDOBASETYPE_H

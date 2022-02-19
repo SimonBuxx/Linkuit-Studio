@@ -18,9 +18,9 @@ UndoAddType::~UndoAddType()
     }
 }
 
-UndoType UndoAddType::Type() const
+Undo::Type UndoAddType::Type() const
 {
-    return UndoType::ADD;
+    return Undo::Type::ADD;
 }
 
 const std::vector<BaseComponent*>& UndoAddType::AddedComponents() const

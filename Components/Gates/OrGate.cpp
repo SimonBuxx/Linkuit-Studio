@@ -1,13 +1,13 @@
 #include "OrGate.h"
 
-OrGate::OrGate(uint8_t pInputCount, Direction pDirection):
-    AbstractGate(pInputCount, pDirection)
+OrGate::OrGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection):
+    AbstractGate(pCoreLogic, pInputCount, pDirection)
 {
     mComponentText = components::gates::OR_TEXT;
 }
 
-OrGate::OrGate(const OrGate& pObj):
-    AbstractGate(pObj.mInputCount, pObj.mDirection)
+OrGate::OrGate(const OrGate& pObj, const CoreLogic* pCoreLogic):
+    OrGate(pCoreLogic, pObj.mInputCount, pObj.mDirection)
 {
     mComponentText = pObj.mComponentText;
     mWidth = pObj.mWidth;
@@ -16,7 +16,7 @@ OrGate::OrGate(const OrGate& pObj):
     mInputInverted= pObj.mInputInverted;
 };
 
-BaseComponent* OrGate::CloneBaseComponent() const
+BaseComponent* OrGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
-    return new OrGate(*this);
+    return new OrGate(*this, pCoreLogic);
 }

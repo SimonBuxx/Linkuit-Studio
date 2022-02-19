@@ -9,8 +9,9 @@ class RectComponent : public BaseComponent
 {
     Q_OBJECT
 public:
-    RectComponent(void);
-    virtual BaseComponent* CloneBaseComponent() const override = 0;
+    RectComponent(const CoreLogic* pCoreLogic);
+
+    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override = 0;
 
     QRectF boundingRect(void) const override;
     QPainterPath shape(void) const override;

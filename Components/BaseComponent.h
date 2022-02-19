@@ -6,13 +6,16 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
+class CoreLogic;
+
 class BaseComponent : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    BaseComponent(void);
-    virtual BaseComponent* CloneBaseComponent() const = 0;
+    BaseComponent(const CoreLogic* pCoreLogic);
+
+    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const = 0;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent) override;
