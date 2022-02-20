@@ -23,6 +23,9 @@ public:
 
     virtual void ResetZValue(void) = 0;
 
+signals:
+    void SelectedComponentMovedSignal(QPointF pOffset);
+
 protected:
     uint32_t mWidth;
     uint32_t mHeight;

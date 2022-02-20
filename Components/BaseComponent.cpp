@@ -10,11 +10,22 @@ BaseComponent::BaseComponent(const CoreLogic* pCoreLogic):
 {
     Q_UNUSED(pCoreLogic);
     setPos(0, 0);
-    setFlags(ItemIsSelectable | ItemIsMovable | ItemSendsGeometryChanges);
-    setAcceptHoverEvents(true);
     setCursor(Qt::PointingHandCursor);
+    setFlags(ItemIsSelectable | ItemIsMovable);
+    setAcceptHoverEvents(true);
 
-    // Connect to CoreLogic
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
+        setCursor(Qt::ArrowCursor);
+        setFlag(ItemIsSelectable, false);
+        setFlag(ItemIsMovable, false);
+        setAcceptHoverEvents(false);
+    });
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
+        setCursor(Qt::PointingHandCursor);
+        setFlags(ItemIsSelectable | ItemIsMovable);
+        setAcceptHoverEvents(true);
+    });
+    QObject::connect(this, &BaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMoved);
 }
 
 void BaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
@@ -39,11 +50,7 @@ void BaseComponent::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
 
     if (offset.manhattanLength() > 0)
     {
-        if (scene() && scene()->views()[0] && static_cast<GraphicsView*>(scene()->views()[0])->GetView())
-        {
-            auto view = static_cast<GraphicsView*>(scene()->views()[0])->GetView();
-            view->OnComponentPositionChanged(offset);
-        }
+        emit SelectedComponentMovedSignal(offset);
     }
     update();
 }

@@ -33,11 +33,26 @@ void CoreLogic::ConnectToView()
 
 void CoreLogic::EnterControlMode(ControlMode pMode)
 {
-    mControlMode = pMode;
-    emit ControlModeChangedSignal(pMode);
-    if (mControlMode == ControlMode::ADD)
+    if (pMode != mControlMode)
     {
-        emit ComponentTypeChangedSignal(mComponentType);
+        if (mControlMode == ControlMode::SIMULATION)
+        {
+            mControlMode = pMode;
+            emit SimulationStopSignal();
+        }
+
+        mControlMode = pMode;
+        emit ControlModeChangedSignal(pMode);
+
+        if (pMode == ControlMode::ADD)
+        {
+            emit ComponentTypeChangedSignal(mComponentType);
+        }
+
+        if (pMode == ControlMode::SIMULATION)
+        {
+            emit SimulationStartSignal();
+        }
     }
 }
 
@@ -55,6 +70,16 @@ ComponentType CoreLogic::GetComponentType() const
 bool CoreLogic::IsSimulationRunning(void) const
 {
     return (mControlMode == ControlMode::SIMULATION);
+}
+
+bool CoreLogic::IsUndoQueueEmpty(void) const
+{
+    return mUndoQueue.empty();
+}
+
+bool CoreLogic::IsRedoQueueEmpty(void) const
+{
+    return mRedoQueue.empty();
 }
 
 void CoreLogic::SetComponentType(ComponentType pComponentType)
@@ -698,30 +723,35 @@ void CoreLogic::OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent
 {
     auto snappedPos = SnapToGrid(pMappedPos);
 
-    // Add ConPoint on X crossing
-    if (mControlMode == ControlMode::EDIT && IsXCrossingPoint(snappedPos) && !IsComponentAtPosition<ConPoint>(snappedPos))
+    if (mControlMode != ControlMode::SIMULATION)
     {
-        // Create a new ConPoint (removing will be handled by OnConnectionTypeChanged)
-        auto item = new ConPoint(this);
-        item->setPos(snappedPos);
-        std::vector<BaseComponent*> addedComponents{item};
-        mView.Scene()->addItem(item);
-        AppendUndo(new UndoAddType(addedComponents));
-        return;
-    }
+        // Add ConPoint on X crossing
+        if (mControlMode == ControlMode::EDIT && IsXCrossingPoint(snappedPos)
+                && !IsComponentAtPosition<ConPoint>(snappedPos)
+                && mView.Scene()->selectedItems().empty())
+        {
+            // Create a new ConPoint (removing will be handled by OnConnectionTypeChanged)
+            auto item = new ConPoint(this);
+            item->setPos(snappedPos);
+            std::vector<BaseComponent*> addedComponents{item};
+            mView.Scene()->addItem(item);
+            AppendUndo(new UndoAddType(addedComponents));
+            return;
+        }
 
-    // Add component at the current position
-    if (mControlMode == ControlMode::ADD)
-    {
-        AddCurrentTypeComponent(snappedPos);
-        return;
-    }
+        // Add component at the current position
+        if (mControlMode == ControlMode::ADD)
+        {
+            AddCurrentTypeComponent(snappedPos);
+            return;
+        }
 
-    // Start the preview wire at the current position
-    if (mControlMode == ControlMode::WIRE)
-    {
-        SetPreviewWireStart(snappedPos);
-        return;
+        // Start the preview wire at the current position
+        if (mControlMode == ControlMode::WIRE)
+        {
+            SetPreviewWireStart(snappedPos);
+            return;
+        }
     }
 
     emit MousePressedEventDefaultSignal(pEvent);
@@ -764,6 +794,7 @@ void CoreLogic::CopySelectedComponents()
         copy->setPos(SnapToGrid(orig->pos() + QPointF(canvas::GRID_SIZE, canvas::GRID_SIZE)));
         copy->setSelected(true);
         copy->ResetZValue();
+        copy->setZValue(copy->zValue() + 100); // Bring copied components to front
         mView.Scene()->addItem(copy);
         addedComponents.push_back(copy);
     }
@@ -810,6 +841,8 @@ void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
 {
     AppendToUndoQueue(pUndoObject, mUndoQueue);
     mRedoQueue.clear();
+
+    mView.SetUndoRedoButtonsEnableState();
 }
 
 void CoreLogic::AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue)
@@ -901,6 +934,7 @@ void CoreLogic::Undo()
         }
     }
     mView.Scene()->clearSelection();
+    mView.SetUndoRedoButtonsEnableState();
 }
 
 void CoreLogic::Redo()
@@ -982,4 +1016,5 @@ void CoreLogic::Redo()
         }
     }
     mView.Scene()->clearSelection();
+    mView.SetUndoRedoButtonsEnableState();
 }

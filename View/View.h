@@ -37,6 +37,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *pEvent) override;
     void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
     void keyPressEvent(QKeyEvent *pEvent) override;
+    void keyReleaseEvent(QKeyEvent *pEvent) override;
 
 protected:
     View &mView;
@@ -61,6 +62,8 @@ public:
     /// \return A QList of all items in mScene
     QList<QGraphicsItem*> Components(void);
 
+    void SetUndoRedoButtonsEnableState(void);
+
 public slots:
     void ZoomIn(int32_t pLevel);
     void ZoomOut(int32_t pLevel);
@@ -73,10 +76,8 @@ public slots:
     /// \param pNewType: The type of components to be added
     void OnComponentTypeChanged(ComponentType pNewType);
 
-    /// \brief Called when the position of an item changed, assuming pOffset
-    /// was applied to all selected components
-    /// \param pOffset: The position offset that was applied to the components
-    void OnComponentPositionChanged(QPointF pOffset);
+    void OnSimulationStart(void);
+    void OnSimulationStop(void);
 
 protected slots:
     void SetupMatrix(void);
@@ -87,6 +88,12 @@ protected:
 
     /// \brief Invokes connectors for all GUI components
     void ConnectGuiSignalsAndSlots(void);
+
+    /// \brief Performs tasks such as disabling buttons
+    void PrepareGuiForSimulation(void);
+
+    /// \brief Performs tasks such as enabling buttons
+    void PrepareGuiForEditing(void);
 
     /// \brief Creates a grid pattern for the canvas background
     /// \param pZoomLevel: The zoom level decides whether to draw the grid or not
@@ -112,6 +119,7 @@ protected:
     QToolButton *mAddOutputButton;
     QToolButton *mUndoButton;
     QToolButton *mRedoButton;
+    QToolButton *mSimulationButton;
 
     QLabel *mZoomLabel;
 

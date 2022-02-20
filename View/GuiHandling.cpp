@@ -62,11 +62,18 @@ void View::CreateGui()
     mUndoButton->setText(tr("Undo"));
     mUndoButton->setCheckable(false);
     mUndoButton->setChecked(false);
+    mUndoButton->setEnabled(false);
 
     mRedoButton = new QToolButton;
     mRedoButton->setText(tr("Redo"));
     mRedoButton->setCheckable(false);
     mRedoButton->setChecked(false);
+    mRedoButton->setEnabled(false);
+
+    mSimulationButton = new QToolButton;
+    mSimulationButton->setText(tr("Start"));
+    mSimulationButton->setCheckable(false);
+    mSimulationButton->setChecked(false);
 
     QButtonGroup *topButtonsGroup = new QButtonGroup(this);
     topButtonsGroup->setExclusive(true);
@@ -82,6 +89,7 @@ void View::CreateGui()
     topButtonsGroup->addButton(mAddOutputButton);
     topButtonsGroup->addButton(mUndoButton);
     topButtonsGroup->addButton(mRedoButton);
+    topButtonsGroup->addButton(mSimulationButton);
 
     topButtonsLayout->addStretch();
     topButtonsLayout->addWidget(mEditButton);
@@ -96,6 +104,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddOutputButton);
     topButtonsLayout->addWidget(mUndoButton);
     topButtonsLayout->addWidget(mRedoButton);
+    topButtonsLayout->addWidget(mSimulationButton);
     topButtonsLayout->addStretch();
 
     mZoomLabel = new QLabel(this);
@@ -112,37 +121,90 @@ void View::CreateGui()
     mGraphicsView.stackUnder(mZoomLabel);
 }
 
+void View::PrepareGuiForSimulation()
+{
+    mEditButton->setEnabled(false);
+    mAddWireButton->setEnabled(false);
+    mAddAndGateButton->setEnabled(false);
+    mAddOrGateButton->setEnabled(false);
+    mAddXorGateButton->setEnabled(false);
+    mAddNotGateButton->setEnabled(false);
+    mAddInputButton->setEnabled(false);
+    mAddOutputButton->setEnabled(false);
+    mDeleteButton->setEnabled(false);
+    mCopyButton->setEnabled(false);
+    mUndoButton->setEnabled(false);
+    mRedoButton->setEnabled(false);
+
+    mSimulationButton->setText(tr("Stop"));
+}
+
+void View::PrepareGuiForEditing()
+{
+    mEditButton->setEnabled(true);
+    mAddWireButton->setEnabled(true);
+    mAddAndGateButton->setEnabled(true);
+    mAddOrGateButton->setEnabled(true);
+    mAddXorGateButton->setEnabled(true);
+    mAddNotGateButton->setEnabled(true);
+    mAddInputButton->setEnabled(true);
+    mAddOutputButton->setEnabled(true);
+    mDeleteButton->setEnabled(true);
+    mCopyButton->setEnabled(true);
+
+    SetUndoRedoButtonsEnableState();
+
+    mSimulationButton->setText(tr("Start"));
+}
+
+void View::SetUndoRedoButtonsEnableState()
+{
+    mUndoButton->setEnabled(!mCoreLogic.IsSimulationRunning() && !mCoreLogic.IsUndoQueueEmpty());
+    mRedoButton->setEnabled(!mCoreLogic.IsSimulationRunning() && !mCoreLogic.IsRedoQueueEmpty());
+}
+
 void View::ConnectGuiSignalsAndSlots()
 {
-    QObject::connect(mEditButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mEditButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
     });
 
-    QObject::connect(mAddWireButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mSimulationButton, &QAbstractButton::clicked, [&](){
+        if (mCoreLogic.IsSimulationRunning())
+        {
+            mCoreLogic.EnterControlMode(ControlMode::EDIT);
+        }
+        else
+        {
+            mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+        }
+    });
+
+    QObject::connect(mAddWireButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterControlMode(ControlMode::WIRE);
     });
 
-    QObject::connect(mAddAndGateButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mAddAndGateButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::AND_GATE);
     });
 
-    QObject::connect(mAddOrGateButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mAddOrGateButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::OR_GATE);
     });
 
-    QObject::connect(mAddXorGateButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mAddXorGateButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::XOR_GATE);
     });
 
-    QObject::connect(mAddNotGateButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mAddNotGateButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::NOT_GATE);
     });
 
-    QObject::connect(mAddInputButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mAddInputButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::INPUT);
     });
 
-    QObject::connect(mAddOutputButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mAddOutputButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::OUTPUT);
     });
 

@@ -35,14 +35,15 @@ void LogicOutput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
 
     QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
              components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-    pPainter->setPen(pen);
 
     if (mState == LogicState::LOW)
     {
+        pPainter->setPen(pen);
         pPainter->setBrush(QBrush(components::FILL_COLOR));
     }
     else if (mState == LogicState::HIGH)
     {
+        pPainter->setPen(QPen(Qt::white));
         pPainter->setBrush(QBrush(Qt::white));
     }
 

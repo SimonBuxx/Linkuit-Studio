@@ -51,7 +51,7 @@ void LogicWire::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOptio
     }
     else if (mState == LogicState::HIGH)
     {
-        pen = QPen(Qt::white, components::BORDER_WIDTH + 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        pen = QPen(Qt::white, components::BORDER_WIDTH + 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     }
     pPainter->setPen(pen);
 

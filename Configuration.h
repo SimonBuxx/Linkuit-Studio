@@ -28,7 +28,7 @@ static constexpr int32_t MAX_ZOOM_LEVEL = 300;
 
 static constexpr int32_t MIN_GRID_ZOOM_LEVEL = 200;
 
-static constexpr QRectF DIMENSIONS(-16000, -16000, 32000, 32000);
+static constexpr QRectF DIMENSIONS(-32000, -32000, 64000, 64000);
 } // namespace
 
 namespace components

@@ -47,16 +47,21 @@ public:
     void CopySelectedComponents(void);
     void DeleteSelectedComponents(void);
 
-    void OnSelectedComponentsMoved(QPointF pOffset);
-
     bool IsSimulationRunning(void) const;
+
+    bool IsUndoQueueEmpty(void) const;
+    bool IsRedoQueueEmpty(void) const;
 
 signals:
     void ControlModeChangedSignal(ControlMode pNewMode);
     void ComponentTypeChangedSignal(ComponentType pNewType);
     void MousePressedEventDefaultSignal(QMouseEvent &pEvent);
 
+    void SimulationStartSignal(void);
+    void SimulationStopSignal(void);
+
 public slots:
+    void OnSelectedComponentsMoved(QPointF pOffset);
     void OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent);
     void OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType);
 

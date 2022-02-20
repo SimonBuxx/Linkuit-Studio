@@ -23,14 +23,16 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
 {
     if (pEvent->button() == Qt::LeftButton)
     {
-        emit LeftMouseButtonPressedEvent(mapToScene(pEvent->pos()), *pEvent);
         mIsLeftMousePressed = true;
         if (pEvent->modifiers() & Qt::ControlModifier)
         {
             // Start panning
             mPanStart = pEvent->pos();
-            setCursor(Qt::ClosedHandCursor);
             pEvent->accept();
+        }
+        else
+        {
+            emit LeftMouseButtonPressedEvent(mapToScene(pEvent->pos()), *pEvent);
         }
         return;
     }
@@ -48,7 +50,6 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
     if (pEvent->button() == Qt::LeftButton)
     {
         mIsLeftMousePressed = false;
-        setCursor(Qt::ArrowCursor);
 
         if (pEvent->modifiers() & Qt::ControlModifier)
         {
@@ -63,10 +64,13 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
             return;
         }
 
-        // Snap all potentially moved components to grid
-        for (auto& comp : scene()->selectedItems())
+        if (!mCoreLogic.IsSimulationRunning())
         {
-            comp->setPos(SnapToGrid(comp->pos()));
+            // Snap all potentially moved components to grid
+            for (auto& comp : scene()->selectedItems())
+            {
+                comp->setPos(SnapToGrid(comp->pos()));
+            }
         }
     }
 
@@ -104,20 +108,45 @@ void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 {
-#warning Check that hotkey actions are permitted (simulation is not running etc.)
     switch (pEvent->key())
     {
         case Qt::Key_Escape:
         {
-            // Enter edit mode
+            // Enter edit mode (may cancel simulation)
             mCoreLogic.EnterControlMode(ControlMode::EDIT);
             break;
         }
         case Qt::Key_Delete:
         {
-            mCoreLogic.DeleteSelectedComponents();
+            if (!mCoreLogic.IsSimulationRunning())
+            {
+                mCoreLogic.DeleteSelectedComponents();
+            }
             break;
         }
+        case Qt::Key_Return:
+        {
+            if (mCoreLogic.IsSimulationRunning())
+            {
+                mCoreLogic.EnterControlMode(ControlMode::EDIT);
+            }
+            else
+            {
+                mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+}
+
+void GraphicsView::keyReleaseEvent(QKeyEvent *pEvent)
+{
+    switch (pEvent->key())
+    {
         default:
         {
             break;

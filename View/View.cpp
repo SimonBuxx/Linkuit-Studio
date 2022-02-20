@@ -43,6 +43,9 @@ void View::Init()
     QObject::connect(&mGraphicsView, &GraphicsView::LeftMouseButtonPressedEvent, &mCoreLogic, &CoreLogic::OnLeftMouseButtonPressed);
     QObject::connect(&mCoreLogic, &CoreLogic::MousePressedEventDefaultSignal, &mGraphicsView, &GraphicsView::OnMousePressedEventDefault);
 
+    QObject::connect(&mCoreLogic, &CoreLogic::SimulationStartSignal, this, &View::OnSimulationStart);
+    QObject::connect(&mCoreLogic, &CoreLogic::SimulationStopSignal, this, &View::OnSimulationStop);
+
     SetupMatrix();
 }
 
@@ -122,9 +125,16 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
     }
 }
 
-void View::OnComponentPositionChanged(QPointF pOffset)
+void View::OnSimulationStart()
 {
-    mCoreLogic.OnSelectedComponentsMoved(pOffset);
+    PrepareGuiForSimulation();
+    mGraphicsView.setDragMode(QGraphicsView::NoDrag);
+}
+
+void View::OnSimulationStop()
+{
+    PrepareGuiForEditing();
+    mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
 }
 
 void View::SetupMatrix()

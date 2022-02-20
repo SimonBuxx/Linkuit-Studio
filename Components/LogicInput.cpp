@@ -1,4 +1,5 @@
 #include "LogicInput.h"
+#include "CoreLogic.h"
 #include "Configuration.h"
 
 LogicInput::LogicInput(const CoreLogic* pCoreLogic):
@@ -9,6 +10,14 @@ LogicInput::LogicInput(const CoreLogic* pCoreLogic):
     mWidth = canvas::GRID_SIZE;
     mHeight = canvas::GRID_SIZE;
     mState = LogicState::LOW;
+
+    // Overwrite base behavior to keep hand cursor
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
+        setCursor(Qt::PointingHandCursor);
+        setFlag(ItemIsSelectable, false);
+        setFlag(ItemIsMovable, false);
+        setAcceptHoverEvents(false);
+    });
 }
 
 LogicInput::LogicInput(const LogicInput& pObj, const CoreLogic* pCoreLogic):
@@ -37,14 +46,16 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
 
     QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
              components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-    pPainter->setPen(pen);
+
 
     if (mState == LogicState::LOW)
     {
+        pPainter->setPen(pen);
         pPainter->setBrush(QBrush(components::FILL_COLOR));
     }
     else if (mState == LogicState::HIGH)
     {
+        pPainter->setPen(QPen(Qt::white));
         pPainter->setBrush(QBrush(Qt::white));
     }
 
