@@ -1,7 +1,9 @@
 #include "NotGate.h"
+#include "CoreLogic.h"
+#include "LogicCells/LogicNotGateCell.h"
 
 NotGate::NotGate(const CoreLogic* pCoreLogic, Direction pDirection):
-    AbstractGate(pCoreLogic, 1, pDirection)
+    AbstractGate(pCoreLogic, std::make_shared<LogicNotGateCell>(), 1, pDirection)
 {
     mComponentText = components::gates::NOT_TEXT;
     mOutputInverted = true;
@@ -15,6 +17,7 @@ NotGate::NotGate(const NotGate& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
     mOutputInverted = pObj.mOutputInverted;
     mInputInverted= pObj.mInputInverted;
+    mLogicCell = std::make_shared<LogicNotGateCell>();
 };
 
 BaseComponent* NotGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const

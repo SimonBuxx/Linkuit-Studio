@@ -1,7 +1,7 @@
 #include "RectComponent.h"
 
-RectComponent::RectComponent(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic)
+RectComponent::RectComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell):
+    BaseComponent(pCoreLogic, pLogicCell)
 {}
 
 void RectComponent::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)

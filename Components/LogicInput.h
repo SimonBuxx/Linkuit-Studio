@@ -3,6 +3,7 @@
 
 #include "BaseComponent.h"
 #include "HelperStructures.h"
+#include "LogicCells/LogicInputCell.h"
 
 class LogicInput : public BaseComponent
 {
@@ -13,6 +14,8 @@ public:
 
     virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
+
     QRectF boundingRect(void) const override;
     QPainterPath shape(void) const override;
 
@@ -20,9 +23,6 @@ public:
 
 protected:
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
-
-protected:
-    LogicState mState;
 };
 
 #endif // LOGICINPUT_H

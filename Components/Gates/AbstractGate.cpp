@@ -1,7 +1,7 @@
 #include "AbstractGate.h"
 
-AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection):
-    RectComponent(pCoreLogic),
+AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, Direction pDirection):
+    RectComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),
     mDirection(pDirection),
     mInputInverted(pInputCount, false)

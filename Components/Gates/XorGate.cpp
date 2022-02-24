@@ -1,7 +1,9 @@
 #include "XorGate.h"
+#include "CoreLogic.h"
+#include "LogicCells/LogicXorGateCell.h"
 
 XorGate::XorGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection):
-    AbstractGate(pCoreLogic, pInputCount, pDirection)
+    AbstractGate(pCoreLogic, std::make_shared<LogicXorGateCell>(pInputCount), pInputCount, pDirection)
 {
     mComponentText = components::gates::XOR_TEXT;
 }
@@ -14,6 +16,7 @@ XorGate::XorGate(const XorGate& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
     mOutputInverted = pObj.mOutputInverted;
     mInputInverted= pObj.mInputInverted;
+    mLogicCell = std::make_shared<LogicXorGateCell>(mInputCount);
 };
 
 BaseComponent* XorGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const

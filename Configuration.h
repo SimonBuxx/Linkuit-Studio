@@ -11,7 +11,7 @@ static constexpr uint8_t MAX_UNDO_STACK_SIZE = 100;
 
 namespace gui
 {
-static constexpr const char* WINDOW_TITLE = "LS22 - Logic Simulator 22";
+static constexpr const char* WINDOW_TITLE = "Linkuit Studio";
 } // namespace
 
 namespace canvas

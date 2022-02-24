@@ -21,7 +21,7 @@ MainWindow::MainWindow(QGraphicsScene &pScene):
     setLayout(layout);
 
     setWindowTitle(tr(gui::WINDOW_TITLE));
-    setWindowIcon(QIcon(":/images/icon.png"));
+    setWindowIcon(QIcon(":/images/linkuit_icon3.png"));
 }
 
 View& MainWindow::GetView()

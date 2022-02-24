@@ -1,8 +1,9 @@
 #include "LogicWire.h"
+#include "CoreLogic.h"
 #include "Configuration.h"
 
 LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint32_t pLength):
-    BaseComponent(pCoreLogic),
+    BaseComponent(pCoreLogic, nullptr),
     mDirection(pDirection),
     mState(LogicState::LOW)
 {
@@ -18,16 +19,15 @@ LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint
         mWidth = components::wires::BOUNDING_RECT_SIZE;
         mHeight = pLength;
     }
+
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
+        mState = LogicState::LOW;
+    });
 }
 
 LogicWire::LogicWire(const LogicWire& pObj, const CoreLogic* pCoreLogic):
     LogicWire(pCoreLogic, pObj.mDirection, pObj.GetLength())
-{
-    mWidth = pObj.mWidth;
-    mHeight = pObj.mHeight;
-    mDirection = pObj.mDirection;
-    mState = pObj.mState;
-};
+{};
 
 BaseComponent* LogicWire::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
@@ -77,7 +77,7 @@ void LogicWire::SetLength(uint32_t pLength)
     }
 }
 
-uint32_t LogicWire::GetLength(void) const
+uint32_t LogicWire::GetLength() const
 {
     if (mDirection == WireDirection::HORIZONTAL)
     {
@@ -89,7 +89,7 @@ uint32_t LogicWire::GetLength(void) const
     }
 }
 
-WireDirection LogicWire::GetDirection(void) const
+WireDirection LogicWire::GetDirection() const
 {
     return mDirection;
 }

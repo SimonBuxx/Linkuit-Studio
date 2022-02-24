@@ -5,8 +5,10 @@
 #include <QApplication>
 #include <QGraphicsScene>
 
-BaseComponent::BaseComponent(const CoreLogic* pCoreLogic):
-    mMoveStartPoint(pos())
+BaseComponent::BaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell):
+    mMoveStartPoint(pos()),
+    mSimulationRunning(false),
+    mLogicCell(pLogicCell)
 {
     Q_UNUSED(pCoreLogic);
     setPos(0, 0);
@@ -19,11 +21,13 @@ BaseComponent::BaseComponent(const CoreLogic* pCoreLogic):
         setFlag(ItemIsSelectable, false);
         setFlag(ItemIsMovable, false);
         setAcceptHoverEvents(false);
+        mSimulationRunning = true;
     });
     QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
         setCursor(Qt::PointingHandCursor);
         setFlags(ItemIsSelectable | ItemIsMovable);
         setAcceptHoverEvents(true);
+        mSimulationRunning = false;
     });
     QObject::connect(this, &BaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMoved);
 }

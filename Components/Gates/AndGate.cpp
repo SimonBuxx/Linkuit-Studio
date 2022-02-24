@@ -1,9 +1,15 @@
 #include "AndGate.h"
+#include "CoreLogic.h"
+#include "LogicCells/LogicAndGateCell.h"
 
 AndGate::AndGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection):
-    AbstractGate(pCoreLogic, pInputCount, pDirection)
+    AbstractGate(pCoreLogic, std::make_shared<LogicAndGateCell>(pInputCount), pInputCount, pDirection)
 {
     mComponentText = components::gates::AND_TEXT;
+
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
+        std::static_pointer_cast<LogicAndGateCell>(mLogicCell)->Shutdown();
+    });
 }
 
 AndGate::AndGate(const AndGate& pObj, const CoreLogic* pCoreLogic):
@@ -14,6 +20,7 @@ AndGate::AndGate(const AndGate& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
     mOutputInverted = pObj.mOutputInverted;
     mInputInverted= pObj.mInputInverted;
+    mLogicCell = std::make_shared<LogicAndGateCell>(mInputCount);
 };
 
 BaseComponent* AndGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const

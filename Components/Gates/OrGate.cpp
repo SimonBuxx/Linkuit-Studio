@@ -1,7 +1,9 @@
 #include "OrGate.h"
+#include "CoreLogic.h"
+#include "LogicCells/LogicOrGateCell.h"
 
 OrGate::OrGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection):
-    AbstractGate(pCoreLogic, pInputCount, pDirection)
+    AbstractGate(pCoreLogic, std::make_shared<LogicOrGateCell>(pInputCount), pInputCount, pDirection)
 {
     mComponentText = components::gates::OR_TEXT;
 }
@@ -14,6 +16,7 @@ OrGate::OrGate(const OrGate& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
     mOutputInverted = pObj.mOutputInverted;
     mInputInverted= pObj.mInputInverted;
+    mLogicCell = std::make_shared<LogicOrGateCell>(mInputCount);
 };
 
 BaseComponent* OrGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const

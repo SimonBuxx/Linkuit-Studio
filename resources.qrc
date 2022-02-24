@@ -1,5 +1,8 @@
 <RCC>
-    <qresource>
-        <file>images/icon.png</file>
+    <qresource prefix="/">
+        <file>images/linkuit_icon.png</file>
+        <file>images/linkuit_icon2.png</file>
+        <file>images/linkuit_icon3.png</file>
+        <file>images/linkuit_icon4.png</file>
     </qresource>
 </RCC>

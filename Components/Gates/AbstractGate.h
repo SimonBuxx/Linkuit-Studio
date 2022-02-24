@@ -7,8 +7,7 @@ class AbstractGate : public RectComponent
 {
     Q_OBJECT
 public:
-    AbstractGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection);
-    AbstractGate(AbstractGate& pObj, const CoreLogic* pCoreLogic);
+    AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, Direction pDirection);
     virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override = 0;
 
     QRectF boundingRect(void) const override;

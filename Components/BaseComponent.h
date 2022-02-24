@@ -1,6 +1,8 @@
 #ifndef BASECOMPONENT_H
 #define BASECOMPONENT_H
 
+#include "LogicCells/LogicBaseCell.h"
+
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
@@ -13,7 +15,7 @@ class BaseComponent : public QObject, public QGraphicsItem
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    BaseComponent(const CoreLogic* pCoreLogic);
+    BaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell);
 
     virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const = 0;
 
@@ -31,6 +33,10 @@ protected:
     uint32_t mHeight;
 
     QPointF mMoveStartPoint;
+
+    bool mSimulationRunning;
+
+    std::shared_ptr<LogicBaseCell> mLogicCell;
 };
 
 #endif // BASECOMPONENT_H

@@ -3,20 +3,19 @@
 #include "Configuration.h"
 
 LogicInput::LogicInput(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic)
+    BaseComponent(pCoreLogic, std::make_shared<LogicInputCell>())
 {
     setZValue(components::zvalues::INPUT);
 
     mWidth = canvas::GRID_SIZE;
     mHeight = canvas::GRID_SIZE;
-    mState = LogicState::LOW;
 
-    // Overwrite base behavior to keep hand cursor
     QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
         setCursor(Qt::PointingHandCursor);
-        setFlag(ItemIsSelectable, false);
-        setFlag(ItemIsMovable, false);
-        setAcceptHoverEvents(false);
+    });
+
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
+        std::static_pointer_cast<LogicInputCell>(mLogicCell)->Shutdown();
     });
 }
 
@@ -25,12 +24,21 @@ LogicInput::LogicInput(const LogicInput& pObj, const CoreLogic* pCoreLogic):
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
-    mState = pObj.mState;
+    mLogicCell = std::make_shared<LogicInputCell>();
 };
 
 BaseComponent* LogicInput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicInput(*this, pCoreLogic);
+}
+
+void LogicInput::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
+{
+    if (mSimulationRunning)
+    {
+        std::static_pointer_cast<LogicInputCell>(mLogicCell)->ToggleState();
+    }
+    BaseComponent::mousePressEvent(pEvent);
 }
 
 void LogicInput::ResetZValue()
@@ -44,16 +52,15 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
 
     const double levelOfDetail = pOption->levelOfDetailFromTransform(pPainter->worldTransform());
 
-    QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
-             components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-
-
-    if (mState == LogicState::LOW)
+    if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetState() == LogicState::LOW)
     {
+        QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
+                 components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
         pPainter->setPen(pen);
         pPainter->setBrush(QBrush(components::FILL_COLOR));
     }
-    else if (mState == LogicState::HIGH)
+    else if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetState() == LogicState::HIGH)
     {
         pPainter->setPen(QPen(Qt::white));
         pPainter->setBrush(QBrush(Qt::white));

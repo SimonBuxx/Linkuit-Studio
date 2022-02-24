@@ -9,7 +9,7 @@ class RectComponent : public BaseComponent
 {
     Q_OBJECT
 public:
-    RectComponent(const CoreLogic* pCoreLogic);
+    RectComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell);
 
     virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override = 0;
 

@@ -3,6 +3,7 @@
 
 #include "BaseComponent.h"
 #include "HelperStructures.h"
+#include "LogicCells/LogicOutputCell.h"
 
 class LogicOutput : public BaseComponent
 {
@@ -20,9 +21,6 @@ public:
 
 protected:
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
-
-protected:
-    LogicState mState;
 };
 
 #endif // LOGICOUTPUT_H

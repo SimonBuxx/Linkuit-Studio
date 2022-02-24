@@ -1,14 +1,18 @@
 #include "LogicOutput.h"
+#include "CoreLogic.h"
 #include "Configuration.h"
 
 LogicOutput::LogicOutput(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic)
+    BaseComponent(pCoreLogic, std::make_shared<LogicOutputCell>())
 {
     setZValue(components::zvalues::OUTPUT);
 
     mWidth = canvas::GRID_SIZE;
     mHeight = canvas::GRID_SIZE;
-    mState = LogicState::LOW;
+
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
+        std::static_pointer_cast<LogicOutputCell>(mLogicCell)->Shutdown();
+    });
 }
 
 LogicOutput::LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic):
@@ -16,7 +20,7 @@ LogicOutput::LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic):
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
-    mState = pObj.mState;
+    mLogicCell = std::make_shared<LogicOutputCell>();
 };
 
 BaseComponent* LogicOutput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
@@ -33,15 +37,15 @@ void LogicOutput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
 {
     Q_UNUSED(pWidget);
 
-    QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
-             components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-
-    if (mState == LogicState::LOW)
+    if (std::static_pointer_cast<LogicOutputCell>(mLogicCell)->GetState() == LogicState::LOW)
     {
+        QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
+                 components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
         pPainter->setPen(pen);
         pPainter->setBrush(QBrush(components::FILL_COLOR));
     }
-    else if (mState == LogicState::HIGH)
+    else if (std::static_pointer_cast<LogicOutputCell>(mLogicCell)->GetState() == LogicState::HIGH)
     {
         pPainter->setPen(QPen(Qt::white));
         pPainter->setBrush(QBrush(Qt::white));

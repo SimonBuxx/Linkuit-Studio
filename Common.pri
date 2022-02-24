@@ -1,5 +1,12 @@
 HEADERS += \
     $$PWD/Components/ConPoint.h \
+    $$PWD/LogicCells/LogicAndGateCell.h \
+    $$PWD/LogicCells/LogicBaseCell.h \
+    $$PWD/LogicCells/LogicInputCell.h \
+    $$PWD/LogicCells/LogicNotGateCell.h \
+    $$PWD/LogicCells/LogicOrGateCell.h \
+    $$PWD/LogicCells/LogicOutputCell.h \
+    $$PWD/LogicCells/LogicXorGateCell.h \
     $${PWD}/Components/BaseComponent.h \
     $${PWD}/Components/Gates/AbstractGate.h \
     $${PWD}/Components/Gates/AndGate.h \
@@ -24,6 +31,13 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/Components/ConPoint.cpp \
+    $$PWD/LogicCells/LogicAndGateCell.cpp \
+    $$PWD/LogicCells/LogicBaseCell.cpp \
+    $$PWD/LogicCells/LogicInputCell.cpp \
+    $$PWD/LogicCells/LogicNotGateCell.cpp \
+    $$PWD/LogicCells/LogicOrGateCell.cpp \
+    $$PWD/LogicCells/LogicOutputCell.cpp \
+    $$PWD/LogicCells/LogicXorGateCell.cpp \
     $${PWD}/Components/BaseComponent.cpp \
     $${PWD}/Components/Gates/AbstractGate.cpp \
     $${PWD}/Components/Gates/AndGate.cpp \

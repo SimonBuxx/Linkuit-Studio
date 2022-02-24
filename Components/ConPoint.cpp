@@ -4,7 +4,7 @@
 #include "HelperFunctions.h"
 
 ConPoint::ConPoint(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic),
+    BaseComponent(pCoreLogic, nullptr),
     mState(LogicState::LOW)
 {
     setZValue(components::zvalues::CONPOINT);
