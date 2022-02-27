@@ -1,7 +1,7 @@
 #ifndef LOGICOUTPUTCELL_H
 #define LOGICOUTPUTCELL_H
 
-#include "LogicBaseCell.h"
+#include "Components/LogicBaseCell.h"
 
 class LogicOutputCell : public LogicBaseCell
 {

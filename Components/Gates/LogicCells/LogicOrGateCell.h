@@ -1,7 +1,7 @@
 #ifndef LOGICORGATECELL_H
 #define LOGICORGATECELL_H
 
-#include "LogicBaseCell.h"
+#include "Components/LogicBaseCell.h"
 
 class LogicOrGateCell : public LogicBaseCell
 {

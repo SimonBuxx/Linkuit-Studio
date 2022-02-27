@@ -9,7 +9,8 @@ enum class ComponentType
     XOR_GATE,
     NOT_GATE,
     INPUT,
-    OUTPUT
+    OUTPUT,
+    TEXT_LABEL
 };
 
 enum class Direction

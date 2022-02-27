@@ -1,21 +1,23 @@
-#ifndef LOGICOUTPUT_H
-#define LOGICOUTPUT_H
+#ifndef LOGICINPUT_H
+#define LOGICINPUT_H
 
-#include "BaseComponent.h"
+#include "../BaseComponent.h"
 #include "HelperStructures.h"
-#include "LogicCells/LogicOutputCell.h"
+#include "LogicCells/LogicInputCell.h"
 
-class LogicOutput : public BaseComponent
+class LogicInput : public BaseComponent
 {
     Q_OBJECT
 public:
-    LogicOutput(const CoreLogic* pCoreLogic);
-    LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic);
+    LogicInput(const CoreLogic* pCoreLogic);
+    LogicInput(const LogicInput& pObj, const CoreLogic* pCoreLogic);
 
-    /// \brief Clone function for the output component
+    /// \brief Clone function for the input component
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \return A pointer to the new component
     virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
 
     /// \brief Defines the bounding rect of this component
     /// \return A rectangle describing the bounding rect
@@ -29,11 +31,11 @@ public:
     void ResetZValue(void) override;
 
 protected:
-    /// \brief Paints the output component
+    /// \brief Paints the input component
     /// \param pPainter: The painter to use
     /// \param pItem: Contains drawing parameters
     /// \param pWidget: Unused, the widget that is been painted on
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 };
 
-#endif // LOGICOUTPUT_H
+#endif // LOGICINPUT_H

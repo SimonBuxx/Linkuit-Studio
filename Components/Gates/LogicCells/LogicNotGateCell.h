@@ -1,16 +1,14 @@
-#ifndef LOGICINPUTCELL_H
-#define LOGICINPUTCELL_H
+#ifndef LOGICNOTGATECELL_H
+#define LOGICNOTGATECELL_H
 
-#include "LogicBaseCell.h"
+#include "Components/LogicBaseCell.h"
 
-class LogicInputCell : public LogicBaseCell
+class LogicNotGateCell : public LogicBaseCell
 {
 public:
-    LogicInputCell();
+    LogicNotGateCell();
 
     void LogicFunction(void) override;
-
-    void ToggleState(void);
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
@@ -18,8 +16,9 @@ public slots:
     void OnShutdown(void) override;
 
 protected:
-    LogicState mState;
+    LogicState mCurrentState;
+    LogicState mNextState;
     bool mStateChanged;
 };
 
-#endif // LOGICINPUTCELL_H
+#endif // LOGICNOTGATECELL_H

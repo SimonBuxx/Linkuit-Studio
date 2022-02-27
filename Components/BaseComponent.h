@@ -1,7 +1,7 @@
 #ifndef BASECOMPONENT_H
 #define BASECOMPONENT_H
 
-#include "LogicCells/LogicBaseCell.h"
+#include "LogicBaseCell.h"
 
 #include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>

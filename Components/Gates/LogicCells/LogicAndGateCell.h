@@ -1,12 +1,12 @@
-#ifndef LOGICXORGATECELL_H
-#define LOGICXORGATECELL_H
+#ifndef LOGICANDGATECELL_H
+#define LOGICANDGATECELL_H
 
-#include "LogicBaseCell.h"
+#include "Components/LogicBaseCell.h"
 
-class LogicXorGateCell : public LogicBaseCell
+class LogicAndGateCell : public LogicBaseCell
 {
 public:
-    LogicXorGateCell(uint32_t pInputs);
+    LogicAndGateCell(uint32_t pInputs);
 
     void LogicFunction(void) override;
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
@@ -21,4 +21,4 @@ protected:
     bool mStateChanged;
 };
 
-#endif // LOGICXORGATECELL_H
+#endif // LOGICANDGATECELL_H

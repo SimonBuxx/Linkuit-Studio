@@ -4,8 +4,9 @@
 #include "Components/Gates/OrGate.h"
 #include "Components/Gates/XorGate.h"
 #include "Components/Gates/NotGate.h"
-#include "Components/LogicInput.h"
-#include "Components/LogicOutput.h"
+#include "Components/Inputs/LogicInput.h"
+#include "Components/Outputs/LogicOutput.h"
+#include "Components/TextLabel.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -58,7 +59,7 @@ void CoreLogic::EnterControlMode(ControlMode pMode)
             ParseWireGroups();
             CreateWireLogicCells();
             ConnectLogicCells();
-            qDebug() << "Found " << mWireGroups.size() << " groups";
+            //qDebug() << "Found " << mWireGroups.size() << " groups";
             mPropagationTimer.start(simulation::PROPAGATION_DELAY);
             emit SimulationStartSignal();
         }
@@ -136,6 +137,11 @@ BaseComponent* CoreLogic::GetItem()
         case ComponentType::OUTPUT:
         {
             item = new LogicOutput(this);
+            break;
+        }
+        case ComponentType::TEXT_LABEL:
+        {
+            item = new TextLabel(this);
             break;
         }
         default:
@@ -763,7 +769,7 @@ void CoreLogic::ConnectLogicCells()
                     {
                         std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
                         compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, out);
-                        qDebug() << "Connected comp output " << out << " to wire";
+                        //qDebug() << "Connected comp output " << out << " to wire";
                     }
                 }
 
@@ -772,7 +778,7 @@ void CoreLogic::ConnectLogicCells()
                     if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[in].pos)))
                     {
                         std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), in);
-                        qDebug() << "Connected wire to comp, input " << in;
+                        //qDebug() << "Connected wire to comp, input " << in;
                     }
                 }
             }

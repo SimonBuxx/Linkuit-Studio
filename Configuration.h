@@ -44,13 +44,14 @@ enum zvalues
     CONPOINT,
     GATE,
     INPUT,
-    OUTPUT
+    OUTPUT,
+    TEXT_LABEL
 };
 
 static constexpr QColor FILL_COLOR(0, 88, 61);
 static constexpr QColor SELECTED_BORDER_COLOR(255, 255, 255);
 static constexpr QColor SELECTED_COMPONENT_COLOR(255, 255, 255);
-static constexpr QColor HIGH_COLOR(0, 184, 129);
+static constexpr QColor HIGH_COLOR(0, 204, 143);
 
 static constexpr uint8_t BORDER_WIDTH = 2;
 
@@ -79,7 +80,7 @@ namespace wires
 static constexpr uint8_t BOUNDING_RECT_SIZE = 20;
 static constexpr QColor WIRE_LOW_COLOR(0, 64, 45);
 static constexpr QColor WIRE_HIGH_COLOR(0, 143, 100);
-
+static constexpr uint8_t WIRE_WIDTH = 2;
 } // namespace
 
 namespace conpoints
@@ -94,6 +95,11 @@ namespace diodes
 {
 static constexpr uint32_t SIZE = 15;
 } // namespace
+namespace text_label {
+static const QFont FONT("Calibri Light", 10);
+static constexpr QColor FONT_COLOR(255, 255, 255);
+} // namespace
+
 } // namespace
 
 #endif // CONFIGURATION_H

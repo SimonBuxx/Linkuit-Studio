@@ -5,7 +5,7 @@
 #include "Undo/UndoBaseType.h"
 #include "Components/LogicWire.h"
 #include "Components/ConPoint.h"
-#include "LogicCells/LogicWireCell.h"
+#include "Components/LogicWireCell.h"
 #include "Configuration.h"
 
 #include <QGraphicsItem>

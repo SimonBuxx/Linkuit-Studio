@@ -117,6 +117,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddOutputButton->setChecked(true);
             break;
         }
+        case ComponentType::TEXT_LABEL:
+        {
+            mAddTextLabelButton->setChecked(true);
+            break;
+        }
         default:
         {
             mEditButton->setChecked(true);

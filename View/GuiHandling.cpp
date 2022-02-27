@@ -58,6 +58,11 @@ void View::CreateGui()
     mAddOutputButton->setCheckable(true);
     mAddOutputButton->setChecked(false);
 
+    mAddTextLabelButton = new QToolButton;
+    mAddTextLabelButton->setText(tr("Label"));
+    mAddTextLabelButton->setCheckable(true);
+    mAddTextLabelButton->setChecked(false);
+
     mUndoButton = new QToolButton;
     mUndoButton->setText(tr("Undo"));
     mUndoButton->setCheckable(false);
@@ -87,6 +92,7 @@ void View::CreateGui()
     topButtonsGroup->addButton(mAddNotGateButton);
     topButtonsGroup->addButton(mAddInputButton);
     topButtonsGroup->addButton(mAddOutputButton);
+    topButtonsGroup->addButton(mAddTextLabelButton);
     topButtonsGroup->addButton(mUndoButton);
     topButtonsGroup->addButton(mRedoButton);
     topButtonsGroup->addButton(mSimulationButton);
@@ -102,6 +108,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddNotGateButton);
     topButtonsLayout->addWidget(mAddInputButton);
     topButtonsLayout->addWidget(mAddOutputButton);
+    topButtonsLayout->addWidget(mAddTextLabelButton);
     topButtonsLayout->addWidget(mUndoButton);
     topButtonsLayout->addWidget(mRedoButton);
     topButtonsLayout->addWidget(mSimulationButton);
@@ -131,6 +138,7 @@ void View::PrepareGuiForSimulation()
     mAddNotGateButton->setEnabled(false);
     mAddInputButton->setEnabled(false);
     mAddOutputButton->setEnabled(false);
+    mAddTextLabelButton->setEnabled(false);
     mDeleteButton->setEnabled(false);
     mCopyButton->setEnabled(false);
     mUndoButton->setEnabled(false);
@@ -149,6 +157,7 @@ void View::PrepareGuiForEditing()
     mAddNotGateButton->setEnabled(true);
     mAddInputButton->setEnabled(true);
     mAddOutputButton->setEnabled(true);
+    mAddTextLabelButton->setEnabled(true);
     mDeleteButton->setEnabled(true);
     mCopyButton->setEnabled(true);
 
@@ -206,6 +215,10 @@ void View::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mAddOutputButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::OUTPUT);
+    });
+
+    QObject::connect(mAddTextLabelButton, &QAbstractButton::clicked, [&](){
+        mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
     });
 
     QObject::connect(mDeleteButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::DeleteSelectedComponents);
