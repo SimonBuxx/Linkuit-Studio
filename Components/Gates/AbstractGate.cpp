@@ -47,7 +47,25 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
                 {
                     for (size_t i = 0; i < mInputCount; i++)
                     {
+                        if (mLogicCell->GetInputState(i) == LogicState::HIGH)
+                        {
+                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                        }
+                        else
+                        {
+                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                                  components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                        }
                         pPainter->drawLine(-8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+                    }
+                    if (mLogicCell->GetOutputState() == LogicState::HIGH)
+                    {
+                        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                    }
+                    else
+                    {
+                        pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                              components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
                     }
                     pPainter->drawLine(mWidth, mHeight / 2, mWidth + 8, mHeight / 2);
                     break;
@@ -56,7 +74,25 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
                 {
                     for (size_t i = 0; i < mInputCount; i++)
                     {
+                        if (mLogicCell->GetInputState(i) == LogicState::HIGH)
+                        {
+                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                        }
+                        else
+                        {
+                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                                  components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                        }
                         pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
+                    }
+                    if (mLogicCell->GetOutputState() == LogicState::HIGH)
+                    {
+                        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                    }
+                    else
+                    {
+                        pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                              components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
                     }
                     pPainter->drawLine(mWidth / 2, mHeight, mWidth / 2, mHeight + 8);
                     break;
@@ -65,7 +101,25 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
                 {
                     for (size_t i = 0; i < mInputCount; i++)
                     {
+                        if (mLogicCell->GetInputState(i) == LogicState::HIGH)
+                        {
+                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                        }
+                        else
+                        {
+                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                                  components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                        }
                         pPainter->drawLine(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+                    }
+                    if (mLogicCell->GetOutputState() == LogicState::HIGH)
+                    {
+                        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                    }
+                    else
+                    {
+                        pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                              components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
                     }
                     pPainter->drawLine(-8, mHeight / 2, 0, mHeight / 2);
                     break;
@@ -74,7 +128,25 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
                 {
                     for (size_t i = 0; i < mInputCount; i++)
                     {
+                        if (mLogicCell->GetInputState(i) == LogicState::HIGH)
+                        {
+                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                        }
+                        else
+                        {
+                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                                  components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                        }
                         pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
+                    }
+                    if (mLogicCell->GetOutputState() == LogicState::HIGH)
+                    {
+                        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                    }
+                    else
+                    {
+                        pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                              components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
                     }
                     pPainter->drawLine(mWidth / 2, -8, mWidth / 2, 0);
                     break;
@@ -160,7 +232,7 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
 
     // Draw gate body
     {
-        QPen pen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
+        QPen pen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::FILL_COLOR,
                  components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
         pPainter->setPen(pen);
         pPainter->setBrush(QBrush(components::FILL_COLOR));
@@ -178,7 +250,7 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
     // Draw description text
     if (levelOfDetail >= components::DESCRIPTION_TEXT_MIN_LOD)
     {
-        pPainter->setPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : Qt::white);
+        pPainter->setPen(components::gates::FONT_COLOR);
         pPainter->setFont(components::gates::FONT);
         pPainter->drawText(boundingRect(), mComponentText, Qt::AlignHCenter | Qt::AlignVCenter);
     }

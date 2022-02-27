@@ -12,7 +12,7 @@ public:
 
     void LogicFunction(void) override;
 
-    LogicState GetState(void) const;
+    LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
     void AppendOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput);
     void AddInputSlot(void);

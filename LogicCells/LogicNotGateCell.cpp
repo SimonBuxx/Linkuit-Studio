@@ -11,14 +11,14 @@ void LogicNotGateCell::LogicFunction()
     {
         case LogicState::LOW:
         {
-            mOutputState = LogicState::HIGH;
+            mNextState = LogicState::HIGH;
             mStateChanged = true;
             emit StateChangedSignal();
             break;
         }
         case LogicState::HIGH:
         {
-            mOutputState = LogicState::LOW;
+            mNextState = LogicState::LOW;
             mStateChanged = true;
             emit StateChangedSignal();
             break;
@@ -30,11 +30,18 @@ void LogicNotGateCell::LogicFunction()
     }
 }
 
+LogicState LogicNotGateCell::GetOutputState(uint32_t pOutput) const
+{
+    Q_UNUSED(pOutput);
+    return mCurrentState;
+}
+
 void LogicNotGateCell::OnSimulationAdvance()
 {
     if (mStateChanged)
     {
-        NotifySuccessor(0, mOutputState);
+        NotifySuccessor(0, mNextState);
+        mCurrentState = mNextState;
         mStateChanged = false;
     }
 }
@@ -42,7 +49,8 @@ void LogicNotGateCell::OnSimulationAdvance()
 void LogicNotGateCell::OnShutdown()
 {
     mInputStates[0] = LogicState::LOW;
-    mOutputState = LogicState::LOW;
+    mCurrentState = LogicState::LOW;
+    mNextState = LogicState::LOW;
     mStateChanged = true;
     emit StateChangedSignal();
 }

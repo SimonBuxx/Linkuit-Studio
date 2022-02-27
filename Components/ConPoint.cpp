@@ -94,7 +94,7 @@ void ConPoint::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption
     {
         if (mState == LogicState::LOW)
         {
-            pPainter->setBrush(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR);
+            pPainter->setBrush(pOption->state & QStyle::State_Selected ? components::SELECTED_COMPONENT_COLOR : components::conpoints::CONPOINTS_LOW_COLOR);
         }
         else if (mState == LogicState::HIGH)
         {

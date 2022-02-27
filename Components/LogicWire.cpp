@@ -39,9 +39,9 @@ void LogicWire::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOptio
     Q_UNUSED(pWidget);
 
     QPen pen;
-    if (mLogicCell != nullptr && std::static_pointer_cast<LogicWireCell>(mLogicCell)->GetState() == LogicState::HIGH)
+    if (mLogicCell != nullptr && std::static_pointer_cast<LogicWireCell>(mLogicCell)->GetOutputState() == LogicState::HIGH)
     {
-        pen = QPen(QColor(0, 143, 100), components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        pen = QPen(components::wires::WIRE_HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     }
     else
     {

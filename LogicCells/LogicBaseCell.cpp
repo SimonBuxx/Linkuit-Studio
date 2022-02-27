@@ -21,6 +21,12 @@ void LogicBaseCell::OnShutdown()
 void LogicBaseCell::OnSimulationAdvance()
 {}
 
+LogicState LogicBaseCell::GetInputState(uint32_t pInput) const
+{
+    Q_ASSERT(mInputStates.size() > pInput);
+    return mInputStates[pInput];
+}
+
 void LogicBaseCell::NotifySuccessor(uint32_t pOutput, LogicState pState) const
 {
     Q_ASSERT(mOutputCells.size() > pOutput);

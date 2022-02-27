@@ -11,7 +11,7 @@ public:
     void LogicFunction(void) override;
 
     void ToggleState(void);
-    LogicState GetState(void) const;
+    LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
     void OnSimulationAdvance(void) override;

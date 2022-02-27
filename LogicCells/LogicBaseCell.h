@@ -18,6 +18,9 @@ public:
 
     void ConnectOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput, uint32_t pOutput);
 
+    LogicState GetInputState(uint32_t pInput) const;
+    virtual LogicState GetOutputState(uint32_t pOutput = 0) const = 0;
+
 public slots:
     virtual void OnSimulationAdvance(void);
     virtual void OnShutdown(void);

@@ -60,8 +60,9 @@ void LogicWireCell::OnSimulationAdvance()
     }
 }
 
-LogicState LogicWireCell::GetState() const
+LogicState LogicWireCell::GetOutputState(uint32_t pOutput) const
 {
+    Q_UNUSED(pOutput);
     return mState;
 }
 

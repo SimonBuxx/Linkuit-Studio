@@ -48,8 +48,9 @@ enum zvalues
 };
 
 static constexpr QColor FILL_COLOR(0, 88, 61);
-static constexpr QColor BORDER_COLOR(0, 88, 61);
 static constexpr QColor SELECTED_BORDER_COLOR(255, 255, 255);
+static constexpr QColor SELECTED_COMPONENT_COLOR(255, 255, 255);
+static constexpr QColor HIGH_COLOR(0, 184, 129);
 
 static constexpr uint8_t BORDER_WIDTH = 2;
 
@@ -69,6 +70,7 @@ static constexpr uint8_t DEFAULT_INPUT_COUNT = 2;
 static constexpr uint8_t GRID_WIDTH = 3;
 
 static const QFont FONT("Calibri Light", 25);
+static constexpr QColor FONT_COLOR(255, 255, 255);
 } // namespace
 
 namespace wires
@@ -76,12 +78,15 @@ namespace wires
 // The height or width of the wire bounding rect
 static constexpr uint8_t BOUNDING_RECT_SIZE = 20;
 static constexpr QColor WIRE_LOW_COLOR(0, 64, 45);
+static constexpr QColor WIRE_HIGH_COLOR(0, 143, 100);
 
 } // namespace
 
 namespace conpoints
 {
 static constexpr double MIN_VISIBLE_LOD = 0.2f;
+static constexpr QColor CONPOINTS_LOW_COLOR(0, 88, 61);
+static constexpr QColor CONPOINTS_HIGH_COLOR(0, 143, 100);
 static constexpr uint32_t SIZE = 6;
 } // namespace
 

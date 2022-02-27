@@ -11,28 +11,35 @@ void LogicAndGateCell::LogicFunction()
     {
         if (input != LogicState::HIGH)
         {
-            if (mOutputState != LogicState::LOW)
+            if (mCurrentState != LogicState::LOW)
             {
-                mOutputState = LogicState::LOW;
+                mNextState = LogicState::LOW;
                 mStateChanged = true;
                 emit StateChangedSignal();
             }
             return;
         }
     }
-    if (mOutputState != LogicState::HIGH)
+    if (mCurrentState != LogicState::HIGH)
     {
-        mOutputState = LogicState::HIGH;
+        mNextState = LogicState::HIGH;
         mStateChanged = true;
         emit StateChangedSignal();
     }
+}
+
+LogicState LogicAndGateCell::GetOutputState(uint32_t pOutput) const
+{
+    Q_UNUSED(pOutput);
+    return mCurrentState;
 }
 
 void LogicAndGateCell::OnSimulationAdvance()
 {
     if (mStateChanged)
     {
-        NotifySuccessor(0, mOutputState);
+        NotifySuccessor(0, mNextState);
+        mCurrentState = mNextState;
         mStateChanged = false;
     }
 }
@@ -40,7 +47,8 @@ void LogicAndGateCell::OnSimulationAdvance()
 void LogicAndGateCell::OnShutdown()
 {
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
-    mOutputState = LogicState::LOW;
+    mCurrentState = LogicState::LOW;
+    mNextState = LogicState::LOW;
     mStateChanged = true;
     emit StateChangedSignal();
 }

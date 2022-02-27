@@ -34,20 +34,20 @@ void LogicOutput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
 {
     Q_UNUSED(pWidget);
 
-    if (std::static_pointer_cast<LogicOutputCell>(mLogicCell)->GetState() == LogicState::LOW)
+    if (std::static_pointer_cast<LogicOutputCell>(mLogicCell)->GetOutputState() == LogicState::LOW)
     {
-        QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
+        QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::FILL_COLOR,
                  components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
         pPainter->setPen(pen);
         pPainter->setBrush(QBrush(components::FILL_COLOR));
     }
-    else if (std::static_pointer_cast<LogicOutputCell>(mLogicCell)->GetState() == LogicState::HIGH)
+    else if (std::static_pointer_cast<LogicOutputCell>(mLogicCell)->GetOutputState() == LogicState::HIGH)
     {
-        QPen pen(QColor(0, 184, 129), components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        QPen pen(components::HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
         pPainter->setPen(pen);
-        pPainter->setBrush(QBrush(QColor(0, 184, 129)));
+        pPainter->setBrush(QBrush(components::HIGH_COLOR));
     }
 
     pPainter->drawEllipse(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);

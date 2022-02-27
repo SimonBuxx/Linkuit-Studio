@@ -49,20 +49,20 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
 
     const double levelOfDetail = pOption->levelOfDetailFromTransform(pPainter->worldTransform());
 
-    if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetState() == LogicState::LOW)
+    if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetOutputState() == LogicState::LOW)
     {
-        QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
+        QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::FILL_COLOR,
                  components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
         pPainter->setPen(pen);
         pPainter->setBrush(QBrush(components::FILL_COLOR));
     }
-    else if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetState() == LogicState::HIGH)
+    else if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetOutputState() == LogicState::HIGH)
     {
-        QPen pen(QColor(0, 184, 129), components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        QPen pen(components::HIGH_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
         pPainter->setPen(pen);
-        pPainter->setBrush(QBrush(QColor(0, 184, 129)));
+        pPainter->setBrush(QBrush(components::HIGH_COLOR));
     }
 
     if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)

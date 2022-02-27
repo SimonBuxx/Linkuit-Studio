@@ -9,7 +9,7 @@ public:
     LogicOutputCell();
 
     void LogicFunction(void) override;
-    LogicState GetState(void) const;
+    LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
     void OnShutdown(void) override;

@@ -17,8 +17,9 @@ void LogicOutputCell::LogicFunction()
     }
 }
 
-LogicState LogicOutputCell::GetState() const
+LogicState LogicOutputCell::GetOutputState(uint32_t pOutput) const
 {
+    Q_UNUSED(pOutput);
     return mState;
 }
 

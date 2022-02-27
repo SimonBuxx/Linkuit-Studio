@@ -32,8 +32,9 @@ void LogicInputCell::OnSimulationAdvance()
     }
 }
 
-LogicState LogicInputCell::GetState() const
+LogicState LogicInputCell::GetOutputState(uint32_t pOutput) const
 {
+    Q_UNUSED(pOutput);
     return mState;
 }
 
