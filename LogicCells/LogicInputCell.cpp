@@ -2,10 +2,9 @@
 
 LogicInputCell::LogicInputCell():
     LogicBaseCell(0, 1),
-    mState(LogicState::LOW)
-{
-
-}
+    mState(LogicState::LOW),
+    mStateChanged(true)
+{}
 
 void LogicInputCell::LogicFunction()
 {}
@@ -18,15 +17,19 @@ void LogicInputCell::ToggleState()
     }
     else
     {
-        mState = LogicState::LOW;
+        mState = LogicState::LOW;  
     }
-    NotifySuccessor(0, mState);
+    mStateChanged = true;
+    emit StateChangedSignal();
 }
 
-void LogicInputCell::SetState(LogicState pState)
+void LogicInputCell::OnSimulationAdvance()
 {
-    mState = pState;
-    NotifySuccessor(0, mState);
+    if (mStateChanged)
+    {
+        NotifySuccessor(0, mState);
+        mStateChanged = false;
+    }
 }
 
 LogicState LogicInputCell::GetState() const
@@ -34,7 +37,9 @@ LogicState LogicInputCell::GetState() const
     return mState;
 }
 
-void LogicInputCell::Shutdown()
+void LogicInputCell::OnShutdown()
 {
     mState = LogicState::LOW;
+    mStateChanged = true;
+    emit StateChangedSignal();
 }

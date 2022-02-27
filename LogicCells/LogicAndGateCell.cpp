@@ -1,7 +1,8 @@
 #include "LogicAndGateCell.h"
 
 LogicAndGateCell::LogicAndGateCell(uint32_t pInputs):
-    LogicBaseCell(pInputs, 1)
+    LogicBaseCell(pInputs, 1),
+    mStateChanged(true)
 {}
 
 void LogicAndGateCell::LogicFunction()
@@ -10,14 +11,36 @@ void LogicAndGateCell::LogicFunction()
     {
         if (input != LogicState::HIGH)
         {
-            NotifySuccessor(0, LogicState::LOW);
+            if (mOutputState != LogicState::LOW)
+            {
+                mOutputState = LogicState::LOW;
+                mStateChanged = true;
+                emit StateChangedSignal();
+            }
             return;
         }
     }
-    NotifySuccessor(0, LogicState::HIGH);
+    if (mOutputState != LogicState::HIGH)
+    {
+        mOutputState = LogicState::HIGH;
+        mStateChanged = true;
+        emit StateChangedSignal();
+    }
 }
 
-void LogicAndGateCell::Shutdown()
+void LogicAndGateCell::OnSimulationAdvance()
+{
+    if (mStateChanged)
+    {
+        NotifySuccessor(0, mOutputState);
+        mStateChanged = false;
+    }
+}
+
+void LogicAndGateCell::OnShutdown()
 {
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mOutputState = LogicState::LOW;
+    mStateChanged = true;
+    emit StateChangedSignal();
 }

@@ -31,6 +31,11 @@ static constexpr int32_t MIN_GRID_ZOOM_LEVEL = 200;
 static constexpr QRectF DIMENSIONS(-32000, -32000, 64000, 64000);
 } // namespace
 
+namespace simulation
+{
+static constexpr std::chrono::milliseconds PROPAGATION_DELAY(10);
+} // namespace
+
 namespace components
 {
 enum zvalues
@@ -70,6 +75,8 @@ namespace wires
 {
 // The height or width of the wire bounding rect
 static constexpr uint8_t BOUNDING_RECT_SIZE = 20;
+static constexpr QColor WIRE_LOW_COLOR(0, 64, 45);
+
 } // namespace
 
 namespace conpoints

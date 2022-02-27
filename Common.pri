@@ -6,6 +6,7 @@ HEADERS += \
     $$PWD/LogicCells/LogicNotGateCell.h \
     $$PWD/LogicCells/LogicOrGateCell.h \
     $$PWD/LogicCells/LogicOutputCell.h \
+    $$PWD/LogicCells/LogicWireCell.h \
     $$PWD/LogicCells/LogicXorGateCell.h \
     $${PWD}/Components/BaseComponent.h \
     $${PWD}/Components/Gates/AbstractGate.h \
@@ -16,7 +17,6 @@ HEADERS += \
     $${PWD}/Components/LogicInput.h \
     $${PWD}/Components/LogicOutput.h \
     $${PWD}/Components/LogicWire.h \
-    $${PWD}/Components/RectComponent.h \
     $${PWD}/CoreLogic.h \
     $${PWD}/HelperFunctions.h \
     $${PWD}/HelperStructures.h \
@@ -37,6 +37,7 @@ SOURCES += \
     $$PWD/LogicCells/LogicNotGateCell.cpp \
     $$PWD/LogicCells/LogicOrGateCell.cpp \
     $$PWD/LogicCells/LogicOutputCell.cpp \
+    $$PWD/LogicCells/LogicWireCell.cpp \
     $$PWD/LogicCells/LogicXorGateCell.cpp \
     $${PWD}/Components/BaseComponent.cpp \
     $${PWD}/Components/Gates/AbstractGate.cpp \
@@ -47,7 +48,6 @@ SOURCES += \
     $${PWD}/Components/LogicInput.cpp \
     $${PWD}/Components/LogicOutput.cpp \
     $${PWD}/Components/LogicWire.cpp \
-    $${PWD}/Components/RectComponent.cpp \
     $${PWD}/CoreLogic.cpp \
     $${PWD}/Undo/UndoAddType.cpp \
     $${PWD}/Undo/UndoBaseType.cpp \

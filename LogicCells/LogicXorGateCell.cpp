@@ -1,7 +1,8 @@
 #include "LogicXorGateCell.h"
 
 LogicXorGateCell::LogicXorGateCell(uint32_t pInputs):
-    LogicBaseCell(pInputs, 1)
+    LogicBaseCell(pInputs, 1),
+    mStateChanged(true)
 {}
 
 void LogicXorGateCell::LogicFunction()
@@ -13,17 +14,39 @@ void LogicXorGateCell::LogicFunction()
         {
             if (oneHigh)
             {
-                NotifySuccessor(0, LogicState::LOW);
+                if (mOutputState != LogicState::LOW)
+                {
+                    mOutputState = LogicState::LOW;
+                    mStateChanged = true;
+                    emit StateChangedSignal();
+                }
                 return;
             }
             oneHigh = true;
         }
     }
 
-    NotifySuccessor(0, oneHigh ? LogicState::HIGH : LogicState::LOW);
+    if (mOutputState != (oneHigh ? LogicState::HIGH : LogicState::LOW))
+    {
+        mOutputState = oneHigh ? LogicState::HIGH : LogicState::LOW;
+        mStateChanged = true;
+        emit StateChangedSignal();
+    }
 }
 
-void LogicXorGateCell::Shutdown()
+void LogicXorGateCell::OnSimulationAdvance()
+{
+    if (mStateChanged)
+    {
+        NotifySuccessor(0, mOutputState);
+        mStateChanged = false;
+    }
+}
+
+void LogicXorGateCell::OnShutdown()
 {
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mOutputState = LogicState::LOW;
+    mStateChanged = true;
+    emit StateChangedSignal();
 }

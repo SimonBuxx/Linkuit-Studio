@@ -10,6 +10,18 @@
 
 class CoreLogic;
 
+struct LogicConnector
+{
+    LogicConnector(ConnectorType pType, QPointF pPos)
+    {
+        type = pType;
+        pos = pPos;
+    }
+
+    ConnectorType type;
+    QPointF pos;
+};
+
 class BaseComponent : public QObject, public QGraphicsItem
 {
     Q_OBJECT
@@ -23,7 +35,19 @@ public:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent) override;
 
+    /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
     virtual void ResetZValue(void) = 0;
+
+    std::vector<LogicConnector>& GetInConnectors(void);
+    std::vector<LogicConnector>& GetOutConnectors(void);
+
+    uint32_t GetInConnectorCount(void) const;
+    uint32_t GetOutConnectorCount(void) const;
+
+    std::shared_ptr<LogicBaseCell> GetLogicCell(void);
+
+protected slots:
+    void OnLogicStateChanged(void);
 
 signals:
     void SelectedComponentMovedSignal(QPointF pOffset);
@@ -36,6 +60,8 @@ protected:
 
     bool mSimulationRunning;
 
+    std::vector<LogicConnector> mInConnectors;
+    std::vector<LogicConnector> mOutConnectors;
     std::shared_ptr<LogicBaseCell> mLogicCell;
 };
 

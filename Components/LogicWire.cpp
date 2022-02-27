@@ -4,8 +4,7 @@
 
 LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint32_t pLength):
     BaseComponent(pCoreLogic, nullptr),
-    mDirection(pDirection),
-    mState(LogicState::LOW)
+    mDirection(pDirection)
 {
     setZValue(components::zvalues::WIRE);
 
@@ -19,10 +18,6 @@ LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint
         mWidth = components::wires::BOUNDING_RECT_SIZE;
         mHeight = pLength;
     }
-
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
-        mState = LogicState::LOW;
-    });
 }
 
 LogicWire::LogicWire(const LogicWire& pObj, const CoreLogic* pCoreLogic):
@@ -44,14 +39,14 @@ void LogicWire::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOptio
     Q_UNUSED(pWidget);
 
     QPen pen;
-    if (mState == LogicState::LOW)
+    if (mLogicCell != nullptr && std::static_pointer_cast<LogicWireCell>(mLogicCell)->GetState() == LogicState::HIGH)
     {
-        pen = QPen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
-                     components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        pen = QPen(QColor(0, 143, 100), components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     }
-    else if (mState == LogicState::HIGH)
+    else
     {
-        pen = QPen(Qt::white, components::BORDER_WIDTH + 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        pen = QPen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                     components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     }
     pPainter->setPen(pen);
 
@@ -101,6 +96,13 @@ bool LogicWire::StartsOrEndsIn(QPointF pPoint) const
             (pos() == pPoint));
 }
 
+void LogicWire::SetLogicCell(std::shared_ptr<LogicWireCell> pLogicCell)
+{
+    mLogicCell = pLogicCell;
+
+    QObject::connect(mLogicCell.get(), &LogicBaseCell::StateChangedSignal, this, &LogicWire::OnLogicStateChanged);
+}
+
 QRectF LogicWire::boundingRect() const
 {
     if (mDirection == WireDirection::HORIZONTAL)
@@ -118,11 +120,11 @@ QPainterPath LogicWire::shape() const
     QPainterPath path;
     if (mDirection == WireDirection::HORIZONTAL)
     {
-        path.addRect(0, mHeight * -0.5f, mWidth, mHeight);
+        path.addRect(-1, mHeight * -0.5f, mWidth + 2, mHeight);
     }
     else
     {
-        path.addRect(mWidth * -0.5f, 0, mWidth, mHeight);
+        path.addRect(mWidth * -0.5f, -1, mWidth, mHeight + 2);
     }
     return path;
 }

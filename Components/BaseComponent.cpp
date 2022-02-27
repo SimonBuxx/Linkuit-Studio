@@ -30,6 +30,43 @@ BaseComponent::BaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicB
         mSimulationRunning = false;
     });
     QObject::connect(this, &BaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMoved);
+
+    if (mLogicCell != nullptr)
+    {
+        QObject::connect(pCoreLogic, &CoreLogic::SimulationAdvanceSignal, mLogicCell.get(), &LogicBaseCell::OnSimulationAdvance);
+        QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, mLogicCell.get(), &LogicBaseCell::OnShutdown);
+        QObject::connect(mLogicCell.get(), &LogicBaseCell::StateChangedSignal, this, &BaseComponent::OnLogicStateChanged);
+    }
+}
+
+std::vector<LogicConnector>& BaseComponent::GetInConnectors()
+{
+    return mInConnectors;
+}
+
+std::vector<LogicConnector>& BaseComponent::GetOutConnectors()
+{
+    return mOutConnectors;
+}
+
+uint32_t BaseComponent::GetInConnectorCount() const
+{
+    return mInConnectors.size();
+}
+
+uint32_t BaseComponent::GetOutConnectorCount() const
+{
+    return mOutConnectors.size();
+}
+
+void BaseComponent::OnLogicStateChanged()
+{
+    update();
+}
+
+std::shared_ptr<LogicBaseCell> BaseComponent::GetLogicCell()
+{
+    return mLogicCell;
 }
 
 void BaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)

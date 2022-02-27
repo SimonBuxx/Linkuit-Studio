@@ -11,13 +11,15 @@ public:
     void LogicFunction(void) override;
 
     void ToggleState(void);
-    void SetState(LogicState pState);
     LogicState GetState(void) const;
 
-    void Shutdown(void) override;
+public slots:
+    void OnSimulationAdvance(void) override;
+    void OnShutdown(void) override;
 
 protected:
     LogicState mState;
+    bool mStateChanged;
 };
 
 #endif // LOGICINPUTCELL_H

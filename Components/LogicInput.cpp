@@ -7,15 +7,13 @@ LogicInput::LogicInput(const CoreLogic* pCoreLogic):
 {
     setZValue(components::zvalues::INPUT);
 
-    mWidth = canvas::GRID_SIZE;
-    mHeight = canvas::GRID_SIZE;
+    mWidth = canvas::GRID_SIZE * 0.8f;
+    mHeight = canvas::GRID_SIZE * 0.8f;
+
+    mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 0))); // Place connector in the middle of the component
 
     QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
         setCursor(Qt::PointingHandCursor);
-    });
-
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
-        std::static_pointer_cast<LogicInputCell>(mLogicCell)->Shutdown();
     });
 }
 
@@ -24,7 +22,6 @@ LogicInput::LogicInput(const LogicInput& pObj, const CoreLogic* pCoreLogic):
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
-    mLogicCell = std::make_shared<LogicInputCell>();
 };
 
 BaseComponent* LogicInput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
@@ -62,13 +59,15 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
     }
     else if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetState() == LogicState::HIGH)
     {
-        pPainter->setPen(QPen(Qt::white));
-        pPainter->setBrush(QBrush(Qt::white));
+        QPen pen(QColor(0, 184, 129), components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
+        pPainter->setPen(pen);
+        pPainter->setBrush(QBrush(QColor(0, 184, 129)));
     }
 
     if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)
     {
-        pPainter->drawRoundedRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight, 2, 2);
+        pPainter->drawRoundedRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight, 0, 0);
     }
     else
     {

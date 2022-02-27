@@ -9,10 +9,10 @@ public:
     LogicOutputCell();
 
     void LogicFunction(void) override;
-
     LogicState GetState(void) const;
 
-    void Shutdown(void) override;
+public slots:
+    void OnShutdown(void) override;
 
 protected:
     LogicState mState;

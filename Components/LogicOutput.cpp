@@ -7,12 +7,10 @@ LogicOutput::LogicOutput(const CoreLogic* pCoreLogic):
 {
     setZValue(components::zvalues::OUTPUT);
 
-    mWidth = canvas::GRID_SIZE;
-    mHeight = canvas::GRID_SIZE;
+    mWidth = canvas::GRID_SIZE * 0.8f;
+    mHeight = canvas::GRID_SIZE * 0.8f;
 
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
-        std::static_pointer_cast<LogicOutputCell>(mLogicCell)->Shutdown();
-    });
+    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 0)));
 }
 
 LogicOutput::LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic):
@@ -20,7 +18,6 @@ LogicOutput::LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic):
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
-    mLogicCell = std::make_shared<LogicOutputCell>();
 };
 
 BaseComponent* LogicOutput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
@@ -47,8 +44,10 @@ void LogicOutput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
     }
     else if (std::static_pointer_cast<LogicOutputCell>(mLogicCell)->GetState() == LogicState::HIGH)
     {
-        pPainter->setPen(QPen(Qt::white));
-        pPainter->setBrush(QBrush(Qt::white));
+        QPen pen(QColor(0, 184, 129), components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
+        pPainter->setPen(pen);
+        pPainter->setBrush(QBrush(QColor(0, 184, 129)));
     }
 
     pPainter->drawEllipse(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);

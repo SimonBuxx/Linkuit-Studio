@@ -1,7 +1,8 @@
 #include "AbstractGate.h"
+#include "Configuration.h"
 
 AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, Direction pDirection):
-    RectComponent(pCoreLogic, pLogicCell),
+    BaseComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),
     mDirection(pDirection),
     mInputInverted(pInputCount, false)
@@ -27,129 +28,157 @@ void AbstractGate::ResetZValue()
     setZValue(components::zvalues::GATE);
 }
 
-void AbstractGate::PaintSpecifics(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, const double pLevelOfDetail)
+void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget)
 {
-    if (pLevelOfDetail >= components::CONNECTORS_MIN_LOD)
-    {
-        // Draw connectors
-        switch (mDirection)
-        {
-            case Direction::RIGHT:
-            {
-                for (size_t i = 0; i < mInputCount; i++)
-                {
-                    pPainter->drawLine(-10, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
-                }
-                pPainter->drawLine(mWidth, mHeight / 2, mWidth + 10, mHeight / 2);
-                break;
-            }
-            case Direction::DOWN:
-            {
-                for (size_t i = 0; i < mInputCount; i++)
-                {
-                    pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -10, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
-                }
-                pPainter->drawLine(mWidth / 2, mHeight, mWidth / 2, mHeight + 10);
-                break;
-            }
-            case Direction::LEFT:
-            {
-                for (size_t i = 0; i < mInputCount; i++)
-                {
-                    pPainter->drawLine(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 10, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
-                }
-                pPainter->drawLine(-10, mHeight / 2, 0, mHeight / 2);
-                break;
-            }
-            case Direction::UP:
-            {
-                for (size_t i = 0; i < mInputCount; i++)
-                {
-                    pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 10);
-                }
-                pPainter->drawLine(mWidth / 2, -10, mWidth / 2, 0);
-                break;
-            }
-            default:
-            {
-                Q_ASSERT(false);
-                break;
-            }
-        }
+    Q_UNUSED(pWidget);
+    const double levelOfDetail = pItem->levelOfDetailFromTransform(pPainter->worldTransform());
 
-        // Draw invertion circles
-        switch (mDirection)
+    // Draw connectors and invertion circles
+    {
+        QPen pen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                 components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        pPainter->setPen(pen);
+        if (levelOfDetail >= components::CONNECTORS_MIN_LOD)
         {
-            case Direction::RIGHT:
+            // Draw connectors
+            switch (mDirection)
             {
-                for (size_t i = 0; i < mInputCount; i++)
+                case Direction::RIGHT:
                 {
-                    if (mInputInverted.at(i))
+                    for (size_t i = 0; i < mInputCount; i++)
                     {
-                        pPainter->drawEllipse(-10, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, 10, 10);
+                        pPainter->drawLine(-8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
                     }
+                    pPainter->drawLine(mWidth, mHeight / 2, mWidth + 8, mHeight / 2);
+                    break;
                 }
-                if (mOutputInverted)
+                case Direction::DOWN:
                 {
-                    pPainter->drawEllipse(mWidth, mHeight / 2 - 5, 10, 10);
-                }
-                break;
-            }
-            case Direction::DOWN:
-            {
-                for (size_t i = 0; i < mInputCount; i++)
-                {
-                    if (mInputInverted.at(i))
+                    for (size_t i = 0; i < mInputCount; i++)
                     {
-                        pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, -10, 10, 10);
+                        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
                     }
+                    pPainter->drawLine(mWidth / 2, mHeight, mWidth / 2, mHeight + 8);
+                    break;
                 }
-                if (mOutputInverted)
+                case Direction::LEFT:
                 {
-                    pPainter->drawEllipse(mWidth / 2 - 5, mHeight, 10, 10);
-                }
-                break;
-            }
-            case Direction::LEFT:
-            {
-                for (size_t i = 0; i < mInputCount; i++)
-                {
-                    if (mInputInverted.at(i))
+                    for (size_t i = 0; i < mInputCount; i++)
                     {
-                        pPainter->drawEllipse(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, 10, 10);
+                        pPainter->drawLine(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
                     }
+                    pPainter->drawLine(-8, mHeight / 2, 0, mHeight / 2);
+                    break;
                 }
-                if (mOutputInverted)
+                case Direction::UP:
                 {
-                    pPainter->drawEllipse(-10, mHeight / 2 - 5, 10, 10);
-                }
-                break;
-            }
-            case Direction::UP:
-            {
-                for (size_t i = 0; i < mInputCount; i++)
-                {
-                    if (mInputInverted.at(i))
+                    for (size_t i = 0; i < mInputCount; i++)
                     {
-                        pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, mHeight, 10, 10);
+                        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
                     }
+                    pPainter->drawLine(mWidth / 2, -8, mWidth / 2, 0);
+                    break;
                 }
-                if (mOutputInverted)
+                default:
                 {
-                    pPainter->drawEllipse(mWidth / 2 - 5, -10, 10, 10);
+                    Q_ASSERT(false);
+                    break;
                 }
-                break;
             }
-            default:
+
+            // Draw invertion circles
+            switch (mDirection)
             {
-                Q_ASSERT(false);
-                break;
+                case Direction::RIGHT:
+                {
+                    for (size_t i = 0; i < mInputCount; i++)
+                    {
+                        if (mInputInverted.at(i))
+                        {
+                            pPainter->drawEllipse(-10, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, 10, 10);
+                        }
+                    }
+                    if (mOutputInverted)
+                    {
+                        pPainter->drawEllipse(mWidth, mHeight / 2 - 5, 10, 10);
+                    }
+                    break;
+                }
+                case Direction::DOWN:
+                {
+                    for (size_t i = 0; i < mInputCount; i++)
+                    {
+                        if (mInputInverted.at(i))
+                        {
+                            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, -10, 10, 10);
+                        }
+                    }
+                    if (mOutputInverted)
+                    {
+                        pPainter->drawEllipse(mWidth / 2 - 5, mHeight, 10, 10);
+                    }
+                    break;
+                }
+                case Direction::LEFT:
+                {
+                    for (size_t i = 0; i < mInputCount; i++)
+                    {
+                        if (mInputInverted.at(i))
+                        {
+                            pPainter->drawEllipse(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, 10, 10);
+                        }
+                    }
+                    if (mOutputInverted)
+                    {
+                        pPainter->drawEllipse(-10, mHeight / 2 - 5, 10, 10);
+                    }
+                    break;
+                }
+                case Direction::UP:
+                {
+                    for (size_t i = 0; i < mInputCount; i++)
+                    {
+                        if (mInputInverted.at(i))
+                        {
+                            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, mHeight, 10, 10);
+                        }
+                    }
+                    if (mOutputInverted)
+                    {
+                        pPainter->drawEllipse(mWidth / 2 - 5, -10, 10, 10);
+                    }
+                    break;
+                }
+                default:
+                {
+                    Q_ASSERT(false);
+                    break;
+                }
             }
         }
     }
-    if (pLevelOfDetail >= components::DESCRIPTION_TEXT_MIN_LOD)
+
+    // Draw gate body
     {
-        pPainter->setPen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : Qt::white);
+        QPen pen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::BORDER_COLOR,
+                 components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        pPainter->setPen(pen);
+        pPainter->setBrush(QBrush(components::FILL_COLOR));
+
+        if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)
+        {
+            pPainter->drawRoundedRect(0, 0, mWidth, mHeight, 0, 0);
+        }
+        else
+        {
+            pPainter->drawRect(0, 0, mWidth, mHeight);
+        }
+    }
+
+    // Draw description text
+    if (levelOfDetail >= components::DESCRIPTION_TEXT_MIN_LOD)
+    {
+        pPainter->setPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : Qt::white);
         pPainter->setFont(components::gates::FONT);
         pPainter->drawText(boundingRect(), mComponentText, Qt::AlignHCenter | Qt::AlignVCenter);
     }

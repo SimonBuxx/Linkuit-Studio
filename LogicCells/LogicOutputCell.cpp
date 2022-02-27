@@ -1,5 +1,7 @@
 #include "LogicOutputCell.h"
 
+#include <iostream>
+
 LogicOutputCell::LogicOutputCell():
     LogicBaseCell(1, 0),
     mState(LogicState::LOW)
@@ -7,8 +9,12 @@ LogicOutputCell::LogicOutputCell():
 
 void LogicOutputCell::LogicFunction()
 {
-    std::cout << "Output " << (mInputStates[0] == LogicState::HIGH) << "\n";
-    mState = mInputStates[0];
+    if (mState != mInputStates[0])
+    {
+        std::cout << "Output " << (mInputStates[0] == LogicState::HIGH) << std::endl;
+        mState = mInputStates[0];
+        emit StateChangedSignal();
+    }
 }
 
 LogicState LogicOutputCell::GetState() const
@@ -16,7 +22,8 @@ LogicState LogicOutputCell::GetState() const
     return mState;
 }
 
-void LogicOutputCell::Shutdown()
+void LogicOutputCell::OnShutdown()
 {
     mState = LogicState::LOW;
+    emit StateChangedSignal();
 }

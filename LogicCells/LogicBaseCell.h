@@ -3,12 +3,11 @@
 
 #include "HelperStructures.h"
 
-#include <cstdint>
-#include <vector>
-#include <iostream>
+#include <QObject>
 
-class LogicBaseCell
+class LogicBaseCell: public QObject
 {
+    Q_OBJECT
 public:
     LogicBaseCell(uint32_t pInputs, uint32_t pOutputs);
     virtual ~LogicBaseCell() = default;
@@ -17,19 +16,20 @@ public:
     void NotifySuccessor(uint32_t pOutput, LogicState pState) const;
     void InputReady(uint32_t pInput, LogicState pState);
 
-    virtual void Shutdown(void);
+    void ConnectOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput, uint32_t pOutput);
 
-    void ConnectOutput(LogicBaseCell* pCell, uint32_t pInput, uint32_t pOutput);
+public slots:
+    virtual void OnSimulationAdvance(void);
+    virtual void OnShutdown(void);
 
-    void SetInput(uint32_t pInput, LogicState pState);
-
-    uint32_t InputsSize(void) const;
+signals:
+    void StateChangedSignal(void);
 
 protected:
     std::vector<LogicState> mInputStates;
 
     // Pairs of connected LogicCell and input number of that cell
-    std::vector<std::pair<LogicBaseCell*, uint32_t>> mOutputCells;
+    std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>> mOutputCells;
 };
 
 #endif // LOGICBASECELL_H

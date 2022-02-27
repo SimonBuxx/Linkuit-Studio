@@ -40,6 +40,12 @@ enum class ConnectionType
     DIODE_Y
 };
 
+enum class ConnectorType
+{
+    IN = 0,
+    OUT
+};
+
 enum class ControlMode
 {
     EDIT = 0,

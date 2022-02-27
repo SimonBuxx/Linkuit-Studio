@@ -14,15 +14,18 @@
 
 #include "HelperFunctions.h"
 
-#include <QElapsedTimer>
+//#include <QElapsedTimer>
 
 CoreLogic::CoreLogic(View &pView):
     mView(pView),
     mHorizontalPreviewWire(this, WireDirection::HORIZONTAL, 0),
-    mVerticalPreviewWire(this, WireDirection::VERTICAL, 0)
+    mVerticalPreviewWire(this, WireDirection::VERTICAL, 0),
+    mPropagationTimer(this)
 {
     ConnectToView();
     mView.Init();
+
+    QObject::connect(&mPropagationTimer, &QTimer::timeout, this, &CoreLogic::OnPropagationTimeout);
 }
 
 void CoreLogic::ConnectToView()
@@ -38,6 +41,7 @@ void CoreLogic::EnterControlMode(ControlMode pMode)
         if (mControlMode == ControlMode::SIMULATION)
         {
             mControlMode = pMode;
+            mPropagationTimer.stop();
             emit SimulationStopSignal();
         }
 
@@ -52,7 +56,10 @@ void CoreLogic::EnterControlMode(ControlMode pMode)
         if (pMode == ControlMode::SIMULATION)
         {
             ParseWireGroups();
+            CreateWireLogicCells();
+            ConnectLogicCells();
             qDebug() << "Found " << mWireGroups.size() << " groups";
+            mPropagationTimer.start(simulation::PROPAGATION_DELAY);
             emit SimulationStartSignal();
         }
     }
@@ -72,6 +79,11 @@ ComponentType CoreLogic::GetComponentType() const
 bool CoreLogic::IsSimulationRunning(void) const
 {
     return (mControlMode == ControlMode::SIMULATION);
+}
+
+void CoreLogic::OnPropagationTimeout()
+{
+    emit SimulationAdvanceSignal();
 }
 
 bool CoreLogic::IsUndoQueueEmpty(void) const
@@ -368,18 +380,6 @@ bool CoreLogic::IsComponentAtPosition(QPointF pPos)
     return false;
 }
 
-bool CoreLogic::IsConPointAtPosition(QPointF pPos, ConnectionType pType)
-{
-    for (const auto& comp : mView.Scene()->items(pPos, Qt::IntersectsItemShape))
-    {
-        if (dynamic_cast<ConPoint*>(comp) != nullptr)
-        {
-            return static_cast<ConPoint*>(comp)->GetConnectionType() == pType;
-        }
-    }
-    return false;
-}
-
 void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector<BaseComponent*> &pAddedWires, std::vector<BaseComponent*> &pDeletedWires)
 {
     for (auto &w : pWires)
@@ -392,8 +392,8 @@ void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector
 
         if (static_cast<LogicWire*>(w)->GetDirection() == WireDirection::HORIZONTAL)
         {
-            startAdjacent = GetAdjacentWire(QPointF(w->x() - 2, w->y()), WireDirection::HORIZONTAL);
-            endAdjacent = GetAdjacentWire(QPointF(w->x() + static_cast<LogicWire*>(w)->GetLength() + 2, w->y()), WireDirection::HORIZONTAL);
+            startAdjacent = GetAdjacentWire(QPointF(w->x() - 4, w->y()), WireDirection::HORIZONTAL);
+            endAdjacent = GetAdjacentWire(QPointF(w->x() + static_cast<LogicWire*>(w)->GetLength() + 4, w->y()), WireDirection::HORIZONTAL);
 
             auto horizontalWire = MergeWires(static_cast<LogicWire*>(w), startAdjacent, endAdjacent);
             horizontalWire->setSelected(w->isSelected());
@@ -408,8 +408,8 @@ void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector
         }
         else
         {
-            startAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() - 2), WireDirection::VERTICAL);
-            endAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() + static_cast<LogicWire*>(w)->GetLength() + 2), WireDirection::VERTICAL);
+            startAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() - 4), WireDirection::VERTICAL);
+            endAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() + static_cast<LogicWire*>(w)->GetLength() + 4), WireDirection::VERTICAL);
 
             auto verticalWire = MergeWires(static_cast<LogicWire*>(w), startAdjacent, endAdjacent);
             verticalWire->setSelected(w->isSelected());
@@ -590,30 +590,6 @@ bool CoreLogic::IsXCrossingPoint(QPointF pPoint) const
     }
 }
 
-bool CoreLogic::IsLCrossing(LogicWire* pWireA, LogicWire* pWireB) const
-{
-    const LogicWire* a;
-    const LogicWire* b;
-
-    if (pWireA->GetDirection() == WireDirection::VERTICAL && pWireB->GetDirection() == WireDirection::HORIZONTAL)
-    {
-        a = pWireB;
-        b = pWireA;
-    }
-    else if (pWireA->GetDirection() == WireDirection::HORIZONTAL && pWireB->GetDirection() == WireDirection::VERTICAL)
-    {
-        a = pWireA;
-        b = pWireB;
-    }
-    else
-    {
-        return false;
-    }
-
-    return ((a->y() == b->y() && a->x() == b->x()) || (a->y() == b->y() && a->x() + a->GetLength() == b->x())
-        || (a->x() == b->x() && b->y() + b->GetLength() == a->y()) || (a->x() + a->GetLength() == b->x() && a->y() == b->y() + b->GetLength()));
-}
-
 LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, LogicWire* pStartAdjacent, LogicWire* pEndAdjacent) const
 {
     QPointF newStart(pNewWire->pos());
@@ -658,23 +634,6 @@ LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, LogicWire* pStartAdjacent,
     }
 }
 
-QPointF CoreLogic::GetWireCollisionPoint(const LogicWire* pWireA, const LogicWire* pWireB) const
-{
-    // Assuming the wires do collide
-    if (pWireA->GetDirection() == WireDirection::HORIZONTAL && pWireB->GetDirection() == WireDirection::VERTICAL)
-    {
-        return QPointF(pWireB->x(), pWireA->y());
-    }
-    else if (pWireA->GetDirection() == WireDirection::VERTICAL && pWireB->GetDirection() == WireDirection::HORIZONTAL)
-    {
-        return QPointF(pWireA->x(), pWireB->y());
-    }
-    else
-    {
-        Q_ASSERT(false);
-    }
-}
-
 void CoreLogic::ParseWireGroups(void)
 {
     mWireGroups.clear();
@@ -703,6 +662,150 @@ void CoreLogic::ExploreGroup(LogicWire* pWire, int32_t pGroupIndex)
                     || IsConPointAtPosition(GetWireCollisionPoint(pWire, static_cast<LogicWire*>(coll)), ConnectionType::FULL)))
         {
             ExploreGroup(static_cast<LogicWire*>(coll), pGroupIndex); // Recursive call
+        }
+    }
+}
+
+QPointF CoreLogic::GetWireCollisionPoint(const LogicWire* pWireA, const LogicWire* pWireB) const
+{
+    // Assuming the wires do collide
+    if (pWireA->GetDirection() == WireDirection::HORIZONTAL && pWireB->GetDirection() == WireDirection::VERTICAL)
+    {
+        return QPointF(pWireB->x(), pWireA->y());
+    }
+    else if (pWireA->GetDirection() == WireDirection::VERTICAL && pWireB->GetDirection() == WireDirection::HORIZONTAL)
+    {
+        return QPointF(pWireA->x(), pWireB->y());
+    }
+    else
+    {
+        Q_ASSERT(false);
+    }
+}
+
+bool CoreLogic::IsLCrossing(LogicWire* pWireA, LogicWire* pWireB) const
+{
+    const LogicWire* a;
+    const LogicWire* b;
+
+    if (pWireA->GetDirection() == WireDirection::VERTICAL && pWireB->GetDirection() == WireDirection::HORIZONTAL)
+    {
+        a = pWireB;
+        b = pWireA;
+    }
+    else if (pWireA->GetDirection() == WireDirection::HORIZONTAL && pWireB->GetDirection() == WireDirection::VERTICAL)
+    {
+        a = pWireA;
+        b = pWireB;
+    }
+    else
+    {
+        return false;
+    }
+
+    return ((a->y() == b->y() && a->x() == b->x()) || (a->y() == b->y() && a->x() + a->GetLength() == b->x())
+        || (a->x() == b->x() && b->y() + b->GetLength() == a->y()) || (a->x() + a->GetLength() == b->x() && a->y() == b->y() + b->GetLength()));
+}
+
+bool CoreLogic::IsConPointAtPosition(QPointF pPos, ConnectionType pType) const
+{
+    for (const auto& comp : mView.Scene()->items(pPos, Qt::IntersectsItemShape))
+    {
+        if (dynamic_cast<ConPoint*>(comp) != nullptr)
+        {
+            return static_cast<ConPoint*>(comp)->GetConnectionType() == pType;
+        }
+    }
+    return false;
+}
+
+void CoreLogic::CreateWireLogicCells()
+{
+    mLogicWireCells.clear();
+
+    for (const auto& group : mWireGroups)
+    {
+        auto logicCell = std::make_shared<LogicWireCell>(this);
+        mLogicWireCells.emplace_back(logicCell);
+        for (auto& wire : group)
+        {
+            wire->SetLogicCell(logicCell);
+        }
+    }
+}
+
+void CoreLogic::ConnectLogicCells()
+{
+    for (auto& comp : mView.Scene()->items())
+    {
+        if (dynamic_cast<LogicWire*>(comp) != nullptr || dynamic_cast<ConPoint*>(comp) != nullptr)
+        {
+            continue;
+        }
+
+        auto compBase = static_cast<BaseComponent*>(comp);
+
+        for (auto& coll : mView.Scene()->collidingItems(comp, Qt::IntersectsItemBoundingRect))
+        {
+            //auto collBase = static_cast<BaseComponent*>(coll);
+
+            if (dynamic_cast<ConPoint*>(coll) != nullptr)
+            {
+                continue; // ignore ConPoints, they are handled during wire grouping
+            }
+            else if (dynamic_cast<LogicWire*>(coll) != nullptr)
+            {
+                // Component <-> Wire connection
+                auto wire = static_cast<LogicWire*>(coll);
+                for (size_t out = 0; out < compBase->GetOutConnectorCount(); out++)
+                {
+                    if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[out].pos)))
+                    {
+                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
+                        compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, out);
+                        qDebug() << "Connected comp output " << out << " to wire";
+                    }
+                }
+
+                for (size_t in = 0; in < compBase->GetInConnectorCount(); in++)
+                {
+                    if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[in].pos)))
+                    {
+                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), in);
+                        qDebug() << "Connected wire to comp, input " << in;
+                    }
+                }
+            }
+            else
+            {
+                /*
+                // Component <-> Component connection
+                // Might be inefficient, maybe that's okay because it's rarely used
+                for (size_t in = 0; in < compBase->GetInConnectorCount(); in++)
+                {
+                    for (size_t out = 0; out < collBase->GetOutConnectorCount(); out++)
+                    {
+                        if (compBase->pos() + compBase->GetInConnectors()[in].pos == collBase->pos() + collBase->GetOutConnectors()[out].pos)
+                        {
+                            collBase->GetLogicCell()->ConnectOutput(compBase->GetLogicCell(), in, out);
+                            qDebug() << "Connected comp input " << in << " to coll output " << out;
+                        }
+                    }
+                }
+
+                for (size_t out = 0; out < compBase->GetOutConnectorCount(); out++)
+                {
+                    for (size_t in = 0; in < collBase->GetInConnectorCount(); in++)
+                    {
+                        if (collBase->pos() + collBase->GetInConnectors()[in].pos == compBase->pos() + compBase->GetOutConnectors()[out].pos)
+                        {
+                            compBase->GetLogicCell()->ConnectOutput(collBase->GetLogicCell(), in, out);
+                            qDebug() << "Connected coll input " << in << " to comp output " << out;
+                        }
+                    }
+                }
+                */
+            }
         }
     }
 }

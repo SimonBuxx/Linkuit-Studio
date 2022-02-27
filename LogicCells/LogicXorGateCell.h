@@ -10,7 +10,13 @@ public:
 
     void LogicFunction(void) override;
 
-    void Shutdown(void) override;
+public slots:
+    void OnSimulationAdvance(void) override;
+    void OnShutdown(void) override;
+
+protected:
+    LogicState mOutputState;
+    bool mStateChanged;
 };
 
 #endif // LOGICXORGATECELL_H
