@@ -2,23 +2,25 @@
 
 LogicXorGateCell::LogicXorGateCell(uint32_t pInputs):
     LogicBaseCell(pInputs, 1),
+    mPreviousState(LogicState::LOW),
     mCurrentState(LogicState::LOW),
-    mNextState(LogicState::LOW),
     mStateChanged(true)
 {}
 
 void LogicXorGateCell::LogicFunction()
 {
     bool oneHigh = false;
+    mCurrentState = mPreviousState; // Keep current state if no change
+
     for (const auto& input : mInputStates)
     {
         if (input == LogicState::HIGH)
         {
             if (oneHigh)
             {
-                if (mCurrentState != LogicState::LOW)
+                if (mPreviousState != LogicState::LOW)
                 {
-                    mNextState = LogicState::LOW;
+                    mCurrentState = LogicState::LOW;
                     mStateChanged = true;
                     emit StateChangedSignal();
                 }
@@ -28,11 +30,12 @@ void LogicXorGateCell::LogicFunction()
         }
     }
 
-    if (mCurrentState != (oneHigh ? LogicState::HIGH : LogicState::LOW))
+    if (mPreviousState != (oneHigh ? LogicState::HIGH : LogicState::LOW))
     {
-        mNextState = oneHigh ? LogicState::HIGH : LogicState::LOW;
+        mCurrentState = oneHigh ? LogicState::HIGH : LogicState::LOW;
         mStateChanged = true;
         emit StateChangedSignal();
+        return;
     }
 }
 
@@ -46,8 +49,8 @@ void LogicXorGateCell::OnSimulationAdvance()
 {
     if (mStateChanged)
     {
-        NotifySuccessor(0, mNextState);
-        mCurrentState = mNextState;
+        NotifySuccessor(0, mCurrentState);
+        mPreviousState = mCurrentState;
         mStateChanged = false;
     }
 }
@@ -55,8 +58,8 @@ void LogicXorGateCell::OnSimulationAdvance()
 void LogicXorGateCell::OnShutdown()
 {
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mPreviousState = LogicState::LOW;
     mCurrentState = LogicState::LOW;
-    mNextState = LogicState::LOW;
     mStateChanged = true;
     emit StateChangedSignal();
 }

@@ -16,8 +16,8 @@ public slots:
     void OnShutdown(void) override;
 
 protected:
+    LogicState mPreviousState;
     LogicState mCurrentState;
-    LogicState mNextState;
     bool mStateChanged;
 };
 

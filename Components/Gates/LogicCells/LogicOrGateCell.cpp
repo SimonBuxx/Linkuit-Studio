@@ -2,29 +2,31 @@
 
 LogicOrGateCell::LogicOrGateCell(uint32_t pInputs):
     LogicBaseCell(pInputs, 1),
+    mPreviousState(LogicState::LOW),
     mCurrentState(LogicState::LOW),
-    mNextState(LogicState::LOW),
     mStateChanged(true)
 {}
 
 void LogicOrGateCell::LogicFunction()
 {
+    mCurrentState = mPreviousState; // Keep current state if no change
+
     for (const auto& input : mInputStates)
     {
         if (input == LogicState::HIGH)
         {
-            if (mCurrentState != LogicState::HIGH)
+            if (mPreviousState != LogicState::HIGH)
             {
-                mNextState = LogicState::HIGH;
+                mCurrentState = LogicState::HIGH;
                 mStateChanged = true;
                 emit StateChangedSignal();
             }
             return;
         }
     }
-    if (mCurrentState != LogicState::LOW)
+    if (mPreviousState != LogicState::LOW)
     {
-        mNextState = LogicState::LOW;
+        mCurrentState = LogicState::LOW;
         mStateChanged = true;
         emit StateChangedSignal();
     }
@@ -40,8 +42,8 @@ void LogicOrGateCell::OnSimulationAdvance()
 {
     if (mStateChanged)
     {
-        NotifySuccessor(0, mNextState);
-        mCurrentState = mNextState;
+        NotifySuccessor(0, mCurrentState);
+        mPreviousState = mCurrentState;
         mStateChanged = false;
     }
 }
@@ -49,8 +51,8 @@ void LogicOrGateCell::OnSimulationAdvance()
 void LogicOrGateCell::OnShutdown()
 {
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mPreviousState = LogicState::LOW;
     mCurrentState = LogicState::LOW;
-    mNextState = LogicState::LOW;
     mStateChanged = true;
     emit StateChangedSignal();
 }
