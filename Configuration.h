@@ -87,7 +87,7 @@ namespace conpoints
 {
 static constexpr double MIN_VISIBLE_LOD = 0.2f;
 static constexpr QColor CONPOINTS_LOW_COLOR(0, 88, 61);
-static constexpr QColor CONPOINTS_HIGH_COLOR(0, 143, 100);
+static constexpr QColor CONPOINTS_HIGH_COLOR(0, 204, 143);
 static constexpr uint32_t SIZE = 6;
 } // namespace
 

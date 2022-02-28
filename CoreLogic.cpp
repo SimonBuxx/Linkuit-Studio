@@ -15,8 +15,6 @@
 
 #include "HelperFunctions.h"
 
-//#include <QElapsedTimer>
-
 CoreLogic::CoreLogic(View &pView):
     mView(pView),
     mHorizontalPreviewWire(this, WireDirection::HORIZONTAL, 0),
@@ -650,7 +648,7 @@ void CoreLogic::ParseWireGroups(void)
         // If the component is a wire that is not yet part of a group
         if (dynamic_cast<LogicWire*>(comp) && mWireMap.find(static_cast<LogicWire*>(comp)) == mWireMap.end())
         {
-            mWireGroups.push_back(std::vector<LogicWire*>());
+            mWireGroups.push_back(std::vector<BaseComponent*>());
             ExploreGroup(static_cast<LogicWire*>(comp), mWireGroups.size() - 1);
         }
     }
@@ -663,11 +661,17 @@ void CoreLogic::ExploreGroup(LogicWire* pWire, int32_t pGroupIndex)
 
     for (auto& coll : mView.Scene()->collidingItems(pWire, Qt::IntersectsItemShape)) // Item shape is sufficient for wire collision
     {
-        if (dynamic_cast<LogicWire*>(coll) != nullptr && mWireMap.find(static_cast<LogicWire*>(coll)) == mWireMap.end()
-                && (IsLCrossing(pWire, static_cast<LogicWire*>(coll))
-                    || IsConPointAtPosition(GetWireCollisionPoint(pWire, static_cast<LogicWire*>(coll)), ConnectionType::FULL)))
+        if (dynamic_cast<LogicWire*>(coll) != nullptr && mWireMap.find(static_cast<LogicWire*>(coll)) == mWireMap.end())
         {
-            ExploreGroup(static_cast<LogicWire*>(coll), pGroupIndex); // Recursive call
+            auto conPoint = GetConPointAtPosition(GetWireCollisionPoint(pWire, static_cast<LogicWire*>(coll)), ConnectionType::FULL);
+            if (conPoint != nullptr)
+            {
+                mWireGroups[pGroupIndex].push_back(conPoint);
+            }
+            if (conPoint != nullptr || IsLCrossing(pWire, static_cast<LogicWire*>(coll)))
+            {
+                ExploreGroup(static_cast<LogicWire*>(coll), pGroupIndex); // Recursive call
+            }
         }
     }
 }
@@ -713,16 +717,20 @@ bool CoreLogic::IsLCrossing(LogicWire* pWireA, LogicWire* pWireB) const
         || (a->x() == b->x() && b->y() + b->GetLength() == a->y()) || (a->x() + a->GetLength() == b->x() && a->y() == b->y() + b->GetLength()));
 }
 
-bool CoreLogic::IsConPointAtPosition(QPointF pPos, ConnectionType pType) const
+ConPoint* CoreLogic::GetConPointAtPosition(QPointF pPos, ConnectionType pType) const
 {
     for (const auto& comp : mView.Scene()->items(pPos, Qt::IntersectsItemShape))
     {
         if (dynamic_cast<ConPoint*>(comp) != nullptr)
         {
-            return static_cast<ConPoint*>(comp)->GetConnectionType() == pType;
+            if(static_cast<ConPoint*>(comp)->GetConnectionType() == pType)
+            {
+                return static_cast<ConPoint*>(comp);
+            }
         }
     }
-    return false;
+
+    return nullptr;
 }
 
 void CoreLogic::CreateWireLogicCells()
@@ -733,9 +741,16 @@ void CoreLogic::CreateWireLogicCells()
     {
         auto logicCell = std::make_shared<LogicWireCell>(this);
         mLogicWireCells.emplace_back(logicCell);
-        for (auto& wire : group)
+        for (auto& comp : group)
         {
-            wire->SetLogicCell(logicCell);
+            if (dynamic_cast<LogicWire*>(comp) != nullptr)
+            {
+                static_cast<LogicWire*>(comp)->SetLogicCell(logicCell);
+            }
+            else if (dynamic_cast<ConPoint*>(comp) != nullptr)
+            {
+                static_cast<ConPoint*>(comp)->SetLogicCell(logicCell);
+            }
         }
     }
 }
@@ -744,7 +759,7 @@ void CoreLogic::ConnectLogicCells()
 {
     for (auto& comp : mView.Scene()->items())
     {
-        if (dynamic_cast<LogicWire*>(comp) != nullptr || dynamic_cast<ConPoint*>(comp) != nullptr)
+        if (dynamic_cast<LogicWire*>(comp) != nullptr || (dynamic_cast<ConPoint*>(comp) != nullptr && static_cast<ConPoint*>(comp)->GetConnectionType() == ConnectionType::FULL))
         {
             continue;
         }
@@ -755,7 +770,7 @@ void CoreLogic::ConnectLogicCells()
         {
             //auto collBase = static_cast<BaseComponent*>(coll);
 
-            if (dynamic_cast<ConPoint*>(coll) != nullptr)
+            if (dynamic_cast<ConPoint*>(coll) != nullptr && static_cast<ConPoint*>(comp)->GetConnectionType() == ConnectionType::FULL)
             {
                 continue; // ignore ConPoints, they are handled during wire grouping
             }

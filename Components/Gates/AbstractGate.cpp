@@ -158,6 +158,19 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
                 }
             }
 
+#warning set pen and brush for every output circle and every direction
+            if (mLogicCell->GetOutputState() == LogicState::HIGH)
+            {
+                pPainter->setPen(QPen(components::HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                pPainter->setBrush(components::HIGH_COLOR);
+            }
+            else
+            {
+                pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                                      components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                pPainter->setBrush(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR);
+            }
+
             // Draw invertion circles
             switch (mDirection)
             {
@@ -167,12 +180,13 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
                     {
                         if (mInputInverted.at(i))
                         {
+#warning outdated ellipse parameter
                             pPainter->drawEllipse(-10, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, 10, 10);
                         }
                     }
                     if (mOutputInverted)
                     {
-                        pPainter->drawEllipse(mWidth, mHeight / 2 - 5, 10, 10);
+                        pPainter->drawEllipse(mWidth + 1, mHeight / 2 - 4, 8, 8);
                     }
                     break;
                 }

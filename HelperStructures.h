@@ -28,6 +28,12 @@ enum class WireDirection
     UNSET
 };
 
+enum class DiodeDirection
+{
+    HORIZONTAL = 0,
+    VERTICAL
+};
+
 enum class LogicState
 {
     LOW = 0,

@@ -2,6 +2,8 @@
 
 LogicNotGateCell::LogicNotGateCell():
     LogicBaseCell(1, 1),
+    mCurrentState(LogicState::LOW),
+    mNextState(LogicState::LOW),
     mStateChanged(true)
 {}
 

@@ -3,6 +3,7 @@
 
 #include "BaseComponent.h"
 #include "HelperStructures.h"
+#include "Components/LogicWireCell.h"
 
 class ConPoint : public BaseComponent
 {
@@ -41,6 +42,8 @@ public:
     /// \return The previous connection type
     ConnectionType AdvanceConnectionType(void);
 
+    void SetLogicCell(std::shared_ptr<LogicWireCell> pLogicCell);
+
 signals:
     void ConnectionTypeChangedSignal(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType);
 
@@ -54,8 +57,6 @@ protected:
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 
 protected:
-    LogicState mState;
-
     bool mWasMoved;
     ConnectionType mConnectionType;
 };

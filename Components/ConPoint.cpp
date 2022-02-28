@@ -4,8 +4,7 @@
 #include "HelperFunctions.h"
 
 ConPoint::ConPoint(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic, nullptr),
-    mState(LogicState::LOW)
+    BaseComponent(pCoreLogic, nullptr)
 {
     setZValue(components::zvalues::CONPOINT);
 
@@ -24,7 +23,6 @@ ConPoint::ConPoint(const ConPoint& pObj, const CoreLogic* pCoreLogic):
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
-    mState = pObj.mState;
     mConnectionType = pObj.mConnectionType;
 };
 
@@ -62,17 +60,20 @@ ConnectionType ConPoint::AdvanceConnectionType()
         case ConnectionType::FULL:
         {
             mConnectionType = ConnectionType::DIODE_Y;
+            //mLogicCell = std::make_shared<LogicDiodeCell>(DiodeDirection::VERTICAL);
             break;
         }
         case ConnectionType::DIODE_Y:
         {
             mConnectionType = ConnectionType::DIODE_X;
+            //mLogicCell = std::make_shared<LogicDiodeCell>(DiodeDirection::HORIZONTAL);
             break;
         }
         case ConnectionType::DIODE_X:
         {
             // CoreLogic will handle deleting if on full crossing
             mConnectionType = ConnectionType::FULL;
+            mLogicCell = nullptr;
             break;
         }
         default:
@@ -92,13 +93,13 @@ void ConPoint::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption
 
     if (levelOfDetail >= components::conpoints::MIN_VISIBLE_LOD)
     {
-        if (mState == LogicState::LOW)
+        if (mLogicCell != nullptr && std::static_pointer_cast<LogicWireCell>(mLogicCell)->GetOutputState() == LogicState::HIGH)
+        {
+            pPainter->setBrush(components::conpoints::CONPOINTS_HIGH_COLOR);
+        }
+        else
         {
             pPainter->setBrush(pOption->state & QStyle::State_Selected ? components::SELECTED_COMPONENT_COLOR : components::conpoints::CONPOINTS_LOW_COLOR);
-        }
-        else if (mState == LogicState::HIGH)
-        {
-            pPainter->setBrush(Qt::white);
         }
         pPainter->setPen(Qt::NoPen);
 
@@ -130,6 +131,13 @@ void ConPoint::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption
             }
         }
     }
+}
+
+void ConPoint::SetLogicCell(std::shared_ptr<LogicWireCell> pLogicCell)
+{
+    mLogicCell = pLogicCell;
+
+    QObject::connect(mLogicCell.get(), &LogicBaseCell::StateChangedSignal, this, &ConPoint::OnLogicStateChanged);
 }
 
 void ConPoint::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)

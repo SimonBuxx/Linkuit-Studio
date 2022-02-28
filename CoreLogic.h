@@ -126,8 +126,8 @@ protected:
     /// \brief Checks if a ConPoint of the given type collides with the given position
     /// \param pPos: The position to check
     /// \param pType: The connection type to look for
-    /// \return True, if a ConPoint is found at pPos with connection type pType
-    bool IsConPointAtPosition(QPointF pPos, ConnectionType pType) const;
+    /// \return A pointer to the ConPoint, if a ConPoint is found at pPos with connection type pType, nullptr otherwise
+    ConPoint* GetConPointAtPosition(QPointF pPos, ConnectionType pType) const;
 
     void CreateWireLogicCells(void);
     void ConnectLogicCells(void);
@@ -153,7 +153,7 @@ protected:
     LogicWire mVerticalPreviewWire;
 
     // Variables for wire parsing (grouping)
-    std::vector<std::vector<LogicWire*>> mWireGroups;
+    std::vector<std::vector<BaseComponent*>> mWireGroups;
     std::map<LogicWire*, int32_t> mWireMap; // Contains wire pointers as keys and group indizes as values
 
     std::vector<std::shared_ptr<LogicWireCell>> mLogicWireCells;

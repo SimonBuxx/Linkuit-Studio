@@ -2,6 +2,8 @@
 
 LogicXorGateCell::LogicXorGateCell(uint32_t pInputs):
     LogicBaseCell(pInputs, 1),
+    mCurrentState(LogicState::LOW),
+    mNextState(LogicState::LOW),
     mStateChanged(true)
 {}
 
