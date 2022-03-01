@@ -161,8 +161,8 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
 #warning set pen and brush for every output circle and every direction
             if (mLogicCell->GetOutputState() == LogicState::HIGH)
             {
-                pPainter->setPen(QPen(components::HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                pPainter->setBrush(components::HIGH_COLOR);
+                pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                pPainter->setBrush(components::wires::WIRE_HIGH_COLOR);
             }
             else
             {

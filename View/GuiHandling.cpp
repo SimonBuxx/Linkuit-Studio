@@ -53,6 +53,11 @@ void View::CreateGui()
     mAddInputButton->setCheckable(true);
     mAddInputButton->setChecked(false);
 
+    mAddButtonButton = new QToolButton;
+    mAddButtonButton->setText(tr("Button"));
+    mAddButtonButton->setCheckable(true);
+    mAddButtonButton->setChecked(false);
+
     mAddOutputButton = new QToolButton;
     mAddOutputButton->setText(tr("Output"));
     mAddOutputButton->setCheckable(true);
@@ -91,6 +96,7 @@ void View::CreateGui()
     topButtonsGroup->addButton(mAddXorGateButton);
     topButtonsGroup->addButton(mAddNotGateButton);
     topButtonsGroup->addButton(mAddInputButton);
+    topButtonsGroup->addButton(mAddButtonButton);
     topButtonsGroup->addButton(mAddOutputButton);
     topButtonsGroup->addButton(mAddTextLabelButton);
     topButtonsGroup->addButton(mUndoButton);
@@ -107,6 +113,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddXorGateButton);
     topButtonsLayout->addWidget(mAddNotGateButton);
     topButtonsLayout->addWidget(mAddInputButton);
+    topButtonsLayout->addWidget(mAddButtonButton);
     topButtonsLayout->addWidget(mAddOutputButton);
     topButtonsLayout->addWidget(mAddTextLabelButton);
     topButtonsLayout->addWidget(mUndoButton);
@@ -137,6 +144,7 @@ void View::PrepareGuiForSimulation()
     mAddXorGateButton->setEnabled(false);
     mAddNotGateButton->setEnabled(false);
     mAddInputButton->setEnabled(false);
+    mAddButtonButton->setEnabled(false);
     mAddOutputButton->setEnabled(false);
     mAddTextLabelButton->setEnabled(false);
     mDeleteButton->setEnabled(false);
@@ -156,6 +164,7 @@ void View::PrepareGuiForEditing()
     mAddXorGateButton->setEnabled(true);
     mAddNotGateButton->setEnabled(true);
     mAddInputButton->setEnabled(true);
+    mAddButtonButton->setEnabled(true);
     mAddOutputButton->setEnabled(true);
     mAddTextLabelButton->setEnabled(true);
     mDeleteButton->setEnabled(true);
@@ -211,6 +220,10 @@ void View::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mAddInputButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::INPUT);
+    });
+
+    QObject::connect(mAddButtonButton, &QAbstractButton::clicked, [&](){
+        mCoreLogic.EnterAddControlMode(ComponentType::BUTTON);
     });
 
     QObject::connect(mAddOutputButton, &QAbstractButton::clicked, [&](){

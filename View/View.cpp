@@ -112,6 +112,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddInputButton->setChecked(true);
             break;
         }
+        case ComponentType::BUTTON:
+        {
+            mAddButtonButton->setChecked(true);
+            break;
+        }
         case ComponentType::OUTPUT:
         {
             mAddOutputButton->setChecked(true);

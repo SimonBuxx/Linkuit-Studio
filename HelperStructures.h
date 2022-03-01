@@ -9,6 +9,7 @@ enum class ComponentType
     XOR_GATE,
     NOT_GATE,
     INPUT,
+    BUTTON,
     OUTPUT,
     TEXT_LABEL
 };

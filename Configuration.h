@@ -95,9 +95,15 @@ namespace diodes
 {
 static constexpr uint32_t SIZE = 15;
 } // namespace
+
 namespace text_label {
 static const QFont FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
+} // namespace
+
+namespace inputs
+{
+static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(500);
 } // namespace
 
 } // namespace

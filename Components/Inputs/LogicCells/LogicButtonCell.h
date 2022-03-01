@@ -1,16 +1,18 @@
-#ifndef LOGICINPUTCELL_H
-#define LOGICINPUTCELL_H
+#ifndef LOGICBUTTONCELL_H
+#define LOGICBUTTONCELL_H
 
 #include "Components/LogicBaseCell.h"
 
-class LogicInputCell : public LogicBaseCell
+#include <QTimer>
+
+class LogicButtonCell : public LogicBaseCell
 {
 public:
-    LogicInputCell(void);
+    LogicButtonCell(void);
 
     void LogicFunction(void) override;
 
-    void ToggleState(void);
+    void ButtonClick(void);
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
@@ -20,6 +22,8 @@ public slots:
 protected:
     LogicState mState;
     bool mStateChanged;
+
+    QTimer mButtonTimer;
 };
 
-#endif // LOGICINPUTCELL_H
+#endif // LOGICBUTTONCELL_H
