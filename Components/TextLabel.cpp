@@ -142,6 +142,11 @@ void TextLabel::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOptio
 
         pPainter->drawLine(0, canvas::GRID_SIZE * -0.45f, 0, mHeight - canvas::GRID_SIZE * 0.45f);
     }
+
+    if (mPlainTextEdit)
+    {
+        mPlainTextEdit->setVisible(levelOfDetail >= components::DESCRIPTION_TEXT_MIN_LOD);
+    }
 }
 
 QRectF TextLabel::boundingRect() const
@@ -161,6 +166,7 @@ void TextLabel::SetTextContent(QString pText)
     if (mPlainTextEdit != nullptr)
     {
         mPlainTextEdit->document()->setPlainText(pText);
+        mPlainTextEdit->document()->setModified(false);
         UpdatePlainTextEditSize();
     }
 }

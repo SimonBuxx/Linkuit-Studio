@@ -1021,7 +1021,6 @@ void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPre
 void CoreLogic::OnTextLabelContentChanged(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText)
 {
     Q_ASSERT(pTextLabel);
-    qDebug() << "Content changed";
 
     auto data = std::make_shared<Undo::TextLabelContentChangedData>(pTextLabel, pPreviousText, pCurrentText);
     AppendUndo(new UndoConfigureType(data));
