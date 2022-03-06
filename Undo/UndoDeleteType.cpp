@@ -1,6 +1,6 @@
 #include "UndoDeleteType.h"
 
-UndoDeleteType::UndoDeleteType(std::vector<BaseComponent*> &pDeletedComponents):
+UndoDeleteType::UndoDeleteType(std::vector<IBaseComponent*> &pDeletedComponents):
     mComponents(pDeletedComponents)
 {}
 
@@ -17,7 +17,7 @@ Undo::Type UndoDeleteType::Type() const
     return Undo::Type::DEL;
 }
 
-const std::vector<BaseComponent*>& UndoDeleteType::Components() const
+const std::vector<IBaseComponent*>& UndoDeleteType::Components() const
 {
     return mComponents;
 }

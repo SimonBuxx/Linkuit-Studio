@@ -2,7 +2,7 @@
 #define VIEW_H
 
 #include "CoreLogic.h"
-#include "Components/BaseComponent.h"
+#include "Components/IBaseComponent.h"
 #include "Configuration.h"
 
 #include <QFrame>

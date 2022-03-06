@@ -4,7 +4,7 @@
 #include "HelperFunctions.h"
 
 ConPoint::ConPoint(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic, nullptr)
+    IBaseComponent(pCoreLogic, nullptr)
 {
     setZValue(components::zvalues::CONPOINT);
 
@@ -31,7 +31,7 @@ void ConPoint::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
     QObject::connect(this, &ConPoint::ConnectionTypeChangedSignal, pCoreLogic, &CoreLogic::OnConnectionTypeChanged);
 }
 
-BaseComponent* ConPoint::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* ConPoint::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new ConPoint(*this, pCoreLogic);
 }
@@ -148,7 +148,7 @@ void ConPoint::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
         emit ConnectionTypeChangedSignal(this, prevType, mConnectionType);
     }
 
-    BaseComponent::mousePressEvent(pEvent);
+    IBaseComponent::mousePressEvent(pEvent);
 }
 
 void ConPoint::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
@@ -170,12 +170,12 @@ void ConPoint::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
         setSelected(false);
     }
 
-    BaseComponent::mouseMoveEvent(pEvent);
+    IBaseComponent::mouseMoveEvent(pEvent);
 }
 
 void ConPoint::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
 {
-    BaseComponent::mouseReleaseEvent(pEvent);
+    IBaseComponent::mouseReleaseEvent(pEvent);
     mWasMoved = false;
 }
 

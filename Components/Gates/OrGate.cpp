@@ -23,7 +23,7 @@ OrGate::OrGate(const OrGate& pObj, const CoreLogic* pCoreLogic):
     mInputInverted= pObj.mInputInverted;
 };
 
-BaseComponent* OrGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* OrGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new OrGate(*this, pCoreLogic);
 }

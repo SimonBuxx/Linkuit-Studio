@@ -20,7 +20,7 @@ class CoreLogic : public QObject
 public:
     CoreLogic(View &pView);
 
-    BaseComponent* GetItem(void);
+    IBaseComponent* GetItem(void);
 
     void EnterControlMode(ControlMode pMode);
     ControlMode GetControlMode(void);
@@ -74,12 +74,12 @@ protected:
 
     // Functions for wire processing
 
-    std::vector<BaseComponent*> FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection = WireDirection::UNSET) const;
+    std::vector<IBaseComponent*> FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection = WireDirection::UNSET) const;
 
     LogicWire* MergeWires(LogicWire* pNewWire, LogicWire* pLeftTopAdjacent, LogicWire* pRightBottomAdjacent) const;
-    std::vector<BaseComponent*> DeleteContainedWires(LogicWire* pWire);
+    std::vector<IBaseComponent*> DeleteContainedWires(LogicWire* pWire);
     LogicWire* GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
-    void MergeWiresAfterMove(std::vector<LogicWire*> &pComponents, std::vector<BaseComponent*> &pAddedWires, std::vector<BaseComponent*> &pDeletedWires);
+    void MergeWiresAfterMove(std::vector<LogicWire*> &pComponents, std::vector<IBaseComponent*> &pAddedWires, std::vector<IBaseComponent*> &pDeletedWires);
 
     bool IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const;
     bool IsNoCrossingPoint(const ConPoint* pConPoint) const;
@@ -96,12 +96,12 @@ protected:
     /// \brief Returns all components that are "colliding" (may not be before or behind others) with the given component
     /// \param pComponent: The component to check for colliding components
     /// \return A vector of components that are colliding with pComponent
-    std::vector<BaseComponent*> GetCollidingComponents(BaseComponent* pComponent) const;
+    std::vector<IBaseComponent*> GetCollidingComponents(IBaseComponent* pComponent) const;
 
     /// \brief Checks if the given component is a "colliding" component (may not be before or behind others)
     /// \param pComponent: The component to check
     /// \return True, if pComponent is a "colliding" component
-    bool IsCollidingComponent(BaseComponent* pComponent) const;
+    bool IsCollidingComponent(IBaseComponent* pComponent) const;
 
     /// \brief Groups all existing wires into groups that are connected, meaning they always have the same logic state
     void ParseWireGroups(void);
@@ -153,7 +153,7 @@ protected:
     LogicWire mVerticalPreviewWire;
 
     // Variables for wire parsing (grouping)
-    std::vector<std::vector<BaseComponent*>> mWireGroups;
+    std::vector<std::vector<IBaseComponent*>> mWireGroups;
     std::map<LogicWire*, int32_t> mWireMap; // Contains wire pointers as keys and group indizes as values
 
     std::vector<std::shared_ptr<LogicWireCell>> mLogicWireCells;

@@ -1,11 +1,11 @@
 #ifndef LOGICINPUT_H
 #define LOGICINPUT_H
 
-#include "../BaseComponent.h"
+#include "../IBaseComponent.h"
 #include "HelperStructures.h"
 #include "LogicCells/LogicInputCell.h"
 
-class LogicInput : public BaseComponent
+class LogicInput : public IBaseComponent
 {
     Q_OBJECT
 public:
@@ -15,7 +15,7 @@ public:
     /// \brief Clone function for the input component
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \return A pointer to the new component
-    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
+    virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
 

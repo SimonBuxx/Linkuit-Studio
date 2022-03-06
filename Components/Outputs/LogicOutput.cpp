@@ -3,7 +3,7 @@
 #include "Configuration.h"
 
 LogicOutput::LogicOutput(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic, std::make_shared<LogicOutputCell>())
+    IBaseComponent(pCoreLogic, std::make_shared<LogicOutputCell>())
 {
     setZValue(components::zvalues::OUTPUT);
 
@@ -20,7 +20,7 @@ LogicOutput::LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
 };
 
-BaseComponent* LogicOutput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* LogicOutput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicOutput(*this, pCoreLogic);
 }

@@ -25,7 +25,7 @@ XorGate::XorGate(const XorGate& pObj, const CoreLogic* pCoreLogic):
     mInputInverted= pObj.mInputInverted;
 };
 
-BaseComponent* XorGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* XorGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new XorGate(*this, pCoreLogic);
 }

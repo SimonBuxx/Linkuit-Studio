@@ -1,5 +1,5 @@
-#ifndef BASECOMPONENT_H
-#define BASECOMPONENT_H
+#ifndef IBASECOMPONENT_H
+#define IBASECOMPONENT_H
 
 #include "LogicBaseCell.h"
 
@@ -22,14 +22,14 @@ struct LogicConnector
     QPointF pos;
 };
 
-class BaseComponent : public QObject, public QGraphicsItem
+class IBaseComponent : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    BaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell);
+    IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell);
 
-    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const = 0;
+    virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const = 0;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent) override;
@@ -65,4 +65,4 @@ protected:
     std::shared_ptr<LogicBaseCell> mLogicCell;
 };
 
-#endif // BASECOMPONENT_H
+#endif // IBASECOMPONENT_H

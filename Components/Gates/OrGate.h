@@ -18,7 +18,7 @@ public:
     /// \brief Clone function for the gate
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \return A pointer to the new gate component
-    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
+    virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 };
 
 #endif // ORGATE_H

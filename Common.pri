@@ -11,7 +11,7 @@ HEADERS += \
     $$PWD/Components/LogicWireCell.h \
     $$PWD/Components/Gates/LogicCells/LogicXorGateCell.h \
     $$PWD/Components/TextLabel.h \
-    $${PWD}/Components/BaseComponent.h \
+    $${PWD}/Components/IBaseComponent.h \
     $${PWD}/Components/Gates/AbstractGate.h \
     $${PWD}/Components/Gates/AndGate.h \
     $${PWD}/Components/Gates/NotGate.h \
@@ -30,7 +30,8 @@ HEADERS += \
     $${PWD}/Undo/UndoDeleteType.h \
     $${PWD}/Undo/UndoMoveType.h \
     $${PWD}/View/View.h \
-    $${PWD}/Configuration.h
+    $${PWD}/Configuration.h \
+    $${PWD}/framelesswindow.h
 
 SOURCES += \
     $$PWD/Components/ConPoint.cpp \
@@ -45,7 +46,7 @@ SOURCES += \
     $$PWD/Components/LogicWireCell.cpp \
     $$PWD/Components/Gates/LogicCells/LogicXorGateCell.cpp \
     $$PWD/Components/TextLabel.cpp \
-    $${PWD}/Components/BaseComponent.cpp \
+    $${PWD}/Components/IBaseComponent.cpp \
     $${PWD}/Components/Gates/AbstractGate.cpp \
     $${PWD}/Components/Gates/AndGate.cpp \
     $${PWD}/Components/Gates/NotGate.cpp \

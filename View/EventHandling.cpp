@@ -1,5 +1,6 @@
 #include "View.h"
 #include "HelperFunctions.h"
+#include "Components/TextLabel.h"
 
 #include <QtWidgets>
 
@@ -108,39 +109,50 @@ void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 {
-    switch (pEvent->key())
+    QList<QGraphicsItem*>&& selected = mView.Scene()->selectedItems();
+
+    if (pEvent->key() == Qt::Key_Escape)
     {
-        case Qt::Key_Escape:
+        // Entering EDIT mode is also enabled during label editing
+        mCoreLogic.EnterControlMode(ControlMode::EDIT);
+        QGraphicsView::keyPressEvent(pEvent);
+        return;
+    }
+
+    if (selected.size() != 1 || dynamic_cast<TextLabel*>(selected[0]) == nullptr)
+    {
+        // Key actions that are disabled during label editing
+
+        switch (pEvent->key())
         {
-            // Enter edit mode (may cancel simulation)
-            mCoreLogic.EnterControlMode(ControlMode::EDIT);
-            break;
-        }
-        case Qt::Key_Delete:
-        {
-            if (!mCoreLogic.IsSimulationRunning())
+            case Qt::Key_Delete:
             {
-                mCoreLogic.DeleteSelectedComponents();
+                if (!mCoreLogic.IsSimulationRunning())
+                {
+                    mCoreLogic.DeleteSelectedComponents();
+                }
+                break;
             }
-            break;
-        }
-        case Qt::Key_Return:
-        {
-            if (mCoreLogic.IsSimulationRunning())
+            case Qt::Key_Return:
             {
-                mCoreLogic.EnterControlMode(ControlMode::EDIT);
+                if (mCoreLogic.IsSimulationRunning())
+                {
+                    mCoreLogic.EnterControlMode(ControlMode::EDIT);
+                }
+                else
+                {
+                    mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+                }
+                break;
             }
-            else
+            default:
             {
-                mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+                break;
             }
-            break;
-        }
-        default:
-        {
-            break;
         }
     }
+
+    QGraphicsView::keyPressEvent(pEvent);
 }
 
 void GraphicsView::keyReleaseEvent(QKeyEvent *pEvent)

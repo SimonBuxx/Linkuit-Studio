@@ -2,19 +2,19 @@
 #define UNDODELETETYPE_H
 
 #include "UndoBaseType.h"
-#include "../Components/BaseComponent.h"
+#include "../Components/IBaseComponent.h"
 
 class UndoDeleteType : public UndoBaseType
 {
 public:
-    UndoDeleteType(std::vector<BaseComponent*> &pDeletedComponents);
+    UndoDeleteType(std::vector<IBaseComponent*> &pDeletedComponents);
     ~UndoDeleteType(void);
     Undo::Type Type(void) const override;
 
-    const std::vector<BaseComponent*>& Components(void) const;
+    const std::vector<IBaseComponent*>& Components(void) const;
 
 protected:
-    std::vector<BaseComponent*> mComponents;
+    std::vector<IBaseComponent*> mComponents;
 };
 
 #endif // UNDODELETETYPE_H

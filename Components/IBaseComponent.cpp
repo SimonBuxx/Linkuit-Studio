@@ -1,11 +1,11 @@
-#include "BaseComponent.h"
+#include "IBaseComponent.h"
 #include "View/View.h"
 #include "HelperFunctions.h"
 
 #include <QApplication>
 #include <QGraphicsScene>
 
-BaseComponent::BaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell):
+IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell):
     mMoveStartPoint(pos()),
     mSimulationRunning(false),
     mLogicCell(pLogicCell)
@@ -29,69 +29,77 @@ BaseComponent::BaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicB
         setAcceptHoverEvents(true);
         mSimulationRunning = false;
     });
-    QObject::connect(this, &BaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMoved);
+    QObject::connect(this, &IBaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMoved);
 
     if (mLogicCell != nullptr)
     {
         QObject::connect(pCoreLogic, &CoreLogic::SimulationAdvanceSignal, mLogicCell.get(), &LogicBaseCell::OnSimulationAdvance);
         QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, mLogicCell.get(), &LogicBaseCell::OnShutdown);
-        QObject::connect(mLogicCell.get(), &LogicBaseCell::StateChangedSignal, this, &BaseComponent::OnLogicStateChanged);
+        QObject::connect(mLogicCell.get(), &LogicBaseCell::StateChangedSignal, this, &IBaseComponent::OnLogicStateChanged);
     }
 }
 
-std::vector<LogicConnector>& BaseComponent::GetInConnectors()
+std::vector<LogicConnector>& IBaseComponent::GetInConnectors()
 {
     return mInConnectors;
 }
 
-std::vector<LogicConnector>& BaseComponent::GetOutConnectors()
+std::vector<LogicConnector>& IBaseComponent::GetOutConnectors()
 {
     return mOutConnectors;
 }
 
-uint32_t BaseComponent::GetInConnectorCount() const
+uint32_t IBaseComponent::GetInConnectorCount() const
 {
     return mInConnectors.size();
 }
 
-uint32_t BaseComponent::GetOutConnectorCount() const
+uint32_t IBaseComponent::GetOutConnectorCount() const
 {
     return mOutConnectors.size();
 }
 
-void BaseComponent::OnLogicStateChanged()
+void IBaseComponent::OnLogicStateChanged()
 {
     update();
 }
 
-std::shared_ptr<LogicBaseCell> BaseComponent::GetLogicCell()
+std::shared_ptr<LogicBaseCell> IBaseComponent::GetLogicCell()
 {
     return mLogicCell;
 }
 
-void BaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
+void IBaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 {
     QGraphicsItem::mousePressEvent(pEvent);
-    mMoveStartPoint = pos();
-    update();
+    if (this->isSelected())
+    {
+        mMoveStartPoint = pos();
+        setZValue(components::zvalues::FRONT);
+        update();
+    }
 }
 
-void BaseComponent::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
+void IBaseComponent::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
 {
     QGraphicsItem::mouseMoveEvent(pEvent);
     update();
 }
 
-void BaseComponent::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
+void IBaseComponent::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
 {
     QGraphicsItem::mouseReleaseEvent(pEvent);
 
-    setPos(SnapToGrid(pos()));
-    QPointF offset = pos() - mMoveStartPoint;
-
-    if (offset.manhattanLength() > 0)
+    if (this->isSelected())
     {
-        emit SelectedComponentMovedSignal(offset);
+        setPos(SnapToGrid(pos()));
+        QPointF offset = pos() - mMoveStartPoint;
+
+        if (offset.manhattanLength() > 0)
+        {
+            emit SelectedComponentMovedSignal(offset);
+        }
+        ResetZValue();
+        update();
     }
-    update();
 }

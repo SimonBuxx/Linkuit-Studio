@@ -22,7 +22,7 @@ NotGate::NotGate(const NotGate& pObj, const CoreLogic* pCoreLogic):
     mInputInverted= pObj.mInputInverted;
 };
 
-BaseComponent* NotGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* NotGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new NotGate(*this, pCoreLogic);
 }

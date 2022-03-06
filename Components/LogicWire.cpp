@@ -3,7 +3,7 @@
 #include "Configuration.h"
 
 LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint32_t pLength):
-    BaseComponent(pCoreLogic, nullptr),
+    IBaseComponent(pCoreLogic, nullptr),
     mDirection(pDirection)
 {
     setZValue(components::zvalues::WIRE);
@@ -24,7 +24,7 @@ LogicWire::LogicWire(const LogicWire& pObj, const CoreLogic* pCoreLogic):
     LogicWire(pCoreLogic, pObj.mDirection, pObj.GetLength())
 {};
 
-BaseComponent* LogicWire::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* LogicWire::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicWire(*this, pCoreLogic);
 }

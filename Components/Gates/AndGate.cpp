@@ -23,7 +23,7 @@ AndGate::AndGate(const AndGate& pObj, const CoreLogic* pCoreLogic):
     mInputInverted= pObj.mInputInverted;
 };
 
-BaseComponent* AndGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* AndGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new AndGate(*this, pCoreLogic);
 }

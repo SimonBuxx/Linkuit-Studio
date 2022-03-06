@@ -3,7 +3,7 @@
 #include "Configuration.h"
 
 LogicButton::LogicButton(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic, std::make_shared<LogicButtonCell>())
+    IBaseComponent(pCoreLogic, std::make_shared<LogicButtonCell>())
 {
     setZValue(components::zvalues::INPUT);
 
@@ -24,7 +24,7 @@ LogicButton::LogicButton(const LogicButton& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
 };
 
-BaseComponent* LogicButton::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* LogicButton::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicButton(*this, pCoreLogic);
 }
@@ -35,7 +35,7 @@ void LogicButton::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
     {
         std::static_pointer_cast<LogicButtonCell>(mLogicCell)->ButtonClick();
     }
-    BaseComponent::mousePressEvent(pEvent);
+    IBaseComponent::mousePressEvent(pEvent);
 }
 
 void LogicButton::ResetZValue()

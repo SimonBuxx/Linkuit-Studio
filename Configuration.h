@@ -45,7 +45,8 @@ enum zvalues
     GATE,
     INPUT,
     OUTPUT,
-    TEXT_LABEL
+    TEXT_LABEL,
+    FRONT
 };
 
 static constexpr QColor FILL_COLOR(0, 88, 61);

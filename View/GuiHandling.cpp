@@ -1,6 +1,6 @@
 #include "View.h"
 #include "HelperFunctions.h"
-#include "Components/BaseComponent.h"
+#include "Components/IBaseComponent.h"
 
 #include <QtWidgets>
 
@@ -123,7 +123,7 @@ void View::CreateGui()
 
     mZoomLabel = new QLabel(this);
     mZoomLabel->setText("100%");
-    mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: #00583D; font-family: \"Calibri Light\"; font-size: 16px; color: #fff; border-radius: 3px;}");
+    mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: #00583D; font-family: \"Calibri Light\"; font-size: 16px; color: #fff;}");
 
     QGridLayout *topLayout = new QGridLayout;
     topLayout->addLayout(topButtonsLayout, 0, 0);

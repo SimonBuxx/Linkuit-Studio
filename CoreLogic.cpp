@@ -53,6 +53,11 @@ void CoreLogic::EnterControlMode(ControlMode pMode)
             emit ComponentTypeChangedSignal(mComponentType);
         }
 
+        if (pMode == ControlMode::EDIT)
+        {
+            mView.Scene()->clearFocus();
+        }
+
         if (pMode == ControlMode::SIMULATION)
         {
             ParseWireGroups();
@@ -102,9 +107,9 @@ void CoreLogic::SetComponentType(ComponentType pComponentType)
     emit ComponentTypeChangedSignal(mComponentType);
 }
 
-BaseComponent* CoreLogic::GetItem()
+IBaseComponent* CoreLogic::GetItem()
 {
-    BaseComponent* item;
+    IBaseComponent* item;
 
     switch(mComponentType)
     {
@@ -172,9 +177,10 @@ void CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
     if (GetCollidingComponents(item).empty())
     {
+        mView.Scene()->clearFocus(); // Remove focus from components like labels that can be edited while in ADD mode
         mView.Scene()->addItem(item);
 
-        auto addedComponents = std::vector<BaseComponent*>{static_cast<BaseComponent*>(item)};
+        auto addedComponents = std::vector<IBaseComponent*>{static_cast<IBaseComponent*>(item)};
         AppendUndo(new UndoAddType(addedComponents));
     }
     else
@@ -244,8 +250,8 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     }
 
     QPointF snappedEndPoint = SnapToGrid(pEndPoint);
-    std::vector<BaseComponent*> addedComponents;
-    std::vector<BaseComponent*> deletedComponents;
+    std::vector<IBaseComponent*> addedComponents;
+    std::vector<IBaseComponent*> deletedComponents;
 
     // Add horizontal wire
     if (mPreviewWireStart.x() != snappedEndPoint.x())
@@ -280,18 +286,18 @@ void CoreLogic::AddWires(QPointF pEndPoint)
 
         if (startAdjacent)
         {
-            deletedComponents.push_back(static_cast<BaseComponent*>(startAdjacent));
+            deletedComponents.push_back(static_cast<IBaseComponent*>(startAdjacent));
             mView.Scene()->removeItem(startAdjacent);
         }
 
         if (endAdjacent)
         {
-            deletedComponents.push_back(static_cast<BaseComponent*>(endAdjacent));
+            deletedComponents.push_back(static_cast<IBaseComponent*>(endAdjacent));
             mView.Scene()->removeItem(endAdjacent);
         }
 
         mView.Scene()->addItem(horizontalWire);
-        addedComponents.push_back(static_cast<BaseComponent*>(horizontalWire));
+        addedComponents.push_back(static_cast<IBaseComponent*>(horizontalWire));
     }
 
     // Add vertical wire
@@ -327,21 +333,21 @@ void CoreLogic::AddWires(QPointF pEndPoint)
 
         if (startAdjacent)
         {
-            deletedComponents.push_back(static_cast<BaseComponent*>(startAdjacent));
+            deletedComponents.push_back(static_cast<IBaseComponent*>(startAdjacent));
             mView.Scene()->removeItem(startAdjacent);
         }
 
         if (endAdjacent)
         {
-            deletedComponents.push_back(static_cast<BaseComponent*>(endAdjacent));
+            deletedComponents.push_back(static_cast<IBaseComponent*>(endAdjacent));
             mView.Scene()->removeItem(endAdjacent);
         }
 
         mView.Scene()->addItem(verticalWire);
-        addedComponents.push_back(static_cast<BaseComponent*>(verticalWire));
+        addedComponents.push_back(static_cast<IBaseComponent*>(verticalWire));
     }
 
-    std::vector<BaseComponent*> addedConPoints;
+    std::vector<IBaseComponent*> addedConPoints;
 
     for (const auto& wire : addedComponents)
     {
@@ -390,7 +396,7 @@ bool CoreLogic::IsComponentAtPosition(QPointF pPos)
     return false;
 }
 
-void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector<BaseComponent*> &pAddedWires, std::vector<BaseComponent*> &pDeletedWires)
+void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector<IBaseComponent*> &pAddedWires, std::vector<IBaseComponent*> &pDeletedWires)
 {
     for (auto &w : pWires)
     {
@@ -414,7 +420,7 @@ void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector
             }
 
             mView.Scene()->addItem(horizontalWire);
-            pAddedWires.push_back(static_cast<BaseComponent*>(horizontalWire));
+            pAddedWires.push_back(static_cast<IBaseComponent*>(horizontalWire));
         }
         else
         {
@@ -430,7 +436,7 @@ void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector
             }
 
             mView.Scene()->addItem(verticalWire);
-            pAddedWires.push_back(static_cast<BaseComponent*>(verticalWire));
+            pAddedWires.push_back(static_cast<IBaseComponent*>(verticalWire));
         }
 
         pDeletedWires.push_back(w);
@@ -438,21 +444,21 @@ void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector
 
         if (startAdjacent)
         {
-            pDeletedWires.push_back(static_cast<BaseComponent*>(startAdjacent));
+            pDeletedWires.push_back(static_cast<IBaseComponent*>(startAdjacent));
             mView.Scene()->removeItem(startAdjacent);
         }
 
         if (endAdjacent)
         {
-            pDeletedWires.push_back(static_cast<BaseComponent*>(endAdjacent));
+            pDeletedWires.push_back(static_cast<IBaseComponent*>(endAdjacent));
             mView.Scene()->removeItem(endAdjacent);
         }
     }
 }
 
-std::vector<BaseComponent*> CoreLogic::DeleteContainedWires(LogicWire* pWire)
+std::vector<IBaseComponent*> CoreLogic::DeleteContainedWires(LogicWire* pWire)
 {
-    std::vector<BaseComponent*> deletedComponents;
+    std::vector<IBaseComponent*> deletedComponents;
 
     QList<QGraphicsItem*> containedComponents;
 
@@ -494,40 +500,40 @@ LogicWire* CoreLogic::GetAdjacentWire(QPointF pCheckPosition, WireDirection pDir
 }
 
 // Remember that using (dynamic_cast<LogicWire*>(comp) != nullptr) directly is more efficient than iterating over filtered components
-std::vector<BaseComponent*> CoreLogic::FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection) const
+std::vector<IBaseComponent*> CoreLogic::FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection) const
 {
-    std::vector<BaseComponent*> wires;
+    std::vector<IBaseComponent*> wires;
 
     for (auto &comp : pComponents)
     {
         if (dynamic_cast<LogicWire*>(comp) != nullptr
                 && (static_cast<LogicWire*>(comp)->GetDirection() == pDirection || pDirection == WireDirection::UNSET))
         {
-            wires.push_back(static_cast<BaseComponent*>(comp));
+            wires.push_back(static_cast<IBaseComponent*>(comp));
         }
     }
 
     return wires;
 }
 
-std::vector<BaseComponent*> CoreLogic::GetCollidingComponents(BaseComponent* pComponent) const
+std::vector<IBaseComponent*> CoreLogic::GetCollidingComponents(IBaseComponent* pComponent) const
 {
-    std::vector<BaseComponent*> collidingComponents;
+    std::vector<IBaseComponent*> collidingComponents;
 
     for (auto &comp : mView.Scene()->collidingItems(pComponent))
     {
-        if (IsCollidingComponent(static_cast<BaseComponent*>(comp)))
+        if (IsCollidingComponent(static_cast<IBaseComponent*>(comp)))
         {
-            collidingComponents.push_back(static_cast<BaseComponent*>(comp));
+            collidingComponents.push_back(static_cast<IBaseComponent*>(comp));
         }
     }
 
     return collidingComponents;
 }
 
-bool CoreLogic::IsCollidingComponent(BaseComponent* pComponent) const
+bool CoreLogic::IsCollidingComponent(IBaseComponent* pComponent) const
 {
-    return (dynamic_cast<LogicWire*>(pComponent) == nullptr && dynamic_cast<ConPoint*>(pComponent) == nullptr);
+    return (dynamic_cast<LogicWire*>(pComponent) == nullptr && dynamic_cast<ConPoint*>(pComponent) == nullptr && dynamic_cast<TextLabel*>(pComponent) == nullptr);
 }
 
 bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const
@@ -654,7 +660,7 @@ void CoreLogic::ParseWireGroups(void)
         // If the component is a wire that is not yet part of a group
         if (dynamic_cast<LogicWire*>(comp) && mWireMap.find(static_cast<LogicWire*>(comp)) == mWireMap.end())
         {
-            mWireGroups.push_back(std::vector<BaseComponent*>());
+            mWireGroups.push_back(std::vector<IBaseComponent*>());
             ExploreGroup(static_cast<LogicWire*>(comp), mWireGroups.size() - 1);
         }
     }
@@ -770,11 +776,11 @@ void CoreLogic::ConnectLogicCells()
             continue;
         }
 
-        auto compBase = static_cast<BaseComponent*>(comp);
+        auto compBase = static_cast<IBaseComponent*>(comp);
 
         for (auto& coll : mView.Scene()->collidingItems(comp, Qt::IntersectsItemBoundingRect))
         {
-            //auto collBase = static_cast<BaseComponent*>(coll);
+            //auto collBase = static_cast<IBaseComponent*>(coll);
 
             if (dynamic_cast<ConPoint*>(coll) != nullptr && static_cast<ConPoint*>(comp)->GetConnectionType() == ConnectionType::FULL)
             {
@@ -846,7 +852,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     }
 
     std::vector<LogicWire*> affectedWires;
-    std::vector<BaseComponent*> affectedComponents;
+    std::vector<IBaseComponent*> affectedComponents;
 
     for (auto& comp : mView.Scene()->selectedItems())
     {
@@ -855,12 +861,12 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
             affectedWires.push_back(static_cast<LogicWire*>(comp));
         }
 
-        affectedComponents.push_back(static_cast<BaseComponent*>(comp));
+        affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
     }
 
-    std::vector<BaseComponent*> movedComponents;
-    std::vector<BaseComponent*> addedComponents;
-    std::vector<BaseComponent*> deletedComponents;
+    std::vector<IBaseComponent*> movedComponents;
+    std::vector<IBaseComponent*> addedComponents;
+    std::vector<IBaseComponent*> deletedComponents;
 
     MergeWiresAfterMove(affectedWires, addedComponents, deletedComponents);
 
@@ -871,7 +877,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
     for (auto& comp : affectedComponents)
     {
-        const auto baseComp = static_cast<BaseComponent*>(comp);
+        const auto baseComp = static_cast<IBaseComponent*>(comp);
 
         // Delete all invalid ConPoints at the original position colliding with the selection
         QRectF oldCollisionRect(baseComp->pos() + baseComp->boundingRect().topLeft() - pOffset,
@@ -882,7 +888,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
             if (dynamic_cast<ConPoint*>(collidingComp) != nullptr && !collidingComp->isSelected() && IsNoCrossingPoint(static_cast<ConPoint*>(collidingComp)))
             {
                 mView.Scene()->removeItem(collidingComp);
-                deletedComponents.push_back(static_cast<BaseComponent*>(collidingComp));
+                deletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
             }
         }
 
@@ -942,7 +948,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
             mView.Scene()->clearSelection();
             return;
         }
-        movedComponents.push_back(static_cast<BaseComponent*>(comp));
+        movedComponents.push_back(static_cast<IBaseComponent*>(comp));
     }
 
     mView.Scene()->clearSelection();
@@ -967,7 +973,7 @@ void CoreLogic::OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent
             // Create a new ConPoint (removing will be handled by OnConnectionTypeChanged)
             auto item = new ConPoint(this);
             item->setPos(snappedPos);
-            std::vector<BaseComponent*> addedComponents{item};
+            std::vector<IBaseComponent*> addedComponents{item};
             mView.Scene()->addItem(item);
             AppendUndo(new UndoAddType(addedComponents));
             return;
@@ -1001,7 +1007,7 @@ void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPre
         pConPoint->SetConnectionType(pPreviousType); // Restore old connection type in case delete is undone
         mView.Scene()->removeItem(pConPoint);
 
-        auto deleted = std::vector<BaseComponent*>{pConPoint};
+        auto deleted = std::vector<IBaseComponent*>{pConPoint};
         AppendUndo(new UndoDeleteType(deleted));
     }
     else
@@ -1014,14 +1020,14 @@ void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPre
 void CoreLogic::CopySelectedComponents()
 {
     QList<QGraphicsItem*> componentsToCopy = mView.Scene()->selectedItems();
-    std::vector<BaseComponent*> addedComponents{};
+    std::vector<IBaseComponent*> addedComponents{};
 
     mView.Scene()->clearSelection();
 
     for (auto& orig : componentsToCopy)
     {
         // Create a copy of the original component
-        BaseComponent* copy = static_cast<BaseComponent*>(orig)->CloneBaseComponent(this);
+        IBaseComponent* copy = static_cast<IBaseComponent*>(orig)->CloneBaseComponent(this);
         Q_ASSERT(copy);
 
         // Paste the copied component one grid cell below and to the right
@@ -1041,14 +1047,14 @@ void CoreLogic::CopySelectedComponents()
 void CoreLogic::DeleteSelectedComponents()
 {
     QList<QGraphicsItem*> componentsToDelete = mView.Scene()->selectedItems();
-    std::vector<BaseComponent*> deletedComponents{};
+    std::vector<IBaseComponent*> deletedComponents{};
     for (auto& comp : componentsToDelete)
     {
         // Do not allow deleting of ConPoints on T crossings
         if (dynamic_cast<ConPoint*>(comp) == nullptr || IsXCrossingPoint(comp->pos()))
         {
             mView.Scene()->removeItem(comp);
-            deletedComponents.push_back(static_cast<BaseComponent*>(comp));
+            deletedComponents.push_back(static_cast<IBaseComponent*>(comp));
         }
     }
 
@@ -1060,7 +1066,7 @@ void CoreLogic::DeleteSelectedComponents()
             if (dynamic_cast<ConPoint*>(collidingComp) != nullptr && IsNoCrossingPoint(static_cast<ConPoint*>(collidingComp)))
             {
                 mView.Scene()->removeItem(collidingComp);
-                deletedComponents.push_back(static_cast<BaseComponent*>(collidingComp));
+                deletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
             }
         }
     }

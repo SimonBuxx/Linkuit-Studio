@@ -1,11 +1,11 @@
 #ifndef CONPOINT_H
 #define CONPOINT_H
 
-#include "BaseComponent.h"
+#include "IBaseComponent.h"
 #include "HelperStructures.h"
 #include "Components/LogicWireCell.h"
 
-class ConPoint : public BaseComponent
+class ConPoint : public IBaseComponent
 {
     Q_OBJECT
 public:
@@ -15,7 +15,7 @@ public:
     /// \brief Clone function for the connection point
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \return A pointer to the new component
-    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
+    virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent) override;

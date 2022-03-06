@@ -1,11 +1,11 @@
 #include "UndoAddType.h"
 
-UndoAddType::UndoAddType(std::vector<BaseComponent*> &pAddedComponents):
+UndoAddType::UndoAddType(std::vector<IBaseComponent*> &pAddedComponents):
     mAddedComponents(pAddedComponents),
     mDeletedComponents()
 {}
 
-UndoAddType::UndoAddType(std::vector<BaseComponent*> &pAddedComponents, std::vector<BaseComponent*> &pDeletedComponents):
+UndoAddType::UndoAddType(std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents):
     mAddedComponents(pAddedComponents),
     mDeletedComponents(pDeletedComponents)
 {}
@@ -23,12 +23,12 @@ Undo::Type UndoAddType::Type() const
     return Undo::Type::ADD;
 }
 
-const std::vector<BaseComponent*>& UndoAddType::AddedComponents() const
+const std::vector<IBaseComponent*>& UndoAddType::AddedComponents() const
 {
     return mAddedComponents;
 }
 
-const std::vector<BaseComponent*>& UndoAddType::DeletedComponents() const
+const std::vector<IBaseComponent*>& UndoAddType::DeletedComponents() const
 {
     return mDeletedComponents;
 }

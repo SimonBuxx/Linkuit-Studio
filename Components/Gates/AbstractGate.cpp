@@ -2,7 +2,7 @@
 #include "Configuration.h"
 
 AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, Direction pDirection):
-    BaseComponent(pCoreLogic, pLogicCell),
+    IBaseComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),
     mDirection(pDirection),
     mInputInverted(pInputCount, false)
@@ -253,7 +253,7 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
 
         if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)
         {
-            pPainter->drawRoundedRect(0, 0, mWidth, mHeight, 0, 0);
+            pPainter->drawRoundedRect(0, 0, mWidth, mHeight, 1, 1);
         }
         else
         {

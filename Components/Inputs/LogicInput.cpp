@@ -3,7 +3,7 @@
 #include "Configuration.h"
 
 LogicInput::LogicInput(const CoreLogic* pCoreLogic):
-    BaseComponent(pCoreLogic, std::make_shared<LogicInputCell>())
+    IBaseComponent(pCoreLogic, std::make_shared<LogicInputCell>())
 {
     setZValue(components::zvalues::INPUT);
 
@@ -24,7 +24,7 @@ LogicInput::LogicInput(const LogicInput& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
 };
 
-BaseComponent* LogicInput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* LogicInput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicInput(*this, pCoreLogic);
 }
@@ -35,7 +35,7 @@ void LogicInput::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
     {
         std::static_pointer_cast<LogicInputCell>(mLogicCell)->ToggleState();
     }
-    BaseComponent::mousePressEvent(pEvent);
+    IBaseComponent::mousePressEvent(pEvent);
 }
 
 void LogicInput::ResetZValue()

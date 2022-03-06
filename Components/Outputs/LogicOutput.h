@@ -1,11 +1,11 @@
 #ifndef LOGICOUTPUT_H
 #define LOGICOUTPUT_H
 
-#include "../BaseComponent.h"
+#include "../IBaseComponent.h"
 #include "HelperStructures.h"
 #include "LogicCells/LogicOutputCell.h"
 
-class LogicOutput : public BaseComponent
+class LogicOutput : public IBaseComponent
 {
     Q_OBJECT
 public:
@@ -15,7 +15,7 @@ public:
     /// \brief Clone function for the output component
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \return A pointer to the new component
-    virtual BaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
+    virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
     /// \brief Defines the bounding rect of this component
     /// \return A rectangle describing the bounding rect
