@@ -6,6 +6,7 @@
 
 void GraphicsView::wheelEvent(QWheelEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
     if (pEvent->modifiers() & Qt::ControlModifier)
     {
         if (pEvent->angleDelta().y() > 0)
@@ -22,6 +23,7 @@ void GraphicsView::wheelEvent(QWheelEvent *pEvent)
 
 void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
     if (pEvent->button() == Qt::LeftButton)
     {
         mIsLeftMousePressed = true;
@@ -48,6 +50,7 @@ void GraphicsView::OnMousePressedEventDefault(QMouseEvent &pEvent)
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
     if (pEvent->button() == Qt::LeftButton)
     {
         mIsLeftMousePressed = false;
@@ -80,6 +83,7 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
     if (mIsLeftMousePressed)
     {
         mCoreLogic.ShowPreviewWires(mapToScene(pEvent->pos()));
@@ -109,15 +113,31 @@ void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 {
-    QList<QGraphicsItem*>&& selected = mView.Scene()->selectedItems();
+    Q_ASSERT(pEvent);
 
-    if (pEvent->key() == Qt::Key_Escape)
+    switch (pEvent->key())
     {
-        // Entering EDIT mode is also enabled during label editing
-        mCoreLogic.EnterControlMode(ControlMode::EDIT);
-        QGraphicsView::keyPressEvent(pEvent);
-        return;
+        case Qt::Key_Escape:
+        {
+            // Entering EDIT mode is also enabled during label editing
+            mCoreLogic.EnterControlMode(ControlMode::EDIT);
+            break;
+        }
+        case Qt::Key_Delete:
+        {
+            if (!mCoreLogic.IsSimulationRunning())
+            {
+                mCoreLogic.DeleteSelectedComponents();
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
     }
+
+    QList<QGraphicsItem*>&& selected = mView.Scene()->selectedItems();
 
     if (selected.size() != 1 || dynamic_cast<TextLabel*>(selected[0]) == nullptr)
     {
@@ -125,14 +145,6 @@ void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 
         switch (pEvent->key())
         {
-            case Qt::Key_Delete:
-            {
-                if (!mCoreLogic.IsSimulationRunning())
-                {
-                    mCoreLogic.DeleteSelectedComponents();
-                }
-                break;
-            }
             case Qt::Key_Return:
             {
                 if (mCoreLogic.IsSimulationRunning())
@@ -157,6 +169,7 @@ void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 
 void GraphicsView::keyReleaseEvent(QKeyEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
     switch (pEvent->key())
     {
         default:

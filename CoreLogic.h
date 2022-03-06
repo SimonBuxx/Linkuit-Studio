@@ -5,6 +5,7 @@
 #include "Undo/UndoBaseType.h"
 #include "Components/LogicWire.h"
 #include "Components/ConPoint.h"
+#include "Components/TextLabel.h"
 #include "Components/LogicWireCell.h"
 #include "Configuration.h"
 
@@ -66,7 +67,11 @@ signals:
 public slots:
     void OnSelectedComponentsMoved(QPointF pOffset);
     void OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent);
+
+    // Slots for configuration events
     void OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType);
+    void OnTextLabelContentChanged(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText);
+
     void OnPropagationTimeout(void);
 
 protected:

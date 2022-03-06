@@ -3,6 +3,7 @@
 
 #include "UndoBaseType.h"
 #include "Components/ConPoint.h"
+#include "Components/TextLabel.h"
 #include "HelperStructures.h"
 
 namespace Undo
@@ -29,6 +30,24 @@ struct ConnectionTypeChangedData : ConfigChangedData
     ConPoint* conPoint;
     ConnectionType previousType;
     ConnectionType currentType;
+};
+
+struct TextLabelContentChangedData : ConfigChangedData
+{
+    TextLabelContentChangedData(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText):
+        textLabel(pTextLabel),
+        previousText(pPreviousText),
+        currentText(pCurrentText)
+    {}
+
+    ConfigType Type(void) const override
+    {
+        return ConfigType::TEXTLABEL_CONTENT;
+    }
+
+    TextLabel* textLabel;
+    QString previousText;
+    QString currentText;
 };
 }
 

@@ -2,81 +2,94 @@
 #include "Configuration.h"
 #include "CoreLogic.h"
 
-TextLabel::TextLabel(const CoreLogic* pCoreLogic, QString pText):
+TextLabel::TextLabel(const CoreLogic* pCoreLogic, QString pText, bool pTakeFocus):
     IBaseComponent(pCoreLogic, nullptr),
-    mText(pText),
     mPlainTextEditProxy(this)
 {
     setZValue(components::zvalues::TEXT_LABEL);
 
-    mHeight = canvas::GRID_SIZE;
-    mWidth = canvas::GRID_SIZE * 2;
+    InitProxyWidget(pTakeFocus, pText);
+    UpdatePlainTextEditSize();
 
-    InitProxyWidget();
-
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
-        if (mPlainTextEdit)
-        {
-            mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-            mPlainTextEdit->setCursor(Qt::ArrowCursor);
-            mPlainTextEdit->viewport()->setCursor(Qt::ArrowCursor);
-        }
-    });
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
-        if (mPlainTextEdit)
-        {
-            mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-            mPlainTextEdit->setTextInteractionFlags(Qt::TextEditable);
-            mPlainTextEdit->setCursor(Qt::IBeamCursor);
-            mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
-        }
-    });
+    ConnectToCoreLogic(pCoreLogic);
 }
 
-void TextLabel::InitProxyWidget()
+void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
 {
     mPlainTextEdit = new PlainTextEdit();
 
-    mPlainTextEdit->document()->setPlainText(mText);
+    mPlainTextEdit->SetLastTextState(pText);
+    mPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+    mPlainTextEdit->document()->setPlainText(pText);
     mPlainTextEdit->document()->setModified(false);
     mPlainTextEdit->document()->setDocumentMargin(1);
 
     mPlainTextEdit->setFont(components::text_label::FONT);
-
+    mPlainTextEdit->setStyleSheet(components::text_label::STYLESHEET);
     mPlainTextEdit->move(5, canvas::GRID_SIZE * -0.5f + 1);
     mPlainTextEdit->setUndoRedoEnabled(false);
     mPlainTextEdit->setContextMenuPolicy(Qt::NoContextMenu);
-    mPlainTextEdit->setStyleSheet("QPlainTextEdit { color: white; background: transparent; border: none; selection-color: rgb(0, 88, 61); selection-background-color: transparent;}");
     mPlainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mPlainTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     mPlainTextEdit->setCursor(Qt::IBeamCursor);
     mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
 
-    QObject::connect(mPlainTextEdit, &PlainTextEdit::textChanged, this, &TextLabel::OnTextChanged);
-
     mPlainTextEditProxy.setWidget(mPlainTextEdit);
 
-    UpdatePlainTextEditSize();
-    mPlainTextEdit->setFocus();
     mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
     mPlainTextEdit->setTextInteractionFlags(Qt::TextEditable);
 
+#warning mind label focus when implementing circuit loading
+    if (pTakeFocus)
+    {
+        mPlainTextEdit->setFocus(); // Take focus if not generated via copy constructor
+    }
+
     QObject::connect(mPlainTextEdit, &PlainTextEdit::SelectParentItem, this, [&](){
+        scene()->clearSelection(); // Prevent editing when multiple components are selected
         setSelected(true);
     });
 
     QObject::connect(mPlainTextEdit, &PlainTextEdit::DeselectParentItem, this, [&](){
         setSelected(false);
     });
+
+    QObject::connect(mPlainTextEdit, &PlainTextEdit::ContentChangedSignal, this, [&](QString pPreviousText, QString pCurrentText){
+        emit TextLabelContentChangedSignal(this, pPreviousText, pCurrentText);
+    });
+
+    QObject::connect(mPlainTextEdit, &PlainTextEdit::textChanged, this, &TextLabel::UpdatePlainTextEditSize);
+}
+
+void TextLabel::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
+{
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
+        if (mPlainTextEdit != nullptr)
+        {
+            // Make read-only
+            mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+            mPlainTextEdit->setCursor(Qt::ArrowCursor);
+            mPlainTextEdit->viewport()->setCursor(Qt::ArrowCursor);
+        }
+    });
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
+        if (mPlainTextEdit != nullptr)
+        {
+            // Make editable
+            mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+            mPlainTextEdit->setTextInteractionFlags(Qt::TextEditable);
+            mPlainTextEdit->setCursor(Qt::IBeamCursor);
+            mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
+        }
+    });
+
+    QObject::connect(this, &TextLabel::TextLabelContentChangedSignal, pCoreLogic, &CoreLogic::OnTextLabelContentChanged);
 }
 
 TextLabel::TextLabel(const TextLabel& pObj, const CoreLogic* pCoreLogic):
-    TextLabel(pCoreLogic, pObj.mText)
-{
-    mWidth = pObj.mWidth;
-    mHeight = pObj.mHeight;
-};
+    TextLabel(pCoreLogic, pObj.mPlainTextEdit ? pObj.mPlainTextEdit->document()->toPlainText(): "", false)
+{};
 
 IBaseComponent* TextLabel::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
@@ -114,14 +127,6 @@ void TextLabel::UpdatePlainTextEditSize()
     update();
 }
 
-void TextLabel::OnTextChanged()
-{
-    Q_ASSERT(mPlainTextEdit);
-
-    mText = mPlainTextEdit->document()->toPlainText();
-    UpdatePlainTextEditSize();
-}
-
 void TextLabel::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)
 {
     Q_UNUSED(pWidget);
@@ -151,12 +156,27 @@ QPainterPath TextLabel::shape() const
     return path;
 }
 
+void TextLabel::SetTextContent(QString pText)
+{
+    if (mPlainTextEdit != nullptr)
+    {
+        mPlainTextEdit->document()->setPlainText(pText);
+        UpdatePlainTextEditSize();
+    }
+}
+
+void PlainTextEdit::SetLastTextState(QString pText)
+{
+    mLastTextState = pText;
+}
+
 void PlainTextEdit::focusOutEvent(QFocusEvent *pEvent)
 {
     if (document()->isModified())
     {
-        qDebug() << "Add undo action!";
         document()->setModified(false);
+        emit ContentChangedSignal(mLastTextState, document()->toPlainText());
+        mLastTextState = document()->toPlainText();
     }
     emit DeselectParentItem();
     QPlainTextEdit::focusOutEvent(pEvent);

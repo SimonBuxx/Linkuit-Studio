@@ -1018,6 +1018,15 @@ void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPre
     }
 }
 
+void CoreLogic::OnTextLabelContentChanged(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText)
+{
+    Q_ASSERT(pTextLabel);
+    qDebug() << "Content changed";
+
+    auto data = std::make_shared<Undo::TextLabelContentChangedData>(pTextLabel, pPreviousText, pCurrentText);
+    AppendUndo(new UndoConfigureType(data));
+}
+
 void CoreLogic::CopySelectedComponents()
 {
     QList<QGraphicsItem*> componentsToCopy = mView.Scene()->selectedItems();
@@ -1165,6 +1174,14 @@ void CoreLogic::Undo()
                         AppendToUndoQueue(undoObject, mRedoQueue);
                         break;
                     }
+                case Undo::ConfigType::TEXTLABEL_CONTENT:
+                {
+                    auto data = std::static_pointer_cast<Undo::TextLabelContentChangedData>(undoConfigureObject->Data());
+                    Q_ASSERT(data->textLabel);
+                    data->textLabel->SetTextContent(data->previousText);
+                    AppendToUndoQueue(undoObject, mRedoQueue);
+                    break;
+                }
                 }
                 break;
             }
@@ -1244,6 +1261,14 @@ void CoreLogic::Redo()
                         auto data = std::static_pointer_cast<Undo::ConnectionTypeChangedData>(undoConfigureObject->Data());
                         Q_ASSERT(data->conPoint);
                         data->conPoint->SetConnectionType(data->currentType);
+                        AppendToUndoQueue(redoObject, mUndoQueue);
+                        break;
+                    }
+                    case Undo::ConfigType::TEXTLABEL_CONTENT:
+                    {
+                        auto data = std::static_pointer_cast<Undo::TextLabelContentChangedData>(undoConfigureObject->Data());
+                        Q_ASSERT(data->textLabel);
+                        data->textLabel->SetTextContent(data->currentText);
                         AppendToUndoQueue(redoObject, mUndoQueue);
                         break;
                     }

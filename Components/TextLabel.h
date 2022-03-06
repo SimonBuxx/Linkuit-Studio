@@ -6,9 +6,14 @@
 #include <QPlainTextEdit>
 #include <QGraphicsProxyWidget>
 
+class TextLabel;
+
 class PlainTextEdit : public QPlainTextEdit
 {
     Q_OBJECT
+public:
+    void SetLastTextState(QString pText);
+
 protected:
     void focusOutEvent(QFocusEvent *pEvent) override;
     void focusInEvent(QFocusEvent *pEvent) override;
@@ -16,13 +21,17 @@ protected:
 signals:
     void SelectParentItem(void);
     void DeselectParentItem(void);
+    void ContentChangedSignal(QString pPreviousText, QString pCurrentText);
+
+protected:
+    QString mLastTextState;
 };
 
 class TextLabel : public IBaseComponent
 {
     Q_OBJECT
 public:
-    TextLabel(const CoreLogic* pCoreLogic, QString pText = "");
+    TextLabel(const CoreLogic* pCoreLogic, QString pText = "", bool pTakeFocus = true);
     TextLabel(const TextLabel& pObj, const CoreLogic* pCoreLogic);
 
     /// \brief Clone function for the label component
@@ -41,8 +50,13 @@ public:
     /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
     void ResetZValue(void) override;
 
-public slots:
-    void OnTextChanged(void);
+    void SetTextContent(QString pText);
+
+signals:
+    void TextLabelContentChangedSignal(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText);
+
+protected slots:
+    void UpdatePlainTextEditSize(void);
 
 protected:
     /// \brief Paints the label component
@@ -51,13 +65,11 @@ protected:
     /// \param pWidget: Unused, the widget that is been painted on
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 
-    void InitProxyWidget(void);
+    void InitProxyWidget(bool pTakeFocus, QString pText);
 
-    void UpdatePlainTextEditSize(void);
+    void ConnectToCoreLogic(const CoreLogic* pCoreLogic);
 
 protected:
-    QString mText = "";
-
     QGraphicsProxyWidget mPlainTextEditProxy;
     PlainTextEdit *mPlainTextEdit;
 };
