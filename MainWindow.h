@@ -1,13 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "framelesswindow.h"
 #include "CoreLogic.h"
 
-#include <QWidget>
-#include <QLabel>
-#include <QPushButton>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 class QGraphicsScene;
@@ -27,14 +23,7 @@ protected:
     View mView;
     CoreLogic mCoreLogic;
 
-    QWidget * mCentralWidget;
-    QWidget *mTitleBarWidget;
-    QLabel *mTitleBarLabel;
-
-    QPushButton *mCloseButton;
-    QPushButton *mMinimizeButton;
-
-    QImage *mLogoImage;
+    QVBoxLayout* mMainLayout;
 };
 
 #endif // MAINWINDOW_H

@@ -30,8 +30,7 @@ HEADERS += \
     $${PWD}/Undo/UndoDeleteType.h \
     $${PWD}/Undo/UndoMoveType.h \
     $${PWD}/View/View.h \
-    $${PWD}/Configuration.h \
-    $${PWD}/framelesswindow.h
+    $${PWD}/Configuration.h
 
 SOURCES += \
     $$PWD/Components/ConPoint.cpp \

@@ -36,6 +36,11 @@ void CoreLogic::ConnectToView()
 
 void CoreLogic::EnterControlMode(ControlMode pMode)
 {
+    if (pMode == ControlMode::EDIT)
+    {
+        mView.Scene()->clearFocus();
+    }
+
     if (pMode != mControlMode)
     {
         if (mControlMode == ControlMode::SIMULATION)
@@ -51,11 +56,6 @@ void CoreLogic::EnterControlMode(ControlMode pMode)
         if (pMode == ControlMode::ADD)
         {
             emit ComponentTypeChangedSignal(mComponentType);
-        }
-
-        if (pMode == ControlMode::EDIT)
-        {
-            mView.Scene()->clearFocus();
         }
 
         if (pMode == ControlMode::SIMULATION)
@@ -771,7 +771,8 @@ void CoreLogic::ConnectLogicCells()
 {
     for (auto& comp : mView.Scene()->items())
     {
-        if (dynamic_cast<LogicWire*>(comp) != nullptr || (dynamic_cast<ConPoint*>(comp) != nullptr && static_cast<ConPoint*>(comp)->GetConnectionType() == ConnectionType::FULL))
+        if (dynamic_cast<IBaseComponent*>(comp) == nullptr || dynamic_cast<LogicWire*>(comp) != nullptr
+                || (dynamic_cast<ConPoint*>(comp) != nullptr && static_cast<ConPoint*>(comp)->GetConnectionType() == ConnectionType::FULL))
         {
             continue;
         }

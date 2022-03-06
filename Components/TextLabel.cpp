@@ -101,14 +101,14 @@ void TextLabel::UpdatePlainTextEditSize()
     mPlainTextEdit->setFixedHeight(newHeight);
 
     // Update QPlainTextEdit width
-    mPlainTextEdit->setFixedWidth(mPlainTextEdit->document()->size().width() + metrics.maxWidth());
+    mPlainTextEdit->setFixedWidth(mPlainTextEdit->document()->size().width() + 12);
 
     // Hide temporarily to update canvas after label shrunk
     this->setOpacity(0);
     update();
 
     mHeight = std::ceil((newHeight - 5) / canvas::GRID_SIZE) * canvas::GRID_SIZE;
-    mWidth = mPlainTextEdit->document()->size().width() + metrics.maxWidth() + canvas::GRID_SIZE / 2;
+    mWidth = mPlainTextEdit->document()->size().width() + canvas::GRID_SIZE / 2;
 
     this->setOpacity(1);
     update();
