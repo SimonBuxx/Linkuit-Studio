@@ -12,6 +12,9 @@ HEADERS += \
     $$PWD/Components/Gates/LogicCells/LogicXorGateCell.h \
     $$PWD/Components/TextLabel.h \
     $${PWD}/Components/IBaseComponent.h \
+    $${PWD}/Components/ComplexLogic/AbstractComplexLogic.h \
+    $${PWD}/Components/ComplexLogic/RsFlipFlop.h \
+    $${PWD}/Components/ComplexLogic/LogicCells/LogicRsFlipFlopCell.h \
     $${PWD}/Components/Gates/AbstractGate.h \
     $${PWD}/Components/Gates/AndGate.h \
     $${PWD}/Components/Gates/NotGate.h \
@@ -46,6 +49,9 @@ SOURCES += \
     $$PWD/Components/Gates/LogicCells/LogicXorGateCell.cpp \
     $$PWD/Components/TextLabel.cpp \
     $${PWD}/Components/IBaseComponent.cpp \
+    $${PWD}/Components/ComplexLogic/AbstractComplexLogic.cpp \
+    $${PWD}/Components/ComplexLogic/RsFlipFlop.cpp \
+    $${PWD}/Components/ComplexLogic/LogicCells/LogicRsFlipFlopCell.cpp \
     $${PWD}/Components/Gates/AbstractGate.cpp \
     $${PWD}/Components/Gates/AndGate.cpp \
     $${PWD}/Components/Gates/NotGate.cpp \

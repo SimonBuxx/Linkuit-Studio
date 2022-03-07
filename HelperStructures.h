@@ -11,7 +11,8 @@ enum class ComponentType
     INPUT,
     BUTTON,
     OUTPUT,
-    TEXT_LABEL
+    TEXT_LABEL,
+    RS_FLIPFLOP
 };
 
 enum class Direction

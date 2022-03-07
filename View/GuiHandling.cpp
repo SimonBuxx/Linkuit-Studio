@@ -68,6 +68,11 @@ void View::CreateGui()
     mAddTextLabelButton->setCheckable(true);
     mAddTextLabelButton->setChecked(false);
 
+    mAddRsFlipFlopButton = new QToolButton;
+    mAddRsFlipFlopButton->setText(tr("RS Flip-Flop"));
+    mAddRsFlipFlopButton->setCheckable(true);
+    mAddRsFlipFlopButton->setChecked(false);
+
     mUndoButton = new QToolButton;
     mUndoButton->setText(tr("Undo"));
     mUndoButton->setCheckable(false);
@@ -99,6 +104,7 @@ void View::CreateGui()
     topButtonsGroup->addButton(mAddButtonButton);
     topButtonsGroup->addButton(mAddOutputButton);
     topButtonsGroup->addButton(mAddTextLabelButton);
+    topButtonsGroup->addButton(mAddRsFlipFlopButton);
     topButtonsGroup->addButton(mUndoButton);
     topButtonsGroup->addButton(mRedoButton);
     topButtonsGroup->addButton(mSimulationButton);
@@ -116,6 +122,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddButtonButton);
     topButtonsLayout->addWidget(mAddOutputButton);
     topButtonsLayout->addWidget(mAddTextLabelButton);
+    topButtonsLayout->addWidget(mAddRsFlipFlopButton);
     topButtonsLayout->addWidget(mUndoButton);
     topButtonsLayout->addWidget(mRedoButton);
     topButtonsLayout->addWidget(mSimulationButton);
@@ -147,6 +154,7 @@ void View::PrepareGuiForSimulation()
     mAddButtonButton->setEnabled(false);
     mAddOutputButton->setEnabled(false);
     mAddTextLabelButton->setEnabled(false);
+    mAddRsFlipFlopButton->setEnabled(false);
     mDeleteButton->setEnabled(false);
     mCopyButton->setEnabled(false);
     mUndoButton->setEnabled(false);
@@ -167,6 +175,7 @@ void View::PrepareGuiForEditing()
     mAddButtonButton->setEnabled(true);
     mAddOutputButton->setEnabled(true);
     mAddTextLabelButton->setEnabled(true);
+    mAddRsFlipFlopButton->setEnabled(true);
     mDeleteButton->setEnabled(true);
     mCopyButton->setEnabled(true);
 
@@ -232,6 +241,10 @@ void View::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mAddTextLabelButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
+    });
+
+    QObject::connect(mAddRsFlipFlopButton, &QAbstractButton::clicked, [&](){
+        mCoreLogic.EnterAddControlMode(ComponentType::RS_FLIPFLOP);
     });
 
     QObject::connect(mDeleteButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::DeleteSelectedComponents);

@@ -8,6 +8,7 @@
 #include "Components/Inputs/LogicButton.h"
 #include "Components/Outputs/LogicOutput.h"
 #include "Components/TextLabel.h"
+#include "Components/ComplexLogic/RsFlipFlop.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -151,6 +152,11 @@ IBaseComponent* CoreLogic::GetItem()
         case ComponentType::TEXT_LABEL:
         {
             item = new TextLabel(this);
+            break;
+        }
+        case ComponentType::RS_FLIPFLOP:
+        {
+            item = new RsFlipFlop(this, mComponentDirection);
             break;
         }
         default:

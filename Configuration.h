@@ -109,6 +109,13 @@ namespace inputs
 static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(500);
 } // namespace
 
+namespace complex_logic
+{
+static constexpr const char* RS_FLIPFLOP_TEXT = "RS";
+static const QFont FONT("Calibri Light", 20);
+static constexpr QColor FONT_COLOR(255, 255, 255);
+} // namespace
+
 } // namespace
 
 #endif // CONFIGURATION_H

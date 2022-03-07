@@ -119,6 +119,7 @@ protected:
     QToolButton *mAddButtonButton;
     QToolButton *mAddOutputButton;
     QToolButton *mAddTextLabelButton;
+    QToolButton *mAddRsFlipFlopButton;
     QToolButton *mUndoButton;
     QToolButton *mRedoButton;
     QToolButton *mSimulationButton;
