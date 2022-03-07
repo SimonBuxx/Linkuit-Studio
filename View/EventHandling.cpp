@@ -55,6 +55,15 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
     {
         mIsLeftMousePressed = false;
 
+        if (!mCoreLogic.IsSimulationRunning())
+        {
+            // Snap all potentially moved components to grid
+            for (auto& comp : scene()->selectedItems())
+            {
+                comp->setPos(SnapToGrid(comp->pos()));
+            }
+        }
+
         if (pEvent->modifiers() & Qt::ControlModifier)
         {
             pEvent->accept();
@@ -66,15 +75,6 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
         {
             mCoreLogic.AddWires(mapToScene(pEvent->pos()));
             return;
-        }
-
-        if (!mCoreLogic.IsSimulationRunning())
-        {
-            // Snap all potentially moved components to grid
-            for (auto& comp : scene()->selectedItems())
-            {
-                comp->setPos(SnapToGrid(comp->pos()));
-            }
         }
     }
 
