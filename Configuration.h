@@ -113,6 +113,7 @@ namespace complex_logic
 {
 static constexpr const char* RS_FLIPFLOP_TEXT = "RS";
 static const QFont FONT("Calibri Light", 20);
+static const QFont CONNECTOR_FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 } // namespace
 

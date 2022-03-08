@@ -6,6 +6,8 @@ RsFlipFlop::RsFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
     AbstractComplexLogic(pCoreLogic, std::make_shared<LogicRsFlipFlopCell>(), 2, 2, pDirection)
 {
     mComponentText = components::complex_logic::RS_FLIPFLOP_TEXT;
+    mInputLabels = {"S", "R"};
+    mOutputLabels = {"Q", "Q̅"};
 
 #warning not suitable for gates with more inputs / turned gates
     mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 20)));

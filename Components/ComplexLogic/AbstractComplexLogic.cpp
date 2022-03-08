@@ -275,7 +275,31 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
         pPainter->setPen(components::complex_logic::FONT_COLOR);
         pPainter->setFont(components::complex_logic::FONT);
         pPainter->drawText(boundingRect(), mComponentText, Qt::AlignHCenter | Qt::AlignVCenter);
+
+        pPainter->setPen(QColor(225, 225, 225));
+        pPainter->setFont(components::complex_logic::CONNECTOR_FONT);
+        switch (mDirection)
+        {
+            case Direction::RIGHT:
+            {
+                for (size_t i = 0; i < mInputCount; i++)
+                {
+                    pPainter->drawText(QRect(2, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[i], Qt::AlignLeft | Qt::AlignVCenter);
+                }
+                for (size_t i = 0; i < mOutputCount; i++)
+                {
+                    pPainter->drawText(QRect(2, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 6, mWidth - 4, 10), mOutputLabels[i], Qt::AlignRight | Qt::AlignVCenter);
+                }
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
     }
+
+
 }
 
 QRectF AbstractComplexLogic::boundingRect() const

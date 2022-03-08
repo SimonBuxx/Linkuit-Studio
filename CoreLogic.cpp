@@ -17,6 +17,8 @@
 
 #include "HelperFunctions.h"
 
+#include <QElapsedTimer>
+
 CoreLogic::CoreLogic(View &pView):
     mView(pView),
     mHorizontalPreviewWire(this, WireDirection::HORIZONTAL, 0),
@@ -852,6 +854,8 @@ void CoreLogic::ConnectLogicCells()
 
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {
+    QElapsedTimer total;
+    total.start();
     if (pOffset.manhattanLength() <= 0)
     {
         // No effective movement
@@ -861,7 +865,9 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     std::vector<LogicWire*> affectedWires;
     std::vector<IBaseComponent*> affectedComponents;
 
-    for (auto& comp : mView.Scene()->selectedItems())
+    QElapsedTimer splitting;
+    splitting.start();
+    for (auto& comp : mView.Scene()->selectedItems()) // Cost neglectable
     {
         if (dynamic_cast<LogicWire*>(comp) != nullptr)
         {
@@ -870,22 +876,38 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
         affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
     }
+    qDebug() << "Splitting into wires and other components took " << splitting.elapsed() << "ms";
 
+    QElapsedTimer merging;
+    merging.start();
     std::vector<IBaseComponent*> movedComponents;
     std::vector<IBaseComponent*> addedComponents;
     std::vector<IBaseComponent*> deletedComponents;
 
-    MergeWiresAfterMove(affectedWires, addedComponents, deletedComponents);
+    MergeWiresAfterMove(affectedWires, addedComponents, deletedComponents); // Ca. 25% of total cost
 
     // Insert merged wires to recognize T-crossings
     affectedComponents.insert(affectedComponents.end(), addedComponents.begin(), addedComponents.end());
-    // In theory, we should removed deletedComponents from movedComps here, but that would be costly and
+    // In theory, we should remove deletedComponents from movedComponents here, but that would be costly and
     // should not make any difference because old wires behind the merged ones cannot generate new ConPoints
 
-    for (auto& comp : affectedComponents)
-    {
-        const auto baseComp = static_cast<IBaseComponent*>(comp);
+    qDebug() << "Merging wires and inserting into affected components took " << merging.elapsed() << "ms";
 
+    QElapsedTimer conpoints;
+    conpoints.start();
+
+    uint64_t originalms = 0;
+    uint64_t tcrossingsms = 0;
+    for (auto& comp : affectedComponents) // Ca. 75% of total cost
+    {
+        const auto baseComp = dynamic_cast<IBaseComponent*>(comp);
+        if (baseComp == nullptr)
+        {
+            continue; // Ignore other QGraphicsItems
+        }
+
+        QElapsedTimer original;
+        original.start();
         // Delete all invalid ConPoints at the original position colliding with the selection
         QRectF oldCollisionRect(baseComp->pos() + baseComp->boundingRect().topLeft() - pOffset,
                                            baseComp->pos() + baseComp->boundingRect().bottomRight() - pOffset);
@@ -898,6 +920,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
                 deletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
             }
         }
+        originalms += original.elapsed();
 
         // Delete all ConPoints of the moved components that are not valid anymore
         if (dynamic_cast<ConPoint*>(baseComp) && IsNoCrossingPoint(static_cast<ConPoint*>(baseComp)))
@@ -906,8 +929,10 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
             deletedComponents.push_back(baseComp);
         }
 
+        QElapsedTimer tcrossings;
+        tcrossings.start();
         // Add ConPoints to all T Crossings
-        if (dynamic_cast<LogicWire*>(baseComp) != nullptr)
+        if (dynamic_cast<LogicWire*>(baseComp) != nullptr) // Costly
         {
             for (const auto& collidingComp : mView.Scene()->collidingItems(baseComp, Qt::IntersectsItemShape))
             {
@@ -925,7 +950,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
                         conPointPos.setY(collidingComp->y());
                     }
 
-                    if (!IsComponentAtPosition<ConPoint>(conPointPos))
+                    if (!IsComponentAtPosition<ConPoint>(conPointPos)) // Might be costly
                     {
                         auto item = new ConPoint(this);
                         item->setPos(conPointPos);
@@ -935,6 +960,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
                 }
             }
         }
+        tcrossingsms += tcrossings.elapsed();
 
         // If collision was detected
         if (IsCollidingComponent(baseComp) && !GetCollidingComponents(baseComp).empty())
@@ -958,12 +984,19 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
         movedComponents.push_back(static_cast<IBaseComponent*>(comp));
     }
 
+    qDebug() << "Deleting invalid ConPoints at original position took " << originalms << "ms";
+
+    qDebug() << "Adding ConPoints on T-crossings took " << tcrossingsms << "ms";
+
+    qDebug() << "Managing ConPoints took " << conpoints.elapsed() << "ms";
+
     mView.Scene()->clearSelection();
 
     if (movedComponents.size() > 0)
     {
         AppendUndo(new UndoMoveType(movedComponents, addedComponents, deletedComponents, pOffset));
     }
+    qDebug() << "Moving took " << total.elapsed() << "ms total";
 }
 
 void CoreLogic::OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent)

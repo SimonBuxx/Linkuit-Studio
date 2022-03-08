@@ -21,7 +21,7 @@ void LogicRsFlipFlopCell::LogicFunction()
             emit StateChangedSignal();
         }
     }
-    else if (mInputStates[1] == LogicState::HIGH) // R high
+    if (mInputStates[1] == LogicState::HIGH) // R high
     {
         if (mCurrentState[0] != LogicState::LOW || mCurrentState[1] != LogicState::HIGH)
         {
