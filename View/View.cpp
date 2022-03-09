@@ -133,6 +133,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddRsFlipFlopButton->setChecked(true);
             break;
         }
+        case ComponentType::D_FLIPFLOP:
+        {
+            mAddDFlipFlopButton->setChecked(true);
+            break;
+        }
         default:
         {
             mEditButton->setChecked(true);

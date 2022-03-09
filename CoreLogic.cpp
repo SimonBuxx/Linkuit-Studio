@@ -9,6 +9,7 @@
 #include "Components/Outputs/LogicOutput.h"
 #include "Components/TextLabel.h"
 #include "Components/ComplexLogic/RsFlipFlop.h"
+#include "Components/ComplexLogic/DFlipFlop.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -159,6 +160,11 @@ IBaseComponent* CoreLogic::GetItem()
         case ComponentType::RS_FLIPFLOP:
         {
             item = new RsFlipFlop(this, mComponentDirection);
+            break;
+        }
+        case ComponentType::D_FLIPFLOP:
+        {
+            item = new DFlipFlop(this, mComponentDirection);
             break;
         }
         default:

@@ -1,4 +1,6 @@
 HEADERS += \
+    $$PWD/Components/ComplexLogic/DFlipFlop.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicDFlipFlopCell.h \
     $$PWD/Components/ConPoint.h \
     $$PWD/Components/Gates/LogicCells/LogicAndGateCell.h \
     $$PWD/Components/Inputs/LogicButton.h \
@@ -36,6 +38,8 @@ HEADERS += \
     $${PWD}/Configuration.h
 
 SOURCES += \
+    $$PWD/Components/ComplexLogic/DFlipFlop.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicDFlipFlopCell.cpp \
     $$PWD/Components/ConPoint.cpp \
     $$PWD/Components/Gates/LogicCells/LogicAndGateCell.cpp \
     $$PWD/Components/Inputs/LogicButton.cpp \

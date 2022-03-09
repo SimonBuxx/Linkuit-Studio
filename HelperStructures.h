@@ -12,7 +12,8 @@ enum class ComponentType
     BUTTON,
     OUTPUT,
     TEXT_LABEL,
-    RS_FLIPFLOP
+    RS_FLIPFLOP,
+    D_FLIPFLOP
 };
 
 enum class Direction
