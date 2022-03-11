@@ -14,12 +14,6 @@ RsFlipFlop::RsFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
     mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 60)));
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 20)));
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 60)));
-
-    if (mLogicCell)
-    {
-#warning implement global OnWakeUp
-        QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, static_cast<LogicRsFlipFlopCell*>(mLogicCell.get()), &LogicRsFlipFlopCell::OnWakeUp);
-    }
 }
 
 RsFlipFlop::RsFlipFlop(const RsFlipFlop& pObj, const CoreLogic* pCoreLogic):

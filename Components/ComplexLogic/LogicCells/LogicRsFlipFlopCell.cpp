@@ -2,15 +2,12 @@
 
 LogicRsFlipFlopCell::LogicRsFlipFlopCell():
     LogicBaseCell(2, 2),
-    mPreviousState(2, LogicState::LOW),
     mCurrentState(2, LogicState::LOW),
     mStateChanged(true)
 {}
 
 void LogicRsFlipFlopCell::LogicFunction()
 {
-    mCurrentState = mPreviousState; // Keep current state if no change
-
     if (mInputStates[0] == LogicState::HIGH) // S high
     {
         if (mCurrentState[0] != LogicState::HIGH || mCurrentState[1] != LogicState::LOW)
@@ -18,7 +15,6 @@ void LogicRsFlipFlopCell::LogicFunction()
             mCurrentState[0] = LogicState::HIGH; // Q
             mCurrentState[1] = LogicState::LOW; // Not Q
             mStateChanged = true;
-            emit StateChangedSignal();
         }
     }
     if (mInputStates[1] == LogicState::HIGH) // R high
@@ -28,7 +24,6 @@ void LogicRsFlipFlopCell::LogicFunction()
             mCurrentState[0] = LogicState::LOW; // Q
             mCurrentState[1] = LogicState::HIGH; // Not Q
             mStateChanged = true;
-            emit StateChangedSignal();
         }
     }
 }
@@ -41,26 +36,30 @@ LogicState LogicRsFlipFlopCell::GetOutputState(uint32_t pOutput) const
 
 void LogicRsFlipFlopCell::OnSimulationAdvance()
 {
+    AdvanceUpdateTime();
+
     if (mStateChanged)
     {
         NotifySuccessor(0, mCurrentState[0]);
         NotifySuccessor(1, mCurrentState[1]);
-        mPreviousState = mCurrentState;
         mStateChanged = false;
     }
 }
 
 void LogicRsFlipFlopCell::OnWakeUp()
 {
+    mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mCurrentState[0] = LogicState::LOW; // Q
     mCurrentState[1] = LogicState::HIGH; // Not Q
+    mNextUpdateTime = UpdateTime::INF;
+
+    mStateChanged = true; // Successors should be notified about wake up
+    emit StateChangedSignal();
 }
 
 void LogicRsFlipFlopCell::OnShutdown()
 {
-    mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
-    mPreviousState = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
-    mCurrentState = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
-    mStateChanged = true;
+    mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+    mCurrentState = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     emit StateChangedSignal();
 }

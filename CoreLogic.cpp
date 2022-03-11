@@ -795,9 +795,7 @@ void CoreLogic::ConnectLogicCells()
 
         for (auto& coll : mView.Scene()->collidingItems(comp, Qt::IntersectsItemBoundingRect))
         {
-            //auto collBase = static_cast<IBaseComponent*>(coll);
-
-            if (dynamic_cast<ConPoint*>(coll) != nullptr && static_cast<ConPoint*>(comp)->GetConnectionType() == ConnectionType::FULL)
+            if (dynamic_cast<ConPoint*>(coll) != nullptr && static_cast<ConPoint*>(coll)->GetConnectionType() == ConnectionType::FULL)
             {
                 continue; // ignore ConPoints, they are handled during wire grouping
             }
@@ -823,36 +821,6 @@ void CoreLogic::ConnectLogicCells()
                         //qDebug() << "Connected wire to comp, input " << in;
                     }
                 }
-            }
-            else
-            {
-                /*
-                // Component <-> Component connection
-                // Might be inefficient, maybe that's okay because it's rarely used
-                for (size_t in = 0; in < compBase->GetInConnectorCount(); in++)
-                {
-                    for (size_t out = 0; out < collBase->GetOutConnectorCount(); out++)
-                    {
-                        if (compBase->pos() + compBase->GetInConnectors()[in].pos == collBase->pos() + collBase->GetOutConnectors()[out].pos)
-                        {
-                            collBase->GetLogicCell()->ConnectOutput(compBase->GetLogicCell(), in, out);
-                            qDebug() << "Connected comp input " << in << " to coll output " << out;
-                        }
-                    }
-                }
-
-                for (size_t out = 0; out < compBase->GetOutConnectorCount(); out++)
-                {
-                    for (size_t in = 0; in < collBase->GetInConnectorCount(); in++)
-                    {
-                        if (collBase->pos() + collBase->GetInConnectors()[in].pos == compBase->pos() + compBase->GetOutConnectors()[out].pos)
-                        {
-                            compBase->GetLogicCell()->ConnectOutput(collBase->GetLogicCell(), in, out);
-                            qDebug() << "Connected coll input " << in << " to comp output " << out;
-                        }
-                    }
-                }
-                */
             }
         }
     }

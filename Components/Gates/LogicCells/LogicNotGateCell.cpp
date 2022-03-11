@@ -9,26 +9,23 @@ LogicNotGateCell::LogicNotGateCell():
 
 void LogicNotGateCell::LogicFunction()
 {
-    mCurrentState = mPreviousState; // Keep current state if no change
-
     switch (mInputStates[0])
     {
         case LogicState::LOW:
         {
             mCurrentState = LogicState::HIGH;
             mStateChanged = true;
-            emit StateChangedSignal();
             break;
         }
         case LogicState::HIGH:
         {
             mCurrentState = LogicState::LOW;
             mStateChanged = true;
-            emit StateChangedSignal();
             break;
         }
         default:
         {
+            Q_ASSERT(false);
             break;
         }
     }
@@ -42,19 +39,32 @@ LogicState LogicNotGateCell::GetOutputState(uint32_t pOutput) const
 
 void LogicNotGateCell::OnSimulationAdvance()
 {
+    AdvanceUpdateTime();
+
     if (mStateChanged)
     {
+        mStateChanged = false;
         NotifySuccessor(0, mCurrentState);
         mPreviousState = mCurrentState;
-        mStateChanged = false;
+
+        emit StateChangedSignal();
     }
+}
+
+void LogicNotGateCell::OnWakeUp()
+{
+    mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mPreviousState = LogicState::LOW;
+    mCurrentState = LogicState::LOW;
+    mNextUpdateTime = UpdateTime::NOW;
+
+    mStateChanged = true; // Successors should be notified about wake up
+    emit StateChangedSignal();
 }
 
 void LogicNotGateCell::OnShutdown()
 {
     mInputStates[0] = LogicState::LOW;
-    mPreviousState = LogicState::LOW;
     mCurrentState = LogicState::LOW;
-    mStateChanged = true;
     emit StateChangedSignal();
 }

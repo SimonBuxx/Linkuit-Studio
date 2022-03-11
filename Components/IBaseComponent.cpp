@@ -35,6 +35,7 @@ IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<Logi
     {
         QObject::connect(pCoreLogic, &CoreLogic::SimulationAdvanceSignal, mLogicCell.get(), &LogicBaseCell::OnSimulationAdvance);
         QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, mLogicCell.get(), &LogicBaseCell::OnShutdown);
+        QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal,mLogicCell.get(), &LogicBaseCell::OnWakeUp);
         QObject::connect(mLogicCell.get(), &LogicBaseCell::StateChangedSignal, this, &IBaseComponent::OnLogicStateChanged);
     }
 }

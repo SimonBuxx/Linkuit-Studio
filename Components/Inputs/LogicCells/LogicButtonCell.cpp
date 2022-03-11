@@ -4,42 +4,30 @@
 LogicButtonCell::LogicButtonCell():
     LogicBaseCell(0, 1),
     mState(LogicState::LOW),
-    mStateChanged(true),
     mButtonTimer(this)
 {
     mButtonTimer.setInterval(components::inputs::BUTTON_TOGGLE_INTERVAL);
     mButtonTimer.setSingleShot(true);
-    QObject::connect(&mButtonTimer, &QTimer::timeout, [&](){
-        if (mState != LogicState::LOW)
-        {
-            mState = LogicState::LOW;
-            mStateChanged = true;
-            emit StateChangedSignal();
-        }
-    });
-}
 
-void LogicButtonCell::LogicFunction()
-{}
+    QObject::connect(&mButtonTimer, &QTimer::timeout, this, &LogicButtonCell::ButtonTimeout);
+}
 
 void LogicButtonCell::ButtonClick()
 {
     if (mState != LogicState::HIGH)
     {
-        mStateChanged = true;
+        mState = LogicState::HIGH;
+        NotifySuccessor(0, mState);
         emit StateChangedSignal();
     }
-    mState = LogicState::HIGH;
     mButtonTimer.start();
 }
 
-void LogicButtonCell::OnSimulationAdvance()
+void LogicButtonCell::ButtonTimeout()
 {
-    if (mStateChanged)
-    {
-        NotifySuccessor(0, mState);
-        mStateChanged = false;
-    }
+    mState = LogicState::LOW;
+    NotifySuccessor(0, mState);
+    emit StateChangedSignal();
 }
 
 LogicState LogicButtonCell::GetOutputState(uint32_t pOutput) const
@@ -48,9 +36,14 @@ LogicState LogicButtonCell::GetOutputState(uint32_t pOutput) const
     return mState;
 }
 
+void LogicButtonCell::OnWakeUp()
+{
+    mState = LogicState::LOW;
+    emit StateChangedSignal();
+}
+
 void LogicButtonCell::OnShutdown()
 {
     mState = LogicState::LOW;
-    mStateChanged = true;
     emit StateChangedSignal();
 }

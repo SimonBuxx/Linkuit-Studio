@@ -20,7 +20,7 @@ AndGate::AndGate(const AndGate& pObj, const CoreLogic* pCoreLogic):
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
     mOutputInverted = pObj.mOutputInverted;
-    mInputInverted= pObj.mInputInverted;
+    mInputInverted = pObj.mInputInverted;
 };
 
 IBaseComponent* AndGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const

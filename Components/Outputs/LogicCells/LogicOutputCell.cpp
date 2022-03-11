@@ -20,6 +20,12 @@ LogicState LogicOutputCell::GetOutputState(uint32_t pOutput) const
     return mState;
 }
 
+void LogicOutputCell::InputReady(uint32_t pInput, LogicState pState)
+{
+    mInputStates[pInput] = pState;
+    LogicFunction();
+}
+
 void LogicOutputCell::OnShutdown()
 {
     mState = LogicState::LOW;

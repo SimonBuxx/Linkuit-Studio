@@ -3,11 +3,10 @@
 
 LogicWireCell::LogicWireCell(const CoreLogic* pCoreLogic):
     LogicBaseCell(0, 0),
-    mState(LogicState::LOW),
-    mStateChanged(true)
+    mState(LogicState::LOW)
 {
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, &LogicWireCell::OnWakeUp);
     QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, &LogicWireCell::OnShutdown);
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationAdvanceSignal, this, &LogicWireCell::OnSimulationAdvance);
 }
 
 void LogicWireCell::LogicFunction()
@@ -19,7 +18,6 @@ void LogicWireCell::LogicFunction()
             if (mState != LogicState::HIGH)
             {
                 mState = LogicState::HIGH;
-                mStateChanged = true;
                 emit StateChangedSignal();
             }
             return;
@@ -28,7 +26,6 @@ void LogicWireCell::LogicFunction()
     if (mState != LogicState::LOW)
     {
         mState = LogicState::LOW;
-        mStateChanged = true;
         emit StateChangedSignal();
     }
 }
@@ -48,15 +45,17 @@ uint32_t LogicWireCell::GetInputSize(void) const
     return mInputStates.size();
 }
 
-void LogicWireCell::OnSimulationAdvance()
+void LogicWireCell::InputReady(uint32_t pInput, LogicState pState)
 {
-    if (mStateChanged)
+    if (mInputStates[pInput] != pState)
     {
+        mInputStates[pInput] = pState;
+        LogicFunction();
+
         for (size_t i = 0; i < mOutputCells.size(); i++)
         {
             NotifySuccessor(i, mState);
         }
-        mStateChanged = false;
     }
 }
 
@@ -66,11 +65,16 @@ LogicState LogicWireCell::GetOutputState(uint32_t pOutput) const
     return mState;
 }
 
+void LogicWireCell::OnWakeUp()
+{
+    mState = LogicState::LOW;
+    emit StateChangedSignal();
+}
+
 void LogicWireCell::OnShutdown()
 {
     mState = LogicState::LOW;
     mOutputCells.clear();
     mInputStates.clear();
-    mStateChanged = true;
     emit StateChangedSignal();
 }

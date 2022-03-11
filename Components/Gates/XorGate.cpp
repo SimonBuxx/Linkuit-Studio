@@ -11,8 +11,6 @@ XorGate::XorGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDi
     mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 20)));
     mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 60)));
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 40)));
-
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationAdvanceSignal, mLogicCell.get(), &LogicBaseCell::OnSimulationAdvance);
 }
 
 XorGate::XorGate(const XorGate& pObj, const CoreLogic* pCoreLogic):
@@ -22,7 +20,7 @@ XorGate::XorGate(const XorGate& pObj, const CoreLogic* pCoreLogic):
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
     mOutputInverted = pObj.mOutputInverted;
-    mInputInverted= pObj.mInputInverted;
+    mInputInverted = pObj.mInputInverted;
 };
 
 IBaseComponent* XorGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const

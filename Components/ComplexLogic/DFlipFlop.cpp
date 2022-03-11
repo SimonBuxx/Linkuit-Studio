@@ -14,12 +14,6 @@ DFlipFlop::DFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
     mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 60)));
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 20)));
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 60)));
-
-    if (mLogicCell)
-    {
-#warning implement global OnWakeUp
-        QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, static_cast<LogicDFlipFlopCell*>(mLogicCell.get()), &LogicDFlipFlopCell::OnWakeUp);
-    }
 }
 
 DFlipFlop::DFlipFlop(const DFlipFlop& pObj, const CoreLogic* pCoreLogic):
@@ -31,7 +25,7 @@ DFlipFlop::DFlipFlop(const DFlipFlop& pObj, const CoreLogic* pCoreLogic):
     mInputLabels = pObj.mInputLabels;
     mOutputLabels = pObj.mOutputLabels;
     mOutputInverted = pObj.mOutputInverted;
-    mInputInverted= pObj.mInputInverted;
+    mInputInverted = pObj.mInputInverted;
 };
 
 IBaseComponent* DFlipFlop::CloneBaseComponent(const CoreLogic* pCoreLogic) const

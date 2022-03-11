@@ -18,13 +18,14 @@ public:
     void AddInputSlot(void);
     uint32_t GetInputSize(void) const;
 
+    void InputReady(uint32_t pInput, LogicState pState) override;
+
 public slots:
-    void OnSimulationAdvance(void) override;
     void OnShutdown(void) override;
+    void OnWakeUp(void) override;
 
 protected:
     LogicState mState;
-    bool mStateChanged;
 };
 
 #endif // LOGICWIRECELL_H

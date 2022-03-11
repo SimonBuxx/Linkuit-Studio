@@ -106,7 +106,7 @@ static constexpr const char* STYLESHEET = "QPlainTextEdit { color: white; backgr
 
 namespace inputs
 {
-static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(500);
+static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(50 * simulation::PROPAGATION_DELAY);
 } // namespace
 
 namespace complex_logic

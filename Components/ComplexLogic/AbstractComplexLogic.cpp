@@ -298,8 +298,6 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
             }
         }
     }
-
-
 }
 
 QRectF AbstractComplexLogic::boundingRect() const

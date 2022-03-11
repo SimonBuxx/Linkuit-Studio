@@ -14,10 +14,9 @@ public:
 public slots:
     void OnSimulationAdvance(void) override;
     void OnShutdown(void) override;
-    void OnWakeUp(void);
+    void OnWakeUp(void) override;
 
 protected:
-    std::vector<LogicState> mPreviousState;
     std::vector<LogicState> mCurrentState;
     bool mStateChanged;
 };

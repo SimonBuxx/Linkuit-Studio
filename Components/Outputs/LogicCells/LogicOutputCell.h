@@ -11,6 +11,8 @@ public:
     void LogicFunction(void) override;
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
+    void InputReady(uint32_t pInput, LogicState pState) override;
+
 public slots:
     void OnShutdown(void) override;
 

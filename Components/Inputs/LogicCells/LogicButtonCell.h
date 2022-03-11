@@ -10,14 +10,15 @@ class LogicButtonCell : public LogicBaseCell
 public:
     LogicButtonCell(void);
 
-    void LogicFunction(void) override;
-
     void ButtonClick(void);
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
-    void OnSimulationAdvance(void) override;
     void OnShutdown(void) override;
+    void OnWakeUp(void) override;
+
+protected:
+    void ButtonTimeout(void);
 
 protected:
     LogicState mState;

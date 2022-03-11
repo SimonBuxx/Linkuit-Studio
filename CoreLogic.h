@@ -136,6 +136,7 @@ protected:
 
     void CreateWireLogicCells(void);
     void ConnectLogicCells(void);
+    void InitializeLogicCells(void);
 
     // Functions for undo and redo
 

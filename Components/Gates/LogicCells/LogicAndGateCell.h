@@ -14,6 +14,7 @@ public:
 public slots:
     void OnSimulationAdvance(void) override;
     void OnShutdown(void) override;
+    void OnWakeUp(void) override;
 
 protected:
     LogicState mPreviousState;

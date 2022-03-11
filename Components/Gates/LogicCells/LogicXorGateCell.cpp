@@ -10,7 +10,6 @@ LogicXorGateCell::LogicXorGateCell(uint32_t pInputs):
 void LogicXorGateCell::LogicFunction()
 {
     bool oneHigh = false;
-    mCurrentState = mPreviousState; // Keep current state if no change
 
     for (const auto& input : mInputStates)
     {
@@ -22,7 +21,6 @@ void LogicXorGateCell::LogicFunction()
                 {
                     mCurrentState = LogicState::LOW;
                     mStateChanged = true;
-                    emit StateChangedSignal();
                 }
                 return;
             }
@@ -34,7 +32,6 @@ void LogicXorGateCell::LogicFunction()
     {
         mCurrentState = oneHigh ? LogicState::HIGH : LogicState::LOW;
         mStateChanged = true;
-        emit StateChangedSignal();
         return;
     }
 }
@@ -47,19 +44,32 @@ LogicState LogicXorGateCell::GetOutputState(uint32_t pOutput) const
 
 void LogicXorGateCell::OnSimulationAdvance()
 {
+    AdvanceUpdateTime();
+
     if (mStateChanged)
     {
+        mStateChanged = false;
         NotifySuccessor(0, mCurrentState);
         mPreviousState = mCurrentState;
-        mStateChanged = false;
+
+        emit StateChangedSignal();
     }
+}
+
+void LogicXorGateCell::OnWakeUp()
+{
+    mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mPreviousState = LogicState::LOW;
+    mCurrentState = LogicState::LOW;
+    mNextUpdateTime = UpdateTime::NOW;
+
+    mStateChanged = true; // Successors should be notified about wake up
+    emit StateChangedSignal();
 }
 
 void LogicXorGateCell::OnShutdown()
 {
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
-    mPreviousState = LogicState::LOW;
     mCurrentState = LogicState::LOW;
-    mStateChanged = true;
     emit StateChangedSignal();
 }
