@@ -14,18 +14,6 @@ void LogicBaseCell::ConnectOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t
     mOutputCells[pOutput] = std::make_pair(pCell, pInput);
 }
 
-void LogicBaseCell::LogicFunction()
-{}
-
-void LogicBaseCell::OnShutdown()
-{}
-
-void LogicBaseCell::OnWakeUp()
-{}
-
-void LogicBaseCell::OnSimulationAdvance()
-{}
-
 LogicState LogicBaseCell::GetInputState(uint32_t pInput) const
 {
     Q_ASSERT(mInputStates.size() > pInput);
@@ -62,6 +50,7 @@ void LogicBaseCell::AdvanceUpdateTime()
         case UpdateTime::NOW:
         {
             LogicFunction(); // Update output states now
+            mNextUpdateTime = UpdateTime::INF;
             break;
         }
         case UpdateTime::INF:

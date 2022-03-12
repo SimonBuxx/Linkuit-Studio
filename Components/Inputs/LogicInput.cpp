@@ -47,8 +47,6 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
 {
     Q_UNUSED(pWidget);
 
-    const double levelOfDetail = pOption->levelOfDetailFromTransform(pPainter->worldTransform());
-
     if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetOutputState() == LogicState::LOW)
     {
         QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::FILL_COLOR,
@@ -65,14 +63,7 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
         pPainter->setBrush(QBrush(components::HIGH_COLOR));
     }
 
-    if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)
-    {
-        pPainter->drawRoundedRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight, 0, 0);
-    }
-    else
-    {
-        pPainter->drawRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
-    }
+    pPainter->drawRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
 }
 
 QRectF LogicInput::boundingRect() const

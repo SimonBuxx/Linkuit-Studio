@@ -38,7 +38,7 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
         QPen pen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
                  components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
         pPainter->setPen(pen);
-        if (levelOfDetail >= components::CONNECTORS_MIN_LOD)
+        if (levelOfDetail >= components::COMPONENT_DETAILS_MIN_LOD)
         {
             // Draw connectors
             switch (mDirection)
@@ -257,15 +257,6 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
                  components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
         pPainter->setPen(pen);
         pPainter->setBrush(QBrush(components::FILL_COLOR));
-
-        /*if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)
-        {
-            pPainter->drawRoundedRect(0, 0, mWidth, mHeight, 0, 0);
-        }
-        else
-        {
-            pPainter->drawRect(0, 0, mWidth, mHeight);
-        }*/
         pPainter->drawRect(0, 0, mWidth, mHeight);
     }
 

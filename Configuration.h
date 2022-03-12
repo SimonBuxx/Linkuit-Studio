@@ -56,9 +56,8 @@ static constexpr QColor HIGH_COLOR(0, 204, 143);
 
 static constexpr uint8_t BORDER_WIDTH = 2;
 
-static constexpr double ROUNDED_CORNERS_MIN_LOD = 0.5f;
 static constexpr double DESCRIPTION_TEXT_MIN_LOD = 0.25f;
-static constexpr double CONNECTORS_MIN_LOD = 0.2f;
+static constexpr double COMPONENT_DETAILS_MIN_LOD = 0.2f;
 static constexpr Direction DEFAULT_DIRECTION = Direction::RIGHT;
 
 namespace gates

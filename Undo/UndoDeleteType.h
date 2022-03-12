@@ -4,13 +4,25 @@
 #include "UndoBaseType.h"
 #include "../Components/IBaseComponent.h"
 
+///
+/// \brief The UndoDeleteType class represents an undo action where objects where deleted
+///
 class UndoDeleteType : public UndoBaseType
 {
 public:
+    /// \brief Constructor for the UndoDeleteType
+    /// \param pDeletedComponents: Components that have been deleted
     UndoDeleteType(std::vector<IBaseComponent*> &pDeletedComponents);
+
+    /// \brief Destructor for the UndoDeleteType
     ~UndoDeleteType(void);
+
+    /// \brief Gets the type of this undo action
+    /// \return An Undo::Type object
     Undo::Type Type(void) const override;
 
+    /// \brief Getter for the deleted components
+    /// \return Vector containing pointers to the deleted components
     const std::vector<IBaseComponent*>& Components(void) const;
 
 protected:

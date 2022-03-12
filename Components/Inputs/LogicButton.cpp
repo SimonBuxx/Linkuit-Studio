@@ -65,10 +65,10 @@ void LogicButton::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
         pPainter->setBrush(QBrush(components::HIGH_COLOR));
     }
 
-    if (levelOfDetail >= components::ROUNDED_CORNERS_MIN_LOD)
-    {
-        pPainter->drawRoundedRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight, 0, 0);
+    pPainter->drawRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
 
+    if (levelOfDetail >= components::COMPONENT_DETAILS_MIN_LOD)
+    {
         if (std::static_pointer_cast<LogicButtonCell>(mLogicCell)->GetOutputState() == LogicState::LOW)
         {
             QPen pen(components::wires::WIRE_LOW_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
@@ -85,10 +85,6 @@ void LogicButton::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
         }
 
         pPainter->drawRect(mWidth * -0.25f, mHeight * -0.25f, mWidth * 0.5f, mHeight * 0.5f);
-    }
-    else
-    {
-        pPainter->drawRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
     }
 }
 
