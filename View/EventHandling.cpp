@@ -35,7 +35,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
         }
         else
         {
-            emit LeftMouseButtonPressedEvent(mapToScene(pEvent->pos()), *pEvent);
+            emit LeftMouseButtonPressedWithoutCtrlEvent(mapToScene(pEvent->pos()), *pEvent);
         }
         return;
     }
@@ -165,16 +165,4 @@ void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
     }
 
     QGraphicsView::keyPressEvent(pEvent);
-}
-
-void GraphicsView::keyReleaseEvent(QKeyEvent *pEvent)
-{
-    Q_ASSERT(pEvent);
-    switch (pEvent->key())
-    {
-        default:
-        {
-            break;
-        }
-    }
 }

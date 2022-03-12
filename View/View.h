@@ -2,7 +2,6 @@
 #define VIEW_H
 
 #include "CoreLogic.h"
-#include "Components/IBaseComponent.h"
 #include "Configuration.h"
 
 #include <QFrame>
@@ -17,56 +16,100 @@ QT_END_NAMESPACE
 class View;
 class CoreLogic;
 
+///
+/// \brief The GraphicsView class extends QGraphicsView, which contains the main scene
+///
 class GraphicsView : public QGraphicsView
 {
     Q_OBJECT
 public:
+    /// \brief Constructor for the GraphicsView class
+    /// \param pView: The frame to contain the GraphicsView
+    /// \param pCoreLogic: Reference to the core logic
     GraphicsView(View &pView, CoreLogic &pCoreLogic);
-    View* GetView(void) const;
 
 signals:
-    void LeftMouseButtonPressedEvent(QPointF pMousePos, QMouseEvent &pEvent);
+    /// \brief Emitted when the left mouse button is pressed without the CTRL key being down
+    /// \param pMappedPos: The mouse position mapped onto the scene
+    /// \param pEvent: The mouse event object of the event
+    void LeftMouseButtonPressedWithoutCtrlEvent(QPointF pMappedPos, QMouseEvent &pEvent);
 
 public slots:
+    /// \brief This slot can be invoked to execute the default behavior for a QGraphicsView::mousePressEvent
+    /// \param pEvent: The mouse event to handle
     void OnMousePressedEventDefault(QMouseEvent &pEvent);
 
 protected:
+    /// \brief Handles mouse wheel events for zooming
+    /// \param pEvent: A mouse wheel event pointer
     void wheelEvent(QWheelEvent *pEvent) override;
+
+    /// \brief Handles mouse press events for panning and editing
+    /// \param pEvent: A mouse press event pointer
     void mousePressEvent(QMouseEvent *pEvent) override;
+
+    /// \brief Handles mouse move event for panning and wire drawing
+    /// \param pEvent: A mouse move event pointer
     void mouseMoveEvent(QMouseEvent *pEvent) override;
+
+    /// \brief Handles mouse release event for moving components etc.
+    /// \param pEvent: A mouse release event pointer
     void mouseReleaseEvent(QMouseEvent *pEvent) override;
+
+    /// \brief Prevents all double click interaction
+    /// \param pEvent: The associated double click event
     void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
+
+    /// \brief Handles keyboard events such as shortcuts
+    /// \param pEvent: The associated key event
     void keyPressEvent(QKeyEvent *pEvent) override;
-    void keyReleaseEvent(QKeyEvent *pEvent) override;
 
 protected:
     View &mView;
     CoreLogic &mCoreLogic;
 
-    bool mIsLeftMousePressed = false;
     QPoint mPanStart;
+    bool mIsLeftMousePressed;
 };
 
+///
+/// \brief The View class contains all GUI components
+///
 class View : public QFrame
 {
     Q_OBJECT
 public:
+    /// \brief Creator for the View class
+    /// \param pCoreLogic: Reference to the core logic
     View(CoreLogic &pCoreLogic);
 
+    /// \brief Initializes the GUI and the GraphicsView and sets up all signal/slot connections
     void Init(void);
 
-    void Scene(QGraphicsScene &pScene);
-    QGraphicsScene* Scene(void);
+    /// \brief Sets the displayed scene to the given scene
+    /// \param pScene: Reference to a QGraphicsScene
+    void SetScene(QGraphicsScene &pScene);
+
+    /// \brief Gets the main scene
+    /// \return Pointer to a QGraphicsScene
+    QGraphicsScene* Scene(void) const;
 
     /// \brief Returns a list of pointers to all scene items
     /// \return A QList of all items in mScene
-    QList<QGraphicsItem*> Components(void);
+    QList<QGraphicsItem*> Components(void) const;
 
+    /// \brief Sets the state of the undo and redo buttons according to whether the simulation
+    /// is running and if undo or redo operations are available to execute
     void SetUndoRedoButtonsEnableState(void);
 
 public slots:
-    void ZoomIn(int32_t pLevel);
-    void ZoomOut(int32_t pLevel);
+    /// \brief Increases the zoom level and updates the displayed percentage
+    /// \param pAmount: The amount to increase the zoom by
+    void ZoomIn(int32_t pAmount);
+
+    /// \brief Decreases the zoom level and updates the displayed percentage
+    /// \param pAmount: The amount to decrease the zoom by
+    void ZoomOut(int32_t pAmount);
 
     /// \brief Performs all GUI adjustments to enter the new control mode
     /// \param pNewMode: The newly entered control mode
@@ -76,10 +119,14 @@ public slots:
     /// \param pNewType: The type of components to be added
     void OnComponentTypeChanged(ComponentType pNewType);
 
+    /// \brief Disables buttons not available in simulation and disables component selection
     void OnSimulationStart(void);
+
+    /// \brief Enables buttons available for editing and enables component selection
     void OnSimulationStop(void);
 
 protected slots:
+    /// \brief Applies the current transform to the GraphicsView and sets the scene background
     void SetupMatrix(void);
 
 protected:
@@ -100,6 +147,8 @@ protected:
     /// \return A pixel map containing a background grid tile
     QPixmap DrawGridPattern(int32_t pZoomLevel);
 
+    /// \brief Updates the zoom GUI label to display the given value
+    /// \param pZoomPercentage: The zoom percentage to display
     void UpdateZoomLabel(uint8_t pZoomPercentage);
 
 protected:
@@ -107,6 +156,7 @@ protected:
     QGraphicsScene *mScene;
     CoreLogic &mCoreLogic;
 
+    // GUI buttons
     QToolButton *mEditButton;
     QToolButton *mDeleteButton;
     QToolButton *mCopyButton;

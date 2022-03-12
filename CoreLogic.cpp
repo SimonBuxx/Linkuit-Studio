@@ -64,23 +64,28 @@ void CoreLogic::EnterControlMode(ControlMode pMode)
 
         if (pMode == ControlMode::SIMULATION)
         {
-            ParseWireGroups();
-            CreateWireLogicCells();
-            ConnectLogicCells();
-            //qDebug() << "Found " << mWireGroups.size() << " groups";
-            mPropagationTimer.start(simulation::PROPAGATION_DELAY);
-            emit SimulationStartSignal();
+            StartSimulation();
         }
     }
+}
+
+void CoreLogic::StartSimulation()
+{
+    ParseWireGroups();
+    CreateWireLogicCells();
+    ConnectLogicCells();
+    //qDebug() << "Found " << mWireGroups.size() << " groups";
+    mPropagationTimer.start(simulation::PROPAGATION_DELAY);
+    emit SimulationStartSignal();
 }
 
 void CoreLogic::EnterAddControlMode(ComponentType pComponentType)
 {
     EnterControlMode(ControlMode::ADD);
-    SetComponentType(pComponentType);
+    SelectComponentType(pComponentType);
 }
 
-ComponentType CoreLogic::GetComponentType() const
+ComponentType CoreLogic::GetSelectedComponentType() const
 {
     return mComponentType;
 }
@@ -105,7 +110,7 @@ bool CoreLogic::IsRedoQueueEmpty(void) const
     return mRedoQueue.empty();
 }
 
-void CoreLogic::SetComponentType(ComponentType pComponentType)
+void CoreLogic::SelectComponentType(ComponentType pComponentType)
 {
     mComponentType = pComponentType;
     emit ComponentTypeChangedSignal(mComponentType);
@@ -973,7 +978,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     qDebug() << "Moving took " << total.elapsed() << "ms total";
 }
 
-void CoreLogic::OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent)
+void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent)
 {
     auto snappedPos = SnapToGrid(pMappedPos);
 

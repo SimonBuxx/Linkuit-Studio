@@ -11,13 +11,9 @@
 GraphicsView::GraphicsView(View &pView, CoreLogic &pCoreLogic):
     QGraphicsView(),
     mView(pView),
-    mCoreLogic(pCoreLogic)
+    mCoreLogic(pCoreLogic),
+    mIsLeftMousePressed(false)
 {}
-
-View* GraphicsView::GetView() const
-{
-    return &mView;
-}
 
 View::View(CoreLogic &pCoreLogic):
     mGraphicsView(*this, pCoreLogic),
@@ -41,7 +37,7 @@ void View::Init()
     CreateGui();
     ConnectGuiSignalsAndSlots();
 
-    QObject::connect(&mGraphicsView, &GraphicsView::LeftMouseButtonPressedEvent, &mCoreLogic, &CoreLogic::OnLeftMouseButtonPressed);
+    QObject::connect(&mGraphicsView, &GraphicsView::LeftMouseButtonPressedWithoutCtrlEvent, &mCoreLogic, &CoreLogic::OnLeftMouseButtonPressedWithoutCtrl);
     QObject::connect(&mCoreLogic, &CoreLogic::MousePressedEventDefaultSignal, &mGraphicsView, &GraphicsView::OnMousePressedEventDefault);
 
     QObject::connect(&mCoreLogic, &CoreLogic::SimulationStartSignal, this, &View::OnSimulationStart);
@@ -50,19 +46,19 @@ void View::Init()
     SetupMatrix();
 }
 
-void View::Scene(QGraphicsScene &pScene)
+void View::SetScene(QGraphicsScene &pScene)
 {
     mScene = &pScene;
     mGraphicsView.setScene(&pScene);
     mGraphicsView.centerOn(0, 0);
 }
 
-QGraphicsScene* View::Scene(void)
+QGraphicsScene* View::Scene(void) const
 {
     return mScene;
 }
 
-QList<QGraphicsItem*> View::Components(void)
+QList<QGraphicsItem*> View::Components(void) const
 {
     return mScene->items();
 }
@@ -169,17 +165,17 @@ void View::SetupMatrix()
     mGraphicsView.setBackgroundBrush(DrawGridPattern(mZoomLevel));
 }
 
-void View::ZoomIn(int32_t pLevel)
+void View::ZoomIn(int32_t pAmount)
 {
-    mZoomLevel += pLevel;
+    mZoomLevel += pAmount;
     mZoomLevel = std::min(mZoomLevel, canvas::MAX_ZOOM_LEVEL);
     UpdateZoomLabel(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
     SetupMatrix();
 }
 
-void View::ZoomOut(int32_t pLevel)
+void View::ZoomOut(int32_t pAmount)
 {
-    mZoomLevel -= pLevel;
+    mZoomLevel -= pAmount;
     mZoomLevel = std::max(mZoomLevel, canvas::MIN_ZOOM_LEVEL);
     UpdateZoomLabel(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
     SetupMatrix();

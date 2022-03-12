@@ -11,7 +11,7 @@ MainWindow::MainWindow(QGraphicsScene &pScene):
     mView(mCoreLogic),
     mCoreLogic(mView)
 {
-    mView.Scene(mScene);
+    mView.SetScene(mScene);
 
     mMainLayout = new QVBoxLayout(this);
     mMainLayout->setContentsMargins(0, 10, 0, 0);

@@ -26,8 +26,8 @@ public:
     void EnterControlMode(ControlMode pMode);
     ControlMode GetControlMode(void);
 
-    void SetComponentType(ComponentType pComponentType);
-    ComponentType GetComponentType(void) const;
+    void SelectComponentType(ComponentType pComponentType);
+    ComponentType GetSelectedComponentType(void) const;
 
     void EnterAddControlMode(ComponentType pComponentType);
 
@@ -66,7 +66,7 @@ signals:
 
 public slots:
     void OnSelectedComponentsMoved(QPointF pOffset);
-    void OnLeftMouseButtonPressed(QPointF pMappedPos, QMouseEvent &pEvent);
+    void OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent);
 
     // Slots for configuration events
     void OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType);
@@ -76,6 +76,8 @@ public slots:
 
 protected:
     void ConnectToView(void);
+
+    void StartSimulation(void);
 
     // Functions for wire processing
 
@@ -136,7 +138,6 @@ protected:
 
     void CreateWireLogicCells(void);
     void ConnectLogicCells(void);
-    void InitializeLogicCells(void);
 
     // Functions for undo and redo
 
