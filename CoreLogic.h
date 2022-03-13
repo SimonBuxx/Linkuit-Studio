@@ -15,18 +15,27 @@
 
 class View;
 
+///
+/// \brief The CoreLogic class contains all business logic
+///
 class CoreLogic : public QObject
 {
     Q_OBJECT
 public:
+    /// \brief Constructor for CoreLogic
+    /// \param pView: The view that contains the main scene
     CoreLogic(View &pView);
 
+    /// \brief Creates a new scene component
+    /// \return Pointer to the new component
     IBaseComponent* GetItem(void);
 
     void EnterControlMode(ControlMode pMode);
+
     ControlMode GetControlMode(void);
 
     void SelectComponentType(ComponentType pComponentType);
+
     ComponentType GetSelectedComponentType(void) const;
 
     void EnterAddControlMode(ComponentType pComponentType);
@@ -45,51 +54,88 @@ public:
     void AddWires(QPointF pEndPoint);
 
     void CopySelectedComponents(void);
+
     void DeleteSelectedComponents(void);
 
+    /// \brief Returns true, if the core logic is in simulation mode
+    /// \return True, if in simulation mode
     bool IsSimulationRunning(void) const;
 
+    // Functions for undo and redo
+
+    /// \brief Returns true, if the undo queue has no elements
+    /// \return True, if the undo queue is empty
     bool IsUndoQueueEmpty(void) const;
+
+    /// \brief Returns true, if the redo queue has no elements
+    /// \return True, if the redo queue is empty
     bool IsRedoQueueEmpty(void) const;
 
+    /// \brief Undos the last logged undo action if existant
     void Undo(void);
+
+    /// \brief Redos the last undone undo action if existant
     void Redo(void);
 
 signals:
     void ControlModeChangedSignal(ControlMode pNewMode);
+
     void ComponentTypeChangedSignal(ComponentType pNewType);
+
     void MousePressedEventDefaultSignal(QMouseEvent &pEvent);
 
     void SimulationStartSignal(void);
+
     void SimulationAdvanceSignal(void);
+
     void SimulationStopSignal(void);
 
 public slots:
     void OnSelectedComponentsMoved(QPointF pOffset);
+
     void OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent);
 
     // Slots for configuration events
     void OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType);
+
     void OnTextLabelContentChanged(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText);
 
+    /// \brief Advances the simulation by one step
     void OnPropagationTimeout(void);
 
 protected:
+    /// \brief Connects to the View object via signals and slots
     void ConnectToView(void);
 
+    /// \brief Performs all neccessary steps to enter simulation mode
     void StartSimulation(void);
 
     // Functions for wire processing
 
+    /// \brief Returns a vector of components that only contains the wires found in pComponents, facing in pDirection
+    /// \param pComponents: The list of components to filter for logic wires
+    /// \param pDirection: The wire direction to filter for, or UNSET for all wires
+    /// \return A vector containing all logic wires from pComponents
     std::vector<IBaseComponent*> FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection = WireDirection::UNSET) const;
 
     LogicWire* MergeWires(LogicWire* pNewWire, LogicWire* pLeftTopAdjacent, LogicWire* pRightBottomAdjacent) const;
+
     std::vector<IBaseComponent*> DeleteContainedWires(LogicWire* pWire);
+
     LogicWire* GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
+
     void MergeWiresAfterMove(std::vector<LogicWire*> &pComponents, std::vector<IBaseComponent*> &pAddedWires, std::vector<IBaseComponent*> &pDeletedWires);
 
     bool IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const;
+
+    /// \brief Determines whether there is a T- or X-crossing below pConPoint
+    /// \param pConPoint: The ConPoint to take the position from
+    /// \return True, if there is no T- or X-crossing of wires below pConPoint
     bool IsNoCrossingPoint(const ConPoint* pConPoint) const;
+
+    /// \brief Determines whether there is an X-crossing at the given point
+    /// \param pPoint: The point to check
+    /// \return True, if there are two wires in pPoint crossing each other
     bool IsXCrossingPoint(QPointF pPoint) const;
 
     // Functions for component retreival
@@ -137,11 +183,13 @@ protected:
     ConPoint* GetConPointAtPosition(QPointF pPos, ConnectionType pType) const;
 
     void CreateWireLogicCells(void);
+
     void ConnectLogicCells(void);
 
     // Functions for undo and redo
 
     void AppendUndo(UndoBaseType* pUndoObject);
+
     void AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue);
 
 protected:
@@ -165,7 +213,7 @@ protected:
 
     std::vector<std::shared_ptr<LogicWireCell>> mLogicWireCells;
 
-    QTimer mPropagationTimer;
+    QTimer mPropagationTimer; // Main timer to set the propagation delay
 
     // Undo and redo queues
     std::deque<UndoBaseType*> mUndoQueue;

@@ -5,11 +5,20 @@
 #include "HelperStructures.h"
 #include "LogicCells/LogicOutputCell.h"
 
+///
+/// \brief The LogicOutput class represents a logic output
+///
 class LogicOutput : public IBaseComponent
 {
     Q_OBJECT
 public:
+    /// \brief Constructor for LogicOutput
+    /// \param pCoreLogic: Pointer to the core logic
     LogicOutput(const CoreLogic* pCoreLogic);
+
+    /// \brief Copy constructor for LogicOutput
+    /// \param pObj: The object to be copied
+    /// \param pCoreLogic: Pointer to the core logic
     LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic);
 
     /// \brief Clone function for the output component

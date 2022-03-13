@@ -3,6 +3,9 @@
 
 #include "AbstractGate.h"
 
+///
+/// \brief The AndGate class represents a logic NOT gate
+///
 class NotGate : public AbstractGate
 {
     Q_OBJECT
@@ -12,6 +15,9 @@ public:
     /// \param pDirection: The direction of the gate
     NotGate(const CoreLogic* pCoreLogic, Direction pDirection);
 
+    /// \brief Copy constructor for the NOT gate
+    /// \param pObj: The object to be copied
+    /// \param pCoreLogic: Pointer to the core logic
     NotGate(const NotGate& pObj, const CoreLogic* pCoreLogic);
 
     /// \brief Clone function for the gate

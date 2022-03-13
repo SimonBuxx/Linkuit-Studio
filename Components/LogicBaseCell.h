@@ -5,7 +5,7 @@
 
 #include <QObject>
 
-/// \brief UpdateTime contains values to indicate when the logic cell should update it's state
+/// \brief UpdateTime contains values to indicate when the logic cell should update its state
 enum class UpdateTime
 {
     NOW = 0,
@@ -31,7 +31,7 @@ public:
     /// \brief The logic function that determines the output states based on the inputs
     virtual void LogicFunction(void) {};
 
-    /// \brief Notifies the logic cell connected to output pOutput to update it's input state to pState
+    /// \brief Notifies the logic cell connected to output pOutput to update its input state to pState
     /// \param pOutput: The number of the output that has changed to pState
     /// \param pState: The new state of the output
     void NotifySuccessor(uint32_t pOutput, LogicState pState) const;

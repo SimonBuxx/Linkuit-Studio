@@ -5,11 +5,20 @@
 #include "HelperStructures.h"
 #include "LogicCells/LogicButtonCell.h"
 
+///
+/// \brief The LogicButton class represents a logic button input
+///
 class LogicButton : public IBaseComponent
 {
     Q_OBJECT
 public:
+    /// \brief Constructor for LogicButton
+    /// \param pCoreLogic: Pointer to the core logic
     LogicButton(const CoreLogic* pCoreLogic);
+
+    /// \brief Copy constructor for LogicButton
+    /// \param pObj: The object to be copied
+    /// \param pCoreLogic: Pointer to the core logic
     LogicButton(const LogicButton& pObj, const CoreLogic* pCoreLogic);
 
     /// \brief Clone function for the button component
@@ -17,6 +26,8 @@ public:
     /// \return A pointer to the new component
     virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
+    /// \brief Triggers the button to toggle if in simulation mode
+    /// \param pEvent: Pointer to the mouse press event
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
 
     /// \brief Defines the bounding rect of this component

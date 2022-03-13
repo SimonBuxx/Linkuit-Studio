@@ -3,6 +3,9 @@
 
 #include "AbstractGate.h"
 
+///
+/// \brief The AndGate class represents a logic OR gate
+///
 class OrGate : public AbstractGate
 {
     Q_OBJECT
@@ -13,6 +16,9 @@ public:
     /// \param pDirection: The direction of the gate
     OrGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection);
 
+    /// \brief Copy constructor for the OR gate
+    /// \param pObj: The object to be copied
+    /// \param pCoreLogic: Pointer to the core logic
     OrGate(const OrGate& pObj, const CoreLogic* pCoreLogic);
 
     /// \brief Clone function for the gate

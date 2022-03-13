@@ -419,18 +419,18 @@ void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector
 {
     for (auto &w : pWires)
     {
-        const auto containedWires = DeleteContainedWires(static_cast<LogicWire*>(w));
+        const auto containedWires = DeleteContainedWires(w);
         pDeletedWires.insert(pDeletedWires.end(), containedWires.begin(), containedWires.end());
 
         LogicWire* startAdjacent = nullptr;
         LogicWire* endAdjacent = nullptr;
 
-        if (static_cast<LogicWire*>(w)->GetDirection() == WireDirection::HORIZONTAL)
+        if (w->GetDirection() == WireDirection::HORIZONTAL)
         {
             startAdjacent = GetAdjacentWire(QPointF(w->x() - 4, w->y()), WireDirection::HORIZONTAL);
-            endAdjacent = GetAdjacentWire(QPointF(w->x() + static_cast<LogicWire*>(w)->GetLength() + 4, w->y()), WireDirection::HORIZONTAL);
+            endAdjacent = GetAdjacentWire(QPointF(w->x() + w->GetLength() + 4, w->y()), WireDirection::HORIZONTAL);
 
-            auto horizontalWire = MergeWires(static_cast<LogicWire*>(w), startAdjacent, endAdjacent);
+            auto horizontalWire = MergeWires(w, startAdjacent, endAdjacent);
             horizontalWire->setSelected(w->isSelected());
 
             if (startAdjacent == endAdjacent)
@@ -444,9 +444,9 @@ void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector
         else
         {
             startAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() - 4), WireDirection::VERTICAL);
-            endAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() + static_cast<LogicWire*>(w)->GetLength() + 4), WireDirection::VERTICAL);
+            endAdjacent = GetAdjacentWire(QPointF(w->x(), w->y() + w->GetLength() + 4), WireDirection::VERTICAL);
 
-            auto verticalWire = MergeWires(static_cast<LogicWire*>(w), startAdjacent, endAdjacent);
+            auto verticalWire = MergeWires(w, startAdjacent, endAdjacent);
             verticalWire->setSelected(w->isSelected());
 
             if (startAdjacent == endAdjacent)
@@ -479,25 +479,25 @@ std::vector<IBaseComponent*> CoreLogic::DeleteContainedWires(LogicWire* pWire)
 {
     std::vector<IBaseComponent*> deletedComponents;
 
-    QList<QGraphicsItem*> containedComponents;
-
+    QRectF collisionRect;
     if (pWire->GetDirection() == WireDirection::HORIZONTAL)
     {
-        containedComponents = mView.Scene()->items(pWire->x() - 2, pWire->y() - components::wires::BOUNDING_RECT_SIZE / 2 - 2,
-                                                   pWire->GetLength() + 4, components::wires::BOUNDING_RECT_SIZE + 4, Qt::ContainsItemShape, Qt::DescendingOrder);
+        collisionRect = QRectF(pWire->x() - 2, pWire->y() - components::wires::BOUNDING_RECT_SIZE / 2 - 2,
+                               pWire->GetLength() + 4, components::wires::BOUNDING_RECT_SIZE + 4);
     }
     else
     {
-        containedComponents = mView.Scene()->items(pWire->x() - components::wires::BOUNDING_RECT_SIZE / 2 - 2, pWire->y() - 2,
-                                                   components::wires::BOUNDING_RECT_SIZE + 4, pWire->GetLength() + 4, Qt::ContainsItemShape, Qt::DescendingOrder);
+        collisionRect = QRectF(pWire->x() - components::wires::BOUNDING_RECT_SIZE / 2 - 2, pWire->y() - 2,
+                               components::wires::BOUNDING_RECT_SIZE + 4, pWire->GetLength() + 4);
     }
-    const auto containedWires = FilterForWires(containedComponents, pWire->GetDirection());
 
-    for (auto &wire : containedWires)
+    const auto&& containedComponents = mView.Scene()->items(collisionRect, Qt::ContainsItemShape, Qt::DescendingOrder);
+
+    for (const auto &wire : containedComponents)
     {
-        if (wire != pWire)
+        if (dynamic_cast<LogicWire*>(wire) != nullptr && static_cast<LogicWire*>(wire)->GetDirection() == pWire->GetDirection() && wire != pWire)
         {
-            deletedComponents.push_back(wire);
+            deletedComponents.push_back(static_cast<IBaseComponent*>(wire));
             mView.Scene()->removeItem(wire);
         }
     }
@@ -842,20 +842,17 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     }
 
     std::vector<LogicWire*> affectedWires;
-    std::vector<IBaseComponent*> affectedComponents;
+    std::vector<QGraphicsItem*> affectedComponents;
 
-    QElapsedTimer splitting;
-    splitting.start();
-    for (auto& comp : mView.Scene()->selectedItems()) // Cost neglectable
+    for (const auto& comp : mView.Scene()->selectedItems())
     {
         if (dynamic_cast<LogicWire*>(comp) != nullptr)
         {
             affectedWires.push_back(static_cast<LogicWire*>(comp));
         }
 
-        affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
+        affectedComponents.push_back(comp);
     }
-    qDebug() << "Splitting into wires and other components took " << splitting.elapsed() << "ms";
 
     QElapsedTimer merging;
     merging.start();
@@ -875,23 +872,23 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     QElapsedTimer conpoints;
     conpoints.start();
 
-    uint64_t originalms = 0;
+    uint64_t tms = 0;
     uint64_t tcrossingsms = 0;
-    for (auto& comp : affectedComponents) // Ca. 75% of total cost
+    for (const auto& comp : affectedComponents) // Ca. 75% of total cost
     {
-        const auto baseComp = dynamic_cast<IBaseComponent*>(comp);
+        const auto& baseComp = dynamic_cast<IBaseComponent*>(comp);
         if (baseComp == nullptr)
         {
             continue; // Ignore other QGraphicsItems
         }
 
-        QElapsedTimer original;
-        original.start();
         // Delete all invalid ConPoints at the original position colliding with the selection
         QRectF oldCollisionRect(baseComp->pos() + baseComp->boundingRect().topLeft() - pOffset,
                                            baseComp->pos() + baseComp->boundingRect().bottomRight() - pOffset);
 
-        for (const auto& collidingComp : mView.Scene()->items(oldCollisionRect, Qt::IntersectsItemShape))
+        const auto&& abandonedComponents = mView.Scene()->items(oldCollisionRect, Qt::IntersectsItemShape);
+
+        for (const auto& collidingComp : abandonedComponents)
         {
             if (dynamic_cast<ConPoint*>(collidingComp) != nullptr && !collidingComp->isSelected() && IsNoCrossingPoint(static_cast<ConPoint*>(collidingComp)))
             {
@@ -899,10 +896,9 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
                 deletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
             }
         }
-        originalms += original.elapsed();
 
         // Delete all ConPoints of the moved components that are not valid anymore
-        if (dynamic_cast<ConPoint*>(baseComp) && IsNoCrossingPoint(static_cast<ConPoint*>(baseComp)))
+        if (dynamic_cast<ConPoint*>(baseComp) != nullptr && IsNoCrossingPoint(static_cast<ConPoint*>(baseComp)))
         {
             mView.Scene()->removeItem(baseComp);
             deletedComponents.push_back(baseComp);
@@ -913,22 +909,24 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
         // Add ConPoints to all T Crossings
         if (dynamic_cast<LogicWire*>(baseComp) != nullptr) // Costly
         {
-            for (const auto& collidingComp : mView.Scene()->collidingItems(baseComp, Qt::IntersectsItemShape))
+            const auto&& collidingComponents = mView.Scene()->collidingItems(baseComp, Qt::IntersectsItemShape);
+
+            for (const auto& collidingComp : collidingComponents)
             {
                 if (dynamic_cast<LogicWire*>(collidingComp) != nullptr && IsTCrossing(static_cast<LogicWire*>(baseComp), static_cast<LogicWire*>(collidingComp)))
                 {
                     QPointF conPointPos;
                     if (static_cast<LogicWire*>(baseComp)->GetDirection() == WireDirection::HORIZONTAL)
                     {
-                        conPointPos.setX(collidingComp->x());
-                        conPointPos.setY(baseComp->y());
+                        conPointPos = QPointF(collidingComp->x(), baseComp->y());
                     }
                     else
                     {
-                        conPointPos.setX(baseComp->x());
-                        conPointPos.setY(collidingComp->y());
+                        conPointPos = QPointF(baseComp->x(), collidingComp->y());
                     }
 
+                    QElapsedTimer t;
+                    t.start();
                     if (!IsComponentAtPosition<ConPoint>(conPointPos)) // Might be costly
                     {
                         auto item = new ConPoint(this);
@@ -936,10 +934,11 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
                         addedComponents.push_back(item);
                         mView.Scene()->addItem(item);
                     }
+                    tms += t.nsecsElapsed();
                 }
             }
         }
-        tcrossingsms += tcrossings.elapsed();
+        tcrossingsms += tcrossings.nsecsElapsed();
 
         // If collision was detected
         if (IsCollidingComponent(baseComp) && !GetCollidingComponents(baseComp).empty())
@@ -963,9 +962,9 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
         movedComponents.push_back(static_cast<IBaseComponent*>(comp));
     }
 
-    qDebug() << "Deleting invalid ConPoints at original position took " << originalms << "ms";
+    qDebug() << "T took " << tms / 1E6 << "ms";
 
-    qDebug() << "Adding ConPoints on T-crossings took " << tcrossingsms << "ms";
+    qDebug() << "Adding ConPoints on T-crossings took " << tcrossingsms / 1E6 << "ms";
 
     qDebug() << "Managing ConPoints took " << conpoints.elapsed() << "ms";
 

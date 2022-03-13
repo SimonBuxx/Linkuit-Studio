@@ -5,6 +5,7 @@
 
 class RsFlipFlop : public AbstractComplexLogic
 {
+    Q_OBJECT
 public:
     RsFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection);
 

@@ -3,6 +3,9 @@
 
 #include "../IBaseComponent.h"
 
+///
+/// \brief The AbstractGate class is the super class for all logic gates
+///
 class AbstractGate : public IBaseComponent
 {
     Q_OBJECT

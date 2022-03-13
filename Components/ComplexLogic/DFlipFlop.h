@@ -5,6 +5,7 @@
 
 class DFlipFlop : public AbstractComplexLogic
 {
+    Q_OBJECT
 public:
     DFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection);
 

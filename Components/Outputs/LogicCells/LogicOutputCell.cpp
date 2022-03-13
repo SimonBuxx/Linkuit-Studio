@@ -22,8 +22,15 @@ LogicState LogicOutputCell::GetOutputState(uint32_t pOutput) const
 
 void LogicOutputCell::InputReady(uint32_t pInput, LogicState pState)
 {
+    Q_ASSERT(pInput == 0);
     mInputStates[pInput] = pState;
     LogicFunction();
+}
+
+void LogicOutputCell::OnWakeUp()
+{
+    mState = LogicState::LOW;
+    emit StateChangedSignal();
 }
 
 void LogicOutputCell::OnShutdown()
