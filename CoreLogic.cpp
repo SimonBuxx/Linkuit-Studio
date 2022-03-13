@@ -586,6 +586,7 @@ bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) co
         || (a->x() > b->x() && a->y() == b->y() && a->x() < b->x() + b->GetLength()));
 }
 
+#warning When placing a component and wire above an x-crossing without ConPoint, a ConPoint is created
 bool CoreLogic::IsNoCrossingPoint(const ConPoint* pConPoint) const
 {
     const auto&& components = mView.Scene()->items(pConPoint->pos(), Qt::IntersectsItemBoundingRect);
@@ -855,13 +856,15 @@ void CoreLogic::ProcessingHeartbeat()
 void CoreLogic::OnProcessingTimeout()
 {
 #warning add loading overlay and display here
-    mView.hide();
+    //mView.hide();
+    mView.FadeInProcessingOverlay();
 }
 
 void CoreLogic::EndProcessing()
 {
     mProcessingTimer.stop();
-    mView.show();
+    //mView.show();
+    mView.FadeOutProcessingOverlay();
     mIsProcessing = false;
 }
 

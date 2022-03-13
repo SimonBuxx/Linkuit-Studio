@@ -7,6 +7,7 @@
 #include <QFrame>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QPropertyAnimation>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -102,6 +103,10 @@ public:
     /// is running and if undo or redo operations are available to execute
     void SetUndoRedoButtonsEnableState(void);
 
+    void FadeOutProcessingOverlay(void);
+
+    void FadeInProcessingOverlay(void);
+
 public slots:
     /// \brief Increases the zoom level and updates the displayed percentage
     /// \param pAmount: The amount to increase the zoom by
@@ -176,6 +181,7 @@ protected:
     QToolButton *mSimulationButton;
 
     QLabel *mZoomLabel;
+    QLabel *mProcessingOverlay;
 
     int32_t mZoomLevel = canvas::DEFAULT_ZOOM_LEVEL;
 };

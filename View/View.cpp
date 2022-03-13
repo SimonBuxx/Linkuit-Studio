@@ -183,6 +183,7 @@ void View::ZoomOut(int32_t pAmount)
 
 void View::UpdateZoomLabel(uint8_t pZoomPercentage)
 {
+    Q_ASSERT(mZoomLabel);
     mZoomLabel->setText(QString::fromStdString(std::to_string(pZoomPercentage) + "%"));
 }
 

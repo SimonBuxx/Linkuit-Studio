@@ -139,14 +139,69 @@ void View::CreateGui()
     mZoomLabel->setText("100%");
     mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: #00583D; font-family: \"Calibri Light\"; font-size: 16px; color: #fff;}");
 
+    QMovie *procImage = new QMovie(QString(":/images/loading.gif"));
+    mProcessingOverlay = new QLabel();
+    mProcessingOverlay->setMovie(procImage);
+    mProcessingOverlay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    procImage->start();
+    mProcessingOverlay->hide();
+
     QGridLayout *topLayout = new QGridLayout;
     topLayout->addLayout(topButtonsLayout, 0, 0);
     topLayout->addWidget(&mGraphicsView, 1, 0);
+    topLayout->addWidget(mProcessingOverlay, 1, 0, Qt::AlignHCenter | Qt::AlignVCenter);
     topLayout->addWidget(mZoomLabel, 1, 0, Qt::AlignBottom | Qt::AlignLeft);
     topLayout->setContentsMargins(0, 0, 0, 0);
     setLayout(topLayout);
 
+    mGraphicsView.stackUnder(mProcessingOverlay);
     mGraphicsView.stackUnder(mZoomLabel);
+}
+
+void View::FadeInProcessingOverlay()
+{
+    if (!mProcessingOverlay->isVisible())
+    {
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
+        mProcessingOverlay->setGraphicsEffect(effect);
+        mProcessingOverlay->show();
+
+        QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
+        anim->setDuration(500);
+        anim->setStartValue(0.0f);
+        anim->setEndValue(1.0f);
+        anim->setEasingCurve(QEasingCurve::OutQuad);
+
+        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
+        {
+            delete mProcessingOverlay->graphicsEffect();
+        });
+
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+}
+
+void View::FadeOutProcessingOverlay()
+{
+    if (mProcessingOverlay->isVisible())
+    {
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
+        mProcessingOverlay->setGraphicsEffect(effect);
+
+        QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
+        anim->setDuration(500);
+        anim->setStartValue(1.0f);
+        anim->setEndValue(0.0f);
+        anim->setEasingCurve(QEasingCurve::OutQuad);
+
+        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
+        {
+            delete mProcessingOverlay->graphicsEffect();
+            mProcessingOverlay->hide();
+        });
+
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
+    }
 }
 
 void View::PrepareGuiForSimulation()
