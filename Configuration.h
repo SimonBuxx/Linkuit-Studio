@@ -12,6 +12,8 @@ static constexpr uint8_t MAX_UNDO_STACK_SIZE = 100;
 namespace gui
 {
 static constexpr const char* WINDOW_TITLE = "Linkuit Studio";
+
+static constexpr std::chrono::milliseconds PROCESSING_HEARTBEAT(100);
 } // namespace
 
 namespace canvas

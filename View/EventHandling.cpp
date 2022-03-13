@@ -7,7 +7,7 @@
 void GraphicsView::wheelEvent(QWheelEvent *pEvent)
 {
     Q_ASSERT(pEvent);
-    if (pEvent->modifiers() & Qt::ControlModifier)
+    if (pEvent->modifiers() & Qt::ControlModifier && !mCoreLogic.IsProcessing())
     {
         if (pEvent->angleDelta().y() > 0)
         {
@@ -24,6 +24,11 @@ void GraphicsView::wheelEvent(QWheelEvent *pEvent)
 void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
 {
     Q_ASSERT(pEvent);
+    if (mCoreLogic.IsProcessing())
+    {
+        return;
+    }
+
     if (pEvent->button() == Qt::LeftButton)
     {
         mIsLeftMousePressed = true;
@@ -51,6 +56,11 @@ void GraphicsView::OnMousePressedEventDefault(QMouseEvent &pEvent)
 void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     Q_ASSERT(pEvent);
+    if (mCoreLogic.IsProcessing())
+    {
+        return;
+    }
+
     if (pEvent->button() == Qt::LeftButton)
     {
         mIsLeftMousePressed = false;
@@ -84,6 +94,11 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
 void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
 {
     Q_ASSERT(pEvent);
+    if (mCoreLogic.IsProcessing())
+    {
+        return;
+    }
+
     if (mIsLeftMousePressed)
     {
         mCoreLogic.ShowPreviewWires(mapToScene(pEvent->pos()));
@@ -114,6 +129,10 @@ void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
 void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 {
     Q_ASSERT(pEvent);
+    if (mCoreLogic.IsProcessing())
+    {
+        return;
+    }
 
     switch (pEvent->key())
     {

@@ -77,6 +77,8 @@ public:
     /// \brief Redos the last undone undo action if existant
     void Redo(void);
 
+    bool IsProcessing(void);
+
 signals:
     void ControlModeChangedSignal(ControlMode pNewMode);
 
@@ -103,6 +105,8 @@ public slots:
     /// \brief Advances the simulation by one step
     void OnPropagationTimeout(void);
 
+    void OnProcessingTimeout(void);
+
 protected:
     /// \brief Connects to the View object via signals and slots
     void ConnectToView(void);
@@ -125,6 +129,9 @@ protected:
     LogicWire* GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
 
     void MergeWiresAfterMove(std::vector<LogicWire*> &pComponents, std::vector<IBaseComponent*> &pAddedWires, std::vector<IBaseComponent*> &pDeletedWires);
+
+    bool ManageConPointsOneStep(IBaseComponent* comp, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
+                                           std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents);
 
     bool IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const;
 
@@ -192,6 +199,19 @@ protected:
 
     void AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue);
 
+    // Functions for handling long processes (copy of large selections, etc.)
+    // These keep the GUI responsive, display a loading screen and block all user interaction
+    // Cheap alternative to multi-threading, because QGraphicsItems cannot be accessed in other threads
+
+    /// \brief Called at the start of a longer process to keep the GUI responsive
+    void StartProcessing(void);
+
+    /// \brief Handles events while processing, call periodically during longer processes
+    void ProcessingHeartbeat(void);
+
+    /// \brief Called when the longer process has been finished
+    void EndProcessing(void);
+
 protected:
     View &mView;
 
@@ -218,6 +238,10 @@ protected:
     // Undo and redo queues
     std::deque<UndoBaseType*> mUndoQueue;
     std::deque<UndoBaseType*> mRedoQueue;
+
+    QTimer mProcessingTimer;
+
+    bool mIsProcessing = false;
 };
 
 #endif // CORELOGIC_H
