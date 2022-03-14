@@ -95,25 +95,25 @@ void View::CreateGui()
     mSimulationButton->setCheckable(false);
     mSimulationButton->setChecked(false);
 
-    QButtonGroup *topButtonsGroup = new QButtonGroup(this);
-    topButtonsGroup->setExclusive(true);
-    topButtonsGroup->addButton(mEditButton);
-    topButtonsGroup->addButton(mDeleteButton);
-    topButtonsGroup->addButton(mCopyButton);
-    topButtonsGroup->addButton(mAddWireButton);
-    topButtonsGroup->addButton(mAddAndGateButton);
-    topButtonsGroup->addButton(mAddOrGateButton);
-    topButtonsGroup->addButton(mAddXorGateButton);
-    topButtonsGroup->addButton(mAddNotGateButton);
-    topButtonsGroup->addButton(mAddInputButton);
-    topButtonsGroup->addButton(mAddButtonButton);
-    topButtonsGroup->addButton(mAddOutputButton);
-    topButtonsGroup->addButton(mAddTextLabelButton);
-    topButtonsGroup->addButton(mAddRsFlipFlopButton);
-    topButtonsGroup->addButton(mAddDFlipFlopButton);
-    topButtonsGroup->addButton(mUndoButton);
-    topButtonsGroup->addButton(mRedoButton);
-    topButtonsGroup->addButton(mSimulationButton);
+    mTopButtonsGroup = new QButtonGroup(this);
+    mTopButtonsGroup->setExclusive(true);
+    mTopButtonsGroup->addButton(mEditButton);
+    mTopButtonsGroup->addButton(mDeleteButton);
+    mTopButtonsGroup->addButton(mCopyButton);
+    mTopButtonsGroup->addButton(mAddWireButton);
+    mTopButtonsGroup->addButton(mAddAndGateButton);
+    mTopButtonsGroup->addButton(mAddOrGateButton);
+    mTopButtonsGroup->addButton(mAddXorGateButton);
+    mTopButtonsGroup->addButton(mAddNotGateButton);
+    mTopButtonsGroup->addButton(mAddInputButton);
+    mTopButtonsGroup->addButton(mAddButtonButton);
+    mTopButtonsGroup->addButton(mAddOutputButton);
+    mTopButtonsGroup->addButton(mAddTextLabelButton);
+    mTopButtonsGroup->addButton(mAddRsFlipFlopButton);
+    mTopButtonsGroup->addButton(mAddDFlipFlopButton);
+    mTopButtonsGroup->addButton(mUndoButton);
+    mTopButtonsGroup->addButton(mRedoButton);
+    mTopButtonsGroup->addButton(mSimulationButton);
 
     topButtonsLayout->addStretch();
     topButtonsLayout->addWidget(mEditButton);
@@ -206,6 +206,8 @@ void View::FadeOutProcessingOverlay()
 
 void View::PrepareGuiForSimulation()
 {
+    SetGuiEnabled(true); // Enable all top buttons to ensure known button state
+
     mEditButton->setEnabled(false);
     mAddWireButton->setEnabled(false);
     mAddAndGateButton->setEnabled(false);
@@ -223,11 +225,14 @@ void View::PrepareGuiForSimulation()
     mUndoButton->setEnabled(false);
     mRedoButton->setEnabled(false);
 
+    mSimulationButton->setEnabled(true);
     mSimulationButton->setText(tr("Stop"));
 }
 
 void View::PrepareGuiForEditing()
 {
+    SetGuiEnabled(false); // Disable all top buttons to ensure known button state
+
     mEditButton->setEnabled(true);
     mAddWireButton->setEnabled(true);
     mAddAndGateButton->setEnabled(true);
@@ -242,10 +247,19 @@ void View::PrepareGuiForEditing()
     mAddDFlipFlopButton->setEnabled(true);
     mDeleteButton->setEnabled(true);
     mCopyButton->setEnabled(true);
+    mSimulationButton->setEnabled(true);
 
     SetUndoRedoButtonsEnableState();
 
     mSimulationButton->setText(tr("Start"));
+}
+
+void View::SetGuiEnabled(bool pEnabled)
+{
+    for (auto& button : mTopButtonsGroup->buttons())
+    {
+        button->setEnabled(pEnabled);
+    }
 }
 
 void View::SetUndoRedoButtonsEnableState()

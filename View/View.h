@@ -8,6 +8,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QPropertyAnimation>
+#include <QButtonGroup>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -103,6 +104,14 @@ public:
     /// is running and if undo or redo operations are available to execute
     void SetUndoRedoButtonsEnableState(void);
 
+    void SetGuiEnabled(bool pEnabled);
+
+    /// \brief Performs tasks such as disabling buttons
+    void PrepareGuiForSimulation(void);
+
+    /// \brief Performs tasks such as enabling buttons
+    void PrepareGuiForEditing(void);
+
     void FadeOutProcessingOverlay(void);
 
     void FadeInProcessingOverlay(void);
@@ -141,12 +150,6 @@ protected:
     /// \brief Invokes connectors for all GUI components
     void ConnectGuiSignalsAndSlots(void);
 
-    /// \brief Performs tasks such as disabling buttons
-    void PrepareGuiForSimulation(void);
-
-    /// \brief Performs tasks such as enabling buttons
-    void PrepareGuiForEditing(void);
-
     /// \brief Creates a grid pattern for the canvas background
     /// \param pZoomLevel: The zoom level decides whether to draw the grid or not
     /// \return A pixel map containing a background grid tile
@@ -162,6 +165,8 @@ protected:
     CoreLogic &mCoreLogic;
 
     // GUI buttons
+    QButtonGroup *mTopButtonsGroup;
+
     QToolButton *mEditButton;
     QToolButton *mDeleteButton;
     QToolButton *mCopyButton;
