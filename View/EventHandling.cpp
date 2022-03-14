@@ -181,6 +181,83 @@ void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
                 break;
             }
         }
+
+        if (mCoreLogic.GetControlMode() == ControlMode::ADD)
+        {
+            switch (pEvent->key())
+            {
+                case Qt::Key_1:
+                {
+                    mCoreLogic.SetComponentInputCount(1);
+                    break;
+                }
+                case Qt::Key_2:
+                {
+                    mCoreLogic.SetComponentInputCount(2);
+                    break;
+                }
+                case Qt::Key_3:
+                {
+                    mCoreLogic.SetComponentInputCount(3);
+                    break;
+                }
+                case Qt::Key_4:
+                {
+                    mCoreLogic.SetComponentInputCount(4);
+                    break;
+                }
+                case Qt::Key_5:
+                {
+                    mCoreLogic.SetComponentInputCount(5);
+                    break;
+                }
+                case Qt::Key_6:
+                {
+                    mCoreLogic.SetComponentInputCount(6);
+                    break;
+                }
+                case Qt::Key_7:
+                {
+                    mCoreLogic.SetComponentInputCount(7);
+                    break;
+                }
+                case Qt::Key_8:
+                {
+                    mCoreLogic.SetComponentInputCount(8);
+                    break;
+                }
+                case Qt::Key_9:
+                {
+                    mCoreLogic.SetComponentInputCount(9);
+                    break;
+                }
+                case Qt::Key_Right:
+                {
+                    mCoreLogic.SetComponentInputDirection(Direction::RIGHT);
+                    break;
+                }
+                case Qt::Key_Up:
+                {
+                    mCoreLogic.SetComponentInputDirection(Direction::UP);
+                    break;
+                }
+                case Qt::Key_Left:
+                {
+                    mCoreLogic.SetComponentInputDirection(Direction::LEFT);
+                    break;
+                }
+                case Qt::Key_Down:
+                {
+                    mCoreLogic.SetComponentInputDirection(Direction::DOWN);
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+            return;
+        }
     }
 
     QGraphicsView::keyPressEvent(pEvent);

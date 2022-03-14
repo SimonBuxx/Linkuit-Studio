@@ -40,6 +40,8 @@ protected:
     /// \param pWidget: Unused, the widget that is been painted on
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 
+    void SetLogicConnectors(void);
+
 protected:
     QString mComponentText;
 

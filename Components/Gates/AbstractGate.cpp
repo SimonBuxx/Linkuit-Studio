@@ -21,6 +21,56 @@ AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBas
         mWidth = mInputCount * canvas::GRID_SIZE * 2;
         mHeight = components::gates::GRID_WIDTH * canvas::GRID_SIZE;
     }
+
+    SetLogicConnectors();
+}
+
+void AbstractGate::SetLogicConnectors()
+{
+    switch(mDirection)
+    {
+        case Direction::RIGHT:
+        {
+            for (uint8_t i = 0; i < mInputCount; i++)
+            {
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+            }
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2)));
+            break;
+        }
+        case Direction::DOWN:
+        {
+            for (uint8_t i = 0; i < mInputCount; i++)
+            {
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0)));
+            }
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, mHeight)));
+            break;
+        }
+        case Direction::LEFT:
+        {
+            for (uint8_t i = 0; i < mInputCount; i++)
+            {
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+            }
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2)));
+            break;
+        }
+        case Direction::UP:
+        {
+            for (uint8_t i = 0; i < mInputCount; i++)
+            {
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight)));
+            }
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, 0)));
+            break;
+        }
+        default:
+        {
+            Q_ASSERT(false);
+            break;
+        }
+    }
 }
 
 void AbstractGate::ResetZValue()

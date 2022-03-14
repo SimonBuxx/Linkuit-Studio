@@ -213,6 +213,16 @@ void CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
     }
 }
 
+void CoreLogic::SetComponentInputCount(uint8_t pCount)
+{
+    mComponentInputCount = pCount;
+}
+
+void CoreLogic::SetComponentInputDirection(Direction pDirection)
+{
+    mComponentDirection = pDirection;
+}
+
 void CoreLogic::SetPreviewWireStart(QPointF pPoint)
 {
     mPreviewWireStart = SnapToGrid(pPoint);

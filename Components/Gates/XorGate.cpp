@@ -6,11 +6,6 @@ XorGate::XorGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDi
     AbstractGate(pCoreLogic, std::make_shared<LogicXorGateCell>(pInputCount), pInputCount, pDirection)
 {
     mComponentText = components::gates::XOR_TEXT;
-
-#warning not suitable for gates with more inputs / turned gates
-    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 20)));
-    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 60)));
-    mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 40)));
 }
 
 XorGate::XorGate(const XorGate& pObj, const CoreLogic* pCoreLogic):

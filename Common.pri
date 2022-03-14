@@ -1,18 +1,18 @@
 HEADERS += \
-    $$PWD/Components/ComplexLogic/DFlipFlop.h \
-    $$PWD/Components/ComplexLogic/LogicCells/LogicDFlipFlopCell.h \
-    $$PWD/Components/ConPoint.h \
-    $$PWD/Components/Gates/LogicCells/LogicAndGateCell.h \
-    $$PWD/Components/Inputs/LogicButton.h \
-    $$PWD/Components/Inputs/LogicCells/LogicButtonCell.h \
-    $$PWD/Components/LogicBaseCell.h \
-    $$PWD/Components/Inputs/LogicCells/LogicInputCell.h \
-    $$PWD/Components/Gates/LogicCells/LogicNotGateCell.h \
-    $$PWD/Components/Gates/LogicCells/LogicOrGateCell.h \
-    $$PWD/Components/Outputs/LogicCells/LogicOutputCell.h \
-    $$PWD/Components/LogicWireCell.h \
-    $$PWD/Components/Gates/LogicCells/LogicXorGateCell.h \
-    $$PWD/Components/TextLabel.h \
+    $${PWD}/Components/ComplexLogic/DFlipFlop.h \
+    $${PWD}/Components/ComplexLogic/LogicCells/LogicDFlipFlopCell.h \
+    $${PWD}/Components/ConPoint.h \
+    $${PWD}/Components/Gates/LogicCells/LogicAndGateCell.h \
+    $${PWD}/Components/Inputs/LogicButton.h \
+    $${PWD}/Components/Inputs/LogicCells/LogicButtonCell.h \
+    $${PWD}/Components/LogicBaseCell.h \
+    $${PWD}/Components/Inputs/LogicCells/LogicInputCell.h \
+    $${PWD}/Components/Gates/LogicCells/LogicNotGateCell.h \
+    $${PWD}/Components/Gates/LogicCells/LogicOrGateCell.h \
+    $${PWD}/Components/Outputs/LogicCells/LogicOutputCell.h \
+    $${PWD}/Components/LogicWireCell.h \
+    $${PWD}/Components/Gates/LogicCells/LogicXorGateCell.h \
+    $${PWD}/Components/TextLabel.h \
     $${PWD}/Components/IBaseComponent.h \
     $${PWD}/Components/ComplexLogic/AbstractComplexLogic.h \
     $${PWD}/Components/ComplexLogic/RsFlipFlop.h \
@@ -38,20 +38,20 @@ HEADERS += \
     $${PWD}/Configuration.h
 
 SOURCES += \
-    $$PWD/Components/ComplexLogic/DFlipFlop.cpp \
-    $$PWD/Components/ComplexLogic/LogicCells/LogicDFlipFlopCell.cpp \
-    $$PWD/Components/ConPoint.cpp \
-    $$PWD/Components/Gates/LogicCells/LogicAndGateCell.cpp \
-    $$PWD/Components/Inputs/LogicButton.cpp \
-    $$PWD/Components/Inputs/LogicCells/LogicButtonCell.cpp \
-    $$PWD/Components/LogicBaseCell.cpp \
-    $$PWD/Components/Inputs/LogicCells/LogicInputCell.cpp \
-    $$PWD/Components/Gates/LogicCells/LogicNotGateCell.cpp \
-    $$PWD/Components/Gates/LogicCells/LogicOrGateCell.cpp \
-    $$PWD/Components/Outputs/LogicCells/LogicOutputCell.cpp \
-    $$PWD/Components/LogicWireCell.cpp \
-    $$PWD/Components/Gates/LogicCells/LogicXorGateCell.cpp \
-    $$PWD/Components/TextLabel.cpp \
+    $${PWD}/Components/ComplexLogic/DFlipFlop.cpp \
+    $${PWD}/Components/ComplexLogic/LogicCells/LogicDFlipFlopCell.cpp \
+    $${PWD}/Components/ConPoint.cpp \
+    $${PWD}/Components/Gates/LogicCells/LogicAndGateCell.cpp \
+    $${PWD}/Components/Inputs/LogicButton.cpp \
+    $${PWD}/Components/Inputs/LogicCells/LogicButtonCell.cpp \
+    $${PWD}/Components/LogicBaseCell.cpp \
+    $${PWD}/Components/Inputs/LogicCells/LogicInputCell.cpp \
+    $${PWD}/Components/Gates/LogicCells/LogicNotGateCell.cpp \
+    $${PWD}/Components/Gates/LogicCells/LogicOrGateCell.cpp \
+    $${PWD}/Components/Outputs/LogicCells/LogicOutputCell.cpp \
+    $${PWD}/Components/LogicWireCell.cpp \
+    $${PWD}/Components/Gates/LogicCells/LogicXorGateCell.cpp \
+    $${PWD}/Components/TextLabel.cpp \
     $${PWD}/Components/IBaseComponent.cpp \
     $${PWD}/Components/ComplexLogic/AbstractComplexLogic.cpp \
     $${PWD}/Components/ComplexLogic/RsFlipFlop.cpp \

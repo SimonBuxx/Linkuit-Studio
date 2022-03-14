@@ -6,11 +6,6 @@ AndGate::AndGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDi
     AbstractGate(pCoreLogic, std::make_shared<LogicAndGateCell>(pInputCount), pInputCount, pDirection)
 {
     mComponentText = components::gates::AND_TEXT;
-
-#warning not suitable for gates with more inputs / turned gates
-    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 20)));
-    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 60)));
-    mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 40)));
 }
 
 AndGate::AndGate(const AndGate& pObj, const CoreLogic* pCoreLogic):

@@ -42,6 +42,10 @@ public:
 
     void AddCurrentTypeComponent(QPointF pPosition);
 
+    void SetComponentInputCount(uint8_t pCount);
+
+    void SetComponentInputDirection(Direction pDirection);
+
     void SetPreviewWireStart(QPointF pStartPoint);
 
     /// \brief Draws preview wires to the current mouse position
