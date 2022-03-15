@@ -72,6 +72,8 @@ protected:
 
     QPoint mPanStart;
     bool mIsLeftMousePressed;
+    bool mIsAddingWire;
+    bool mIsDragging;
 };
 
 ///

@@ -6,7 +6,14 @@
 
 void GraphicsView::wheelEvent(QWheelEvent *pEvent)
 {
+    // Disable zooming while moving a selection
+    if (!mView.Scene()->selectedItems().empty() && mIsLeftMousePressed)
+    {
+        return;
+    }
+
     Q_ASSERT(pEvent);
+
     if (pEvent->modifiers() & Qt::ControlModifier && !mCoreLogic.IsProcessing())
     {
         if (pEvent->angleDelta().y() > 0)
@@ -23,12 +30,13 @@ void GraphicsView::wheelEvent(QWheelEvent *pEvent)
 
 void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
 {
-    Q_ASSERT(pEvent);
-
+    // Disable canvas interaction while processing
     if (mCoreLogic.IsProcessing())
     {
         return;
     }
+
+    Q_ASSERT(pEvent);
 
     if (pEvent->button() == Qt::LeftButton) // RMB ignored
     {
@@ -41,6 +49,11 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
         }
         else
         {
+            mIsDragging = true;
+            if (mCoreLogic.GetControlMode() == ControlMode::WIRE)
+            {
+                mIsAddingWire = true;
+            }
             emit LeftMouseButtonPressedWithoutCtrlEvent(mapToScene(pEvent->pos()), *pEvent);
         }
     }
@@ -54,6 +67,8 @@ void GraphicsView::OnMousePressedEventDefault(QMouseEvent &pEvent)
 void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     Q_ASSERT(pEvent);
+
+    mIsDragging = false;
     if (mCoreLogic.IsProcessing())
     {
         return;
@@ -72,16 +87,17 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
             }
         }
 
-        if (pEvent->modifiers() & Qt::ControlModifier)
+        // Add the new wires at the current position
+        if (mIsAddingWire)
         {
-            pEvent->accept();
+            mCoreLogic.AddWires(mapToScene(pEvent->pos()));
+            mIsAddingWire = false;
             return;
         }
 
-        // Add the new wires at the current position
-        if (mCoreLogic.GetControlMode() == ControlMode::WIRE)
+        if (pEvent->modifiers() & Qt::ControlModifier)
         {
-            mCoreLogic.AddWires(mapToScene(pEvent->pos()));
+            pEvent->accept();
             return;
         }
     }
@@ -91,27 +107,31 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
 {
-    Q_ASSERT(pEvent);
+    // Disable canvas interaction while processing
     if (mCoreLogic.IsProcessing())
     {
         return;
     }
 
+    Q_ASSERT(pEvent);
+
     if (mIsLeftMousePressed)
     {
-        mCoreLogic.ShowPreviewWires(mapToScene(pEvent->pos()));
-    }
+        if (mIsAddingWire)
+        {
+            mCoreLogic.ShowPreviewWires(mapToScene(pEvent->pos()));
+        }
+        else if (pEvent->modifiers() & Qt::ControlModifier && !mIsDragging)
+        {
+            // Pan the scene
+            horizontalScrollBar()->setValue(horizontalScrollBar()->value() - (pEvent->position().x() - mPanStart.x()));
+            verticalScrollBar()->setValue(verticalScrollBar()->value() - (pEvent->position().y() - mPanStart.y()));
 
-    if (mIsLeftMousePressed && pEvent->modifiers() & Qt::ControlModifier)
-    {
-        // Pan the scene
-        horizontalScrollBar()->setValue(horizontalScrollBar()->value() - (pEvent->position().x() - mPanStart.x()));
-        verticalScrollBar()->setValue(verticalScrollBar()->value() - (pEvent->position().y() - mPanStart.y()));
+            mPanStart = pEvent->pos();
 
-        mPanStart = pEvent->pos();
-
-        pEvent->accept();
-        return;
+            pEvent->accept();
+            return;
+        }
     }
 
     QGraphicsView::mouseMoveEvent(pEvent);
@@ -127,7 +147,7 @@ void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
 void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 {
     Q_ASSERT(pEvent);
-    if (mCoreLogic.IsProcessing() || (mCoreLogic.GetControlMode() == ControlMode::WIRE && mIsLeftMousePressed))
+    if (mCoreLogic.IsProcessing() || mIsAddingWire)
     {
         return;
     }

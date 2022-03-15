@@ -12,7 +12,9 @@ GraphicsView::GraphicsView(View &pView, CoreLogic &pCoreLogic):
     QGraphicsView(),
     mView(pView),
     mCoreLogic(pCoreLogic),
-    mIsLeftMousePressed(false)
+    mIsLeftMousePressed(false),
+    mIsAddingWire(false),
+    mIsDragging(false)
 {}
 
 View::View(CoreLogic &pCoreLogic):
