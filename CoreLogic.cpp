@@ -865,15 +865,13 @@ void CoreLogic::ProcessingHeartbeat()
 
 void CoreLogic::OnProcessingTimeout()
 {
-#warning add loading overlay and display here
-    //mView.hide();
+
     mView.FadeInProcessingOverlay();
 }
 
 void CoreLogic::EndProcessing()
 {
     mProcessingTimer.stop();
-    //mView.show();
     mView.FadeOutProcessingOverlay();
     mIsProcessing = false;
 }
@@ -896,6 +894,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     {
         // No effective movement
         EndProcessing();
+        mView.PrepareGuiForEditing();
         return;
     }
 
@@ -935,8 +934,6 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     QElapsedTimer conpoints;
     conpoints.start();
 
-    uint64_t tms = 0;
-    uint64_t tcrossingsms = 0;
     for (const auto& comp : affectedComponents) // Ca. 75% of total cost
     {                   
 #warning crash when moving in some scenarios
@@ -957,15 +954,12 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
             }
             mView.Scene()->clearSelection();
             EndProcessing();
+            mView.PrepareGuiForEditing();
             return;
         }
 
         ProcessingHeartbeat();
     }
-
-    qDebug() << "T took " << tms / 1E6 << "ms";
-
-    qDebug() << "Adding ConPoints on T-crossings took " << tcrossingsms / 1E6 << "ms";
 
     qDebug() << "Managing ConPoints took " << conpoints.elapsed() << "ms";
 

@@ -24,12 +24,13 @@ void GraphicsView::wheelEvent(QWheelEvent *pEvent)
 void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
 {
     Q_ASSERT(pEvent);
+
     if (mCoreLogic.IsProcessing())
     {
         return;
     }
 
-    if (pEvent->button() == Qt::LeftButton)
+    if (pEvent->button() == Qt::LeftButton) // RMB ignored
     {
         mIsLeftMousePressed = true;
         if (pEvent->modifiers() & Qt::ControlModifier)
@@ -42,10 +43,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
         {
             emit LeftMouseButtonPressedWithoutCtrlEvent(mapToScene(pEvent->pos()), *pEvent);
         }
-        return;
     }
-
-    QGraphicsView::mousePressEvent(pEvent);
 }
 
 void GraphicsView::OnMousePressedEventDefault(QMouseEvent &pEvent)
@@ -129,7 +127,7 @@ void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
 void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
 {
     Q_ASSERT(pEvent);
-    if (mCoreLogic.IsProcessing())
+    if (mCoreLogic.IsProcessing() || (mCoreLogic.GetControlMode() == ControlMode::WIRE && mIsLeftMousePressed))
     {
         return;
     }
