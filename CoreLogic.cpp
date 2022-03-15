@@ -601,18 +601,23 @@ bool CoreLogic::IsNoCrossingPoint(const ConPoint* pConPoint) const
 {
     const auto&& components = mView.Scene()->items(pConPoint->pos(), Qt::IntersectsItemBoundingRect);
 
-    if (components.size() <= 1)
+    if (components.size() <= 2) // We know that there is a ConPoint at that position
     {
         return true;
     }
     else
     {
+        bool foundOne = false;
         for (const auto& comp : components)
         {
-            if (dynamic_cast<LogicWire*>(comp) != nullptr && !static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos()))
+            if (dynamic_cast<LogicWire*>(comp) != nullptr)
             {
-                // T-Crossing wire found, this is no L or I crossing
-                return false;
+                if (!static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos()) && foundOne)
+                {
+                    // T-Crossing wire found and two wires total, this is no L or I crossing
+                    return false;
+                }
+                foundOne = true;
             }
         }
         return true;
