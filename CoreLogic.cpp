@@ -597,12 +597,11 @@ bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) co
         || (a->x() > b->x() && a->y() == b->y() && a->x() < b->x() + b->GetLength()));
 }
 
-#warning When placing a component and wire above an x-crossing without ConPoint, a ConPoint is created
 bool CoreLogic::IsNoCrossingPoint(const ConPoint* pConPoint) const
 {
     const auto&& components = mView.Scene()->items(pConPoint->pos(), Qt::IntersectsItemBoundingRect);
 
-    if (components.size() <= 2) // One wire plus the ConPoint
+    if (components.size() <= 1)
     {
         return true;
     }
@@ -1056,9 +1055,11 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
     if (mControlMode != ControlMode::SIMULATION)
     {
         // Add ConPoint on X crossing
-        if (mControlMode == ControlMode::EDIT && IsXCrossingPoint(snappedPos)
-                && !IsComponentAtPosition<ConPoint>(snappedPos)
-                && mView.Scene()->selectedItems().empty())
+        if (mControlMode == ControlMode::EDIT
+                && mView.Scene()->selectedItems().empty() // Scene must be empty (select of clicked item did not yet happen)
+                && dynamic_cast<LogicWire*>(mView.Scene()->itemAt(pMappedPos, QTransform())) != nullptr // Wire is clicked (not crossing below other component)
+                && IsXCrossingPoint(snappedPos) // There is an X-crossing at that position
+                && !IsComponentAtPosition<ConPoint>(snappedPos)) // There is no ConPoint at that position yet
         {
             // Create a new ConPoint (removing will be handled by OnConnectionTypeChanged)
             auto item = new ConPoint(this);
