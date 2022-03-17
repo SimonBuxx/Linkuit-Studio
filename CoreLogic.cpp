@@ -601,23 +601,29 @@ bool CoreLogic::IsNoCrossingPoint(const ConPoint* pConPoint) const
 {
     const auto&& components = mView.Scene()->items(pConPoint->pos(), Qt::IntersectsItemBoundingRect);
 
-    if (components.size() <= 2) // We know that there is a ConPoint at that position
+    if (components.size() <= 2)
     {
+        // Including the ConPoint at the position, there can be at max the ConPoint and one wire
         return true;
     }
     else
     {
         bool foundOne = false;
+        bool firstGoesTrough = false;
         for (const auto& comp : components)
         {
             if (dynamic_cast<LogicWire*>(comp) != nullptr)
             {
-                if (!static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos()) && foundOne)
+                if (!foundOne)
                 {
-                    // T-Crossing wire found and two wires total, this is no L or I crossing
+                    foundOne = true; // Found a crossing wire (either ends in pConPoint or doesn't)
+                    firstGoesTrough = !static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos()); // True, if this wire doesn't end in pConPoint
+                }
+                else if ((foundOne && firstGoesTrough) || (foundOne && !static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos())))
+                {
+                    // T-Crossing wire found (first or second one) and two wires total, this is no L or I crossing
                     return false;
                 }
-                foundOne = true;
             }
         }
         return true;
@@ -858,7 +864,7 @@ void CoreLogic::ConnectLogicCells()
 
 void CoreLogic::StartProcessing()
 {
-    mProcessingTimer.start(gui::PROCESSING_HEARTBEAT);
+    mProcessingTimer.start(gui::PROCESSING_OVERLAY_TIMEOUT);
     mIsProcessing = true;
 }
 
@@ -870,7 +876,6 @@ void CoreLogic::ProcessingHeartbeat()
 
 void CoreLogic::OnProcessingTimeout()
 {
-
     mView.FadeInProcessingOverlay();
 }
 

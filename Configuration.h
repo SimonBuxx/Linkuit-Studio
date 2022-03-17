@@ -13,7 +13,7 @@ namespace gui
 {
 static constexpr const char* WINDOW_TITLE = "Linkuit Studio";
 
-static constexpr std::chrono::milliseconds PROCESSING_HEARTBEAT(100);
+static constexpr std::chrono::milliseconds PROCESSING_OVERLAY_TIMEOUT(100);
 } // namespace
 
 namespace canvas
