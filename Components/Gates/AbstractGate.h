@@ -40,14 +40,39 @@ protected:
     /// \param pWidget: Unused, the widget that is been painted on
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 
+    /// \brief Draws the gate in- and output pins and inversion circles for a right-facing component
+    /// \param pPainter: The painter to use
+    /// \param pItem: Contains drawing parameters
     void DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
+    /// \brief Draws the gate in- and output pins and inversion circles for a down-facing component
+    /// \param pPainter: The painter to use
+    /// \param pItem: Contains drawing parameters
     void DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
+    /// \brief Draws the gate in- and output pins and inversion circles for a left-facing component
+    /// \param pPainter: The painter to use
+    /// \param pItem: Contains drawing parameters
     void DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
+    /// \brief Draws the gate in- and output pins and inversion circles for an up-facing component
+    /// \param pPainter: The painter to use
+    /// \param pItem: Contains drawing parameters
     void DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
 
+    /// \brief Creates logic connectors at all in- and output pin points
     void SetLogicConnectors(void);
 
+    /// \brief Sets the current pen to the pen to use for connector pins
+    /// \param pPainter: The painter to use
+    /// \param pState: The logic state of the pin
+    /// \param pSelected: Whether the component is selected or not
     void SetConnectorPen(QPainter *pPainter, LogicState pState, bool pSelected);
+
+    /// \brief Sets the current pen and brush to the pen to use for inversion circles
+    /// \param pPainter: The painter to use
+    /// \param pState: The logic state of the inversion circle
+    /// \param pSelected: Whether the component is selected or not
     void SetInversionPen(QPainter *pPainter, LogicState pState, bool pSelected);
 
 protected:
@@ -55,8 +80,6 @@ protected:
 
     uint8_t mInputCount;
     Direction mDirection;
-
-    bool mOutputInverted = false;
 };
 
 #endif // ABSTRACTGATE_H

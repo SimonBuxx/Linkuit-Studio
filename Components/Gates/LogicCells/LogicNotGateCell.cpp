@@ -5,36 +5,29 @@ LogicNotGateCell::LogicNotGateCell():
     mPreviousState(LogicState::LOW),
     mCurrentState(LogicState::LOW),
     mStateChanged(true)
-{}
+{
+    mOutputInverted[0] = true;
+}
 
 void LogicNotGateCell::LogicFunction()
 {
-    switch (mInputStates[0])
+    if (mCurrentState != mInputStates[0])
     {
-        case LogicState::LOW:
-        {
-            mCurrentState = LogicState::HIGH;
-            mStateChanged = true;
-            break;
-        }
-        case LogicState::HIGH:
-        {
-            mCurrentState = LogicState::LOW;
-            mStateChanged = true;
-            break;
-        }
-        default:
-        {
-            Q_ASSERT(false);
-            break;
-        }
+         mCurrentState = mInputStates[0];
+         mStateChanged = true;
     }
 }
 
 LogicState LogicNotGateCell::GetOutputState(uint32_t pOutput) const
 {
-    Q_UNUSED(pOutput);
-    return mCurrentState;
+    if (mOutputInverted[pOutput] && mIsActive)
+    {
+        return InvertState(mCurrentState);
+    }
+    else
+    {
+        return mCurrentState;
+    }
 }
 
 void LogicNotGateCell::OnSimulationAdvance()
@@ -63,6 +56,7 @@ void LogicNotGateCell::OnWakeUp()
     mNextUpdateTime = UpdateTime::NOW;
 
     mStateChanged = true; // Successors should be notified about wake up
+    mIsActive = true;
     emit StateChangedSignal();
 }
 
@@ -71,5 +65,6 @@ void LogicNotGateCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates[0] = LogicState::LOW;
     mCurrentState = LogicState::LOW;
+    mIsActive = false;
     emit StateChangedSignal();
 }

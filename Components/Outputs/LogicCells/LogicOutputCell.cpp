@@ -30,11 +30,13 @@ void LogicOutputCell::InputReady(uint32_t pInput, LogicState pState)
 void LogicOutputCell::OnWakeUp()
 {
     mState = LogicState::LOW;
+    mIsActive = true;
     emit StateChangedSignal();
 }
 
 void LogicOutputCell::OnShutdown()
 {
     mState = LogicState::LOW;
+    mIsActive = false;
     emit StateChangedSignal();
 }

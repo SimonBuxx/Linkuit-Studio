@@ -31,7 +31,14 @@ void LogicRsFlipFlopCell::LogicFunction()
 LogicState LogicRsFlipFlopCell::GetOutputState(uint32_t pOutput) const
 {
     Q_ASSERT(pOutput <= 1);
-    return mCurrentState[pOutput];
+    if (mOutputInverted[pOutput] && mIsActive)
+    {
+        return InvertState(mCurrentState[pOutput]);
+    }
+    else
+    {
+        return mCurrentState[pOutput];
+    }
 }
 
 void LogicRsFlipFlopCell::OnSimulationAdvance()
@@ -54,6 +61,7 @@ void LogicRsFlipFlopCell::OnWakeUp()
     mNextUpdateTime = UpdateTime::INF;
 
     mStateChanged = true; // Successors should be notified about wake up
+    mIsActive = true;
     emit StateChangedSignal();
 }
 
@@ -62,5 +70,6 @@ void LogicRsFlipFlopCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mCurrentState = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+    mIsActive = false;
     emit StateChangedSignal();
 }

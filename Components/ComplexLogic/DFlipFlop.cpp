@@ -18,8 +18,8 @@ DFlipFlop::DFlipFlop(const DFlipFlop& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
     mInputLabels = pObj.mInputLabels;
     mOutputLabels = pObj.mOutputLabels;
-    mOutputInverted = pObj.mOutputInverted;
-    mInputInverted = pObj.mInputInverted;
+    mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
+    mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
 };
 
 IBaseComponent* DFlipFlop::CloneBaseComponent(const CoreLogic* pCoreLogic) const

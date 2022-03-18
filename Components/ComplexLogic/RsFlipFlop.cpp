@@ -18,8 +18,8 @@ RsFlipFlop::RsFlipFlop(const RsFlipFlop& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
     mInputLabels = pObj.mInputLabels;
     mOutputLabels = pObj.mOutputLabels;
-    mOutputInverted = pObj.mOutputInverted;
-    mInputInverted= pObj.mInputInverted;
+    mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
+    mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
 };
 
 IBaseComponent* RsFlipFlop::CloneBaseComponent(const CoreLogic* pCoreLogic) const

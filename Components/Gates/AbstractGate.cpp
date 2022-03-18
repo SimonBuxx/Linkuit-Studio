@@ -156,7 +156,7 @@ void AbstractGate::DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGr
         }
     }
 
-    if (mOutputInverted)
+    if (mLogicCell->IsOutputInverted(0))
     {
         SetInversionPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
         pPainter->drawEllipse(mWidth + 1, mHeight / 2 - 4, 8, 8);
@@ -186,7 +186,7 @@ void AbstractGate::DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGra
         }
     }
 
-    if (mOutputInverted)
+    if (mLogicCell->IsOutputInverted(0))
     {
         SetInversionPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
         pPainter->drawEllipse(mWidth / 2 - 4, mHeight + 1, 8, 8);
@@ -216,7 +216,7 @@ void AbstractGate::DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGra
         }
     }
 
-    if (mOutputInverted)
+    if (mLogicCell->IsOutputInverted(0))
     {
         SetInversionPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
         pPainter->drawEllipse(-9, mHeight / 2 - 4, 8, 8);
@@ -246,7 +246,7 @@ void AbstractGate::DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraph
         }
     }
 
-    if (mOutputInverted)
+    if (mLogicCell->IsOutputInverted(0))
     {
         SetInversionPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
         pPainter->drawEllipse(mWidth / 2 - 4, -9, 8, 8);

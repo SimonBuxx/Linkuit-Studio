@@ -39,6 +39,7 @@ LogicState LogicButtonCell::GetOutputState(uint32_t pOutput) const
 void LogicButtonCell::OnWakeUp()
 {
     mState = LogicState::LOW;
+    mIsActive = true;
     emit StateChangedSignal();
 }
 
@@ -46,5 +47,6 @@ void LogicButtonCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mState = LogicState::LOW;
+    mIsActive = false;
     emit StateChangedSignal();
 }

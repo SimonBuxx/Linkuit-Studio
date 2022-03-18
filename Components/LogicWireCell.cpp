@@ -33,6 +33,7 @@ void LogicWireCell::LogicFunction()
 void LogicWireCell::AppendOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput)
 {
     mOutputCells.push_back(std::make_pair(pCell, pInput));
+    mOutputInverted.push_back(false);
 }
 
 void LogicWireCell::AddInputSlot()
@@ -77,6 +78,7 @@ void LogicWireCell::OnShutdown()
     mState = LogicState::LOW;
     mOutputCells.clear();
     mInputStates.clear();
+    mOutputInverted.clear();
     mInputInverted.clear();
     emit StateChangedSignal();
 }

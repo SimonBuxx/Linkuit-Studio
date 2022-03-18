@@ -6,8 +6,10 @@
 LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mInputStates(pInputs, LogicState::LOW),
     mInputInverted(pInputs, false),
+    mOutputInverted(pOutputs, false),
     mOutputCells(pOutputs, std::make_pair(nullptr, 0)),
-    mNextUpdateTime(UpdateTime::INF)
+    mNextUpdateTime(UpdateTime::INF),
+    mIsActive(false)
 {}
 
 void LogicBaseCell::ConnectOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput, uint32_t pOutput)
@@ -37,6 +39,27 @@ bool LogicBaseCell::IsInputInverted(uint32_t pInput) const
     return mInputInverted[pInput];
 }
 
+std::vector<bool> LogicBaseCell::GetOutputInversions() const
+{
+    return mOutputInverted;
+}
+
+void LogicBaseCell::SetOutputInversions(std::vector<bool> pOutputInversions)
+{
+    mOutputInverted = pOutputInversions;
+}
+
+bool LogicBaseCell::IsOutputInverted(uint32_t pOutput) const
+{
+    Q_ASSERT(mOutputInverted.size() > pOutput);
+    return mOutputInverted[pOutput];
+}
+
+bool LogicBaseCell::IsActive() const
+{
+    return mIsActive;
+}
+
 void LogicBaseCell::NotifySuccessor(uint32_t pOutput, LogicState pState) const
 {
     Q_ASSERT(mOutputCells.size() > pOutput);
@@ -44,12 +67,27 @@ void LogicBaseCell::NotifySuccessor(uint32_t pOutput, LogicState pState) const
     {
         if (mOutputCells[pOutput].first->IsInputInverted(mOutputCells[pOutput].second))
         {
-            mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, InvertState(pState));
+            const auto&& forwardedState = ApplyInversion(InvertState(pState), pOutput);
+            mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, forwardedState);
         }
         else
         {
-            mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, pState);
+            const auto&& forwardedState = ApplyInversion(pState, pOutput);
+            mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, forwardedState);
         }
+    }
+}
+
+LogicState LogicBaseCell::ApplyInversion(LogicState pState, uint32_t pOutput) const
+{
+    Q_ASSERT(mOutputInverted.size() > pOutput);
+    if (mOutputInverted[pOutput])
+    {
+        return InvertState(pState);
+    }
+    else
+    {
+        return pState;
     }
 }
 

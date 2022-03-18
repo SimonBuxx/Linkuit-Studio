@@ -5,9 +5,7 @@ AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, std::sha
     IBaseComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),
     mOutputCount(pOutputCount),
-    mDirection(pDirection),
-    mInputInverted(pInputCount, false),
-    mOutputInverted(pOutputCount, false)
+    mDirection(pDirection)
 {
     setZValue(components::zvalues::GATE);
 
@@ -227,7 +225,7 @@ void AbstractComplexLogic::DrawComponentDetailsRight(QPainter *pPainter, const Q
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
     {
-        if (mInputInverted.at(i))
+        if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(-9, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
@@ -235,7 +233,7 @@ void AbstractComplexLogic::DrawComponentDetailsRight(QPainter *pPainter, const Q
     }
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        if (mOutputInverted.at(i))
+        if (mLogicCell->IsOutputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(mWidth + 1, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
@@ -262,7 +260,7 @@ void AbstractComplexLogic::DrawComponentDetailsDown(QPainter *pPainter, const QS
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
     {
-        if (mInputInverted.at(i))
+        if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, -9, 8, 8);
@@ -270,7 +268,7 @@ void AbstractComplexLogic::DrawComponentDetailsDown(QPainter *pPainter, const QS
     }
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        if (mOutputInverted.at(i))
+        if (mLogicCell->IsOutputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, mHeight + 1, 8, 8);
@@ -297,7 +295,7 @@ void AbstractComplexLogic::DrawComponentDetailsLeft(QPainter *pPainter, const QS
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
     {
-        if (mInputInverted.at(i))
+        if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(mWidth + 1, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
@@ -305,7 +303,7 @@ void AbstractComplexLogic::DrawComponentDetailsLeft(QPainter *pPainter, const QS
     }
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        if (mOutputInverted.at(i))
+        if (mLogicCell->IsOutputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(-9, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
@@ -332,7 +330,7 @@ void AbstractComplexLogic::DrawComponentDetailsUp(QPainter *pPainter, const QSty
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
     {
-        if (mInputInverted.at(i))
+        if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, mHeight + 1, 8, 8);
@@ -340,7 +338,7 @@ void AbstractComplexLogic::DrawComponentDetailsUp(QPainter *pPainter, const QSty
     }
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        if (mOutputInverted.at(i))
+        if (mLogicCell->IsOutputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, -9, 8, 8);

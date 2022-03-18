@@ -30,8 +30,14 @@ void LogicAndGateCell::LogicFunction()
 
 LogicState LogicAndGateCell::GetOutputState(uint32_t pOutput) const
 {
-    Q_UNUSED(pOutput);
-    return mCurrentState;
+    if (mOutputInverted[pOutput] && mIsActive)
+    {
+        return InvertState(mCurrentState);
+    }
+    else
+    {
+        return mCurrentState;
+    }
 }
 
 void LogicAndGateCell::OnSimulationAdvance()
@@ -60,6 +66,7 @@ void LogicAndGateCell::OnWakeUp()
     mNextUpdateTime = UpdateTime::NOW;
 
     mStateChanged = true; // Successors should be notified about wake up
+    mIsActive = true;
     emit StateChangedSignal();
 }
 
@@ -68,5 +75,6 @@ void LogicAndGateCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
     mCurrentState = LogicState::LOW;
+    mIsActive = false;
     emit StateChangedSignal();
 }

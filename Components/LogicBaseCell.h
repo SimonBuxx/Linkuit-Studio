@@ -52,21 +52,51 @@ public:
     /// \return The logic state of this cell's input number pInput
     LogicState GetInputState(uint32_t pInput) const;
 
+    /// \brief Checks if the given cell input is inverted
+    /// \param pInput: A number of a cell input
+    /// \return True, if the input is inverted
     bool IsInputInverted(uint32_t pInput) const;
 
+    /// \brief Getter for the current input inversion vector
+    /// \return The current input inversion vector
     std::vector<bool> GetInputInversions(void) const;
 
+    /// \brief Sets the input inversion vector of this cell
+    /// \param pInputInversions: The new input inversion vector
     void SetInputInversions(std::vector<bool> pInputInversions);
+
+    /// \brief Checks if the given cell output is inverted
+    /// \param pOutput: A number of a cell output
+    /// \return True, if the output is inverted
+    bool IsOutputInverted(uint32_t pOutput) const;
+
+    /// \brief Getter for the current output inversion vector
+    /// \return The current output inversion vector
+    std::vector<bool> GetOutputInversions(void) const;
+
+    /// \brief Sets the output inversion vector of this cell
+    /// \param pOutputInversions: The new output inversion vector
+    void SetOutputInversions(std::vector<bool> pOutputInversions);
 
     /// \brief Getter for the curent output state number pOutput of this cell
     /// \param pOutput: The number of the output to retreive
     /// \return The logic state of this cell's output number pOutput
     virtual LogicState GetOutputState(uint32_t pOutput = 0) const = 0;
 
+    /// \brief Returns true, if this logic cell is not shut down
+    /// \return True, if logic cell active
+    bool IsActive(void) const;
+
 protected:
     /// \brief If the mNextUpdateTime value is NOW, AdvanceUpdateTime calls LogicFunction()
     /// If it's NEXT_TICK, the update time is advanced to NOW
     void AdvanceUpdateTime(void);
+
+    /// \brief Inverts the given state if pOutput is an inverted output
+    /// \param pState: A logic state
+    /// \param pOutput: A number of a cell output
+    /// \return The output logic state
+    LogicState ApplyInversion(LogicState pState, uint32_t pOutput) const;
 
 public slots:
     /// \brief Advances the simulation of this cell by one logic tick
@@ -85,11 +115,14 @@ signals:
 protected:
     std::vector<LogicState> mInputStates;
     std::vector<bool> mInputInverted;
+    std::vector<bool> mOutputInverted;
 
     // Pairs of connected LogicCell and input number of that cell
     std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>> mOutputCells;
 
     UpdateTime mNextUpdateTime;
+
+    bool mIsActive;
 };
 
 #endif // LOGICBASECELL_H
