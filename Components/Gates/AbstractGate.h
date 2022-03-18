@@ -40,7 +40,17 @@ protected:
     /// \param pWidget: Unused, the widget that is been painted on
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 
+    void DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+    void DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+    void DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+    void DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
+
+
     void SetLogicConnectors(void);
+
+    void SetConnectorPen(QPainter *pPainter, LogicState pState, bool pSelected);
+    void SetInversionPen(QPainter *pPainter, LogicState pState, bool pSelected);
 
 protected:
     QString mComponentText;
