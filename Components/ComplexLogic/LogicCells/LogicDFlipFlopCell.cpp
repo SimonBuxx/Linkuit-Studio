@@ -54,6 +54,7 @@ void LogicDFlipFlopCell::OnWakeUp()
 
 void LogicDFlipFlopCell::OnShutdown()
 {
+    mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
     emit StateChangedSignal();

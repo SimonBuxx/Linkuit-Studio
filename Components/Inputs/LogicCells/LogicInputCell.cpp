@@ -27,6 +27,7 @@ void LogicInputCell::OnWakeUp()
 
 void LogicInputCell::OnShutdown()
 {
+    mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mState = LogicState::LOW;
     emit StateChangedSignal();
 }
