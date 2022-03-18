@@ -58,7 +58,11 @@ void LogicXorGateCell::OnSimulationAdvance()
 
 void LogicXorGateCell::OnWakeUp()
 {
-    mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    for (size_t i = 0; i < mInputStates.size(); i++)
+    {
+        mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
+    }
+
     mPreviousState = LogicState::LOW;
     mCurrentState = LogicState::LOW;
     mNextUpdateTime = UpdateTime::NOW;

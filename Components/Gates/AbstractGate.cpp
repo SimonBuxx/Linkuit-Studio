@@ -4,8 +4,7 @@
 AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, Direction pDirection):
     IBaseComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),
-    mDirection(pDirection),
-    mInputInverted(pInputCount, false)
+    mDirection(pDirection)
 {
     Q_ASSERT(mInputCount >= 1);
 
@@ -150,7 +149,7 @@ void AbstractGate::DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGr
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
     {
-        if (mInputInverted.at(i))
+        if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(-9, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
@@ -180,7 +179,7 @@ void AbstractGate::DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGra
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
     {
-        if (mInputInverted.at(i))
+        if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, -9, 8, 8);
@@ -210,7 +209,7 @@ void AbstractGate::DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGra
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
     {
-        if (mInputInverted.at(i))
+        if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(mWidth + 1, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
@@ -240,7 +239,7 @@ void AbstractGate::DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraph
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
     {
-        if (mInputInverted.at(i))
+        if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, mHeight + 1, 8, 8);

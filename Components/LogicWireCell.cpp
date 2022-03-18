@@ -38,6 +38,7 @@ void LogicWireCell::AppendOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t 
 void LogicWireCell::AddInputSlot()
 {
     mInputStates.push_back(LogicState::LOW);
+    mInputInverted.push_back(false);
 }
 
 uint32_t LogicWireCell::GetInputSize(void) const
@@ -76,5 +77,6 @@ void LogicWireCell::OnShutdown()
     mState = LogicState::LOW;
     mOutputCells.clear();
     mInputStates.clear();
+    mInputInverted.clear();
     emit StateChangedSignal();
 }

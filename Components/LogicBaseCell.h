@@ -1,7 +1,7 @@
 #ifndef LOGICBASECELL_H
 #define LOGICBASECELL_H
 
-#include "HelperStructures.h"
+#include "HelperFunctions.h"
 
 #include <QObject>
 
@@ -52,6 +52,12 @@ public:
     /// \return The logic state of this cell's input number pInput
     LogicState GetInputState(uint32_t pInput) const;
 
+    bool IsInputInverted(uint32_t pInput) const;
+
+    std::vector<bool> GetInputInversions(void) const;
+
+    void SetInputInversions(std::vector<bool> pInputInversions);
+
     /// \brief Getter for the curent output state number pOutput of this cell
     /// \param pOutput: The number of the output to retreive
     /// \return The logic state of this cell's output number pOutput
@@ -78,6 +84,7 @@ signals:
 
 protected:
     std::vector<LogicState> mInputStates;
+    std::vector<bool> mInputInverted;
 
     // Pairs of connected LogicCell and input number of that cell
     std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>> mOutputCells;

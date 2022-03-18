@@ -15,7 +15,7 @@ XorGate::XorGate(const XorGate& pObj, const CoreLogic* pCoreLogic):
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
     mOutputInverted = pObj.mOutputInverted;
-    mInputInverted = pObj.mInputInverted;
+    mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
 };
 
 IBaseComponent* XorGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const

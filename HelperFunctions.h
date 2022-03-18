@@ -1,7 +1,6 @@
 #ifndef HELPERFUNCTIONS_H
 #define HELPERFUNCTIONS_H
 
-#include "Components/ConPoint.h"
 #include "Configuration.h"
 
 #include <QGraphicsItem>
@@ -14,6 +13,29 @@ inline QPointF SnapToGrid(QPointF pPoint)
 {
     return QPointF(std::floor(pPoint.x() / canvas::GRID_SIZE + 0.5f) * canvas::GRID_SIZE,
                    std::floor(pPoint.y() / canvas::GRID_SIZE + 0.5f) * canvas::GRID_SIZE);
+}
+
+/// \brief Inverts the given logic state
+/// \param pState: The state to invert
+/// \return The inverted state
+inline LogicState InvertState(LogicState pState)
+{
+    switch (pState)
+    {
+        case LogicState::LOW:
+        {
+            return LogicState::HIGH;
+        }
+        case LogicState::HIGH:
+        {
+            return LogicState::LOW;
+        }
+        default:
+        {
+            Q_ASSERT(false);
+            break;
+        }
+    }
 }
 
 #endif // HELPERFUNCTIONS_H

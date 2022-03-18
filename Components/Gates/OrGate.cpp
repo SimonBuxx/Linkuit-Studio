@@ -15,7 +15,7 @@ OrGate::OrGate(const OrGate& pObj, const CoreLogic* pCoreLogic):
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
     mOutputInverted = pObj.mOutputInverted;
-    mInputInverted = pObj.mInputInverted;
+    mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
 };
 
 IBaseComponent* OrGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const

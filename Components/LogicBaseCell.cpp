@@ -5,6 +5,7 @@
 
 LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mInputStates(pInputs, LogicState::LOW),
+    mInputInverted(pInputs, false),
     mOutputCells(pOutputs, std::make_pair(nullptr, 0)),
     mNextUpdateTime(UpdateTime::INF)
 {}
@@ -20,12 +21,35 @@ LogicState LogicBaseCell::GetInputState(uint32_t pInput) const
     return mInputStates[pInput];
 }
 
+std::vector<bool> LogicBaseCell::GetInputInversions() const
+{
+    return mInputInverted;
+}
+
+void LogicBaseCell::SetInputInversions(std::vector<bool> pInputInversions)
+{
+    mInputInverted = pInputInversions;
+}
+
+bool LogicBaseCell::IsInputInverted(uint32_t pInput) const
+{
+    Q_ASSERT(mInputInverted.size() > pInput);
+    return mInputInverted[pInput];
+}
+
 void LogicBaseCell::NotifySuccessor(uint32_t pOutput, LogicState pState) const
 {
     Q_ASSERT(mOutputCells.size() > pOutput);
     if (mOutputCells[pOutput].first != nullptr) // If successor exists
     {
-        mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, pState);
+        if (mOutputCells[pOutput].first->IsInputInverted(mOutputCells[pOutput].second))
+        {
+            mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, InvertState(pState));
+        }
+        else
+        {
+            mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, pState);
+        }
     }
 }
 
