@@ -45,8 +45,6 @@ protected:
     void DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
     void DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
 
-
-
     void SetLogicConnectors(void);
 
     void SetConnectorPen(QPainter *pPainter, LogicState pState, bool pSelected);

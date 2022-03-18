@@ -83,7 +83,7 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
     Q_UNUSED(pWidget);
     const double levelOfDetail = pItem->levelOfDetailFromTransform(pPainter->worldTransform());
 
-    // Draw connectors and invertion circles
+    // Draw connectors and inversion circles
     if (levelOfDetail >= components::COMPONENT_DETAILS_MIN_LOD)
     {
         switch(mDirection)

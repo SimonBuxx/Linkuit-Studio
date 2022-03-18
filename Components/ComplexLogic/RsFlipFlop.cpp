@@ -8,12 +8,6 @@ RsFlipFlop::RsFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
     mComponentText = components::complex_logic::RS_FLIPFLOP_TEXT;
     mInputLabels = {"S", "R"};
     mOutputLabels = {"Q", "Q̅"};
-
-#warning not suitable for gates with more inputs / turned gates
-    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 20)));
-    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 60)));
-    mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 20)));
-    mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(60, 60)));
 }
 
 RsFlipFlop::RsFlipFlop(const RsFlipFlop& pObj, const CoreLogic* pCoreLogic):

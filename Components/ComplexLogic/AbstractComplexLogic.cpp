@@ -21,6 +21,68 @@ AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, std::sha
         mWidth = std::max(mInputCount, mOutputCount) * canvas::GRID_SIZE * 2;
         mHeight = components::gates::GRID_WIDTH * canvas::GRID_SIZE;
     }
+
+    SetLogicConnectors();
+}
+
+void AbstractComplexLogic::SetLogicConnectors()
+{
+    switch(mDirection)
+    {
+        case Direction::RIGHT:
+        {
+            for (uint8_t i = 0; i < mInputCount; i++)
+            {
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+            }
+            for (uint8_t i = 0; i < mOutputCount; i++)
+            {
+                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+            }
+            break;
+        }
+        case Direction::DOWN:
+        {
+            for (uint8_t i = 0; i < mInputCount; i++)
+            {
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0)));
+            }
+            for (uint8_t i = 0; i < mOutputCount; i++)
+            {
+                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight)));
+            }
+            break;
+        }
+        case Direction::LEFT:
+        {
+            for (uint8_t i = 0; i < mInputCount; i++)
+            {
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+            }
+            for (uint8_t i = 0; i < mOutputCount; i++)
+            {
+                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+            }
+            break;
+        }
+        case Direction::UP:
+        {
+            for (uint8_t i = 0; i < mInputCount; i++)
+            {
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight)));
+            }
+            for (uint8_t i = 0; i < mOutputCount; i++)
+            {
+                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0)));
+            }
+            break;
+        }
+        default:
+        {
+            Q_ASSERT(false);
+            break;
+        }
+    }
 }
 
 void AbstractComplexLogic::ResetZValue()
@@ -33,220 +95,35 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
     Q_UNUSED(pWidget);
     const double levelOfDetail = pItem->levelOfDetailFromTransform(pPainter->worldTransform());
 
-    // Draw connectors and invertion circles
+    // Draw connectors and inversion circles
+    if (levelOfDetail >= components::COMPONENT_DETAILS_MIN_LOD)
     {
-        QPen pen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                 components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-        pPainter->setPen(pen);
-        if (levelOfDetail >= components::DESCRIPTION_TEXT_MIN_LOD)
+        switch(mDirection)
         {
-            // Draw connectors
-            switch (mDirection)
+            case Direction::RIGHT:
             {
-                case Direction::RIGHT:
-                {
-                    for (size_t i = 0; i < mInputCount; i++)
-                    {
-                        if (mLogicCell->GetInputState(i) == LogicState::HIGH)
-                        {
-                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        else
-                        {
-                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                                  components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        pPainter->drawLine(-8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
-                    }
-                    for (size_t i = 0; i < mOutputCount; i++)
-                    {
-                        if (mLogicCell->GetOutputState(i) == LogicState::HIGH)
-                        {
-                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        else
-                        {
-                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                                  components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        pPainter->drawLine(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
-                    }
-                    break;
-                }
-#warning add output connectors for other directions
-                case Direction::DOWN:
-                {
-                    for (size_t i = 0; i < mInputCount; i++)
-                    {
-                        if (mLogicCell->GetInputState(i) == LogicState::HIGH)
-                        {
-                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        else
-                        {
-                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                                  components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
-                    }
-                    if (mLogicCell->GetOutputState() == LogicState::HIGH)
-                    {
-                        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                    }
-                    else
-                    {
-                        pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                              components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                    }
-                    pPainter->drawLine(mWidth / 2, mHeight, mWidth / 2, mHeight + 8);
-                    break;
-                }
-                case Direction::LEFT:
-                {
-                    for (size_t i = 0; i < mInputCount; i++)
-                    {
-                        if (mLogicCell->GetInputState(i) == LogicState::HIGH)
-                        {
-                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        else
-                        {
-                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                                  components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        pPainter->drawLine(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
-                    }
-                    if (mLogicCell->GetOutputState() == LogicState::HIGH)
-                    {
-                        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                    }
-                    else
-                    {
-                        pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                              components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                    }
-                    pPainter->drawLine(-8, mHeight / 2, 0, mHeight / 2);
-                    break;
-                }
-                case Direction::UP:
-                {
-                    for (size_t i = 0; i < mInputCount; i++)
-                    {
-                        if (mLogicCell->GetInputState(i) == LogicState::HIGH)
-                        {
-                            pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        else
-                        {
-                            pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                                  components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                        }
-                        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
-                    }
-                    if (mLogicCell->GetOutputState() == LogicState::HIGH)
-                    {
-                        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                    }
-                    else
-                    {
-                        pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                              components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                    }
-                    pPainter->drawLine(mWidth / 2, -8, mWidth / 2, 0);
-                    break;
-                }
-                default:
-                {
-                    Q_ASSERT(false);
-                    break;
-                }
+                DrawComponentDetailsRight(pPainter, pItem);
+                break;
             }
-
-#warning set pen and brush for every output circle and every direction
-            if (mLogicCell->GetOutputState() == LogicState::HIGH)
+            case Direction::DOWN:
             {
-                pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                pPainter->setBrush(components::wires::WIRE_HIGH_COLOR);
+                DrawComponentDetailsDown(pPainter, pItem);
+                break;
             }
-            else
+            case Direction::LEFT:
             {
-                pPainter->setPen(QPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
-                                      components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-                pPainter->setBrush(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR);
+                DrawComponentDetailsLeft(pPainter, pItem);
+                break;
             }
-
-            // Draw invertion circles
-            switch (mDirection)
+            case Direction::UP:
             {
-                case Direction::RIGHT:
-                {
-                    for (size_t i = 0; i < mInputCount; i++)
-                    {
-                        if (mInputInverted.at(i))
-                        {
-#warning outdated ellipse parameter
-                            pPainter->drawEllipse(-10, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, 10, 10);
-                        }
-                    }
-                    for (size_t i = 0; i < mOutputCount; i++)
-                    {
-                        if (mOutputInverted.at(i))
-                        {
-                            pPainter->drawEllipse(mWidth + 1, mHeight / 2 - 4, 8, 8);
-                        }
-                    }
-                    break;
-                }
-                case Direction::DOWN:
-                {
-                    for (size_t i = 0; i < mInputCount; i++)
-                    {
-                        if (mInputInverted.at(i))
-                        {
-                            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, -10, 10, 10);
-                        }
-                    }
-                    /*if (mOutputInverted)
-                    {
-                        pPainter->drawEllipse(mWidth / 2 - 5, mHeight, 10, 10);
-                    }*/
-                    break;
-                }
-                case Direction::LEFT:
-                {
-                    for (size_t i = 0; i < mInputCount; i++)
-                    {
-                        if (mInputInverted.at(i))
-                        {
-                            pPainter->drawEllipse(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, 10, 10);
-                        }
-                    }
-                    /*if (mOutputInverted)
-                    {
-                        pPainter->drawEllipse(-10, mHeight / 2 - 5, 10, 10);
-                    }*/
-                    break;
-                }
-                case Direction::UP:
-                {
-                    for (size_t i = 0; i < mInputCount; i++)
-                    {
-                        if (mInputInverted.at(i))
-                        {
-                            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 5, mHeight, 10, 10);
-                        }
-                    }
-                    /*if (mOutputInverted)
-                    {
-                        pPainter->drawEllipse(mWidth / 2 - 5, -10, 10, 10);
-                    }*/
-                    break;
-                }
-                default:
-                {
-                    Q_ASSERT(false);
-                    break;
-                }
+                DrawComponentDetailsUp(pPainter, pItem);
+                break;
+            }
+            default:
+            {
+                Q_ASSERT(false);
+                break;
             }
         }
     }
@@ -287,11 +164,215 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
                 }
                 break;
             }
+            case Direction::DOWN:
+            {
+                for (size_t i = 0; i < mInputCount; i++)
+                {
+                    pPainter->drawText(QRect(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 20, 0, 40, mHeight), mInputLabels[i], Qt::AlignHCenter | Qt::AlignTop);
+                }
+                for (size_t i = 0; i < mOutputCount; i++)
+                {
+                    pPainter->drawText(QRect(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 20, 0, 40, mHeight), mOutputLabels[i], Qt::AlignHCenter | Qt::AlignBottom);
+                }
+                break;
+            }
+            case Direction::LEFT:
+            {
+                for (size_t i = 0; i < mInputCount; i++)
+                {
+                    pPainter->drawText(QRect(2, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[i], Qt::AlignRight | Qt::AlignVCenter);
+                }
+                for (size_t i = 0; i < mOutputCount; i++)
+                {
+                    pPainter->drawText(QRect(2, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 6, mWidth - 4, 10), mOutputLabels[i], Qt::AlignLeft | Qt::AlignVCenter);
+                }
+                break;
+            }
+            case Direction::UP:
+            {
+                for (size_t i = 0; i < mInputCount; i++)
+                {
+                    pPainter->drawText(QRect(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 20, 0, 40, mHeight), mInputLabels[i], Qt::AlignHCenter | Qt::AlignBottom);
+                }
+                for (size_t i = 0; i < mOutputCount; i++)
+                {
+                    pPainter->drawText(QRect(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 20, 0, 40, mHeight), mOutputLabels[i], Qt::AlignHCenter | Qt::AlignTop);
+                }
+                break;
+            }
             default:
             {
                 break;
             }
         }
+    }
+}
+
+void AbstractComplexLogic::DrawComponentDetailsRight(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem)
+{
+    // Draw input connectors
+    for (size_t i = 0; i < mInputCount; i++)
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(-8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+    }
+
+    // Draw output connectors
+    for (size_t i = 0; i < mOutputCount; i++)
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+    }
+
+    // Draw inversion circles
+    for (size_t i = 0; i < mInputCount; i++)
+    {
+        if (mInputInverted.at(i))
+        {
+            SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawEllipse(-9, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
+        }
+    }
+    for (size_t i = 0; i < mOutputCount; i++)
+    {
+        if (mOutputInverted.at(i))
+        {
+            SetInversionPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawEllipse(mWidth + 1, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
+        }
+    }
+}
+
+void AbstractComplexLogic::DrawComponentDetailsDown(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem)
+{
+    // Draw input connectors
+    for (size_t i = 0; i < mInputCount; i++)
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
+    }
+
+    // Draw output connectors
+    for (size_t i = 0; i < mOutputCount; i++)
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
+    }
+
+    // Draw inversion circles
+    for (size_t i = 0; i < mInputCount; i++)
+    {
+        if (mInputInverted.at(i))
+        {
+            SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, -9, 8, 8);
+        }
+    }
+    for (size_t i = 0; i < mOutputCount; i++)
+    {
+        if (mOutputInverted.at(i))
+        {
+            SetInversionPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, mHeight + 1, 8, 8);
+        }
+    }
+}
+
+void AbstractComplexLogic::DrawComponentDetailsLeft(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem)
+{
+    // Draw input connectors
+    for (size_t i = 0; i < mInputCount; i++)
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+    }
+
+    // Draw output connectors
+    for (size_t i = 0; i < mOutputCount; i++)
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(-8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+    }
+
+    // Draw inversion circles
+    for (size_t i = 0; i < mInputCount; i++)
+    {
+        if (mInputInverted.at(i))
+        {
+            SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawEllipse(mWidth + 1, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
+        }
+    }
+    for (size_t i = 0; i < mOutputCount; i++)
+    {
+        if (mOutputInverted.at(i))
+        {
+            SetInversionPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawEllipse(-9, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
+        }
+    }
+}
+
+void AbstractComplexLogic::DrawComponentDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem)
+{
+    // Draw input connectors
+    for (size_t i = 0; i < mInputCount; i++)
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
+    }
+
+    // Draw output connectors
+    for (size_t i = 0; i < mOutputCount; i++)
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
+    }
+
+    // Draw inversion circles
+    for (size_t i = 0; i < mInputCount; i++)
+    {
+        if (mInputInverted.at(i))
+        {
+            SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, mHeight + 1, 8, 8);
+        }
+    }
+    for (size_t i = 0; i < mOutputCount; i++)
+    {
+        if (mOutputInverted.at(i))
+        {
+            SetInversionPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, -9, 8, 8);
+        }
+    }
+}
+
+void AbstractComplexLogic::SetConnectorPen(QPainter *pPainter, LogicState pState, bool pSelected)
+{
+    if (pState == LogicState::HIGH)
+    {
+        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    }
+    else
+    {
+        pPainter->setPen(QPen(pSelected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                              components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    }
+}
+
+void AbstractComplexLogic::SetInversionPen(QPainter *pPainter, LogicState pState, bool pSelected)
+{
+    if (pState == LogicState::HIGH)
+    {
+        pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        pPainter->setBrush(components::wires::WIRE_HIGH_COLOR);
+    }
+    else
+    {
+        pPainter->setPen(QPen(pSelected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                              components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        pPainter->setBrush(pSelected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR);
     }
 }
 

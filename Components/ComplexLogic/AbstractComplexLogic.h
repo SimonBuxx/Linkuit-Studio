@@ -38,6 +38,16 @@ protected:
     /// \param pWidget: Unused, the widget that is been painted on
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
 
+    void DrawComponentDetailsRight(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+    void DrawComponentDetailsDown(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+    void DrawComponentDetailsLeft(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+    void DrawComponentDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
+    void SetLogicConnectors(void);
+
+    void SetConnectorPen(QPainter *pPainter, LogicState pState, bool pSelected);
+    void SetInversionPen(QPainter *pPainter, LogicState pState, bool pSelected);
+
 protected:
     QString mComponentText;
 
