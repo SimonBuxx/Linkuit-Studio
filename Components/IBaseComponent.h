@@ -12,14 +12,18 @@ class CoreLogic;
 
 struct LogicConnector
 {
-    LogicConnector(ConnectorType pType, QPointF pPos)
+    LogicConnector(ConnectorType pType, QPointF pPos, uint32_t pNum, QPointF pPinCenterOffset)
     {
         type = pType;
         pos = pPos;
+        num = pNum;
+        pinCenterOffset = pPinCenterOffset;
     }
 
     ConnectorType type;
     QPointF pos;
+    uint32_t num;
+    QPointF pinCenterOffset;
 };
 
 class IBaseComponent : public QObject, public QGraphicsItem
@@ -45,6 +49,8 @@ public:
     uint32_t GetOutConnectorCount(void) const;
 
     std::shared_ptr<LogicBaseCell> GetLogicCell(void);
+
+    const LogicConnector* InvertConnectorByPoint(QPointF pPoint);
 
 protected slots:
     void OnLogicStateChanged(void);

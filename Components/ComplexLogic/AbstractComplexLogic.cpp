@@ -31,11 +31,11 @@ void AbstractComplexLogic::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(-4, 0)));
             }
             for (uint8_t i = 0; i < mOutputCount; i++)
             {
-                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(4, 0)));
             }
             break;
         }
@@ -43,11 +43,11 @@ void AbstractComplexLogic::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0), i, QPointF(0, -4)));
             }
             for (uint8_t i = 0; i < mOutputCount; i++)
             {
-                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight)));
+                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight), i, QPointF(0, 4)));
             }
             break;
         }
@@ -55,11 +55,11 @@ void AbstractComplexLogic::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(4, 0)));
             }
             for (uint8_t i = 0; i < mOutputCount; i++)
             {
-                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(-4, 0)));
             }
             break;
         }
@@ -67,11 +67,11 @@ void AbstractComplexLogic::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight), i, QPointF(0, 4)));
             }
             for (uint8_t i = 0; i < mOutputCount; i++)
             {
-                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0)));
+                mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0), i, QPointF(0, -4)));
             }
             break;
         }

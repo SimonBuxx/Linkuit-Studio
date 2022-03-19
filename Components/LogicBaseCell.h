@@ -57,6 +57,8 @@ public:
     /// \return True, if the input is inverted
     bool IsInputInverted(uint32_t pInput) const;
 
+    void InvertInput(uint32_t pInput);
+
     /// \brief Getter for the current input inversion vector
     /// \return The current input inversion vector
     std::vector<bool> GetInputInversions(void) const;
@@ -69,6 +71,8 @@ public:
     /// \param pOutput: A number of a cell output
     /// \return True, if the output is inverted
     bool IsOutputInverted(uint32_t pOutput) const;
+
+    void InvertOutput(uint32_t pOutput);
 
     /// \brief Getter for the current output inversion vector
     /// \return The current output inversion vector

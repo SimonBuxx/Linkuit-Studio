@@ -39,6 +39,12 @@ bool LogicBaseCell::IsInputInverted(uint32_t pInput) const
     return mInputInverted[pInput];
 }
 
+void LogicBaseCell::InvertInput(uint32_t pInput)
+{
+    Q_ASSERT(pInput < mInputInverted.size());
+    mInputInverted[pInput] = !mInputInverted[pInput];
+}
+
 std::vector<bool> LogicBaseCell::GetOutputInversions() const
 {
     return mOutputInverted;
@@ -53,6 +59,12 @@ bool LogicBaseCell::IsOutputInverted(uint32_t pOutput) const
 {
     Q_ASSERT(mOutputInverted.size() > pOutput);
     return mOutputInverted[pOutput];
+}
+
+void LogicBaseCell::InvertOutput(uint32_t pOutput)
+{
+    Q_ASSERT(pOutput < mOutputInverted.size());
+    mOutputInverted[pOutput] = !mOutputInverted[pOutput];
 }
 
 bool LogicBaseCell::IsActive() const

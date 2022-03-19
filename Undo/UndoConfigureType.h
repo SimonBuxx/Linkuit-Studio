@@ -45,6 +45,28 @@ struct ConnectionTypeChangedData : ConfigChangedData
     ConnectionType currentType;
 };
 
+/// \brief Concrete config data for a connector inversion change (change from normal to inverted in/output or vice versa)
+struct ConnectorInversionChangedData : ConfigChangedData
+{
+    /// \brief Constructor for ConnectorInversionChangedData
+    /// \param pComponent: The component that has been altered
+    /// \param pLogicConnector: Data to identify the altered connector pin
+    ConnectorInversionChangedData(IBaseComponent* pComponent, const LogicConnector* pLogicConnector):
+        component(pComponent),
+        logicConnector(pLogicConnector)
+    {}
+
+    /// \brief Getter for the type of this config data
+    /// \return The ConfigType of the data contained in this struct
+    ConfigType Type(void) const override
+    {
+        return ConfigType::CONNECTOR_INVERSION;
+    }
+
+    IBaseComponent* component;
+    const LogicConnector* logicConnector;
+};
+
 /// \brief Concrete config data for a text label content change
 struct TextLabelContentChangedData : ConfigChangedData
 {

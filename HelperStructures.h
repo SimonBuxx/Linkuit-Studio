@@ -77,7 +77,8 @@ enum class Type
 enum class ConfigType
 {
     CONNECTION_TYPE,
-    TEXTLABEL_CONTENT
+    TEXTLABEL_CONTENT,
+    CONNECTOR_INVERSION
 };
 } // namespace
 

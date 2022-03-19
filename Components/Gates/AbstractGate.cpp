@@ -32,36 +32,36 @@ void AbstractGate::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(-4, 0)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2), 0, QPointF(4, 0)));
             break;
         }
         case Direction::DOWN:
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0), i, QPointF(0, -4)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, mHeight)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, mHeight), 0, QPointF(0, 4)));
             break;
         }
         case Direction::LEFT:
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(4, 0)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2), 0, QPointF(-4, 0)));
             break;
         }
         case Direction::UP:
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight), i, QPointF(0, 4)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, 0)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, 0), 0, QPointF(0, -4)));
             break;
         }
         default:

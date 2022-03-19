@@ -70,6 +70,31 @@ std::shared_ptr<LogicBaseCell> IBaseComponent::GetLogicCell()
     return mLogicCell;
 }
 
+const LogicConnector* IBaseComponent::InvertConnectorByPoint(QPointF pPoint)
+{
+    Q_ASSERT(mLogicCell);
+    for (const auto& connector : mInConnectors)
+    {
+        if (EuclidianDistance(pos() + connector.pos + connector.pinCenterOffset, pPoint) < 6)
+        {
+            mLogicCell->InvertInput(connector.num);
+            update();
+            return &connector;
+        }
+    }
+    for (const auto& connector : mOutConnectors)
+    {
+        if (EuclidianDistance(pos() + connector.pos + connector.pinCenterOffset, pPoint) < 6)
+        {
+            mLogicCell->InvertOutput(connector.num);
+            update();
+            return &connector;;
+        }
+    }
+
+    return nullptr;
+}
+
 void IBaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 {
     QGraphicsItem::mousePressEvent(pEvent);

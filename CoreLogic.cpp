@@ -1073,6 +1073,34 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
             return;
         }
 
+        if (mControlMode == ControlMode::EDIT
+                && mView.Scene()->selectedItems().empty())
+        {
+            for (const auto& item : mView.Scene()->items(pMappedPos, Qt::IntersectsItemBoundingRect))
+            {
+                if (dynamic_cast<AbstractGate*>(item) != nullptr)
+                {
+                    const auto&& connector = static_cast<AbstractGate*>(item)->InvertConnectorByPoint(pMappedPos);
+                    if (connector != nullptr)
+                    {
+                        auto data = std::make_shared<Undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector);
+                        AppendUndo(new UndoConfigureType(data));
+                        return;
+                    }
+                }
+                else if (dynamic_cast<AbstractComplexLogic*>(item) != nullptr)
+                {
+                    const auto&& connector = static_cast<AbstractComplexLogic*>(item)->InvertConnectorByPoint(pMappedPos);
+                    if (connector != nullptr)
+                    {
+                        auto data = std::make_shared<Undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector);
+                        AppendUndo(new UndoConfigureType(data));
+                        return;
+                    }
+                }
+            }
+        }
+
         // Add component at the current position
         if (mControlMode == ControlMode::ADD)
         {
@@ -1274,6 +1302,15 @@ void CoreLogic::Undo()
                     AppendToUndoQueue(undoObject, mRedoQueue);
                     break;
                 }
+                case Undo::ConfigType::CONNECTOR_INVERSION:
+                {
+                    auto data = std::static_pointer_cast<Undo::ConnectorInversionChangedData>(undoConfigureObject->Data());
+                    Q_ASSERT(data->component);
+                    Q_ASSERT(data->logicConnector);
+                    data->component->InvertConnectorByPoint(data->component->pos() + data->logicConnector->pos);
+                    AppendToUndoQueue(undoObject, mRedoQueue);
+                    break;
+                }
                 }
                 break;
             }
@@ -1361,6 +1398,15 @@ void CoreLogic::Redo()
                         auto data = std::static_pointer_cast<Undo::TextLabelContentChangedData>(undoConfigureObject->Data());
                         Q_ASSERT(data->textLabel);
                         data->textLabel->SetTextContent(data->currentText);
+                        AppendToUndoQueue(redoObject, mUndoQueue);
+                        break;
+                    }
+                    case Undo::ConfigType::CONNECTOR_INVERSION:
+                    {
+                        auto data = std::static_pointer_cast<Undo::ConnectorInversionChangedData>(undoConfigureObject->Data());
+                        Q_ASSERT(data->component);
+                        Q_ASSERT(data->logicConnector);
+                        data->component->InvertConnectorByPoint(data->component->pos() + data->logicConnector->pos);
                         AppendToUndoQueue(redoObject, mUndoQueue);
                         break;
                     }

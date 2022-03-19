@@ -15,6 +15,11 @@ inline QPointF SnapToGrid(QPointF pPoint)
                    std::floor(pPoint.y() / canvas::GRID_SIZE + 0.5f) * canvas::GRID_SIZE);
 }
 
+inline uint32_t EuclidianDistance(QPointF pA, QPointF pB)
+{
+    return std::sqrt(std::pow(pA.x() - pB.x(), 2) + std::pow(pA.y() - pB.y(), 2));
+}
+
 /// \brief Inverts the given logic state
 /// \param pState: The state to invert
 /// \return The inverted state

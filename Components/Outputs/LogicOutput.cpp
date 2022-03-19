@@ -10,7 +10,7 @@ LogicOutput::LogicOutput(const CoreLogic* pCoreLogic):
     mWidth = canvas::GRID_SIZE * 0.8f;
     mHeight = canvas::GRID_SIZE * 0.8f;
 
-    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 0)));
+    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 0), 0, QPointF(0, 0)));
 }
 
 LogicOutput::LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic):
