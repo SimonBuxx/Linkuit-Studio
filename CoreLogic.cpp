@@ -477,13 +477,13 @@ void CoreLogic::MergeWiresAfterMove(std::vector<LogicWire*> &pWires, std::vector
         pDeletedWires.push_back(w);
         mView.Scene()->removeItem(w);
 
-        if (startAdjacent)
+        if (startAdjacent && std::find(pAddedWires.begin(), pAddedWires.end(), startAdjacent) == pAddedWires.end())
         {
             pDeletedWires.push_back(static_cast<IBaseComponent*>(startAdjacent));
             mView.Scene()->removeItem(startAdjacent);
         }
 
-        if (endAdjacent)
+        if (endAdjacent && std::find(pAddedWires.begin(), pAddedWires.end(), endAdjacent) == pAddedWires.end())
         {
             pDeletedWires.push_back(static_cast<IBaseComponent*>(endAdjacent));
             mView.Scene()->removeItem(endAdjacent);
