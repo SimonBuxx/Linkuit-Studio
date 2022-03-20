@@ -13,6 +13,7 @@ enum class ComponentType
     CLOCK,
     OUTPUT,
     TEXT_LABEL,
+    HALF_ADDER,
     RS_FLIPFLOP,
     D_FLIPFLOP
 };

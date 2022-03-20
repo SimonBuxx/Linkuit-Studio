@@ -13,11 +13,6 @@ RsFlipFlop::RsFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
 RsFlipFlop::RsFlipFlop(const RsFlipFlop& pObj, const CoreLogic* pCoreLogic):
     RsFlipFlop(pCoreLogic, pObj.mDirection)
 {
-    mComponentText = pObj.mComponentText;
-    mWidth = pObj.mWidth;
-    mHeight = pObj.mHeight;
-    mInputLabels = pObj.mInputLabels;
-    mOutputLabels = pObj.mOutputLabels;
     mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
     mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
 };

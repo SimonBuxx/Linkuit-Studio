@@ -9,6 +9,7 @@
 #include "Components/Inputs/LogicClock.h"
 #include "Components/Outputs/LogicOutput.h"
 #include "Components/TextLabel.h"
+#include "Components/ComplexLogic/HalfAdder.h"
 #include "Components/ComplexLogic/RsFlipFlop.h"
 #include "Components/ComplexLogic/DFlipFlop.h"
 
@@ -172,6 +173,11 @@ IBaseComponent* CoreLogic::GetItem()
         case ComponentType::TEXT_LABEL:
         {
             item = new TextLabel(this);
+            break;
+        }
+        case ComponentType::HALF_ADDER:
+        {
+            item = new HalfAdder(this, mComponentDirection);
             break;
         }
         case ComponentType::RS_FLIPFLOP:

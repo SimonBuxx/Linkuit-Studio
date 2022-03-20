@@ -49,8 +49,16 @@ void LogicDFlipFlopCell::OnSimulationAdvance()
 }
 
 void LogicDFlipFlopCell::OnWakeUp()
-{
+{   
+    mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+
+    for (size_t i = 0; i < mInputStates.size(); i++)
+    {
+        mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
+    }
+
     mPrevInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+
     mOutputStates[0] = LogicState::LOW;
     mOutputStates[1] = LogicState::HIGH;
     mNextUpdateTime = UpdateTime::NOW;

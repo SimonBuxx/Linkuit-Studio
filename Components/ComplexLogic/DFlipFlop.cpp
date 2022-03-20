@@ -13,11 +13,6 @@ DFlipFlop::DFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
 DFlipFlop::DFlipFlop(const DFlipFlop& pObj, const CoreLogic* pCoreLogic):
     DFlipFlop(pCoreLogic, pObj.mDirection)
 {
-    mComponentText = pObj.mComponentText;
-    mWidth = pObj.mWidth;
-    mHeight = pObj.mHeight;
-    mInputLabels = pObj.mInputLabels;
-    mOutputLabels = pObj.mOutputLabels;
     mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
     mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
 };

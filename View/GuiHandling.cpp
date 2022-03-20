@@ -73,6 +73,11 @@ void View::CreateGui()
     mAddTextLabelButton->setCheckable(true);
     mAddTextLabelButton->setChecked(false);
 
+    mAddHalfAdderButton = new QToolButton;
+    mAddHalfAdderButton->setText(tr("Half Adder"));
+    mAddHalfAdderButton->setCheckable(true);
+    mAddHalfAdderButton->setChecked(false);
+
     mAddRsFlipFlopButton = new QToolButton;
     mAddRsFlipFlopButton->setText(tr("RS Flip-Flop"));
     mAddRsFlipFlopButton->setCheckable(true);
@@ -115,6 +120,7 @@ void View::CreateGui()
     mTopButtonsGroup->addButton(mAddClockButton);
     mTopButtonsGroup->addButton(mAddOutputButton);
     mTopButtonsGroup->addButton(mAddTextLabelButton);
+    mTopButtonsGroup->addButton(mAddHalfAdderButton);
     mTopButtonsGroup->addButton(mAddRsFlipFlopButton);
     mTopButtonsGroup->addButton(mAddDFlipFlopButton);
     mTopButtonsGroup->addButton(mUndoButton);
@@ -135,6 +141,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddClockButton);
     topButtonsLayout->addWidget(mAddOutputButton);
     topButtonsLayout->addWidget(mAddTextLabelButton);
+    topButtonsLayout->addWidget(mAddHalfAdderButton);
     topButtonsLayout->addWidget(mAddRsFlipFlopButton);
     topButtonsLayout->addWidget(mAddDFlipFlopButton);
     topButtonsLayout->addWidget(mUndoButton);
@@ -226,6 +233,7 @@ void View::PrepareGuiForSimulation()
     mAddClockButton->setEnabled(false);
     mAddOutputButton->setEnabled(false);
     mAddTextLabelButton->setEnabled(false);
+    mAddHalfAdderButton->setEnabled(false);
     mAddRsFlipFlopButton->setEnabled(false);
     mAddDFlipFlopButton->setEnabled(false);
     mDeleteButton->setEnabled(false);
@@ -252,6 +260,7 @@ void View::PrepareGuiForEditing()
     mAddClockButton->setEnabled(true);
     mAddOutputButton->setEnabled(true);
     mAddTextLabelButton->setEnabled(true);
+    mAddHalfAdderButton->setEnabled(true);
     mAddRsFlipFlopButton->setEnabled(true);
     mAddDFlipFlopButton->setEnabled(true);
     mDeleteButton->setEnabled(true);
@@ -332,6 +341,10 @@ void View::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mAddTextLabelButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
+    });
+
+    QObject::connect(mAddHalfAdderButton, &QAbstractButton::clicked, [&](){
+        mCoreLogic.EnterAddControlMode(ComponentType::HALF_ADDER);
     });
 
     QObject::connect(mAddRsFlipFlopButton, &QAbstractButton::clicked, [&](){

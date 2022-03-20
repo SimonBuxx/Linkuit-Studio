@@ -182,6 +182,7 @@ protected:
     QToolButton *mAddClockButton;
     QToolButton *mAddOutputButton;
     QToolButton *mAddTextLabelButton;
+    QToolButton *mAddHalfAdderButton;
     QToolButton *mAddRsFlipFlopButton;
     QToolButton *mAddDFlipFlopButton;
     QToolButton *mUndoButton;

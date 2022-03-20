@@ -56,9 +56,15 @@ void LogicRsFlipFlopCell::OnSimulationAdvance()
 void LogicRsFlipFlopCell::OnWakeUp()
 {
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+
+    for (size_t i = 0; i < mInputStates.size(); i++)
+    {
+        mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
+    }
+
     mCurrentState[0] = LogicState::LOW; // Q
     mCurrentState[1] = LogicState::HIGH; // Not Q
-    mNextUpdateTime = UpdateTime::INF;
+    mNextUpdateTime = UpdateTime::NOW;
 
     mStateChanged = true; // Successors should be notified about wake up
     mIsActive = true;
