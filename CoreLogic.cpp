@@ -563,8 +563,9 @@ std::vector<IBaseComponent*> CoreLogic::GetCollidingComponents(IBaseComponent* p
 
     for (auto &comp : mView.Scene()->collidingItems(pComponent))
     {
-        if (IsCollidingComponent(static_cast<IBaseComponent*>(comp)))
+        if (IsCollidingComponent(comp))
         {
+            // comp must be IBaseComponent at this point
             collidingComponents.push_back(static_cast<IBaseComponent*>(comp));
         }
     }
@@ -572,9 +573,12 @@ std::vector<IBaseComponent*> CoreLogic::GetCollidingComponents(IBaseComponent* p
     return collidingComponents;
 }
 
-bool CoreLogic::IsCollidingComponent(IBaseComponent* pComponent) const
+bool CoreLogic::IsCollidingComponent(QGraphicsItem* pComponent) const
 {
-    return (dynamic_cast<LogicWire*>(pComponent) == nullptr && dynamic_cast<ConPoint*>(pComponent) == nullptr && dynamic_cast<TextLabel*>(pComponent) == nullptr);
+    return (dynamic_cast<IBaseComponent*>(pComponent) != nullptr
+            && dynamic_cast<LogicWire*>(pComponent) == nullptr
+            && dynamic_cast<ConPoint*>(pComponent) == nullptr
+            && dynamic_cast<TextLabel*>(pComponent) == nullptr);
 }
 
 bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const

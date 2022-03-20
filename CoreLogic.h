@@ -162,10 +162,10 @@ protected:
     /// \return A vector of components that are colliding with pComponent
     std::vector<IBaseComponent*> GetCollidingComponents(IBaseComponent* pComponent) const;
 
-    /// \brief Checks if the given component is a "colliding" component (may not be before or behind others)
-    /// \param pComponent: The component to check
+    /// \brief Checks if the given item is a "colliding" component (may not be before or behind others)
+    /// \param pComponent: The item to check
     /// \return True, if pComponent is a "colliding" component
-    bool IsCollidingComponent(IBaseComponent* pComponent) const;
+    bool IsCollidingComponent(QGraphicsItem* pComponent) const;
 
     /// \brief Groups all existing wires into groups that are connected, meaning they always have the same logic state
     void ParseWireGroups(void);
