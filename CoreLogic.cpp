@@ -6,6 +6,7 @@
 #include "Components/Gates/NotGate.h"
 #include "Components/Inputs/LogicInput.h"
 #include "Components/Inputs/LogicButton.h"
+#include "Components/Inputs/LogicClock.h"
 #include "Components/Outputs/LogicOutput.h"
 #include "Components/TextLabel.h"
 #include "Components/ComplexLogic/RsFlipFlop.h"
@@ -156,6 +157,11 @@ IBaseComponent* CoreLogic::GetItem()
         case ComponentType::BUTTON:
         {
             item = new LogicButton(this);
+            break;
+        }
+        case ComponentType::CLOCK:
+        {
+            item = new LogicClock(this, mComponentDirection);
             break;
         }
         case ComponentType::OUTPUT:
@@ -1073,24 +1079,15 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
             return;
         }
 
+        // Invert in/output connectors
         if (mControlMode == ControlMode::EDIT
                 && mView.Scene()->selectedItems().empty())
         {
             for (const auto& item : mView.Scene()->items(pMappedPos, Qt::IntersectsItemBoundingRect))
             {
-                if (dynamic_cast<AbstractGate*>(item) != nullptr)
+                if (dynamic_cast<AbstractGate*>(item) != nullptr || dynamic_cast<AbstractComplexLogic*>(item) != nullptr || dynamic_cast<LogicClock*>(item) != nullptr)
                 {
-                    const auto&& connector = static_cast<AbstractGate*>(item)->InvertConnectorByPoint(pMappedPos);
-                    if (connector != nullptr)
-                    {
-                        auto data = std::make_shared<Undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector);
-                        AppendUndo(new UndoConfigureType(data));
-                        return;
-                    }
-                }
-                else if (dynamic_cast<AbstractComplexLogic*>(item) != nullptr)
-                {
-                    const auto&& connector = static_cast<AbstractComplexLogic*>(item)->InvertConnectorByPoint(pMappedPos);
+                    const auto&& connector = static_cast<IBaseComponent*>(item)->InvertConnectorByPoint(pMappedPos);
                     if (connector != nullptr)
                     {
                         auto data = std::make_shared<Undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector);

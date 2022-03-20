@@ -109,6 +109,14 @@ static constexpr const char* STYLESHEET = "QPlainTextEdit { color: white; backgr
 namespace inputs
 {
 static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(50 * simulation::PROPAGATION_DELAY);
+
+// Whether the clock should toggle at timeout or pulse for CLOCK_PULSE_TICKS ticks
+static constexpr bool CLOCK_ENABLE_PULSE = true;
+
+static constexpr uint32_t CLOCK_PULSE_TICKS = 10;
+
+// The amount of ticks to pass before the clock timeouts
+static constexpr uint32_t CLOCK_TOGGLE_TICKS = 100;
 } // namespace
 
 namespace complex_logic

@@ -58,6 +58,11 @@ void View::CreateGui()
     mAddButtonButton->setCheckable(true);
     mAddButtonButton->setChecked(false);
 
+    mAddClockButton = new QToolButton;
+    mAddClockButton->setText(tr("Clock"));
+    mAddClockButton->setCheckable(true);
+    mAddClockButton->setChecked(false);
+
     mAddOutputButton = new QToolButton;
     mAddOutputButton->setText(tr("Output"));
     mAddOutputButton->setCheckable(true);
@@ -107,6 +112,7 @@ void View::CreateGui()
     mTopButtonsGroup->addButton(mAddNotGateButton);
     mTopButtonsGroup->addButton(mAddInputButton);
     mTopButtonsGroup->addButton(mAddButtonButton);
+    mTopButtonsGroup->addButton(mAddClockButton);
     mTopButtonsGroup->addButton(mAddOutputButton);
     mTopButtonsGroup->addButton(mAddTextLabelButton);
     mTopButtonsGroup->addButton(mAddRsFlipFlopButton);
@@ -126,6 +132,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddNotGateButton);
     topButtonsLayout->addWidget(mAddInputButton);
     topButtonsLayout->addWidget(mAddButtonButton);
+    topButtonsLayout->addWidget(mAddClockButton);
     topButtonsLayout->addWidget(mAddOutputButton);
     topButtonsLayout->addWidget(mAddTextLabelButton);
     topButtonsLayout->addWidget(mAddRsFlipFlopButton);
@@ -216,6 +223,7 @@ void View::PrepareGuiForSimulation()
     mAddNotGateButton->setEnabled(false);
     mAddInputButton->setEnabled(false);
     mAddButtonButton->setEnabled(false);
+    mAddClockButton->setEnabled(false);
     mAddOutputButton->setEnabled(false);
     mAddTextLabelButton->setEnabled(false);
     mAddRsFlipFlopButton->setEnabled(false);
@@ -241,6 +249,7 @@ void View::PrepareGuiForEditing()
     mAddNotGateButton->setEnabled(true);
     mAddInputButton->setEnabled(true);
     mAddButtonButton->setEnabled(true);
+    mAddClockButton->setEnabled(true);
     mAddOutputButton->setEnabled(true);
     mAddTextLabelButton->setEnabled(true);
     mAddRsFlipFlopButton->setEnabled(true);
@@ -311,6 +320,10 @@ void View::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mAddButtonButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::BUTTON);
+    });
+
+    QObject::connect(mAddClockButton, &QAbstractButton::clicked, [&](){
+        mCoreLogic.EnterAddControlMode(ComponentType::CLOCK);
     });
 
     QObject::connect(mAddOutputButton, &QAbstractButton::clicked, [&](){

@@ -10,6 +10,7 @@ enum class ComponentType
     NOT_GATE,
     INPUT,
     BUTTON,
+    CLOCK,
     OUTPUT,
     TEXT_LABEL,
     RS_FLIPFLOP,

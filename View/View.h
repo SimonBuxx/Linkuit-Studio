@@ -179,6 +179,7 @@ protected:
     QToolButton *mAddNotGateButton;
     QToolButton *mAddInputButton;
     QToolButton *mAddButtonButton;
+    QToolButton *mAddClockButton;
     QToolButton *mAddOutputButton;
     QToolButton *mAddTextLabelButton;
     QToolButton *mAddRsFlipFlopButton;

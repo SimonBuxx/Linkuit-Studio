@@ -120,6 +120,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddButtonButton->setChecked(true);
             break;
         }
+        case ComponentType::CLOCK:
+        {
+            mAddClockButton->setChecked(true);
+            break;
+        }
         case ComponentType::OUTPUT:
         {
             mAddOutputButton->setChecked(true);

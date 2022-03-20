@@ -141,7 +141,6 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
         pPainter->setPen(components::complex_logic::FONT_COLOR);
         pPainter->setFont(components::complex_logic::FONT);
         pPainter->drawText(boundingRect(), mComponentText, Qt::AlignHCenter | Qt::AlignVCenter);
-
     }
 
     if (levelOfDetail >= components::SMALL_TEXT_MIN_LOD)
