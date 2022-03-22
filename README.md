@@ -1,5 +1,5 @@
 # Linkuit Studio
-![Linkuit Studio Icon](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/linkuit_logo.png?raw=true)
+![Linkuit Studio Icon](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/linkuit_logo_new.png?raw=true)
 
 ![8-bit RS counter](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/Linkuit_RS_counter.PNG?raw=true)
 *Part of an 8-bit counter made using RS flip-flops*

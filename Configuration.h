@@ -51,16 +51,18 @@ enum zvalues
     FRONT
 };
 
-static constexpr QColor FILL_COLOR(0, 88, 61);
+static constexpr QColor FILL_COLOR(0, 100, 70);
 static constexpr QColor SELECTED_BORDER_COLOR(255, 255, 255);
 static constexpr QColor SELECTED_COMPONENT_COLOR(255, 255, 255);
 static constexpr QColor HIGH_COLOR(0, 204, 143);
 
 static constexpr uint8_t BORDER_WIDTH = 2;
 
+// Minimal levels of detail to show component details
 static constexpr double SMALL_TEXT_MIN_LOD = 0.4f;
 static constexpr double DESCRIPTION_TEXT_MIN_LOD = 0.3f;
 static constexpr double COMPONENT_DETAILS_MIN_LOD = 0.2f;
+
 static constexpr Direction DEFAULT_DIRECTION = Direction::RIGHT;
 
 namespace gates
@@ -99,7 +101,8 @@ namespace diodes
 static constexpr uint32_t SIZE = 15;
 } // namespace
 
-namespace text_label {
+namespace text_label
+{
 static const QFont FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr const char* STYLESHEET = "QPlainTextEdit { color: white; background: transparent; border: none; \
@@ -122,12 +125,14 @@ static constexpr uint32_t CLOCK_TOGGLE_TICKS = 100;
 namespace complex_logic
 {
 static constexpr const char* HALF_ADDER_TEXT = "HA";
+static constexpr const char* FULL_ADDER_TEXT = "FA";
 static constexpr const char* RS_FLIPFLOP_TEXT = "RS";
 static constexpr const char* D_FLIPFLOP_TEXT = "FF";
 
 static const QFont FONT("Calibri Light", 20);
 static const QFont CONNECTOR_FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
+static constexpr QColor SMALL_TEXT_FONT_COLOR(225, 225, 225);
 } // namespace
 
 } // namespace

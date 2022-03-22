@@ -140,6 +140,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddHalfAdderButton->setChecked(true);
             break;
         }
+        case ComponentType::FULL_ADDER:
+        {
+            mAddFullAdderButton->setChecked(true);
+            break;
+        }
         case ComponentType::RS_FLIPFLOP:
         {
             mAddRsFlipFlopButton->setChecked(true);

@@ -1,5 +1,7 @@
 HEADERS += \
+    $$PWD/Components/ComplexLogic/FullAdder.h \
     $$PWD/Components/ComplexLogic/HalfAdder.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.h \
     $$PWD/Components/Inputs/LogicCells/LogicClockCell.h \
     $$PWD/Components/Inputs/LogicClock.h \
@@ -42,7 +44,9 @@ HEADERS += \
     $${PWD}/Configuration.h
 
 SOURCES += \
+    $$PWD/Components/ComplexLogic/FullAdder.cpp \
     $$PWD/Components/ComplexLogic/HalfAdder.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.cpp \
     $$PWD/Components/Inputs/LogicCells/LogicClockCell.cpp \
     $$PWD/Components/Inputs/LogicClock.cpp \

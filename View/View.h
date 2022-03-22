@@ -183,6 +183,7 @@ protected:
     QToolButton *mAddOutputButton;
     QToolButton *mAddTextLabelButton;
     QToolButton *mAddHalfAdderButton;
+    QToolButton *mAddFullAdderButton;
     QToolButton *mAddRsFlipFlopButton;
     QToolButton *mAddDFlipFlopButton;
     QToolButton *mUndoButton;

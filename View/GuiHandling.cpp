@@ -78,6 +78,11 @@ void View::CreateGui()
     mAddHalfAdderButton->setCheckable(true);
     mAddHalfAdderButton->setChecked(false);
 
+    mAddFullAdderButton = new QToolButton;
+    mAddFullAdderButton->setText(tr("Full Adder"));
+    mAddFullAdderButton->setCheckable(true);
+    mAddFullAdderButton->setChecked(false);
+
     mAddRsFlipFlopButton = new QToolButton;
     mAddRsFlipFlopButton->setText(tr("RS Flip-Flop"));
     mAddRsFlipFlopButton->setCheckable(true);
@@ -121,6 +126,7 @@ void View::CreateGui()
     mTopButtonsGroup->addButton(mAddOutputButton);
     mTopButtonsGroup->addButton(mAddTextLabelButton);
     mTopButtonsGroup->addButton(mAddHalfAdderButton);
+    mTopButtonsGroup->addButton(mAddFullAdderButton);
     mTopButtonsGroup->addButton(mAddRsFlipFlopButton);
     mTopButtonsGroup->addButton(mAddDFlipFlopButton);
     mTopButtonsGroup->addButton(mUndoButton);
@@ -142,6 +148,7 @@ void View::CreateGui()
     topButtonsLayout->addWidget(mAddOutputButton);
     topButtonsLayout->addWidget(mAddTextLabelButton);
     topButtonsLayout->addWidget(mAddHalfAdderButton);
+    topButtonsLayout->addWidget(mAddFullAdderButton);
     topButtonsLayout->addWidget(mAddRsFlipFlopButton);
     topButtonsLayout->addWidget(mAddDFlipFlopButton);
     topButtonsLayout->addWidget(mUndoButton);
@@ -234,6 +241,7 @@ void View::PrepareGuiForSimulation()
     mAddOutputButton->setEnabled(false);
     mAddTextLabelButton->setEnabled(false);
     mAddHalfAdderButton->setEnabled(false);
+    mAddFullAdderButton->setEnabled(false);
     mAddRsFlipFlopButton->setEnabled(false);
     mAddDFlipFlopButton->setEnabled(false);
     mDeleteButton->setEnabled(false);
@@ -261,6 +269,7 @@ void View::PrepareGuiForEditing()
     mAddOutputButton->setEnabled(true);
     mAddTextLabelButton->setEnabled(true);
     mAddHalfAdderButton->setEnabled(true);
+    mAddFullAdderButton->setEnabled(true);
     mAddRsFlipFlopButton->setEnabled(true);
     mAddDFlipFlopButton->setEnabled(true);
     mDeleteButton->setEnabled(true);
@@ -345,6 +354,10 @@ void View::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mAddHalfAdderButton, &QAbstractButton::clicked, [&](){
         mCoreLogic.EnterAddControlMode(ComponentType::HALF_ADDER);
+    });
+
+    QObject::connect(mAddFullAdderButton, &QAbstractButton::clicked, [&](){
+        mCoreLogic.EnterAddControlMode(ComponentType::FULL_ADDER);
     });
 
     QObject::connect(mAddRsFlipFlopButton, &QAbstractButton::clicked, [&](){

@@ -1,5 +1,4 @@
 #include "LogicHalfAdderCell.h"
-#include <QDebug>
 
 LogicHalfAdderCell::LogicHalfAdderCell():
     LogicBaseCell(2, 2),
@@ -88,7 +87,7 @@ void LogicHalfAdderCell::OnWakeUp()
     }
 
     mOutputStates[0] = LogicState::LOW;
-    mOutputStates[1] = LogicState::HIGH;
+    mOutputStates[1] = LogicState::LOW;
     mNextUpdateTime = UpdateTime::NOW;
 
     mStateChanged = true; // Successors should be notified about wake up

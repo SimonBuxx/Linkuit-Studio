@@ -3,5 +3,6 @@
         <file>images/linkuit_icon3.png</file>
         <file>images/linkuit_logo.png</file>
         <file>images/loading.gif</file>
+        <file>images/linkuit_icon4.png</file>
     </qresource>
 </RCC>

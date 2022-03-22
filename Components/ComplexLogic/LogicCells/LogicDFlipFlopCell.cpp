@@ -1,5 +1,4 @@
 #include "LogicDFlipFlopCell.h"
-#include <QDebug>
 
 LogicDFlipFlopCell::LogicDFlipFlopCell():
     LogicBaseCell(2, 2),

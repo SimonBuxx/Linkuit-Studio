@@ -14,6 +14,7 @@ enum class ComponentType
     OUTPUT,
     TEXT_LABEL,
     HALF_ADDER,
+    FULL_ADDER,
     RS_FLIPFLOP,
     D_FLIPFLOP
 };

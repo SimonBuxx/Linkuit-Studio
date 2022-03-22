@@ -145,7 +145,7 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
 
     if (levelOfDetail >= components::SMALL_TEXT_MIN_LOD)
     {
-        pPainter->setPen(QColor(225, 225, 225));
+        pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
         pPainter->setFont(components::complex_logic::CONNECTOR_FONT);
         switch (mDirection)
         {
