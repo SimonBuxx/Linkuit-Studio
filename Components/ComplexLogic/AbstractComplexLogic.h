@@ -16,7 +16,9 @@ public:
     /// \param pInputCount: The amount of inputs to this component
     /// \param pOutputCount: The amount of outputs of this component
     /// \param pDirection: The direction of the component
-    AbstractComplexLogic(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, uint8_t pOutputCount, Direction pDirection);
+    /// \param pTopInputCount: The input number up to which the inputs should be drawn on top of the component (exclusive)
+    AbstractComplexLogic(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, uint8_t pOutputCount,
+                         Direction pDirection, uint8_t pTopInputCount = 0);
 
     /// \brief Clone function for the component
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
@@ -85,6 +87,8 @@ protected:
 
     uint8_t mInputsSpacing;
     uint8_t mOutputsSpacing;
+
+    uint8_t mTopInputCount;
 
     std::vector<QString> mInputLabels;
     std::vector<QString> mOutputLabels;
