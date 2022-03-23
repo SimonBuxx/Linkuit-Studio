@@ -4,7 +4,8 @@
 #include "HelperFunctions.h"
 
 ConPoint::ConPoint(const CoreLogic* pCoreLogic):
-    IBaseComponent(pCoreLogic, nullptr)
+    IBaseComponent(pCoreLogic, nullptr),
+    mLogicDiodeCell(std::make_shared<LogicDiodeCell>(pCoreLogic))
 {
     setZValue(components::zvalues::CONPOINT);
 
@@ -16,6 +17,12 @@ ConPoint::ConPoint(const CoreLogic* pCoreLogic):
     mWasMoved = false;
 
     ConnectToCoreLogic(pCoreLogic);
+
+    // Connectors for diodes
+    mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 0), 0, QPointF(0, 0)));
+    mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 0), 0, QPointF(0, 0)));
+
+    QObject::connect(mLogicDiodeCell.get(), &LogicBaseCell::StateChangedSignal, this, &ConPoint::OnLogicStateChanged);
 }
 
 ConPoint::ConPoint(const ConPoint& pObj, const CoreLogic* pCoreLogic):
@@ -54,26 +61,26 @@ void ConPoint::SetConnectionType(ConnectionType pNewType)
 
 ConnectionType ConPoint::AdvanceConnectionType()
 {
+    Q_ASSERT(mLogicDiodeCell);
     const auto previous = mConnectionType;
     switch (mConnectionType)
     {
         case ConnectionType::FULL:
         {
             mConnectionType = ConnectionType::DIODE_Y;
-            //mLogicCell = std::make_shared<LogicDiodeCell>(DiodeDirection::VERTICAL);
+            mLogicCell = mLogicDiodeCell;
             break;
         }
         case ConnectionType::DIODE_Y:
         {
             mConnectionType = ConnectionType::DIODE_X;
-            //mLogicCell = std::make_shared<LogicDiodeCell>(DiodeDirection::HORIZONTAL);
+            mLogicCell = mLogicDiodeCell;
             break;
         }
         case ConnectionType::DIODE_X:
         {
-            // CoreLogic will handle deleting if on full crossing
             mConnectionType = ConnectionType::FULL;
-            mLogicCell = nullptr;
+            mLogicCell = nullptr; // Will assume the logic cell of its wire group
             break;
         }
         default:
@@ -93,7 +100,8 @@ void ConPoint::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption
 
     if (levelOfDetail >= components::conpoints::MIN_VISIBLE_LOD)
     {
-        if (mLogicCell != nullptr && std::static_pointer_cast<LogicWireCell>(mLogicCell)->GetOutputState() == LogicState::HIGH)
+        if ((std::dynamic_pointer_cast<LogicWireCell>(mLogicCell) != nullptr && std::static_pointer_cast<LogicWireCell>(mLogicCell)->GetOutputState() == LogicState::HIGH)
+                || (std::dynamic_pointer_cast<LogicDiodeCell>(mLogicCell) != nullptr && std::static_pointer_cast<LogicDiodeCell>(mLogicCell)->GetOutputState() == LogicState::HIGH))
         {
             pPainter->setBrush(components::conpoints::CONPOINTS_HIGH_COLOR);
         }
@@ -133,8 +141,9 @@ void ConPoint::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption
     }
 }
 
-void ConPoint::SetLogicCell(std::shared_ptr<LogicWireCell> pLogicCell)
+void ConPoint::SetLogicCell(std::shared_ptr<LogicBaseCell> pLogicCell)
 {
+    Q_ASSERT(pLogicCell);
     mLogicCell = pLogicCell;
 
     QObject::connect(mLogicCell.get(), &LogicBaseCell::StateChangedSignal, this, &ConPoint::OnLogicStateChanged);

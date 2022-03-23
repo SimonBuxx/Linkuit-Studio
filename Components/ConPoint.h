@@ -4,6 +4,7 @@
 #include "IBaseComponent.h"
 #include "HelperStructures.h"
 #include "Components/LogicWireCell.h"
+#include "Components/LogicDiodeCell.h"
 
 ///
 /// \brief The ConPoint class represents a wire connection point
@@ -61,9 +62,9 @@ public:
     /// \return The previous connection type
     ConnectionType AdvanceConnectionType(void);
 
-    /// \brief Sets the logic cell to the cell of the associated wire group
-    /// \param pLogicCell: The logic wire cell
-    void SetLogicCell(std::shared_ptr<LogicWireCell> pLogicCell);
+    /// \brief Sets the logic cell to the cell of the associated wire group or to a diode logic cell
+    /// \param pLogicCell: The logic cell
+    void SetLogicCell(std::shared_ptr<LogicBaseCell> pLogicCell);
 
 signals:
     /// \brief Emitted when the connection type of this ConPoint changed
@@ -86,6 +87,8 @@ protected:
 protected:
     bool mWasMoved;
     ConnectionType mConnectionType;
+
+    std::shared_ptr<LogicDiodeCell> mLogicDiodeCell;
 };
 
 #endif // CONPOINT_H

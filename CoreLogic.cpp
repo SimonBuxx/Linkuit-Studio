@@ -829,7 +829,7 @@ void CoreLogic::CreateWireLogicCells()
             {
                 static_cast<LogicWire*>(comp)->SetLogicCell(logicCell);
             }
-            else if (dynamic_cast<ConPoint*>(comp) != nullptr)
+            else if (dynamic_cast<ConPoint*>(comp) != nullptr) // Full crossing because sorted into group
             {
                 static_cast<ConPoint*>(comp)->SetLogicCell(logicCell);
             }
@@ -842,8 +842,7 @@ void CoreLogic::ConnectLogicCells()
 {
     for (auto& comp : mView.Scene()->items())
     {
-        if (dynamic_cast<IBaseComponent*>(comp) == nullptr || dynamic_cast<LogicWire*>(comp) != nullptr
-                || (dynamic_cast<ConPoint*>(comp) != nullptr && static_cast<ConPoint*>(comp)->GetConnectionType() == ConnectionType::FULL))
+        if (dynamic_cast<IBaseComponent*>(comp) == nullptr || dynamic_cast<LogicWire*>(comp) != nullptr)
         {
             continue;
         }
@@ -852,30 +851,52 @@ void CoreLogic::ConnectLogicCells()
 
         for (auto& coll : mView.Scene()->collidingItems(comp, Qt::IntersectsItemBoundingRect))
         {
-            if (dynamic_cast<ConPoint*>(coll) != nullptr && static_cast<ConPoint*>(coll)->GetConnectionType() == ConnectionType::FULL)
-            {
-                continue; // ignore ConPoints, they are handled during wire grouping
-            }
-            else if (dynamic_cast<LogicWire*>(coll) != nullptr)
+            if (dynamic_cast<LogicWire*>(coll) != nullptr)
             {
                 // Component <-> Wire connection
                 auto wire = static_cast<LogicWire*>(coll);
-                for (size_t out = 0; out < compBase->GetOutConnectorCount(); out++)
+
+                if (dynamic_cast<ConPoint*>(comp) != nullptr)
                 {
-                    if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[out].pos)))
+                    const auto& conPoint = static_cast<ConPoint*>(comp);
+                    if (conPoint->GetConnectionType() != ConnectionType::FULL)
                     {
-                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
-                        compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, out);
-                        //qDebug() << "Connected comp output " << out << " to wire";
+                        // Diode <-> Wire connection
+                        Q_ASSERT(compBase->GetLogicCell());
+                        auto outputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::HORIZONTAL : WireDirection::VERTICAL);
+                        auto inputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::VERTICAL : WireDirection::HORIZONTAL);
+
+                        if ((wire->GetDirection() == outputDirection)
+                                && wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[0].pos)))
+                        {
+                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
+                            compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, 0);
+                        }
+                        else if ((wire->GetDirection() == inputDirection)
+                                && wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[0].pos)))
+                        {
+                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), 0);
+                        }
                     }
                 }
-
-                for (size_t in = 0; in < compBase->GetInConnectorCount(); in++)
+                else
                 {
-                    if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[in].pos)))
+                    // Other component <-> Wire connection
+                    for (size_t out = 0; out < compBase->GetOutConnectorCount(); out++)
                     {
-                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), in);
-                        //qDebug() << "Connected wire to comp, input " << in;
+                        if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[out].pos)))
+                        {
+                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
+                            compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, out);
+                        }
+                    }
+
+                    for (size_t in = 0; in < compBase->GetInConnectorCount(); in++)
+                    {
+                        if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[in].pos)))
+                        {
+                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), in);
+                        }
                     }
                 }
             }

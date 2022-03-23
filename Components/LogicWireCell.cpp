@@ -70,6 +70,7 @@ LogicState LogicWireCell::GetOutputState(uint32_t pOutput) const
 void LogicWireCell::OnWakeUp()
 {
     mState = LogicState::LOW;
+    mIsActive = true;
     emit StateChangedSignal();
 }
 
@@ -80,5 +81,6 @@ void LogicWireCell::OnShutdown()
     mInputStates.clear();
     mOutputInverted.clear();
     mInputInverted.clear();
+    mIsActive = false;
     emit StateChangedSignal();
 }
