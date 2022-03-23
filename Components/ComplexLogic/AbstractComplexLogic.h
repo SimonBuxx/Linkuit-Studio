@@ -83,6 +83,9 @@ protected:
     uint8_t mOutputCount;
     Direction mDirection;
 
+    uint8_t mInputsSpacing;
+    uint8_t mOutputsSpacing;
+
     std::vector<QString> mInputLabels;
     std::vector<QString> mOutputLabels;
 };

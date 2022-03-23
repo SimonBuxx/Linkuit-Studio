@@ -4,20 +4,26 @@
 AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, Direction pDirection):
     IBaseComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),
-    mDirection(pDirection)
+    mDirection(pDirection),
+    mInputsSpacing(1)
 {
     Q_ASSERT(mInputCount >= 1);
 
     setZValue(components::zvalues::GATE);
 
+    if (mInputCount == 2)
+    {
+        mInputsSpacing = 2;
+    }
+
     if (mDirection == Direction::RIGHT || mDirection == Direction::LEFT)
     {
         mWidth = components::gates::GRID_WIDTH * canvas::GRID_SIZE;
-        mHeight = mInputCount * canvas::GRID_SIZE * 2;
+        mHeight = (mInputCount + (mInputsSpacing == 2 ? 0 : 1)) * canvas::GRID_SIZE * mInputsSpacing;
     }
     else
     {
-        mWidth = mInputCount * canvas::GRID_SIZE * 2;
+        mWidth = (mInputCount + (mInputsSpacing == 2 ? 0 : 1)) * canvas::GRID_SIZE * mInputsSpacing;
         mHeight = components::gates::GRID_WIDTH * canvas::GRID_SIZE;
     }
 
@@ -32,7 +38,7 @@ void AbstractGate::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(-4, 0)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(-4, 0)));
             }
             mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2), 0, QPointF(4, 0)));
             break;
@@ -41,7 +47,7 @@ void AbstractGate::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0), i, QPointF(0, -4)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0), i, QPointF(0, -4)));
             }
             mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, mHeight), 0, QPointF(0, 4)));
             break;
@@ -50,7 +56,7 @@ void AbstractGate::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(4, 0)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(4, 0)));
             }
             mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2), 0, QPointF(-4, 0)));
             break;
@@ -59,7 +65,7 @@ void AbstractGate::SetLogicConnectors()
         {
             for (uint8_t i = 0; i < mInputCount; i++)
             {
-                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight), i, QPointF(0, 4)));
+                mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight), i, QPointF(0, 4)));
             }
             mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, 0), 0, QPointF(0, -4)));
             break;
@@ -139,7 +145,7 @@ void AbstractGate::DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGr
     for (size_t i = 0; i < mInputCount; i++)
     {
         SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(-8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        pPainter->drawLine(-8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
     }
 
     // Draw output connector
@@ -152,7 +158,7 @@ void AbstractGate::DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGr
         if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-            pPainter->drawEllipse(-9, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
+            pPainter->drawEllipse(-9, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
         }
     }
 
@@ -169,7 +175,7 @@ void AbstractGate::DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGra
     for (size_t i = 0; i < mInputCount; i++)
     {
         SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
+        pPainter->drawLine(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
     }
 
     // Draw output connector
@@ -182,7 +188,7 @@ void AbstractGate::DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGra
         if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, -9, 8, 8);
+            pPainter->drawEllipse(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, -9, 8, 8);
         }
     }
 
@@ -199,7 +205,7 @@ void AbstractGate::DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGra
     for (size_t i = 0; i < mInputCount; i++)
     {
         SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        pPainter->drawLine(mWidth, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
     }
 
     // Draw output connector
@@ -212,7 +218,7 @@ void AbstractGate::DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGra
         if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-            pPainter->drawEllipse(mWidth + 1, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
+            pPainter->drawEllipse(mWidth + 1, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
         }
     }
 
@@ -229,7 +235,7 @@ void AbstractGate::DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraph
     for (size_t i = 0; i < mInputCount; i++)
     {
         SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, 2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
+        pPainter->drawLine(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
     }
 
     // Draw output connector
@@ -242,7 +248,7 @@ void AbstractGate::DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraph
         if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-            pPainter->drawEllipse(2 * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, mHeight + 1, 8, 8);
+            pPainter->drawEllipse(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, mHeight + 1, 8, 8);
         }
     }
 

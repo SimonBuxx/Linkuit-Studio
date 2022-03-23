@@ -80,6 +80,8 @@ protected:
 
     uint8_t mInputCount;
     Direction mDirection;
+
+    uint8_t mInputsSpacing;
 };
 
 #endif // ABSTRACTGATE_H
