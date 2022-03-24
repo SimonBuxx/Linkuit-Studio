@@ -6,159 +6,302 @@
 
 void View::CreateGui()
 {
-    QHBoxLayout *topButtonsLayout = new QHBoxLayout;
+    mRibbonMenu = new QTabWidget;
+    mComponentsPage = new QWidget;
+    mSimulationPage = new QWidget;
+    mClockPage = new QWidget; // Special page only visible when at least one clock is selected
+
+    mRibbonMenu->addTab(mComponentsPage, "Components");
+    mRibbonMenu->addTab(mSimulationPage, "Simulation");
+    //mRibbonMenu->addTab(mClockPage, "Clock");
+    mRibbonMenu->setTabPosition(QTabWidget::TabPosition::North);
+    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab {border-radius: 1px; background: rgb(0, 31, 34); font-family: \"Calibri Light\"; font-size: 18px; color: rgb(255, 255, 255);" \
+    "padding: 8px; width: 110px;} QTabBar::tab:hover {background: rgb(0, 45, 50);} QTabBar::tab:selected {background: rgb(0, 45, 50);} /*QTabBar::tab:last {color: rgb(0, 204, 143);}*/");
+    mRibbonMenu->setStyleSheet("QWidget {background: rgb(0, 45, 50); color: white;} QTabWidget {border: none;} QTabWidget::pane {border: none;}");
+    mRibbonMenu->setFixedHeight(156);
 
     mEditButton = new QToolButton;
     mEditButton->setText(tr("Edit"));
     mEditButton->setCheckable(true);
     mEditButton->setChecked(true);
+    mEditButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);}");
+    mEditButton->setFixedSize(90, 58);
 
     mDeleteButton = new QToolButton;
     mDeleteButton->setText(tr("Delete"));
     mDeleteButton->setCheckable(false);
     mDeleteButton->setChecked(false);
+    mDeleteButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mDeleteButton->setFixedSize(90, 42);
 
     mCopyButton = new QToolButton;
     mCopyButton->setText(tr("Copy"));
     mCopyButton->setCheckable(false);
     mCopyButton->setChecked(false);
+    mCopyButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mCopyButton->setFixedSize(90, 58);
 
     mAddWireButton = new QToolButton;
     mAddWireButton->setText(tr("Wire"));
     mAddWireButton->setCheckable(true);
     mAddWireButton->setChecked(false);
+    mAddWireButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mAddWireButton->setFixedSize(90, 42);
 
-    mAddAndGateButton = new QToolButton;
-    mAddAndGateButton->setText(tr("And Gate"));
-    mAddAndGateButton->setCheckable(true);
-    mAddAndGateButton->setChecked(false);
+    {
+        mAddAndGateButton = new QToolButton;
+        mAddAndGateButton->setText(tr("And Gate"));
+        mAddAndGateButton->setCheckable(true);
+        mAddAndGateButton->setChecked(false);
+        mAddAndGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
 
-    mAddOrGateButton = new QToolButton;
-    mAddOrGateButton->setText(tr("Or Gate"));
-    mAddOrGateButton->setCheckable(true);
-    mAddOrGateButton->setChecked(false);
+        QPixmap pixmap(":/images/icons/and_gate.png");
+        mAddAndGateButton->setIcon(QIcon(pixmap));
+        mAddAndGateButton->setIconSize(pixmap.rect().size());
+        mAddAndGateButton->setFixedSize(90, 106);
+    }
 
-    mAddXorGateButton = new QToolButton;
-    mAddXorGateButton->setText(tr("Xor Gate"));
-    mAddXorGateButton->setCheckable(true);
-    mAddXorGateButton->setChecked(false);
+    {
+        mAddOrGateButton = new QToolButton;
+        mAddOrGateButton->setText(tr("Or Gate"));
+        mAddOrGateButton->setCheckable(true);
+        mAddOrGateButton->setChecked(false);
+        mAddOrGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
 
-    mAddNotGateButton = new QToolButton;
-    mAddNotGateButton->setText(tr("Not Gate"));
-    mAddNotGateButton->setCheckable(true);
-    mAddNotGateButton->setChecked(false);
+        QPixmap pixmap(":/images/icons/or_gate.png");
+        mAddOrGateButton->setIcon(QIcon(pixmap));
+        mAddOrGateButton->setIconSize(pixmap.rect().size());
+        mAddOrGateButton->setFixedSize(90, 106);
+    }
 
-    mAddInputButton = new QToolButton;
-    mAddInputButton->setText(tr("Input"));
-    mAddInputButton->setCheckable(true);
-    mAddInputButton->setChecked(false);
+    {
+        mAddXorGateButton = new QToolButton;
+        mAddXorGateButton->setText(tr("Xor Gate"));
+        mAddXorGateButton->setCheckable(true);
+        mAddXorGateButton->setChecked(false);
+        mAddXorGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
 
-    mAddButtonButton = new QToolButton;
-    mAddButtonButton->setText(tr("Button"));
-    mAddButtonButton->setCheckable(true);
-    mAddButtonButton->setChecked(false);
+        QPixmap pixmap(":/images/icons/xor_gate.png");
+        mAddXorGateButton->setIcon(QIcon(pixmap));
+        mAddXorGateButton->setIconSize(pixmap.rect().size());
+        mAddXorGateButton->setFixedSize(90, 106);
+    }
+
+    {
+        mAddNotGateButton = new QToolButton;
+        mAddNotGateButton->setText(tr("Not Gate"));
+        mAddNotGateButton->setCheckable(true);
+        mAddNotGateButton->setChecked(false);
+        mAddNotGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+
+        QPixmap pixmap(":/images/icons/not_gate.png");
+        mAddNotGateButton->setIcon(QIcon(pixmap));
+        mAddNotGateButton->setIconSize(pixmap.rect().size());
+        mAddNotGateButton->setFixedSize(90, 58);
+    }
+
+    {
+        mAddInputButton = new QToolButton;
+        mAddInputButton->setText(tr("Input"));
+        mAddInputButton->setCheckable(true);
+        mAddInputButton->setChecked(false);
+        mAddInputButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+
+        QPixmap pixmap(":/images/icons/input.png");
+        mAddInputButton->setIcon(QIcon(pixmap));
+        mAddInputButton->setIconSize(pixmap.rect().size());
+        mAddInputButton->setFixedSize(42, 42);
+    }
+
+    {
+        mAddButtonButton = new QToolButton;
+        mAddButtonButton->setText(tr("Button"));
+        mAddButtonButton->setCheckable(true);
+        mAddButtonButton->setChecked(false);
+        mAddButtonButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+
+        QPixmap pixmap(":/images/icons/button.png");
+        mAddButtonButton->setIcon(QIcon(pixmap));
+        mAddButtonButton->setIconSize(pixmap.rect().size());
+        mAddButtonButton->setFixedSize(42, 42);
+    }
 
     mAddClockButton = new QToolButton;
     mAddClockButton->setText(tr("Clock"));
     mAddClockButton->setCheckable(true);
     mAddClockButton->setChecked(false);
+    mAddClockButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mAddClockButton->setFixedSize(90, 58);
 
     mAddOutputButton = new QToolButton;
     mAddOutputButton->setText(tr("Output"));
     mAddOutputButton->setCheckable(true);
     mAddOutputButton->setChecked(false);
+    mAddOutputButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mAddOutputButton->setFixedSize(90, 42);
 
     mAddTextLabelButton = new QToolButton;
     mAddTextLabelButton->setText(tr("Label"));
     mAddTextLabelButton->setCheckable(true);
     mAddTextLabelButton->setChecked(false);
+    mAddTextLabelButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mAddTextLabelButton->setFixedSize(90, 106);
 
-    mAddHalfAdderButton = new QToolButton;
-    mAddHalfAdderButton->setText(tr("Half Adder"));
-    mAddHalfAdderButton->setCheckable(true);
-    mAddHalfAdderButton->setChecked(false);
+    {
+        mAddHalfAdderButton = new QToolButton;
+        mAddHalfAdderButton->setText(tr("Half Adder"));
+        mAddHalfAdderButton->setCheckable(true);
+        mAddHalfAdderButton->setChecked(false);
+        mAddHalfAdderButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
 
-    mAddFullAdderButton = new QToolButton;
-    mAddFullAdderButton->setText(tr("Full Adder"));
-    mAddFullAdderButton->setCheckable(true);
-    mAddFullAdderButton->setChecked(false);
+        QPixmap pixmap(":/images/icons/half_adder.png");
+        mAddHalfAdderButton->setIcon(QIcon(pixmap));
+        mAddHalfAdderButton->setIconSize(pixmap.rect().size());
+        mAddHalfAdderButton->setFixedSize(90, 106);
+    }
 
-    mAddRsFlipFlopButton = new QToolButton;
-    mAddRsFlipFlopButton->setText(tr("RS Flip-Flop"));
-    mAddRsFlipFlopButton->setCheckable(true);
-    mAddRsFlipFlopButton->setChecked(false);
+    {
+        mAddFullAdderButton = new QToolButton;
+        mAddFullAdderButton->setText(tr("Full Adder"));
+        mAddFullAdderButton->setCheckable(true);
+        mAddFullAdderButton->setChecked(false);
+        mAddFullAdderButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
 
-    mAddDFlipFlopButton = new QToolButton;
-    mAddDFlipFlopButton->setText(tr("D Flip-Flop"));
-    mAddDFlipFlopButton->setCheckable(true);
-    mAddDFlipFlopButton->setChecked(false);
+        QPixmap pixmap(":/images/icons/full_adder.png");
+        mAddFullAdderButton->setIcon(QIcon(pixmap));
+        mAddFullAdderButton->setIconSize(pixmap.rect().size());
+        mAddFullAdderButton->setFixedSize(90, 106);
+    }
+
+    {
+        mAddRsFlipFlopButton = new QToolButton;
+        mAddRsFlipFlopButton->setText(tr("RS Flip-Flop"));
+        mAddRsFlipFlopButton->setCheckable(true);
+        mAddRsFlipFlopButton->setChecked(false);
+        mAddRsFlipFlopButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+
+        QPixmap pixmap(":/images/icons/rs_flipflop.png");
+        mAddRsFlipFlopButton->setIcon(QIcon(pixmap));
+        mAddRsFlipFlopButton->setIconSize(pixmap.rect().size());
+        mAddRsFlipFlopButton->setFixedSize(90, 106);
+    }
+
+    {
+        mAddDFlipFlopButton = new QToolButton;
+        mAddDFlipFlopButton->setText(tr("D Flip-Flop"));
+        mAddDFlipFlopButton->setCheckable(true);
+        mAddDFlipFlopButton->setChecked(false);
+        mAddDFlipFlopButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+
+        QPixmap pixmap(":/images/icons/d_flipflop.png");
+        mAddDFlipFlopButton->setIcon(QIcon(pixmap));
+        mAddDFlipFlopButton->setIconSize(pixmap.rect().size());
+        mAddDFlipFlopButton->setFixedSize(90, 106);
+    }
 
     mUndoButton = new QToolButton;
     mUndoButton->setText(tr("Undo"));
     mUndoButton->setCheckable(false);
     mUndoButton->setChecked(false);
     mUndoButton->setEnabled(false);
+    mUndoButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mUndoButton->setFixedSize(90, 58);
 
     mRedoButton = new QToolButton;
     mRedoButton->setText(tr("Redo"));
     mRedoButton->setCheckable(false);
     mRedoButton->setChecked(false);
     mRedoButton->setEnabled(false);
+    mRedoButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mRedoButton->setFixedSize(90, 42);
 
     mSimulationButton = new QToolButton;
     mSimulationButton->setText(tr("Start"));
     mSimulationButton->setCheckable(false);
     mSimulationButton->setChecked(false);
+    mSimulationButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+    mSimulationButton->setFixedSize(90, 106);
 
-    mTopButtonsGroup = new QButtonGroup(this);
-    mTopButtonsGroup->setExclusive(true);
-    mTopButtonsGroup->addButton(mEditButton);
-    mTopButtonsGroup->addButton(mDeleteButton);
-    mTopButtonsGroup->addButton(mCopyButton);
-    mTopButtonsGroup->addButton(mAddWireButton);
-    mTopButtonsGroup->addButton(mAddAndGateButton);
-    mTopButtonsGroup->addButton(mAddOrGateButton);
-    mTopButtonsGroup->addButton(mAddXorGateButton);
-    mTopButtonsGroup->addButton(mAddNotGateButton);
-    mTopButtonsGroup->addButton(mAddInputButton);
-    mTopButtonsGroup->addButton(mAddButtonButton);
-    mTopButtonsGroup->addButton(mAddClockButton);
-    mTopButtonsGroup->addButton(mAddOutputButton);
-    mTopButtonsGroup->addButton(mAddTextLabelButton);
-    mTopButtonsGroup->addButton(mAddHalfAdderButton);
-    mTopButtonsGroup->addButton(mAddFullAdderButton);
-    mTopButtonsGroup->addButton(mAddRsFlipFlopButton);
-    mTopButtonsGroup->addButton(mAddDFlipFlopButton);
-    mTopButtonsGroup->addButton(mUndoButton);
-    mTopButtonsGroup->addButton(mRedoButton);
-    mTopButtonsGroup->addButton(mSimulationButton);
+    mComponentsButtonGroup = new QButtonGroup(this);
+    mComponentsButtonGroup->setExclusive(true);
+    mComponentsButtonGroup->addButton(mEditButton);
+    mComponentsButtonGroup->addButton(mDeleteButton);
+    mComponentsButtonGroup->addButton(mCopyButton);
+    mComponentsButtonGroup->addButton(mAddWireButton);
+    mComponentsButtonGroup->addButton(mAddAndGateButton);
+    mComponentsButtonGroup->addButton(mAddOrGateButton);
+    mComponentsButtonGroup->addButton(mAddXorGateButton);
+    mComponentsButtonGroup->addButton(mAddNotGateButton);
+    mComponentsButtonGroup->addButton(mAddInputButton);
+    mComponentsButtonGroup->addButton(mAddButtonButton);
+    mComponentsButtonGroup->addButton(mAddClockButton);
+    mComponentsButtonGroup->addButton(mAddOutputButton);
+    mComponentsButtonGroup->addButton(mAddTextLabelButton);
+    mComponentsButtonGroup->addButton(mAddHalfAdderButton);
+    mComponentsButtonGroup->addButton(mAddFullAdderButton);
+    mComponentsButtonGroup->addButton(mAddRsFlipFlopButton);
+    mComponentsButtonGroup->addButton(mAddDFlipFlopButton);
+    mComponentsButtonGroup->addButton(mUndoButton);
+    mComponentsButtonGroup->addButton(mRedoButton);
 
-    topButtonsLayout->addStretch();
-    topButtonsLayout->addWidget(mEditButton);
-    topButtonsLayout->addWidget(mDeleteButton);
-    topButtonsLayout->addWidget(mCopyButton);
-    topButtonsLayout->addWidget(mAddWireButton);
-    topButtonsLayout->addWidget(mAddAndGateButton);
-    topButtonsLayout->addWidget(mAddOrGateButton);
-    topButtonsLayout->addWidget(mAddXorGateButton);
-    topButtonsLayout->addWidget(mAddNotGateButton);
-    topButtonsLayout->addWidget(mAddInputButton);
-    topButtonsLayout->addWidget(mAddButtonButton);
-    topButtonsLayout->addWidget(mAddClockButton);
-    topButtonsLayout->addWidget(mAddOutputButton);
-    topButtonsLayout->addWidget(mAddTextLabelButton);
-    topButtonsLayout->addWidget(mAddHalfAdderButton);
-    topButtonsLayout->addWidget(mAddFullAdderButton);
-    topButtonsLayout->addWidget(mAddRsFlipFlopButton);
-    topButtonsLayout->addWidget(mAddDFlipFlopButton);
-    topButtonsLayout->addWidget(mUndoButton);
-    topButtonsLayout->addWidget(mRedoButton);
-    topButtonsLayout->addWidget(mSimulationButton);
-    topButtonsLayout->addStretch();
+    auto componentsMenuLayout = new QGridLayout;
+
+    {
+        componentsMenuLayout->setAlignment(Qt::AlignLeft);
+        componentsMenuLayout->setContentsMargins(10, 10, 0, 0);
+        componentsMenuLayout->addWidget(mEditButton, 0, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mDeleteButton, 1, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mCopyButton, 0, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddWireButton, 1, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddAndGateButton, 0, 2, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddOrGateButton, 0, 3, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddXorGateButton, 0, 4, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddNotGateButton, 0, 5, 1, 2, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddInputButton, 1, 5, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddButtonButton, 1, 6, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddClockButton, 0, 7, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddOutputButton, 1, 7, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddTextLabelButton, 0, 8, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddHalfAdderButton, 0, 9, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddFullAdderButton, 0, 10, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddRsFlipFlopButton, 0, 11, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddDFlipFlopButton, 0, 12, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mUndoButton, 0, 13, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mRedoButton, 1, 13, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+    }
+
+    auto simulationMenuLayout = new QGridLayout;
+
+    {
+        simulationMenuLayout->setAlignment(Qt::AlignLeft);
+        simulationMenuLayout->setContentsMargins(10, 10, 0, 0);
+        simulationMenuLayout->addWidget(mSimulationButton, 0, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+    }
 
     mZoomLabel = new QLabel(this);
     mZoomLabel->setText("100%");
-    mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: #00583D; font-family: \"Calibri Light\"; font-size: 16px; color: #fff;}");
+    mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: rgb(0, 204, 143); \
+        font-family: \"Calibri Light\"; font-size: 16px; color: rgb(0, 39, 43); border-radius: 2px;}");
 
     QMovie *procImage = new QMovie(QString(":/images/loading.gif"));
     mProcessingOverlay = new QLabel();
@@ -167,13 +310,18 @@ void View::CreateGui()
     procImage->start();
     mProcessingOverlay->hide();
 
-    QGridLayout *topLayout = new QGridLayout;
-    topLayout->addLayout(topButtonsLayout, 0, 0);
-    topLayout->addWidget(&mGraphicsView, 1, 0);
-    topLayout->addWidget(mProcessingOverlay, 1, 0, Qt::AlignHCenter | Qt::AlignVCenter);
-    topLayout->addWidget(mZoomLabel, 1, 0, Qt::AlignBottom | Qt::AlignLeft);
-    topLayout->setContentsMargins(0, 0, 0, 0);
-    setLayout(topLayout);
+    mComponentsPage->setLayout(componentsMenuLayout);
+    mSimulationPage->setLayout(simulationMenuLayout);
+
+    QGridLayout *mainGridLayout = new QGridLayout;
+
+    mainGridLayout->setSpacing(0);
+    mainGridLayout->addWidget(mRibbonMenu, 0, 0);
+    mainGridLayout->addWidget(&mGraphicsView, 1, 0);
+    mainGridLayout->addWidget(mProcessingOverlay, 1, 0, Qt::AlignHCenter | Qt::AlignVCenter);
+    mainGridLayout->addWidget(mZoomLabel, 1, 0, Qt::AlignBottom | Qt::AlignLeft);
+    mainGridLayout->setContentsMargins(0, 0, 0, 0);
+    setLayout(mainGridLayout);
 
     mGraphicsView.stackUnder(mProcessingOverlay);
     mGraphicsView.stackUnder(mZoomLabel);
@@ -283,7 +431,7 @@ void View::PrepareGuiForEditing()
 
 void View::SetGuiEnabled(bool pEnabled)
 {
-    for (auto& button : mTopButtonsGroup->buttons())
+    for (auto& button : mComponentsButtonGroup->buttons())
     {
         button->setEnabled(pEnabled);
     }

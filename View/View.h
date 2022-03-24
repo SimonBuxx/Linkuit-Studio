@@ -8,7 +8,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QPropertyAnimation>
+#include <QTabWidget>
 #include <QButtonGroup>
+#include <QGroupBox>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -166,8 +168,13 @@ protected:
     QGraphicsScene *mScene;
     CoreLogic &mCoreLogic;
 
+    QTabWidget *mRibbonMenu;
+    QWidget *mComponentsPage;
+    QWidget *mSimulationPage;
+    QWidget *mClockPage;
+
     // GUI buttons
-    QButtonGroup *mTopButtonsGroup;
+    QButtonGroup *mComponentsButtonGroup;
 
     QToolButton *mEditButton;
     QToolButton *mDeleteButton;

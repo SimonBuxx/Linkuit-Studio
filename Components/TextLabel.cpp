@@ -119,7 +119,7 @@ void TextLabel::UpdatePlainTextEditSize()
     update();
 
     mHeight = std::ceil((newHeight - 5) / canvas::GRID_SIZE) * canvas::GRID_SIZE;
-    mWidth = mPlainTextEdit->document()->size().width() + canvas::GRID_SIZE * 0.75f;
+    mWidth = mPlainTextEdit->document()->size().width() + canvas::GRID_SIZE * 0.5f;
 
     this->setOpacity(1);
     update();

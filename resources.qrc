@@ -4,5 +4,15 @@
         <file>images/linkuit_logo.png</file>
         <file>images/loading.gif</file>
         <file>images/linkuit_icon4.png</file>
+        <file>images/icons/and_gate.png</file>
+        <file>images/icons/d_flipflop.png</file>
+        <file>images/icons/full_adder.png</file>
+        <file>images/icons/half_adder.png</file>
+        <file>images/icons/or_gate.png</file>
+        <file>images/icons/rs_flipflop.png</file>
+        <file>images/icons/xor_gate.png</file>
+        <file>images/icons/button.png</file>
+        <file>images/icons/input.png</file>
+        <file>images/icons/not_gate.png</file>
     </qresource>
 </RCC>
