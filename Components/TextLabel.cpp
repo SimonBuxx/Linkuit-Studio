@@ -26,7 +26,7 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
 
     mPlainTextEdit->setFont(components::text_label::FONT);
     mPlainTextEdit->setStyleSheet(components::text_label::STYLESHEET);
-    mPlainTextEdit->move(5, canvas::GRID_SIZE * -0.5f + 1);
+    mPlainTextEdit->move(10, canvas::GRID_SIZE * -0.5f + 1);
     mPlainTextEdit->setUndoRedoEnabled(false);
     mPlainTextEdit->setContextMenuPolicy(Qt::NoContextMenu);
     mPlainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -37,8 +37,6 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
 
     mPlainTextEditProxy.setWidget(mPlainTextEdit);
 
-    mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-    mPlainTextEdit->setTextInteractionFlags(Qt::TextEditable);
 
 #warning mind label focus when implementing circuit loading
     if (pTakeFocus)
@@ -121,7 +119,7 @@ void TextLabel::UpdatePlainTextEditSize()
     update();
 
     mHeight = std::ceil((newHeight - 5) / canvas::GRID_SIZE) * canvas::GRID_SIZE;
-    mWidth = mPlainTextEdit->document()->size().width() + canvas::GRID_SIZE / 2;
+    mWidth = mPlainTextEdit->document()->size().width() + canvas::GRID_SIZE * 0.75f;
 
     this->setOpacity(1);
     update();
@@ -135,12 +133,23 @@ void TextLabel::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOptio
 
     if (levelOfDetail >= components::DESCRIPTION_TEXT_MIN_LOD)
     {
-        QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::FILL_COLOR, 2, Qt::SolidLine, Qt::FlatCap);
+        {
+            QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::FILL_COLOR, 2, Qt::SolidLine, Qt::SquareCap);
+            pPainter->setPen(pen);
 
-        pPainter->setPen(pen);
-        pPainter->setBrush(Qt::NoBrush);
+            pPainter->drawLine(0, canvas::GRID_SIZE * -0.45f, 0, mHeight - canvas::GRID_SIZE * 0.45f - 1);
+        }
+        {
+            QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR, 1, Qt::SolidLine, Qt::RoundCap);
+            pPainter->setPen(pen);
 
-        pPainter->drawLine(0, canvas::GRID_SIZE * -0.45f, 0, mHeight - canvas::GRID_SIZE * 0.45f);
+            pPainter->drawPoint(4, mHeight / 2 - canvas::GRID_SIZE * 0.45f - 4);
+            pPainter->drawPoint(4, mHeight / 2 - canvas::GRID_SIZE * 0.45f - 1);
+            pPainter->drawPoint(4, mHeight / 2 - canvas::GRID_SIZE * 0.45f + 2);
+            pPainter->drawPoint(6, mHeight / 2 - canvas::GRID_SIZE * 0.45f - 4);
+            pPainter->drawPoint(6, mHeight / 2 - canvas::GRID_SIZE * 0.45f - 1);
+            pPainter->drawPoint(6, mHeight / 2 - canvas::GRID_SIZE * 0.45f + 2);
+        }
     }
 
     if (mPlainTextEdit)
@@ -184,6 +193,12 @@ void PlainTextEdit::focusOutEvent(QFocusEvent *pEvent)
         emit ContentChangedSignal(mLastTextState, document()->toPlainText());
         mLastTextState = document()->toPlainText();
     }
+
+    // Clear selected text
+    auto cursor = textCursor();
+    cursor.movePosition(QTextCursor::End);
+    setTextCursor(cursor);
+
     emit DeselectParentItem();
     QPlainTextEdit::focusOutEvent(pEvent);
 }
@@ -193,4 +208,3 @@ void PlainTextEdit::focusInEvent(QFocusEvent *pEvent)
     emit SelectParentItem();
     QPlainTextEdit::focusInEvent(pEvent);
 }
-

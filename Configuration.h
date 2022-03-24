@@ -106,7 +106,7 @@ namespace text_label
 static const QFont FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr const char* STYLESHEET = "QPlainTextEdit { color: white; background: transparent; border: none; \
-    selection-color: rgb(0, 88, 61); selection-background-color: transparent;}";
+    selection-color: rgb(0, 204, 143); selection-background-color: transparent;}";
 } // namespace
 
 namespace inputs
