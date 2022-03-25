@@ -13,6 +13,8 @@ void View::CreateGui()
 
     mRibbonMenu->addTab(mComponentsPage, "Components");
     mRibbonMenu->addTab(mSimulationPage, "Simulation");
+#warning define behavior for clock tab when multiple clocks are selected
+#warning make clock tab visible/invisible and change stylesheet when selecting/deselecting clock(s)
     //mRibbonMenu->addTab(mClockPage, "Clock");
     mRibbonMenu->setTabPosition(QTabWidget::TabPosition::North);
     mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab {border-radius: 1px; background: rgb(0, 31, 34); font-family: \"Calibri Light\"; font-size: 18px; color: rgb(255, 255, 255);" \
@@ -42,15 +44,24 @@ void View::CreateGui()
     mCopyButton->setChecked(false);
     mCopyButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
         "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
-    mCopyButton->setFixedSize(90, 58);
+    mCopyButton->setFixedSize(90, 42);
 
-    mAddWireButton = new QToolButton;
-    mAddWireButton->setText(tr("Wire"));
-    mAddWireButton->setCheckable(true);
-    mAddWireButton->setChecked(false);
-    mAddWireButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
-    mAddWireButton->setFixedSize(90, 42);
+    {
+        mAddWireButton = new QToolButton;
+        mAddWireButton->setText(tr("Wiring tool"));
+        mAddWireButton->setCheckable(true);
+        mAddWireButton->setChecked(false);
+        mAddWireButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
+
+        QPixmap pixmap(":/images/icons/wire.png");
+        mAddWireButton->setIcon(QIcon(pixmap));
+        mAddWireButton->setIconSize(pixmap.rect().size());
+        mAddWireButton->setFixedSize(90, 58);
+
+        mAddWireButton->setToolTip(tr("Wiring tool"));
+    }
 
     {
         mAddAndGateButton = new QToolButton;
@@ -58,12 +69,15 @@ void View::CreateGui()
         mAddAndGateButton->setCheckable(true);
         mAddAndGateButton->setChecked(false);
         mAddAndGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/and_gate.png");
         mAddAndGateButton->setIcon(QIcon(pixmap));
         mAddAndGateButton->setIconSize(pixmap.rect().size());
         mAddAndGateButton->setFixedSize(90, 106);
+
+        mAddAndGateButton->setToolTip(tr("AND gate"));
     }
 
     {
@@ -72,12 +86,15 @@ void View::CreateGui()
         mAddOrGateButton->setCheckable(true);
         mAddOrGateButton->setChecked(false);
         mAddOrGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/or_gate.png");
         mAddOrGateButton->setIcon(QIcon(pixmap));
         mAddOrGateButton->setIconSize(pixmap.rect().size());
         mAddOrGateButton->setFixedSize(90, 106);
+
+        mAddOrGateButton->setToolTip(tr("OR gate"));
     }
 
     {
@@ -86,12 +103,15 @@ void View::CreateGui()
         mAddXorGateButton->setCheckable(true);
         mAddXorGateButton->setChecked(false);
         mAddXorGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/xor_gate.png");
         mAddXorGateButton->setIcon(QIcon(pixmap));
         mAddXorGateButton->setIconSize(pixmap.rect().size());
         mAddXorGateButton->setFixedSize(90, 106);
+
+        mAddXorGateButton->setToolTip(tr("XOR gate"));
     }
 
     {
@@ -100,12 +120,15 @@ void View::CreateGui()
         mAddNotGateButton->setCheckable(true);
         mAddNotGateButton->setChecked(false);
         mAddNotGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/not_gate.png");
         mAddNotGateButton->setIcon(QIcon(pixmap));
         mAddNotGateButton->setIconSize(pixmap.rect().size());
         mAddNotGateButton->setFixedSize(90, 58);
+
+        mAddNotGateButton->setToolTip(tr("NOT gate"));
     }
 
     {
@@ -114,12 +137,15 @@ void View::CreateGui()
         mAddInputButton->setCheckable(true);
         mAddInputButton->setChecked(false);
         mAddInputButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/input.png");
         mAddInputButton->setIcon(QIcon(pixmap));
         mAddInputButton->setIconSize(pixmap.rect().size());
         mAddInputButton->setFixedSize(42, 42);
+
+        mAddInputButton->setToolTip(tr("Input"));
     }
 
     {
@@ -128,37 +154,67 @@ void View::CreateGui()
         mAddButtonButton->setCheckable(true);
         mAddButtonButton->setChecked(false);
         mAddButtonButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/button.png");
         mAddButtonButton->setIcon(QIcon(pixmap));
         mAddButtonButton->setIconSize(pixmap.rect().size());
         mAddButtonButton->setFixedSize(42, 42);
+
+        mAddButtonButton->setToolTip(tr("Button"));
     }
 
-    mAddClockButton = new QToolButton;
-    mAddClockButton->setText(tr("Clock"));
-    mAddClockButton->setCheckable(true);
-    mAddClockButton->setChecked(false);
-    mAddClockButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
-    mAddClockButton->setFixedSize(90, 58);
+    {
+        mAddClockButton = new QToolButton;
+        mAddClockButton->setText(tr("Clock"));
+        mAddClockButton->setCheckable(true);
+        mAddClockButton->setChecked(false);
+        mAddClockButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
-    mAddOutputButton = new QToolButton;
-    mAddOutputButton->setText(tr("Output"));
-    mAddOutputButton->setCheckable(true);
-    mAddOutputButton->setChecked(false);
-    mAddOutputButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
-    mAddOutputButton->setFixedSize(90, 42);
+        QPixmap pixmap(":/images/icons/clock.png");
+        mAddClockButton->setIcon(QIcon(pixmap));
+        mAddClockButton->setIconSize(pixmap.rect().size());
+        mAddClockButton->setFixedSize(90, 58);
 
-    mAddTextLabelButton = new QToolButton;
-    mAddTextLabelButton->setText(tr("Label"));
-    mAddTextLabelButton->setCheckable(true);
-    mAddTextLabelButton->setChecked(false);
-    mAddTextLabelButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-        "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
-    mAddTextLabelButton->setFixedSize(90, 106);
+        mAddClockButton->setToolTip(tr("Clock"));
+    }
+
+    {
+        mAddOutputButton = new QToolButton;
+        mAddOutputButton->setText(tr("Output"));
+        mAddOutputButton->setCheckable(true);
+        mAddOutputButton->setChecked(false);
+        mAddOutputButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
+
+        QPixmap pixmap(":/images/icons/output.png");
+        mAddOutputButton->setIcon(QIcon(pixmap));
+        mAddOutputButton->setIconSize(pixmap.rect().size());
+        mAddOutputButton->setFixedSize(90, 42);
+
+        mAddOutputButton->setToolTip(tr("Output"));
+    }
+
+    {
+        mAddTextLabelButton = new QToolButton;
+        mAddTextLabelButton->setText(tr("Label"));
+        mAddTextLabelButton->setCheckable(true);
+        mAddTextLabelButton->setChecked(false);
+        mAddTextLabelButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
+
+        QPixmap pixmap(":/images/icons/label.png");
+        mAddTextLabelButton->setIcon(QIcon(pixmap));
+        mAddTextLabelButton->setIconSize(pixmap.rect().size());
+        mAddTextLabelButton->setFixedSize(90, 106);
+
+        mAddTextLabelButton->setToolTip(tr("Text label"));
+    }
 
     {
         mAddHalfAdderButton = new QToolButton;
@@ -166,12 +222,15 @@ void View::CreateGui()
         mAddHalfAdderButton->setCheckable(true);
         mAddHalfAdderButton->setChecked(false);
         mAddHalfAdderButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/half_adder.png");
         mAddHalfAdderButton->setIcon(QIcon(pixmap));
         mAddHalfAdderButton->setIconSize(pixmap.rect().size());
         mAddHalfAdderButton->setFixedSize(90, 106);
+
+        mAddHalfAdderButton->setToolTip(tr("Half adder"));
     }
 
     {
@@ -180,12 +239,15 @@ void View::CreateGui()
         mAddFullAdderButton->setCheckable(true);
         mAddFullAdderButton->setChecked(false);
         mAddFullAdderButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/full_adder.png");
         mAddFullAdderButton->setIcon(QIcon(pixmap));
         mAddFullAdderButton->setIconSize(pixmap.rect().size());
         mAddFullAdderButton->setFixedSize(90, 106);
+
+        mAddFullAdderButton->setToolTip(tr("Full adder"));
     }
 
     {
@@ -194,12 +256,15 @@ void View::CreateGui()
         mAddRsFlipFlopButton->setCheckable(true);
         mAddRsFlipFlopButton->setChecked(false);
         mAddRsFlipFlopButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/rs_flipflop.png");
         mAddRsFlipFlopButton->setIcon(QIcon(pixmap));
         mAddRsFlipFlopButton->setIconSize(pixmap.rect().size());
         mAddRsFlipFlopButton->setFixedSize(90, 106);
+
+        mAddRsFlipFlopButton->setToolTip(tr("RS flip-flop"));
     }
 
     {
@@ -208,12 +273,15 @@ void View::CreateGui()
         mAddDFlipFlopButton->setCheckable(true);
         mAddDFlipFlopButton->setChecked(false);
         mAddDFlipFlopButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
-            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;}");
+            "QToolButton:hover {border: 1px solid rgb(0, 204, 143);} QToolButton:checked {border: 1px solid white;} " \
+            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: \"Calibri Light\"; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/d_flipflop.png");
         mAddDFlipFlopButton->setIcon(QIcon(pixmap));
         mAddDFlipFlopButton->setIconSize(pixmap.rect().size());
         mAddDFlipFlopButton->setFixedSize(90, 106);
+
+        mAddDFlipFlopButton->setToolTip(tr("D flip-flop"));
     }
 
     mUndoButton = new QToolButton;
@@ -261,6 +329,8 @@ void View::CreateGui()
     mComponentsButtonGroup->addButton(mAddFullAdderButton);
     mComponentsButtonGroup->addButton(mAddRsFlipFlopButton);
     mComponentsButtonGroup->addButton(mAddDFlipFlopButton);
+
+#warning remove undo and redo buttons from components tab
     mComponentsButtonGroup->addButton(mUndoButton);
     mComponentsButtonGroup->addButton(mRedoButton);
 
@@ -271,8 +341,8 @@ void View::CreateGui()
         componentsMenuLayout->setContentsMargins(10, 10, 0, 0);
         componentsMenuLayout->addWidget(mEditButton, 0, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
         componentsMenuLayout->addWidget(mDeleteButton, 1, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mCopyButton, 0, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddWireButton, 1, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mAddWireButton, 0, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        componentsMenuLayout->addWidget(mCopyButton, 1, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
         componentsMenuLayout->addWidget(mAddAndGateButton, 0, 2, 2, 1, Qt::AlignLeft | Qt::AlignTop);
         componentsMenuLayout->addWidget(mAddOrGateButton, 0, 3, 2, 1, Qt::AlignLeft | Qt::AlignTop);
         componentsMenuLayout->addWidget(mAddXorGateButton, 0, 4, 2, 1, Qt::AlignLeft | Qt::AlignTop);
@@ -286,6 +356,8 @@ void View::CreateGui()
         componentsMenuLayout->addWidget(mAddFullAdderButton, 0, 10, 2, 1, Qt::AlignLeft | Qt::AlignTop);
         componentsMenuLayout->addWidget(mAddRsFlipFlopButton, 0, 11, 2, 1, Qt::AlignLeft | Qt::AlignTop);
         componentsMenuLayout->addWidget(mAddDFlipFlopButton, 0, 12, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+
+#warning remove undo and redo buttons from components tab
         componentsMenuLayout->addWidget(mUndoButton, 0, 13, 1, 1, Qt::AlignLeft | Qt::AlignTop);
         componentsMenuLayout->addWidget(mRedoButton, 1, 13, 1, 1, Qt::AlignLeft | Qt::AlignTop);
     }
@@ -295,13 +367,15 @@ void View::CreateGui()
     {
         simulationMenuLayout->setAlignment(Qt::AlignLeft);
         simulationMenuLayout->setContentsMargins(10, 10, 0, 0);
+
+#warning add simulation button outside of the ribbon menu for easy access
         simulationMenuLayout->addWidget(mSimulationButton, 0, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
     }
 
     mZoomLabel = new QLabel(this);
     mZoomLabel->setText("100%");
     mZoomLabel->setStyleSheet("QWidget{padding: 5px; margin: 0 0 10px 10px; background: rgb(0, 204, 143); \
-        font-family: \"Calibri Light\"; font-size: 16px; color: rgb(0, 39, 43); border-radius: 2px;}");
+        font-family: \"Calibri Light\"; font-size: 16px; color: rgb(255, 255, 255); border-radius: 1px;}");
 
     QMovie *procImage = new QMovie(QString(":/images/loading.gif"));
     mProcessingOverlay = new QLabel();

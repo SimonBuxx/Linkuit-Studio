@@ -14,5 +14,9 @@
         <file>images/icons/button.png</file>
         <file>images/icons/input.png</file>
         <file>images/icons/not_gate.png</file>
+        <file>images/icons/clock.png</file>
+        <file>images/icons/label.png</file>
+        <file>images/icons/output.png</file>
+        <file>images/icons/wire.png</file>
     </qresource>
 </RCC>
