@@ -111,6 +111,9 @@ public slots:
 
     void OnProcessingTimeout(void);
 
+    /// \brief Checks if a special tab should be displayed
+    void SelectionChanged(void);
+
 protected:
     /// \brief Connects to the View object via signals and slots
     void ConnectToView(void);

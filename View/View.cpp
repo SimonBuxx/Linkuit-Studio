@@ -54,6 +54,8 @@ void View::SetScene(QGraphicsScene &pScene)
     mGraphicsView.setScene(&pScene);
     mGraphicsView.centerOn(0, 0);
 
+    QObject::connect(mScene, &QGraphicsScene::selectionChanged, &mCoreLogic, &CoreLogic::SelectionChanged);
+
     QTimer::singleShot(0, &mGraphicsView, [&](){
         mGraphicsView.setFocus();
     });
@@ -173,6 +175,38 @@ void View::OnSimulationStop()
 {
     PrepareGuiForEditing();
     mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
+}
+
+void View::ShowSpecialTab(gui::MenuTab mTab)
+{
+    switch(mTab)
+    {
+        case gui::MenuTab::CLOCK:
+        {
+            if (!mClockPage->isVisible())
+            {
+                mRibbonMenu->setTabVisible(mRibbonMenu->indexOf(mClockPage), true);
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab {border-radius: 1px; background: rgb(0, 31, 34); font-family: 'Quicksand Medium'; font-size: 16px; color: rgb(255, 255, 255);" \
+    "height: 30px; width: 120px;} QTabBar::tab:hover {background: rgb(0, 45, 50);} QTabBar::tab:selected {background: rgb(0, 45, 50);} QTabBar::tab:last {color: rgb(0, 204, 143);}");
+    mRibbonMenu->setStyleSheet("QWidget {background: rgb(0, 45, 50); color: white;} QTabWidget {border: none;} QTabWidget::pane {border: none;}");
+}
+
+void View::HideSpecialTab()
+{
+    mRibbonMenu->setTabVisible(mRibbonMenu->indexOf(mClockPage), false);
+
+    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab {border-radius: 1px; background: rgb(0, 31, 34); font-family: 'Quicksand Medium'; font-size: 16px; color: rgb(255, 255, 255);" \
+    "height: 30px; width: 120px;} QTabBar::tab:hover {background: rgb(0, 45, 50);} QTabBar::tab:selected {background: rgb(0, 45, 50);}");
+    mRibbonMenu->setStyleSheet("QWidget {background: rgb(0, 45, 50); color: white;} QTabWidget {border: none;} QTabWidget::pane {border: none;}");
 }
 
 void View::SetupMatrix()

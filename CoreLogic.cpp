@@ -99,7 +99,7 @@ ComponentType CoreLogic::GetSelectedComponentType() const
     return mComponentType;
 }
 
-bool CoreLogic::IsSimulationRunning(void) const
+bool CoreLogic::IsSimulationRunning() const
 {
     return (mControlMode == ControlMode::SIMULATION);
 }
@@ -109,12 +109,12 @@ void CoreLogic::OnPropagationTimeout()
     emit SimulationAdvanceSignal();
 }
 
-bool CoreLogic::IsUndoQueueEmpty(void) const
+bool CoreLogic::IsUndoQueueEmpty() const
 {
     return mUndoQueue.empty();
 }
 
-bool CoreLogic::IsRedoQueueEmpty(void) const
+bool CoreLogic::IsRedoQueueEmpty() const
 {
     return mRedoQueue.empty();
 }
@@ -123,6 +123,22 @@ void CoreLogic::SelectComponentType(ComponentType pComponentType)
 {
     mComponentType = pComponentType;
     emit ComponentTypeChangedSignal(mComponentType);
+}
+
+void CoreLogic::SelectionChanged()
+{
+    const auto&& selection = mView.Scene()->selectedItems();
+
+    if (selection.size() == 1)
+    {
+        if (dynamic_cast<LogicClock*>(selection[0]) != nullptr)
+        {
+            mView.ShowSpecialTab(gui::MenuTab::CLOCK);
+            return;
+        }
+    }
+
+    mView.HideSpecialTab();
 }
 
 IBaseComponent* CoreLogic::GetItem()

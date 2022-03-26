@@ -85,4 +85,14 @@ enum class ConfigType
 };
 } // namespace
 
+namespace gui
+{
+enum class MenuTab
+{
+    COMPONENTS,
+    SIMULATION,
+    CLOCK
+};
+} // namespace
+
 #endif // HELPERSTRUCTURES_H

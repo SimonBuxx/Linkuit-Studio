@@ -120,6 +120,10 @@ public:
 
     void FadeInProcessingOverlay(void);
 
+    void ShowSpecialTab(gui::MenuTab mTab);
+
+    void HideSpecialTab(void);
+
 public slots:
     /// \brief Increases the zoom level and updates the displayed percentage
     /// \param pAmount: The amount to increase the zoom by
