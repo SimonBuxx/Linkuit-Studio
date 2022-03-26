@@ -104,7 +104,7 @@ static constexpr uint32_t SIZE = 15;
 
 namespace text_label
 {
-static const QFont FONT("Calibri Light", 10);
+static const QFont FONT("Quicksand Medium", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr const char* STYLESHEET = "QPlainTextEdit { color: white; background: transparent; border: none; \
     selection-color: rgb(0, 204, 143); selection-background-color: transparent;}";
@@ -130,7 +130,7 @@ static constexpr const char* FULL_ADDER_TEXT = "FA";
 static constexpr const char* RS_FLIPFLOP_TEXT = "RS";
 static constexpr const char* D_FLIPFLOP_TEXT = "FF";
 
-static const QFont FONT("Calibri Light", 20);
+static const QFont FONT("Quicksand Medium", 20);
 static const QFont CONNECTOR_FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr QColor SMALL_TEXT_FONT_COLOR(225, 225, 225);

@@ -18,5 +18,6 @@
         <file>images/icons/label.png</file>
         <file>images/icons/output.png</file>
         <file>images/icons/wire.png</file>
+        <file>fonts/Quicksand-Medium.ttf</file>
     </qresource>
 </RCC>
