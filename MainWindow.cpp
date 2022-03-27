@@ -17,7 +17,7 @@ MainWindow::MainWindow(QGraphicsScene &pScene):
     mMainLayout->setContentsMargins(0, 10, 0, 0);
 
     setWindowTitle(tr(gui::WINDOW_TITLE));
-    setWindowIcon(QIcon(":/images/linkuit_icon4.png"));
+    setWindowIcon(QIcon(":/images/linkuit_icon5.png"));
     setStyleSheet("QWidget {background: rgb(255, 255, 255);}");
 
     mMainLayout->addWidget(&mView);

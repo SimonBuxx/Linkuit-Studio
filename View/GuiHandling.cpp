@@ -8,6 +8,8 @@ void View::CreateGui()
 {
     mRibbonMenu = new QTabWidget;
 
+#warning disable all tabs while loading or all individual elements (plus styling)
+
     // Standard tabs
     mComponentsPage = new QWidget;
     mRibbonMenu->addTab(mComponentsPage, "Toolbox");
@@ -57,7 +59,7 @@ void View::CreateGui()
         mAddWireButton->setChecked(false);
         mAddWireButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/wire.png");
         mAddWireButton->setIcon(QIcon(pixmap));
@@ -74,7 +76,7 @@ void View::CreateGui()
         mAddAndGateButton->setChecked(false);
         mAddAndGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/and_gate.png");
         mAddAndGateButton->setIcon(QIcon(pixmap));
@@ -91,7 +93,7 @@ void View::CreateGui()
         mAddOrGateButton->setChecked(false);
         mAddOrGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/or_gate.png");
         mAddOrGateButton->setIcon(QIcon(pixmap));
@@ -108,7 +110,7 @@ void View::CreateGui()
         mAddXorGateButton->setChecked(false);
         mAddXorGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/xor_gate.png");
         mAddXorGateButton->setIcon(QIcon(pixmap));
@@ -125,7 +127,7 @@ void View::CreateGui()
         mAddNotGateButton->setChecked(false);
         mAddNotGateButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/not_gate.png");
         mAddNotGateButton->setIcon(QIcon(pixmap));
@@ -142,7 +144,7 @@ void View::CreateGui()
         mAddInputButton->setChecked(false);
         mAddInputButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/input.png");
         mAddInputButton->setIcon(QIcon(pixmap));
@@ -159,7 +161,7 @@ void View::CreateGui()
         mAddButtonButton->setChecked(false);
         mAddButtonButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/button.png");
         mAddButtonButton->setIcon(QIcon(pixmap));
@@ -176,7 +178,7 @@ void View::CreateGui()
         mAddClockButton->setChecked(false);
         mAddClockButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/clock.png");
         mAddClockButton->setIcon(QIcon(pixmap));
@@ -193,7 +195,7 @@ void View::CreateGui()
         mAddOutputButton->setChecked(false);
         mAddOutputButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/output.png");
         mAddOutputButton->setIcon(QIcon(pixmap));
@@ -210,7 +212,7 @@ void View::CreateGui()
         mAddTextLabelButton->setChecked(false);
         mAddTextLabelButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/label.png");
         mAddTextLabelButton->setIcon(QIcon(pixmap));
@@ -227,7 +229,7 @@ void View::CreateGui()
         mAddHalfAdderButton->setChecked(false);
         mAddHalfAdderButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/half_adder.png");
         mAddHalfAdderButton->setIcon(QIcon(pixmap));
@@ -244,7 +246,7 @@ void View::CreateGui()
         mAddFullAdderButton->setChecked(false);
         mAddFullAdderButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/full_adder.png");
         mAddFullAdderButton->setIcon(QIcon(pixmap));
@@ -261,7 +263,7 @@ void View::CreateGui()
         mAddRsFlipFlopButton->setChecked(false);
         mAddRsFlipFlopButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/rs_flipflop.png");
         mAddRsFlipFlopButton->setIcon(QIcon(pixmap));
@@ -278,7 +280,7 @@ void View::CreateGui()
         mAddDFlipFlopButton->setChecked(false);
         mAddDFlipFlopButton->setStyleSheet("QToolButton {border: 1px solid rgb(0, 39, 43); padding: 0; border-radius: 1px; background: rgb(0, 39, 43);} " \
             "QToolButton:hover {border: 1px solid rgb(0, 143, 100);} QToolButton:checked {border: 1px solid rgb(0, 204, 143);} " \
-            "QToolTip {background-color: rgb(0, 204, 143); color: rgb(255, 255, 255); border: none; border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
+            "QToolTip {background-color: rgb(0, 39, 43); color: rgb(255, 255, 255); border: 1px solid rgb(0, 204, 143); border-radius: 1px; font-family: 'Quicksand Medium'; font-size: 16px;}");
 
         QPixmap pixmap(":/images/icons/d_flipflop.png");
         mAddDFlipFlopButton->setIcon(QIcon(pixmap));

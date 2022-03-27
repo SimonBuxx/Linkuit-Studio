@@ -75,8 +75,7 @@ void TextLabel::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
         if (mPlainTextEdit != nullptr)
         {
             // Make editable
-            mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-            mPlainTextEdit->setTextInteractionFlags(Qt::TextEditable);
+            mPlainTextEdit->setTextInteractionFlags(Qt::TextEditorInteraction);
             mPlainTextEdit->setCursor(Qt::IBeamCursor);
             mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
         }
