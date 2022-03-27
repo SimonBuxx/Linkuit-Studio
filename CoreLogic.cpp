@@ -227,7 +227,7 @@ ControlMode CoreLogic::GetControlMode()
     return mControlMode;
 }
 
-void CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
+bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 {
     auto item = GetItem();
     Q_ASSERT(item);
@@ -241,10 +241,12 @@ void CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
         auto addedComponents = std::vector<IBaseComponent*>{static_cast<IBaseComponent*>(item)};
         AppendUndo(new UndoAddType(addedComponents));
+        return true;
     }
     else
     {
         delete item;
+        return false;
     }
 }
 
@@ -605,8 +607,7 @@ bool CoreLogic::IsCollidingComponent(QGraphicsItem* pComponent) const
 {
     return (dynamic_cast<IBaseComponent*>(pComponent) != nullptr
             && dynamic_cast<LogicWire*>(pComponent) == nullptr
-            && dynamic_cast<ConPoint*>(pComponent) == nullptr
-            && dynamic_cast<TextLabel*>(pComponent) == nullptr);
+            && dynamic_cast<ConPoint*>(pComponent) == nullptr);
 }
 
 bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const
@@ -1154,8 +1155,16 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
         // Add component at the current position
         if (mControlMode == ControlMode::ADD)
         {
-            AddCurrentTypeComponent(snappedPos);
-            return;
+            const auto&& success = AddCurrentTypeComponent(snappedPos);
+            if (success)
+            {
+                // A new component has been added => clear selection if it wasn't a text label
+                if (mView.Scene()->selectedItems().size() != 1 || dynamic_cast<TextLabel*>(mView.Scene()->selectedItems()[0]) == nullptr)
+                {
+                    mView.Scene()->clearSelection();
+                }
+                return;
+            }
         }
 
         // Start the preview wire at the current position

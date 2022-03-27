@@ -20,8 +20,6 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
 
     mPlainTextEdit->SetLastTextState(pText);
     mPlainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
-    mPlainTextEdit->document()->setPlainText(pText);
-    mPlainTextEdit->document()->setModified(false);
     mPlainTextEdit->document()->setDocumentMargin(1);
 
     mPlainTextEdit->setFont(components::text_label::FONT);
@@ -34,6 +32,8 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
 
     mPlainTextEdit->setCursor(Qt::IBeamCursor);
     mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
+
+    SetTextContent(QString(""));
 
     mPlainTextEditProxy.setWidget(mPlainTextEdit);
 
@@ -110,15 +110,15 @@ void TextLabel::UpdatePlainTextEditSize()
             + (mPlainTextEdit->document()->documentMargin() + mPlainTextEdit->frameWidth()) * 2 + margins.top() + margins.bottom() + 2;
     mPlainTextEdit->setFixedHeight(newHeight);
 
-    // Update QPlainTextEdit width
-    mPlainTextEdit->setFixedWidth(mPlainTextEdit->document()->size().width() + 12);
+    // Update QPlainTextEdit width (Minimum width to provide click space if label is empty)
+    mPlainTextEdit->setFixedWidth(std::max(mPlainTextEdit->document()->size().width() + 12, 20.0));
 
     // Hide temporarily to update canvas after label shrunk
     this->setOpacity(0);
     update();
 
     mHeight = std::ceil((newHeight - 5) / canvas::GRID_SIZE) * canvas::GRID_SIZE;
-    mWidth = mPlainTextEdit->document()->size().width() + canvas::GRID_SIZE * 0.5f;
+    mWidth = mPlainTextEdit->width() + canvas::GRID_SIZE * 0.5f;
 
     this->setOpacity(1);
     update();

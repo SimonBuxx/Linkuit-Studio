@@ -132,6 +132,12 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
             pEvent->accept();
             return;
         }
+        else if (mCoreLogic.GetControlMode() == ControlMode::ADD && mView.Scene()->selectedItems().size() != 1)
+        {
+            /* Only allow dragging of exactly one component (selectedItems().size() == 1),
+               not selecting (selectedItems().size() == 0) or dragging multiple components */
+            return;
+        }
     }
 
     QGraphicsView::mouseMoveEvent(pEvent);

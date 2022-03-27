@@ -40,7 +40,11 @@ public:
 
     void EnterAddControlMode(ComponentType pComponentType);
 
-    void AddCurrentTypeComponent(QPointF pPosition);
+    /// \brief Adds a component of the currently selected type to the scene at position pPosition
+    /// if there is no collision with existing components
+    /// \param pPosition: The position to add the component at
+    /// \return False, if the action has been aborted
+    bool AddCurrentTypeComponent(QPointF pPosition);
 
     void SetComponentInputCount(uint8_t pCount);
 
