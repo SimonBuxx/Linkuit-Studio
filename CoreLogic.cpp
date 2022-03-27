@@ -65,6 +65,7 @@ void CoreLogic::EnterControlMode(ControlMode pMode)
 
         if (pMode == ControlMode::ADD)
         {
+            mView.Scene()->clearFocus();
             emit ComponentTypeChangedSignal(mComponentType);
         }
 
