@@ -166,8 +166,7 @@ public slots:
     /// \brief Displays the processing overlay (loading screen); invoked by mProcessingTimer
     void OnProcessingTimeout(void);
 
-    /// \brief Checks if a special tab should be displayed and displays/hides it
-    void SelectionChanged(void);
+    void OnDisplayTabRequest(gui::MenuTab pTab);
 
 protected:
     /// \brief Connects to the View object via signals and slots
@@ -311,6 +310,8 @@ protected:
 
     /// \brief Called when the longer process has been finished
     void EndProcessing(void);
+
+    void ClearSelection(void);
 
 protected:
     View &mView;

@@ -47,6 +47,7 @@ void CoreLogic::ConnectToView()
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
 {
     mView.Scene()->clearFocus();
+    mView.HideSpecialTab();
 
     const auto& currentMode = mControlMode;
 
@@ -127,20 +128,9 @@ void CoreLogic::SelectComponentType(ComponentType pComponentType)
     emit ComponentTypeChangedSignal(mComponentType);
 }
 
-void CoreLogic::SelectionChanged()
+void CoreLogic::OnDisplayTabRequest(gui::MenuTab pTab)
 {
-    const auto&& selection = mView.Scene()->selectedItems();
-
-    if (selection.size() == 1)
-    {
-        if (dynamic_cast<LogicClock*>(selection[0]) != nullptr)
-        {
-            mView.ShowSpecialTab(gui::MenuTab::CLOCK);
-            return;
-        }
-    }
-
-    mView.HideSpecialTab();
+    mView.ShowSpecialTab(pTab);
 }
 
 std::optional<IBaseComponent*> CoreLogic::GetItem() const
@@ -954,6 +944,12 @@ bool CoreLogic::IsProcessing() const
     return mIsProcessing;
 }
 
+void CoreLogic::ClearSelection()
+{
+    mView.Scene()->clearSelection();
+    mView.HideSpecialTab();
+}
+
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {   
     mView.SetGuiEnabled(false);
@@ -1015,7 +1011,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
             {
                 mView.Scene()->addItem(comp);
             }
-            mView.Scene()->clearSelection();
+            ClearSelection();
             EndProcessing();
             mView.PrepareGuiForEditing();
             return;
@@ -1024,7 +1020,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
         ProcessingHeartbeat();
     }
 
-    mView.Scene()->clearSelection();
+    ClearSelection();
 
     if (movedComponents.size() > 0)
     {
@@ -1153,7 +1149,7 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
                 // A new component has been added => clear selection if it wasn't a text label
                 if (mView.Scene()->selectedItems().size() != 1 || dynamic_cast<TextLabel*>(mView.Scene()->selectedItems()[0]) == nullptr)
                 {
-                    mView.Scene()->clearSelection();
+                    ClearSelection();
                 }
                 return;
             }
@@ -1203,7 +1199,7 @@ void CoreLogic::CopySelectedComponents()
     QList<QGraphicsItem*> componentsToCopy = mView.Scene()->selectedItems();
     std::vector<IBaseComponent*> addedComponents{};
 
-    mView.Scene()->clearSelection();
+    ClearSelection();
 
     for (auto& orig : componentsToCopy)
     {
@@ -1256,6 +1252,7 @@ void CoreLogic::DeleteSelectedComponents()
     {
         AppendUndo(new UndoDeleteType(deletedComponents));
     }
+    ClearSelection();
 }
 
 void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
@@ -1371,7 +1368,7 @@ void CoreLogic::Undo()
             }
         }
     }
-    mView.Scene()->clearSelection();
+    ClearSelection();
     mView.SetUndoRedoButtonsEnableState();
 }
 
@@ -1470,6 +1467,6 @@ void CoreLogic::Redo()
             }
         }
     }
-    mView.Scene()->clearSelection();
+    ClearSelection();
     mView.SetUndoRedoButtonsEnableState();
 }

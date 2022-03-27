@@ -29,7 +29,10 @@ IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<Logi
         setAcceptHoverEvents(true);
         mSimulationRunning = false;
     });
+
     QObject::connect(this, &IBaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMoved);
+
+    QObject::connect(this, &IBaseComponent::DisplaySpecialTabSignal, pCoreLogic, &CoreLogic::OnDisplayTabRequest);
 
     if (mLogicCell != nullptr)
     {

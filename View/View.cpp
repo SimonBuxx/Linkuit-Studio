@@ -54,8 +54,6 @@ void View::SetScene(QGraphicsScene &pScene)
     mGraphicsView.setScene(&pScene);
     mGraphicsView.centerOn(0, 0);
 
-    QObject::connect(mScene, &QGraphicsScene::selectionChanged, &mCoreLogic, &CoreLogic::SelectionChanged);
-
     QTimer::singleShot(0, &mGraphicsView, [&](){
         mGraphicsView.setFocus();
     });

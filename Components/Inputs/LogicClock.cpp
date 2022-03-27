@@ -215,6 +215,15 @@ void LogicClock::SetInversionPen(QPainter *pPainter, LogicState pState, bool pSe
     }
 }
 
+void LogicClock::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
+{
+    IBaseComponent::mousePressEvent(pEvent);
+    if (this->isSelected() && this->scene()->selectedItems().size() == 1)
+    {
+        emit DisplaySpecialTabSignal(gui::MenuTab::CLOCK);
+    }
+}
+
 QRectF LogicClock::boundingRect() const
 {
     if (mDirection == Direction::RIGHT || mDirection == Direction::LEFT)
