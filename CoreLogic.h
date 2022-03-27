@@ -27,17 +27,28 @@ public:
     CoreLogic(View &pView);
 
     /// \brief Creates a new scene component
-    /// \return Pointer to the new component
-    IBaseComponent* GetItem(void);
+    /// \return Optional pointer to the new component
+    std::optional<IBaseComponent*> GetItem(void) const;
 
-    void EnterControlMode(ControlMode pMode);
+    /// \brief Changes the control mode to the given mode and kicks off all
+    /// neccessary steps to enter this mode
+    /// \param pNewMode: The new control mode
+    void EnterControlMode(ControlMode pNewMode);
 
-    ControlMode GetControlMode(void);
+    /// \brief Getter for the current control mode (EDIT, ADD, etc.)
+    /// \return the current control mode
+    ControlMode GetControlMode(void) const;
 
+    /// \brief Changes the type of component to add to the given type
+    /// \param pComponentType: The component type of which to add new instances
     void SelectComponentType(ComponentType pComponentType);
 
+    /// \brief Getter for the currently selected component type
+    /// \return the currently selected component type
     ComponentType GetSelectedComponentType(void) const;
 
+    /// \brief Changes the current control mode to ADD and selects the given component type
+    /// \param pComponentType: The component type of which to add new instances
     void EnterAddControlMode(ComponentType pComponentType);
 
     /// \brief Adds a component of the currently selected type to the scene at position pPosition
@@ -46,10 +57,16 @@ public:
     /// \return False, if the action has been aborted
     bool AddCurrentTypeComponent(QPointF pPosition);
 
+    /// \brief Setter for the amount of inputs for components with variable input count (e.g. gates)
+    /// \param pCount: The amount of inputs to use for new components
     void SetComponentInputCount(uint8_t pCount);
 
-    void SetComponentInputDirection(Direction pDirection);
+    /// \brief Setter for the component direction for components with variable direction
+    /// \param pDirection: The new component direction (output-side of the component)
+    void SetComponentDirection(Direction pDirection);
 
+    /// \brief Sets the starting point of the preview wires to the given point and adds them to the scene
+    /// \param pStartPoint: The point where the new wire drawing action started
     void SetPreviewWireStart(QPointF pStartPoint);
 
     /// \brief Draws preview wires to the current mouse position
@@ -61,13 +78,19 @@ public:
     /// \param pEndPoint: The end point the last drawn wire should reach
     void AddWires(QPointF pEndPoint);
 
+    /// \brief Creates a copy of the currently selected components and pastes it in a shifted position
     void CopySelectedComponents(void);
 
+    /// \brief Deletes the currently selected components
     void DeleteSelectedComponents(void);
 
     /// \brief Returns true, if the core logic is in simulation mode
     /// \return True, if in simulation mode
     bool IsSimulationRunning(void) const;
+
+    /// \brief Returns whether the software is currently processing or loading
+    /// \return True, if the software is currently processing or loading
+    bool IsProcessing(void) const;
 
     // Functions for undo and redo
 
@@ -85,37 +108,65 @@ public:
     /// \brief Redos the last undone undo action if existant
     void Redo(void);
 
-    bool IsProcessing(void);
+    // ////////////////////////////
 
 signals:
+    /// \brief Emitted when the current control mode changes
+    /// \param pNewMode: The newly entered control mode
     void ControlModeChangedSignal(ControlMode pNewMode);
 
+    /// \brief Emitted when the selected component type for new components changes
+    /// \param pNewType: The newly selected component type
     void ComponentTypeChangedSignal(ComponentType pNewType);
 
+    /// \brief Emitted to finish the given QMouseEvent in the GraphicsView
+    /// \param pEvent: The mouse press event to finish
     void MousePressedEventDefaultSignal(QMouseEvent &pEvent);
 
+    /// \brief Emitted when the core logic has started the simulation
     void SimulationStartSignal(void);
 
+    /// \brief Emitted when the simulation should advance by one step
     void SimulationAdvanceSignal(void);
 
+    /// \brief Emitted when the core logic has stopped the simulation
     void SimulationStopSignal(void);
 
 public slots:
+    /// \brief Checks for collisions, merges moved wires and brings the ConPoints in a valid state
+    /// \param pOffset: The relative offset by which the selected components have been moved
     void OnSelectedComponentsMoved(QPointF pOffset);
 
+    /// \brief Performs operations such as adding ConPoints, inversion circles and components on click
+    /// May emit MousePressedEventDefaultSignal to pass the press event back to the GraphicsView
+    /// (e.g. to selecting, dragging, etc. if no action was executed instead)
+    /// \param pMappedPos: The position in the scene where the mouse press happened
+    /// \param pEvent: The mouse press event to pass back to MousePressedEventDefaultSignal
     void OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent);
 
     // Slots for configuration events
+
+    /// \brief Invoked by pConPoint when its connection type changed; creates undo/redo object
+    /// \param pConPoint: Pointer to the affected ConPoint
+    /// \param pPreviousType: The previous connection type
+    /// \param pCurrentType: The new connection type
     void OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType);
 
+    /// \brief Invoked by pTextLabel when its text content changed; creates undo/redo object
+    /// \param pTextLabel: Pointer to the affected TextLabel
+    /// \param pPreviousText: The previous text content
+    /// \param pCurrentText: The new text content
     void OnTextLabelContentChanged(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText);
 
-    /// \brief Advances the simulation by one step
+    // ///////////////////////////////
+
+    /// \brief Advances the simulation by one step; invoked by mPropagationTimer
     void OnPropagationTimeout(void);
 
+    /// \brief Displays the processing overlay (loading screen); invoked by mProcessingTimer
     void OnProcessingTimeout(void);
 
-    /// \brief Checks if a special tab should be displayed
+    /// \brief Checks if a special tab should be displayed and displays/hides it
     void SelectionChanged(void);
 
 protected:
@@ -133,17 +184,46 @@ protected:
     /// \return A vector containing all logic wires from pComponents
     std::vector<IBaseComponent*> FilterForWires(const QList<QGraphicsItem*> &pComponents, WireDirection pDirection = WireDirection::UNSET) const;
 
-    LogicWire* MergeWires(LogicWire* pNewWire, LogicWire* pLeftTopAdjacent, LogicWire* pRightBottomAdjacent) const;
+    /// \brief Merges pNewWire and the given adjacent wires into a new wire
+    /// \param pNewWire: The new wire that has to be merged with adjacent wires
+    /// \param pLeftTopAdjacent: The first (left or top) adjacent wire
+    /// \param pRightBottomAdjacent: The second (right or bottom) adjacent wire
+    /// \return A new LogicWire to replace all of the given wires
+    LogicWire* MergeWires(LogicWire* pNewWire, std::optional<LogicWire*> pLeftTopAdjacent, std::optional<LogicWire*> pRightBottomAdjacent) const;
 
-    std::vector<IBaseComponent*> DeleteContainedWires(LogicWire* pWire);
+    /// \brief Removes all wires from the scene that are completely contained in the given wire
+    /// \param pWire: The wire to look for contained wires below
+    /// \return A vector containing pointers to all deleted wires
+    std::vector<LogicWire*> DeleteContainedWires(const LogicWire* pWire);
 
-    LogicWire* GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
+    /// \brief Searches a wire at the given position that has the given direction
+    /// \param pCheckPosition: The position to check at
+    /// \param pDirection: The direction to look for
+    /// \return A pointer to the wire, if it has been found, or std::nullopt
+    std::optional<LogicWire*> GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const;
 
-    void MergeWiresAfterMove(std::vector<LogicWire*> &pComponents, std::vector<IBaseComponent*> &pAddedWires, std::vector<IBaseComponent*> &pDeletedWires);
+    /// \brief Merges all wires that have been moved if they are now adjacent with or overlapping others
+    /// \param pWires: The wires that have been moved
+    /// \param pAddedComponents: Vector to add newly created wires to
+    /// \param pDeletedComponents: Vector to add deleted wires to
+    void MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents);
 
-    bool ManageConPointsOneStep(IBaseComponent* comp, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
+    /// \brief One step of the algorithm to create a valid ConPoint state in OnSelectedComponentsMoved
+    /// \param pComponent: The component that currently processed
+    /// \param pOffset: The offset by that the component has been moved
+    /// \param movedComponents: Vector to add moved components to
+    /// \param addedComponents: Vector to add newly added components to
+    /// \param deletedComponents: Vector to add deleted components to
+    /// \return False, if the move operation has to be aborted
+    bool ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
                                            std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents);
 
+    // Functions to check for wire crossings and ConPoint positions
+
+    /// \brief Checks whether the two given wires form a T-crossing
+    /// \param pWire1: Pointer to the first wire
+    /// \param pWire2: Pointer to the second wire
+    /// \return True, if both wires form a T-crossing
     bool IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const;
 
     /// \brief Determines whether there is a T- or X-crossing below pConPoint
@@ -155,32 +235,6 @@ protected:
     /// \param pPoint: The point to check
     /// \return True, if there are two wires in pPoint crossing each other
     bool IsXCrossingPoint(QPointF pPoint) const;
-
-    // Functions for component retreival
-
-    /// \brief Checks if a component of the given type T collides with the given position
-    /// \param pPos: The position to check
-    /// \return True, if a component of type T is found at pPos
-    template<typename T>
-    bool IsComponentAtPosition(QPointF pPos);
-
-    /// \brief Returns all components that are "colliding" (may not be before or behind others) with the given component
-    /// \param pComponent: The component to check for colliding components
-    /// \return A vector of components that are colliding with pComponent
-    std::vector<IBaseComponent*> GetCollidingComponents(IBaseComponent* pComponent) const;
-
-    /// \brief Checks if the given item is a "colliding" component (may not be before or behind others)
-    /// \param pComponent: The item to check
-    /// \return True, if pComponent is a "colliding" component
-    bool IsCollidingComponent(QGraphicsItem* pComponent) const;
-
-    /// \brief Groups all existing wires into groups that are connected, meaning they always have the same logic state
-    void ParseWireGroups(void);
-
-    /// \brief Looks for wires connecting to pWire and recursively includes them in the group
-    /// \param pWire: The root wire of that the group should be explored
-    /// \param pGroupIndex: The index of a group in mWireGroups
-    void ExploreGroup(LogicWire* pWire, int32_t pGroupIndex);
 
     /// \brief Checks if the two given wires form an L-type crossing
     /// \param pWireA: The first wire
@@ -200,14 +254,49 @@ protected:
     /// \return A pointer to the ConPoint, if a ConPoint is found at pPos with connection type pType, nullptr otherwise
     ConPoint* GetConPointAtPosition(QPointF pPos, ConnectionType pType) const;
 
+    // Functions for component retreival
+
+    /// \brief Checks if a component of the given type T collides with the given position
+    /// \param pPos: The position to check
+    /// \return True, if a component of type T is found at pPos
+    template<typename T>
+    bool IsComponentAtPosition(QPointF pPos);
+
+    /// \brief Returns all components that are "colliding" (may not be before or behind others) with the given component
+    /// \param pComponent: The component to check for colliding components
+    /// \return A vector of components that are colliding with pComponent
+    std::vector<IBaseComponent*> GetCollidingComponents(IBaseComponent* pComponent) const;
+
+    /// \brief Checks if the given item is a "colliding" component (may not be before or behind others)
+    /// \param pComponent: The item to check
+    /// \return True, if pComponent is a "colliding" component
+    bool IsCollidingComponent(QGraphicsItem* pComponent) const;
+
+    // Functions for entering simulation mode (parsing, setting up logic cells etc.)
+
+    /// \brief Groups all existing wires into groups that are connected, meaning they always have the same logic state
+    void ParseWireGroups(void);
+
+    /// \brief Looks for wires connecting to pWire and recursively includes them in the group
+    /// \param pWire: The root wire of that the group should be explored
+    /// \param pGroupIndex: The index of a group in mWireGroups
+    void ExploreGroup(LogicWire* pWire, int32_t pGroupIndex);
+
+    /// \brief Creates logic cells for wire groups, including full ConPoints
     void CreateWireLogicCells(void);
 
+    /// \brief Connects all logic cells based on their connector positions
     void ConnectLogicCells(void);
 
     // Functions for undo and redo
 
+    /// \brief Appends the given undo/redo object to the undo queue and clears the redo queue
+    /// \param pUndoObject: The object to append
     void AppendUndo(UndoBaseType* pUndoObject);
 
+    /// \brief Appends the given undo/redo object to the given queue
+    /// \param pUndoObject: The object to append
+    /// \param pQueue: The queue to append to object to
     void AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue);
 
     // Functions for handling long processes (copy of large selections, etc.)

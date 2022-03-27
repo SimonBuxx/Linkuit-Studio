@@ -257,22 +257,22 @@ void GraphicsView::keyPressEvent(QKeyEvent *pEvent)
                 }
                 case Qt::Key_Right:
                 {
-                    mCoreLogic.SetComponentInputDirection(Direction::RIGHT);
+                    mCoreLogic.SetComponentDirection(Direction::RIGHT);
                     break;
                 }
                 case Qt::Key_Up:
                 {
-                    mCoreLogic.SetComponentInputDirection(Direction::UP);
+                    mCoreLogic.SetComponentDirection(Direction::UP);
                     break;
                 }
                 case Qt::Key_Left:
                 {
-                    mCoreLogic.SetComponentInputDirection(Direction::LEFT);
+                    mCoreLogic.SetComponentDirection(Direction::LEFT);
                     break;
                 }
                 case Qt::Key_Down:
                 {
-                    mCoreLogic.SetComponentInputDirection(Direction::DOWN);
+                    mCoreLogic.SetComponentDirection(Direction::DOWN);
                     break;
                 }
                 default:
