@@ -108,7 +108,9 @@ public:
     /// is running and if undo or redo operations are available to execute
     void SetUndoRedoButtonsEnableState(void);
 
-    void SetGuiEnabled(bool pEnabled);
+    /// \brief Enables or disables all widgets on the toolbox tab
+    /// \param pEnabled: If true, the widgets will be enabled
+    void SetToolboxTabEnabled(bool pEnabled);
 
     /// \brief Performs tasks such as disabling buttons
     void PrepareGuiForSimulation(void);
@@ -173,12 +175,12 @@ protected:
     CoreLogic &mCoreLogic;
 
     QTabWidget *mRibbonMenu;
-    QWidget *mComponentsPage;
+    QWidget *mToolboxPage;
     QWidget *mSimulationPage;
     QWidget *mClockPage;
 
     // GUI buttons
-    QButtonGroup *mComponentsButtonGroup;
+    QButtonGroup *mToolboxButtonGroup;
 
     QToolButton *mEditButton;
     QToolButton *mDeleteButton;

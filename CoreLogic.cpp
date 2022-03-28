@@ -79,7 +79,7 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
 
 void CoreLogic::StartSimulation()
 {
-    mView.SetGuiEnabled(false);
+    mView.SetToolboxTabEnabled(false);
     StartProcessing();
     ParseWireGroups();
     CreateWireLogicCells();
@@ -952,7 +952,7 @@ void CoreLogic::ClearSelection()
 
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {   
-    mView.SetGuiEnabled(false);
+    mView.SetToolboxTabEnabled(false);
     StartProcessing();
 
     QElapsedTimer total;

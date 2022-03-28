@@ -12,8 +12,8 @@ void View::CreateGui()
 #warning disable all tabs while loading or all individual elements (plus styling)
 
     // Standard tabs
-    mComponentsPage = new QWidget;
-    mRibbonMenu->addTab(mComponentsPage, "Toolbox");
+    mToolboxPage = new QWidget;
+    mRibbonMenu->addTab(mToolboxPage, "Toolbox");
 
     mSimulationPage = new QWidget;
     mRibbonMenu->addTab(mSimulationPage, "Simulation");
@@ -33,282 +33,230 @@ void View::CreateGui()
 
     mDeleteButton = new QToolButton;
     mDeleteButton->setText(tr("Delete"));
-    mDeleteButton->setCheckable(false);
-    mDeleteButton->setChecked(false);
     mDeleteButton->setFixedSize(90, 42);
 
     mCopyButton = new QToolButton;
     mCopyButton->setText(tr("Copy"));
-    mCopyButton->setCheckable(false);
-    mCopyButton->setChecked(false);
     mCopyButton->setFixedSize(90, 42);
 
     {
         mAddWireButton = new QToolButton;
-        mAddWireButton->setText(tr("Wiring tool"));
         mAddWireButton->setCheckable(true);
-        mAddWireButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/wire.png");
         mAddWireButton->setIcon(QIcon(pixmap));
         mAddWireButton->setIconSize(pixmap.rect().size());
         mAddWireButton->setFixedSize(90, 58);
-
         mAddWireButton->setToolTip(tr("Wiring tool"));
     }
 
     {
         mAddAndGateButton = new QToolButton;
-        mAddAndGateButton->setText(tr("And Gate"));
         mAddAndGateButton->setCheckable(true);
-        mAddAndGateButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/and_gate.png");
         mAddAndGateButton->setIcon(QIcon(pixmap));
         mAddAndGateButton->setIconSize(pixmap.rect().size());
         mAddAndGateButton->setFixedSize(90, 106);
-
         mAddAndGateButton->setToolTip(tr("AND gate"));
     }
 
     {
         mAddOrGateButton = new QToolButton;
-        mAddOrGateButton->setText(tr("Or Gate"));
         mAddOrGateButton->setCheckable(true);
-        mAddOrGateButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/or_gate.png");
         mAddOrGateButton->setIcon(QIcon(pixmap));
         mAddOrGateButton->setIconSize(pixmap.rect().size());
         mAddOrGateButton->setFixedSize(90, 106);
-
         mAddOrGateButton->setToolTip(tr("OR gate"));
     }
 
     {
         mAddXorGateButton = new QToolButton;
-        mAddXorGateButton->setText(tr("Xor Gate"));
         mAddXorGateButton->setCheckable(true);
-        mAddXorGateButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/xor_gate.png");
         mAddXorGateButton->setIcon(QIcon(pixmap));
         mAddXorGateButton->setIconSize(pixmap.rect().size());
         mAddXorGateButton->setFixedSize(90, 106);
-
         mAddXorGateButton->setToolTip(tr("XOR gate"));
     }
 
     {
         mAddNotGateButton = new QToolButton;
-        mAddNotGateButton->setText(tr("Not Gate"));
         mAddNotGateButton->setCheckable(true);
-        mAddNotGateButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/not_gate.png");
         mAddNotGateButton->setIcon(QIcon(pixmap));
         mAddNotGateButton->setIconSize(pixmap.rect().size());
         mAddNotGateButton->setFixedSize(90, 58);
-
         mAddNotGateButton->setToolTip(tr("NOT gate"));
     }
 
     {
         mAddInputButton = new QToolButton;
-        mAddInputButton->setText(tr("Input"));
         mAddInputButton->setCheckable(true);
-        mAddInputButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/input.png");
         mAddInputButton->setIcon(QIcon(pixmap));
         mAddInputButton->setIconSize(pixmap.rect().size());
         mAddInputButton->setFixedSize(42, 42);
-
         mAddInputButton->setToolTip(tr("Input"));
     }
 
     {
         mAddButtonButton = new QToolButton;
-        mAddButtonButton->setText(tr("Button"));
         mAddButtonButton->setCheckable(true);
-        mAddButtonButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/button.png");
         mAddButtonButton->setIcon(QIcon(pixmap));
         mAddButtonButton->setIconSize(pixmap.rect().size());
         mAddButtonButton->setFixedSize(42, 42);
-
         mAddButtonButton->setToolTip(tr("Button"));
     }
 
     {
         mAddClockButton = new QToolButton;
-        mAddClockButton->setText(tr("Clock"));
         mAddClockButton->setCheckable(true);
-        mAddClockButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/clock.png");
         mAddClockButton->setIcon(QIcon(pixmap));
         mAddClockButton->setIconSize(pixmap.rect().size());
         mAddClockButton->setFixedSize(90, 58);
-
         mAddClockButton->setToolTip(tr("Clock"));
     }
 
     {
         mAddOutputButton = new QToolButton;
-        mAddOutputButton->setText(tr("Output"));
         mAddOutputButton->setCheckable(true);
-        mAddOutputButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/output.png");
         mAddOutputButton->setIcon(QIcon(pixmap));
         mAddOutputButton->setIconSize(pixmap.rect().size());
         mAddOutputButton->setFixedSize(90, 42);
-
         mAddOutputButton->setToolTip(tr("Output"));
     }
 
     {
         mAddTextLabelButton = new QToolButton;
-        mAddTextLabelButton->setText(tr("Label"));
         mAddTextLabelButton->setCheckable(true);
-        mAddTextLabelButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/label.png");
         mAddTextLabelButton->setIcon(QIcon(pixmap));
         mAddTextLabelButton->setIconSize(pixmap.rect().size());
         mAddTextLabelButton->setFixedSize(90, 106);
-
         mAddTextLabelButton->setToolTip(tr("Text label"));
     }
 
     {
         mAddHalfAdderButton = new QToolButton;
-        mAddHalfAdderButton->setText(tr("Half Adder"));
         mAddHalfAdderButton->setCheckable(true);
-        mAddHalfAdderButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/half_adder.png");
         mAddHalfAdderButton->setIcon(QIcon(pixmap));
         mAddHalfAdderButton->setIconSize(pixmap.rect().size());
         mAddHalfAdderButton->setFixedSize(90, 106);
-
         mAddHalfAdderButton->setToolTip(tr("Half adder"));
     }
 
     {
         mAddFullAdderButton = new QToolButton;
-        mAddFullAdderButton->setText(tr("Full Adder"));
         mAddFullAdderButton->setCheckable(true);
-        mAddFullAdderButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/full_adder.png");
         mAddFullAdderButton->setIcon(QIcon(pixmap));
         mAddFullAdderButton->setIconSize(pixmap.rect().size());
         mAddFullAdderButton->setFixedSize(90, 106);
-
         mAddFullAdderButton->setToolTip(tr("Full adder"));
     }
 
     {
         mAddRsFlipFlopButton = new QToolButton;
-        mAddRsFlipFlopButton->setText(tr("RS Flip-Flop"));
         mAddRsFlipFlopButton->setCheckable(true);
-        mAddRsFlipFlopButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/rs_flipflop.png");
         mAddRsFlipFlopButton->setIcon(QIcon(pixmap));
         mAddRsFlipFlopButton->setIconSize(pixmap.rect().size());
         mAddRsFlipFlopButton->setFixedSize(90, 106);
-
         mAddRsFlipFlopButton->setToolTip(tr("RS flip-flop"));
     }
 
     {
         mAddDFlipFlopButton = new QToolButton;
-        mAddDFlipFlopButton->setText(tr("D Flip-Flop"));
         mAddDFlipFlopButton->setCheckable(true);
-        mAddDFlipFlopButton->setChecked(false);
 
         QPixmap pixmap(":/images/icons/d_flipflop.png");
         mAddDFlipFlopButton->setIcon(QIcon(pixmap));
         mAddDFlipFlopButton->setIconSize(pixmap.rect().size());
         mAddDFlipFlopButton->setFixedSize(90, 106);
-
         mAddDFlipFlopButton->setToolTip(tr("D flip-flop"));
     }
 
     mUndoButton = new QToolButton;
     mUndoButton->setText(tr("Undo"));
-    mUndoButton->setCheckable(false);
-    mUndoButton->setChecked(false);
     mUndoButton->setEnabled(false);
     mUndoButton->setFixedSize(90, 58);
 
     mRedoButton = new QToolButton;
     mRedoButton->setText(tr("Redo"));
-    mRedoButton->setCheckable(false);
-    mRedoButton->setChecked(false);
     mRedoButton->setEnabled(false);
     mRedoButton->setFixedSize(90, 42);
 
     mSimulationButton = new QToolButton;
     mSimulationButton->setText(tr("Start"));
-    mSimulationButton->setCheckable(false);
-    mSimulationButton->setChecked(false);
     mSimulationButton->setFixedSize(90, 106);
 
-    mComponentsButtonGroup = new QButtonGroup(this);
-    mComponentsButtonGroup->setExclusive(true);
-    mComponentsButtonGroup->addButton(mEditButton);
-    mComponentsButtonGroup->addButton(mDeleteButton);
-    mComponentsButtonGroup->addButton(mCopyButton);
-    mComponentsButtonGroup->addButton(mAddWireButton);
-    mComponentsButtonGroup->addButton(mAddAndGateButton);
-    mComponentsButtonGroup->addButton(mAddOrGateButton);
-    mComponentsButtonGroup->addButton(mAddXorGateButton);
-    mComponentsButtonGroup->addButton(mAddNotGateButton);
-    mComponentsButtonGroup->addButton(mAddInputButton);
-    mComponentsButtonGroup->addButton(mAddButtonButton);
-    mComponentsButtonGroup->addButton(mAddClockButton);
-    mComponentsButtonGroup->addButton(mAddOutputButton);
-    mComponentsButtonGroup->addButton(mAddTextLabelButton);
-    mComponentsButtonGroup->addButton(mAddHalfAdderButton);
-    mComponentsButtonGroup->addButton(mAddFullAdderButton);
-    mComponentsButtonGroup->addButton(mAddRsFlipFlopButton);
-    mComponentsButtonGroup->addButton(mAddDFlipFlopButton);
+    mToolboxButtonGroup = new QButtonGroup(this);
+    mToolboxButtonGroup->setExclusive(true);
+    mToolboxButtonGroup->addButton(mEditButton);
+    mToolboxButtonGroup->addButton(mDeleteButton);
+    mToolboxButtonGroup->addButton(mCopyButton);
+    mToolboxButtonGroup->addButton(mAddWireButton);
+    mToolboxButtonGroup->addButton(mAddAndGateButton);
+    mToolboxButtonGroup->addButton(mAddOrGateButton);
+    mToolboxButtonGroup->addButton(mAddXorGateButton);
+    mToolboxButtonGroup->addButton(mAddNotGateButton);
+    mToolboxButtonGroup->addButton(mAddInputButton);
+    mToolboxButtonGroup->addButton(mAddButtonButton);
+    mToolboxButtonGroup->addButton(mAddClockButton);
+    mToolboxButtonGroup->addButton(mAddOutputButton);
+    mToolboxButtonGroup->addButton(mAddTextLabelButton);
+    mToolboxButtonGroup->addButton(mAddHalfAdderButton);
+    mToolboxButtonGroup->addButton(mAddFullAdderButton);
+    mToolboxButtonGroup->addButton(mAddRsFlipFlopButton);
+    mToolboxButtonGroup->addButton(mAddDFlipFlopButton);
 
-#warning remove undo and redo buttons from components tab
-    mComponentsButtonGroup->addButton(mUndoButton);
-    mComponentsButtonGroup->addButton(mRedoButton);
+#warning remove undo and redo buttons from toolbox tab
+    mToolboxButtonGroup->addButton(mUndoButton);
+    mToolboxButtonGroup->addButton(mRedoButton);
 
-    auto componentsMenuLayout = new QGridLayout;
+    auto toolboxTabLayout = new QGridLayout;
 
     {
-        componentsMenuLayout->setAlignment(Qt::AlignLeft);
-        componentsMenuLayout->setContentsMargins(10, 10, 0, 0);
-        componentsMenuLayout->addWidget(mEditButton, 0, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mDeleteButton, 1, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddWireButton, 0, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mCopyButton, 1, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddAndGateButton, 0, 2, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddOrGateButton, 0, 3, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddXorGateButton, 0, 4, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddNotGateButton, 0, 5, 1, 2, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddInputButton, 1, 5, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddButtonButton, 1, 6, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddClockButton, 0, 7, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddOutputButton, 1, 7, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddTextLabelButton, 0, 8, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddHalfAdderButton, 0, 9, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddFullAdderButton, 0, 10, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddRsFlipFlopButton, 0, 11, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mAddDFlipFlopButton, 0, 12, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->setAlignment(Qt::AlignLeft);
+        toolboxTabLayout->setContentsMargins(10, 10, 0, 0);
+        toolboxTabLayout->addWidget(mEditButton, 0, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mDeleteButton, 1, 0, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddWireButton, 0, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mCopyButton, 1, 1, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddAndGateButton, 0, 2, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddOrGateButton, 0, 3, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddXorGateButton, 0, 4, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddNotGateButton, 0, 5, 1, 2, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddInputButton, 1, 5, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddButtonButton, 1, 6, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddClockButton, 0, 7, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddOutputButton, 1, 7, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddTextLabelButton, 0, 8, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddHalfAdderButton, 0, 9, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddFullAdderButton, 0, 10, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddRsFlipFlopButton, 0, 11, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mAddDFlipFlopButton, 0, 12, 2, 1, Qt::AlignLeft | Qt::AlignTop);
 
-#warning remove undo and redo buttons from components tab
-        componentsMenuLayout->addWidget(mUndoButton, 0, 13, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-        componentsMenuLayout->addWidget(mRedoButton, 1, 13, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+#warning remove undo and redo buttons from toolbox tab
+        toolboxTabLayout->addWidget(mUndoButton, 0, 13, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+        toolboxTabLayout->addWidget(mRedoButton, 1, 13, 1, 1, Qt::AlignLeft | Qt::AlignTop);
     }
 
     auto simulationMenuLayout = new QGridLayout;
@@ -332,7 +280,7 @@ void View::CreateGui()
     procImage->start();
     mProcessingOverlay->hide();
 
-    mComponentsPage->setLayout(componentsMenuLayout);
+    mToolboxPage->setLayout(toolboxTabLayout);
     mSimulationPage->setLayout(simulationMenuLayout);
 
     QGridLayout *mainGridLayout = new QGridLayout;
@@ -397,73 +345,32 @@ void View::FadeOutProcessingOverlay()
 
 void View::PrepareGuiForSimulation()
 {
-    SetGuiEnabled(true); // Enable all top buttons to ensure known button state
+    SetToolboxTabEnabled(false);
 
-    mEditButton->setEnabled(false);
-    mAddWireButton->setEnabled(false);
-    mAddAndGateButton->setEnabled(false);
-    mAddOrGateButton->setEnabled(false);
-    mAddXorGateButton->setEnabled(false);
-    mAddNotGateButton->setEnabled(false);
-    mAddInputButton->setEnabled(false);
-    mAddButtonButton->setEnabled(false);
-    mAddClockButton->setEnabled(false);
-    mAddOutputButton->setEnabled(false);
-    mAddTextLabelButton->setEnabled(false);
-    mAddHalfAdderButton->setEnabled(false);
-    mAddFullAdderButton->setEnabled(false);
-    mAddRsFlipFlopButton->setEnabled(false);
-    mAddDFlipFlopButton->setEnabled(false);
-    mDeleteButton->setEnabled(false);
-    mCopyButton->setEnabled(false);
-    mUndoButton->setEnabled(false);
-    mRedoButton->setEnabled(false);
-
-    mSimulationButton->setEnabled(true);
+#warning introduce mSimulationButtonGroup
     mSimulationButton->setText(tr("Stop"));
 
     HideSpecialTab();
-    mRibbonMenu->setCurrentIndex(mRibbonMenu->indexOf(mSimulationPage));
 
 #warning add styling for disabled tabs
-    mRibbonMenu->setTabEnabled(mRibbonMenu->indexOf(mComponentsPage), false);
+    mRibbonMenu->setCurrentIndex(mRibbonMenu->indexOf(mSimulationPage));
+    mRibbonMenu->setTabEnabled(mRibbonMenu->indexOf(mToolboxPage), false);
 }
 
 void View::PrepareGuiForEditing()
 {
-    SetGuiEnabled(false); // Disable all top buttons to ensure known button state
-
-    mEditButton->setEnabled(true);
-    mAddWireButton->setEnabled(true);
-    mAddAndGateButton->setEnabled(true);
-    mAddOrGateButton->setEnabled(true);
-    mAddXorGateButton->setEnabled(true);
-    mAddNotGateButton->setEnabled(true);
-    mAddInputButton->setEnabled(true);
-    mAddButtonButton->setEnabled(true);
-    mAddClockButton->setEnabled(true);
-    mAddOutputButton->setEnabled(true);
-    mAddTextLabelButton->setEnabled(true);
-    mAddHalfAdderButton->setEnabled(true);
-    mAddFullAdderButton->setEnabled(true);
-    mAddRsFlipFlopButton->setEnabled(true);
-    mAddDFlipFlopButton->setEnabled(true);
-    mDeleteButton->setEnabled(true);
-    mCopyButton->setEnabled(true);
-    mSimulationButton->setEnabled(true);
-
+    SetToolboxTabEnabled(true);
     SetUndoRedoButtonsEnableState();
 
     mSimulationButton->setText(tr("Start"));
 
-    const auto&& componentsTabIndex = mRibbonMenu->indexOf(mComponentsPage);
-
+    const auto&& componentsTabIndex = mRibbonMenu->indexOf(mToolboxPage);
     mRibbonMenu->setTabEnabled(componentsTabIndex, true);
 }
 
-void View::SetGuiEnabled(bool pEnabled)
+void View::SetToolboxTabEnabled(bool pEnabled)
 {
-    for (auto& button : mComponentsButtonGroup->buttons())
+    for (auto& button : mToolboxButtonGroup->buttons())
     {
         button->setEnabled(pEnabled);
     }
