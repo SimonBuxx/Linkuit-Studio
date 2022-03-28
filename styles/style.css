@@ -1,0 +1,97 @@
+QWidget#mainWindow
+{
+    background: rgb(255, 255, 255);
+}
+
+QGraphicsView
+{
+    selection-background-color: rgb(0, 39, 43);
+}
+
+QTabWidget#ribbonMenu > QWidget
+{
+    background: rgb(0, 45, 50);
+}
+
+QTabWidget#ribbonMenu
+{
+    border: none;
+}
+
+QTabWidget#ribbonMenu::pane
+{
+    border: none;
+}
+
+QTabBar::tab
+{
+    border-radius: 1px;
+    background: rgb(0, 31, 34);
+    font-family: 'Quicksand Medium';
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    height: 30px;
+    width: 120px;
+}
+
+QTabBar::tab:hover
+{
+    background: rgb(0, 45, 50);
+}
+
+QTabBar::tab:selected
+{
+    background: rgb(0, 45, 50);
+}
+
+QToolButton
+{
+    border: 1px solid rgb(0, 39, 43);
+    padding: 0;
+    border-radius: 1px;
+    background: rgb(0, 39, 43);
+    font-family: 'Quicksand Medium';
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+}
+
+QToolButton:hover
+{
+    border: 1px solid rgb(0, 143, 100);
+}
+
+QToolButton:checked
+{
+    border: 1px solid rgb(0, 204, 143);
+}
+
+QToolTip
+{
+    background-color: rgb(0, 39, 43);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 204, 143);
+    border-radius: 1px;
+    font-family: 'Quicksand Medium';
+    font-size: 16px;
+}
+
+QWidget#zoomLabel
+{
+    padding: 5px;
+    margin: 0 0 10px 10px;
+    background: rgb(0, 39, 43);
+    border: 1px solid rgb(0, 204, 143);
+    font-family: 'Quicksand Medium';
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    border-radius: 1px;
+}
+
+QPlainTextEdit
+{
+    color: white;
+    background: transparent;
+    border: none;
+    selection-color: rgb(0, 204, 143);
+    selection-background-color: transparent;
+}

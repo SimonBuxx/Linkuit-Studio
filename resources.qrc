@@ -18,5 +18,6 @@
         <file>images/icons/wire.png</file>
         <file>fonts/Quicksand-Medium.ttf</file>
         <file>images/linkuit_icon5.png</file>
+        <file>styles/style.css</file>
     </qresource>
 </RCC>

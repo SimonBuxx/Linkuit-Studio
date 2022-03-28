@@ -34,7 +34,6 @@ void View::Init()
     mGraphicsView.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setFrameStyle(QGraphicsView::NoFrame);
-    mGraphicsView.setStyleSheet("QGraphicsView {selection-background-color: #00272b;}");
 
     CreateGui();
     ConnectGuiSignalsAndSlots();
@@ -193,18 +192,14 @@ void View::ShowSpecialTab(gui::MenuTab mTab)
         }
     }
 
-    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab {border-radius: 1px; background: rgb(0, 31, 34); font-family: 'Quicksand Medium'; font-size: 16px; color: rgb(255, 255, 255);" \
-    "height: 30px; width: 120px;} QTabBar::tab:hover {background: rgb(0, 45, 50);} QTabBar::tab:selected {background: rgb(0, 45, 50);} QTabBar::tab:last {color: rgb(0, 204, 143);}");
-    mRibbonMenu->setStyleSheet("QWidget {background: rgb(0, 45, 50); color: white;} QTabWidget {border: none;} QTabWidget::pane {border: none;}");
+    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab:last {color: rgb(0, 204, 143);}");
 }
 
 void View::HideSpecialTab()
 {
     mRibbonMenu->setTabVisible(mRibbonMenu->indexOf(mClockPage), false);
 
-    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab {border-radius: 1px; background: rgb(0, 31, 34); font-family: 'Quicksand Medium'; font-size: 16px; color: rgb(255, 255, 255);" \
-    "height: 30px; width: 120px;} QTabBar::tab:hover {background: rgb(0, 45, 50);} QTabBar::tab:selected {background: rgb(0, 45, 50);}");
-    mRibbonMenu->setStyleSheet("QWidget {background: rgb(0, 45, 50); color: white;} QTabWidget {border: none;} QTabWidget::pane {border: none;}");
+    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab:last {}");
 }
 
 void View::SetupMatrix()

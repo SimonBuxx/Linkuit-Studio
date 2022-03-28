@@ -23,7 +23,6 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
     mPlainTextEdit->document()->setDocumentMargin(1);
 
     mPlainTextEdit->setFont(components::text_label::FONT);
-    mPlainTextEdit->setStyleSheet(components::text_label::STYLESHEET);
     mPlainTextEdit->move(10, canvas::GRID_SIZE * -0.5f + 1);
     mPlainTextEdit->setUndoRedoEnabled(false);
     mPlainTextEdit->setContextMenuPolicy(Qt::NoContextMenu);
@@ -36,7 +35,6 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
     SetTextContent(QString(""));
 
     mPlainTextEditProxy.setWidget(mPlainTextEdit);
-
 
 #warning mind label focus when implementing circuit loading
     if (pTakeFocus)
