@@ -10,6 +10,8 @@ LogicOutput::LogicOutput(const CoreLogic* pCoreLogic):
     mWidth = canvas::GRID_SIZE * 0.8f;
     mHeight = canvas::GRID_SIZE * 0.8f;
 
+    mShape.addRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
+
     mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 0), 0, QPointF(0, 0)));
 }
 
@@ -56,11 +58,4 @@ void LogicOutput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
 QRectF LogicOutput::boundingRect() const
 {
     return QRectF(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
-}
-
-QPainterPath LogicOutput::shape() const
-{
-    QPainterPath path;
-    path.addRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
-    return path;
 }

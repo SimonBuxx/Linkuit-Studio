@@ -22,6 +22,9 @@ ConPoint::ConPoint(const CoreLogic* pCoreLogic):
     mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 0), 0, QPointF(0, 0)));
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 0), 0, QPointF(0, 0)));
 
+    mShape.addRect(-components::wires::BOUNDING_RECT_SIZE / 2, -components::wires::BOUNDING_RECT_SIZE / 2,
+                 components::wires::BOUNDING_RECT_SIZE, components::wires::BOUNDING_RECT_SIZE);
+
     QObject::connect(mLogicDiodeCell.get(), &LogicBaseCell::StateChangedSignal, this, &ConPoint::OnLogicStateChanged);
 }
 
@@ -162,21 +165,14 @@ void ConPoint::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 
 void ConPoint::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
 {
-    if (scene()->selectedItems().size() == 1)
+    if (isSelected() && !mWasMoved && scene()->selectedItems().size() == 1)
     {
         // If selected and moved, pull underlying wires with it
-        if (isSelected() && !mWasMoved)
+        for (auto& item : collidingItems())
         {
-            for (auto& item : collidingItems())
-            {
-                item->setSelected(true);
-            }
+            item->setSelected(true);
         }
         mWasMoved = true;
-    }
-    else
-    {
-        setSelected(false);
     }
 
     IBaseComponent::mouseMoveEvent(pEvent);
@@ -192,12 +188,4 @@ QRectF ConPoint::boundingRect() const
 {
     return QRectF(-components::wires::BOUNDING_RECT_SIZE / 2, -components::wires::BOUNDING_RECT_SIZE / 2,
                   components::wires::BOUNDING_RECT_SIZE, components::wires::BOUNDING_RECT_SIZE);
-}
-
-QPainterPath ConPoint::shape() const
-{
-    QPainterPath path;
-    path.addRect(-components::wires::BOUNDING_RECT_SIZE / 2, -components::wires::BOUNDING_RECT_SIZE / 2,
-                 components::wires::BOUNDING_RECT_SIZE, components::wires::BOUNDING_RECT_SIZE);
-    return path;
 }

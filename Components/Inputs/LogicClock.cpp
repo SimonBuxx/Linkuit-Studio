@@ -11,6 +11,20 @@ LogicClock::LogicClock(const CoreLogic* pCoreLogic, Direction pDirection):
     mWidth = canvas::GRID_SIZE * 2;
     mHeight = canvas::GRID_SIZE * 2;
 
+    mShape.addRect(0, 0, mWidth, mHeight);
+
+    // Construct square wave symbol
+    constexpr uint8_t amplitude = 10;
+
+    mSquareWave.moveTo(8, mHeight / 2 + amplitude);
+    mSquareWave.lineTo(14, mHeight / 2 + amplitude);
+    mSquareWave.lineTo(14, mHeight / 2 - amplitude);
+    mSquareWave.lineTo(20, mHeight / 2 - amplitude);
+    mSquareWave.lineTo(20, mHeight / 2 + amplitude);
+    mSquareWave.lineTo(26, mHeight / 2 + amplitude);
+    mSquareWave.lineTo(26, mHeight / 2 - amplitude);
+    mSquareWave.lineTo(32, mHeight / 2 - amplitude);
+
     SetLogicConnectors();
 }
 
@@ -114,20 +128,8 @@ void LogicClock::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
     // Draw square wave icon
     if (levelOfDetail >= components::DESCRIPTION_TEXT_MIN_LOD)
     {
-        constexpr uint8_t amplitude = 10;
-
         pPainter->setPen(QPen(components::gates::FONT_COLOR, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-        QPainterPath path;
-        path.moveTo(8, mHeight / 2 + amplitude);
-        path.lineTo(14, mHeight / 2 + amplitude);
-        path.lineTo(14, mHeight / 2 - amplitude);
-        path.lineTo(20, mHeight / 2 - amplitude);
-        path.lineTo(20, mHeight / 2 + amplitude);
-        path.lineTo(26, mHeight / 2 + amplitude);
-        path.lineTo(26, mHeight / 2 - amplitude);
-        path.lineTo(32, mHeight / 2 - amplitude);
-        pPainter->drawPath(path);
+        pPainter->drawPath(mSquareWave);
     }
 }
 
@@ -215,6 +217,7 @@ void LogicClock::SetInversionPen(QPainter *pPainter, LogicState pState, bool pSe
     }
 }
 
+#warning use reimplemented itemChange() instead with QGraphicsItem::ItemSelectedChange
 void LogicClock::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 {
     IBaseComponent::mousePressEvent(pEvent);
@@ -234,11 +237,4 @@ QRectF LogicClock::boundingRect() const
     {
         return QRectF(-3, -13, mWidth + 6, mHeight + 26);
     }
-}
-
-QPainterPath LogicClock::shape() const
-{
-    QPainterPath path;
-    path.addRect(0, 0, mWidth, mHeight);
-    return path;
 }

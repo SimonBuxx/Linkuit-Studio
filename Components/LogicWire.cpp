@@ -12,11 +12,14 @@ LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint
     {
         mHeight = components::wires::BOUNDING_RECT_SIZE;
         mWidth = pLength;
+        mShape.addRect(-1, mHeight * -0.5f, mWidth + 2, mHeight);
     }
     else
     {
         mWidth = components::wires::BOUNDING_RECT_SIZE;
         mHeight = pLength;
+        mShape.addRect(mWidth * -0.5f, -1, mWidth, mHeight + 2);
+
     }
 }
 
@@ -113,18 +116,4 @@ QRectF LogicWire::boundingRect() const
     {
         return QRectF(mWidth * -0.5f, -2, mWidth, mHeight + 4);
     }
-}
-
-QPainterPath LogicWire::shape() const
-{
-    QPainterPath path;
-    if (mDirection == WireDirection::HORIZONTAL)
-    {
-        path.addRect(-1, mHeight * -0.5f, mWidth + 2, mHeight);
-    }
-    else
-    {
-        path.addRect(mWidth * -0.5f, -1, mWidth, mHeight + 2);
-    }
-    return path;
 }

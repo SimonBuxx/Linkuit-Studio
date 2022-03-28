@@ -217,6 +217,8 @@ protected:
     bool ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
                                            std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents);
 
+    void AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComponent*>& addedComponents);
+
     // Functions to check for wire crossings and ConPoint positions
 
     /// \brief Checks whether the two given wires form a T-crossing

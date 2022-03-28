@@ -73,7 +73,7 @@ std::shared_ptr<LogicBaseCell> IBaseComponent::GetLogicCell()
     return mLogicCell;
 }
 
-const LogicConnector* IBaseComponent::InvertConnectorByPoint(QPointF pPoint)
+std::optional<const LogicConnector*> IBaseComponent::InvertConnectorByPoint(QPointF pPoint)
 {
     Q_ASSERT(mLogicCell);
     for (const auto& connector : mInConnectors)
@@ -91,11 +91,11 @@ const LogicConnector* IBaseComponent::InvertConnectorByPoint(QPointF pPoint)
         {
             mLogicCell->InvertOutput(connector.num);
             update();
-            return &connector;;
+            return &connector;
         }
     }
 
-    return nullptr;
+    return std::nullopt;
 }
 
 void IBaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
@@ -107,12 +107,6 @@ void IBaseComponent::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
         setZValue(components::zvalues::FRONT);
         update();
     }
-}
-
-void IBaseComponent::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
-{
-    QGraphicsItem::mouseMoveEvent(pEvent);
-    update();
 }
 
 void IBaseComponent::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
@@ -131,4 +125,9 @@ void IBaseComponent::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
         ResetZValue();
         update();
     }
+}
+
+QPainterPath IBaseComponent::shape() const
+{
+    return mShape;
 }

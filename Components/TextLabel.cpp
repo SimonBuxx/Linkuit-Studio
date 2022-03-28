@@ -118,6 +118,8 @@ void TextLabel::UpdatePlainTextEditSize()
     mHeight = std::ceil((newHeight - 5) / canvas::GRID_SIZE) * canvas::GRID_SIZE;
     mWidth = mPlainTextEdit->width() + canvas::GRID_SIZE * 0.5f;
 
+    mShape.addRect(0, canvas::GRID_SIZE * -0.5f, mWidth, mHeight);
+
     this->setOpacity(1);
     update();
 }
@@ -158,13 +160,6 @@ void TextLabel::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOptio
 QRectF TextLabel::boundingRect() const
 {
     return QRectF(0, canvas::GRID_SIZE * -0.5f, mWidth, mHeight);
-}
-
-QPainterPath TextLabel::shape() const
-{
-    QPainterPath path;
-    path.addRect(0, canvas::GRID_SIZE * -0.5f, mWidth, mHeight);
-    return path;
 }
 
 void TextLabel::SetTextContent(QString pText)

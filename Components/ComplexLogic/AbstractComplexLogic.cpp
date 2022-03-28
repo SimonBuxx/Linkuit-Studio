@@ -36,6 +36,8 @@ AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, std::sha
         mHeight = std::max(components::gates::GRID_WIDTH * canvas::GRID_SIZE, (components::gates::GRID_WIDTH - 2) * canvas::GRID_SIZE + mTopInputCount * canvas::GRID_SIZE);
     }
 
+    mShape.addRect(0, 0, mWidth, mHeight);
+
     SetLogicConnectors();
 }
 
@@ -491,11 +493,4 @@ QRectF AbstractComplexLogic::boundingRect() const
     {
         return QRectF(-13, -13, mWidth + 26, mHeight + 26);
     }
-}
-
-QPainterPath AbstractComplexLogic::shape() const
-{
-    QPainterPath path;
-    path.addRect(0, 0, mWidth, mHeight);
-    return path;
 }

@@ -36,7 +36,6 @@ public:
     virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const = 0;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent) override;
 
     /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
@@ -50,7 +49,9 @@ public:
 
     std::shared_ptr<LogicBaseCell> GetLogicCell(void);
 
-    const LogicConnector* InvertConnectorByPoint(QPointF pPoint);
+    std::optional<const LogicConnector*> InvertConnectorByPoint(QPointF pPoint);
+
+    QPainterPath shape(void) const override;
 
 protected slots:
     void OnLogicStateChanged(void);
@@ -71,6 +72,8 @@ protected:
     std::vector<LogicConnector> mInConnectors;
     std::vector<LogicConnector> mOutConnectors;
     std::shared_ptr<LogicBaseCell> mLogicCell;
+
+    QPainterPath mShape;
 };
 
 #endif // IBASECOMPONENT_H

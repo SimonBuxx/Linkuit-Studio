@@ -27,6 +27,8 @@ AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBas
         mHeight = components::gates::GRID_WIDTH * canvas::GRID_SIZE;
     }
 
+    mShape.addRect(0, 0, mWidth, mHeight);
+
     SetLogicConnectors();
 }
 
@@ -297,11 +299,4 @@ QRectF AbstractGate::boundingRect() const
     {
         return QRectF(-3, -13, mWidth + 6, mHeight + 26);
     }
-}
-
-QPainterPath AbstractGate::shape() const
-{
-    QPainterPath path;
-    path.addRect(0, 0, mWidth, mHeight);
-    return path;
 }

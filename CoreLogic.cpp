@@ -613,7 +613,7 @@ bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) co
         a = pWire1;
         b = pWire2;
     }
-    else if (pWire1->GetDirection() == WireDirection::HORIZONTAL && pWire2->GetDirection() == WireDirection::VERTICAL)
+    else if (pWire1->GetDirection() != pWire2->GetDirection()) // pWire1 horizontal, pWire2 vertical
     {
         a = pWire2;
         b = pWire1;
@@ -950,6 +950,8 @@ void CoreLogic::ClearSelection()
     mView.HideSpecialTab();
 }
 
+int steps = 0;
+int collideCheck = 0;
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {   
     mView.SetToolboxTabEnabled(false);
@@ -1030,11 +1032,22 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
     EndProcessing();
     mView.PrepareGuiForEditing();
+    qDebug() << "Steps: " << steps;
+    qDebug() << "CollideCheck: " << collideCheck;
+    steps = 0;
+    collideCheck = 0;
 }
 
 bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
                                        std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents)
 {
+    steps++;
+
+    if (IsCollidingComponent(pComponent) && !GetCollidingComponents(pComponent).empty())
+    {
+        return false;
+    }
+
     // Delete all invalid ConPoints at the original position colliding with the selection
     QRectF oldCollisionRect(pComponent->pos() + pComponent->boundingRect().topLeft() - pOffset,
                                        pComponent->pos() + pComponent->boundingRect().bottomRight() - pOffset);
@@ -1059,44 +1072,50 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
     }
 
     // Add ConPoints to all T Crossings
-    if (dynamic_cast<LogicWire*>(pComponent) != nullptr) // Costly
+    if (dynamic_cast<LogicWire*>(pComponent) != nullptr)
     {
-        const auto&& collidingComponents = mView.Scene()->collidingItems(pComponent, Qt::IntersectsItemShape);
-
-        for (const auto& collidingComp : collidingComponents)
-        {
-            if (dynamic_cast<LogicWire*>(collidingComp) != nullptr && IsTCrossing(static_cast<LogicWire*>(pComponent), static_cast<LogicWire*>(collidingComp)))
-            {
-                QPointF conPointPos;
-                if (static_cast<LogicWire*>(pComponent)->GetDirection() == WireDirection::HORIZONTAL)
-                {
-                    conPointPos = QPointF(collidingComp->x(), pComponent->y());
-                }
-                else
-                {
-                    conPointPos = QPointF(pComponent->x(), collidingComp->y());
-                }
-
-                if (!IsComponentAtPosition<ConPoint>(conPointPos)) // Might be costly
-                {
-                    auto item = new ConPoint(this);
-                    item->setPos(conPointPos);
-                    addedComponents.push_back(item);
-                    mView.Scene()->addItem(item);
-                }
-            }
-
-            ProcessingHeartbeat();
-        }
-    }
-
-    if (IsCollidingComponent(pComponent) && !GetCollidingComponents(pComponent).empty())
-    {
-        return false;
+        AddConPointsToTCrossings(static_cast<LogicWire*>(pComponent), addedComponents);
     }
 
     movedComponents.push_back(pComponent);
     return true;
+}
+
+void CoreLogic::AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComponent*>& addedComponents)
+{
+    const auto&& collidingComponents = mView.Scene()->collidingItems(pWire, Qt::IntersectsItemShape);
+
+    for (const auto& collidingComp : collidingComponents)
+    {
+        collideCheck++;
+        if (dynamic_cast<LogicWire*>(collidingComp) == nullptr)
+        {
+            continue;
+        }
+
+        if (IsTCrossing(pWire, static_cast<LogicWire*>(collidingComp)))
+        {
+            QPointF conPointPos;
+            if (pWire->GetDirection() == WireDirection::HORIZONTAL)
+            {
+                conPointPos = QPointF(collidingComp->x(), pWire->y());
+            }
+            else
+            {
+                conPointPos = QPointF(pWire->x(), collidingComp->y());
+            }
+
+            if (!IsComponentAtPosition<ConPoint>(conPointPos))
+            {
+                auto item = new ConPoint(this);
+                item->setPos(conPointPos);
+                addedComponents.push_back(item);
+                mView.Scene()->addItem(item);
+            }
+        }
+
+        ProcessingHeartbeat();
+    }
 }
 
 void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent)
@@ -1129,10 +1148,10 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
             {
                 if (dynamic_cast<AbstractGate*>(item) != nullptr || dynamic_cast<AbstractComplexLogic*>(item) != nullptr || dynamic_cast<LogicClock*>(item) != nullptr)
                 {
-                    const auto&& connector = static_cast<IBaseComponent*>(item)->InvertConnectorByPoint(pMappedPos);
-                    if (connector != nullptr)
+                    const auto& connector = static_cast<IBaseComponent*>(item)->InvertConnectorByPoint(pMappedPos);
+                    if (connector.has_value())
                     {
-                        auto data = std::make_shared<Undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector);
+                        auto data = std::make_shared<Undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector.value());
                         AppendUndo(new UndoConfigureType(data));
                         return;
                     }

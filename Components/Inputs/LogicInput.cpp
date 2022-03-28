@@ -10,6 +10,8 @@ LogicInput::LogicInput(const CoreLogic* pCoreLogic):
     mWidth = canvas::GRID_SIZE * 0.8f;
     mHeight = canvas::GRID_SIZE * 0.8f;
 
+    mShape.addRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
+
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 0), 0, QPointF(0, 0))); // Place connector in the middle of the component
 
     QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
@@ -69,11 +71,4 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
 QRectF LogicInput::boundingRect() const
 {
     return QRectF(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
-}
-
-QPainterPath LogicInput::shape() const
-{
-    QPainterPath path;
-    path.addRect(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
-    return path;
 }

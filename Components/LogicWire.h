@@ -32,10 +32,6 @@ public:
     /// \return A rectangle describing the bounding rect
     QRectF boundingRect(void) const override;
 
-    /// \brief Defines the shape of this component
-    /// \return A rectangular path describing the component shape
-    QPainterPath shape(void) const override;
-
     /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
     void ResetZValue(void) override;
 
