@@ -16,14 +16,16 @@ IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<Logi
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
 
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&]()
+    {
         setCursor(Qt::ArrowCursor);
         setFlag(ItemIsSelectable, false);
         setFlag(ItemIsMovable, false);
         setAcceptHoverEvents(false);
         mSimulationRunning = true;
     });
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&]()
+    {
         setCursor(Qt::PointingHandCursor);
         setFlags(ItemIsSelectable | ItemIsMovable);
         setAcceptHoverEvents(true);

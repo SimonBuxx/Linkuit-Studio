@@ -9,7 +9,6 @@ TextLabel::TextLabel(const CoreLogic* pCoreLogic, QString pText, bool pTakeFocus
     setZValue(components::zvalues::TEXT_LABEL);
 
     InitProxyWidget(pTakeFocus, pText);
-    UpdatePlainTextEditSize();
 
     ConnectToCoreLogic(pCoreLogic);
 }
@@ -42,16 +41,19 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
         mPlainTextEdit->setFocus(); // Take focus if not generated via copy constructor
     }
 
-    QObject::connect(mPlainTextEdit, &PlainTextEdit::SelectParentItem, this, [&](){
+    QObject::connect(mPlainTextEdit, &PlainTextEdit::SelectParentItem, this, [&]()
+    {
         scene()->clearSelection(); // Prevent editing when multiple components are selected
         setSelected(true);
     });
 
-    QObject::connect(mPlainTextEdit, &PlainTextEdit::DeselectParentItem, this, [&](){
+    QObject::connect(mPlainTextEdit, &PlainTextEdit::DeselectParentItem, this, [&]()
+    {
         setSelected(false);
     });
 
-    QObject::connect(mPlainTextEdit, &PlainTextEdit::ContentChangedSignal, this, [&](QString pPreviousText, QString pCurrentText){
+    QObject::connect(mPlainTextEdit, &PlainTextEdit::ContentChangedSignal, this, [&](QString pPreviousText, QString pCurrentText)
+    {
         emit TextLabelContentChangedSignal(this, pPreviousText, pCurrentText);
     });
 
@@ -60,7 +62,8 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
 
 void TextLabel::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
 {
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&]()
+    {
         if (mPlainTextEdit != nullptr)
         {
             // Make read-only
@@ -69,7 +72,8 @@ void TextLabel::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
             mPlainTextEdit->viewport()->setCursor(Qt::ArrowCursor);
         }
     });
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&](){
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&]()
+    {
         if (mPlainTextEdit != nullptr)
         {
             // Make editable
@@ -98,6 +102,7 @@ void TextLabel::ResetZValue()
 
 void TextLabel::UpdatePlainTextEditSize()
 {
+    qDebug() << "Update size";
     Q_ASSERT(mPlainTextEdit);
     QFontMetrics metrics(mPlainTextEdit->font());
 

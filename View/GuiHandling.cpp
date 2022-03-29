@@ -384,11 +384,13 @@ void View::SetUndoRedoButtonsEnableState()
 
 void View::ConnectGuiSignalsAndSlots()
 {
-    QObject::connect(mEditButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mEditButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
     });
 
-    QObject::connect(mSimulationButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mSimulationButton, &QAbstractButton::clicked, [&]()
+    {
         if (mCoreLogic.IsSimulationRunning())
         {
             mCoreLogic.EnterControlMode(ControlMode::EDIT);
@@ -399,59 +401,73 @@ void View::ConnectGuiSignalsAndSlots()
         }
     });
 
-    QObject::connect(mAddWireButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddWireButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterControlMode(ControlMode::WIRE);
     });
 
-    QObject::connect(mAddAndGateButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddAndGateButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::AND_GATE);
     });
 
-    QObject::connect(mAddOrGateButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddOrGateButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::OR_GATE);
     });
 
-    QObject::connect(mAddXorGateButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddXorGateButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::XOR_GATE);
     });
 
-    QObject::connect(mAddNotGateButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddNotGateButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::NOT_GATE);
     });
 
-    QObject::connect(mAddInputButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddInputButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::INPUT);
     });
 
-    QObject::connect(mAddButtonButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddButtonButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::BUTTON);
     });
 
-    QObject::connect(mAddClockButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddClockButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::CLOCK);
     });
 
-    QObject::connect(mAddOutputButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddOutputButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::OUTPUT);
     });
 
-    QObject::connect(mAddTextLabelButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddTextLabelButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
     });
 
-    QObject::connect(mAddHalfAdderButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddHalfAdderButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::HALF_ADDER);
     });
 
-    QObject::connect(mAddFullAdderButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddFullAdderButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::FULL_ADDER);
     });
 
-    QObject::connect(mAddRsFlipFlopButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddRsFlipFlopButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::RS_FLIPFLOP);
     });
 
-    QObject::connect(mAddDFlipFlopButton, &QAbstractButton::clicked, [&](){
+    QObject::connect(mAddDFlipFlopButton, &QAbstractButton::clicked, [&]()
+    {
         mCoreLogic.EnterAddControlMode(ComponentType::D_FLIPFLOP);
     });
 

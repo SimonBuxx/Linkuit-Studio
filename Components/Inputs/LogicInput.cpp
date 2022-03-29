@@ -14,7 +14,8 @@ LogicInput::LogicInput(const CoreLogic* pCoreLogic):
 
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 0), 0, QPointF(0, 0))); // Place connector in the middle of the component
 
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&](){
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&]()
+    {
         setCursor(Qt::PointingHandCursor);
     });
 }

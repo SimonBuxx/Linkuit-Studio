@@ -53,7 +53,8 @@ void View::SetScene(QGraphicsScene &pScene)
     mGraphicsView.setScene(&pScene);
     mGraphicsView.centerOn(0, 0);
 
-    QTimer::singleShot(0, &mGraphicsView, [&](){
+    QTimer::singleShot(0, &mGraphicsView, [&]()
+    {
         mGraphicsView.setFocus();
     });
 }
