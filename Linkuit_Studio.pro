@@ -18,3 +18,4 @@ RESOURCES += \
     resources.qrc
 
 include(Common.pri)
+include(QtAwesome/QtAwesome.pri)

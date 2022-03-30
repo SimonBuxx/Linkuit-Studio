@@ -21,11 +21,18 @@ QTabWidget#ribbonMenu
 QTabWidget#ribbonMenu::pane
 {
     border: none;
+    margin-bottom: -3px;
+}
+
+QGraphicsView
+{
+    margin-top: 30px;
 }
 
 QTabBar::tab
 {
     border-radius: 1px;
+    padding-top: 2px;
     background: rgb(0, 31, 34);
     font-family: 'Quicksand Medium';
     font-size: 16px;
@@ -37,6 +44,17 @@ QTabBar::tab
 QTabBar::tab:hover
 {
     background: rgb(0, 45, 50);
+}
+
+QTabBar::tab:first
+{
+    background: rgb(0, 143, 100);
+    width: 70px;
+}
+
+QTabBar::tab:first:hover, QTabBar::tab:first:selected
+{
+    background: rgb(0, 204, 143);
 }
 
 QTabBar::tab:selected
@@ -55,14 +73,32 @@ QToolButton
     color: rgb(255, 255, 255);
 }
 
+QToolButton[accessibleName="icon-and-text"]
+{
+    padding: 15px 0;
+}
+
 QToolButton:hover
 {
     border: 1px solid rgb(0, 143, 100);
 }
 
-QToolButton:checked
+QToolButton:checked, QToolButton:pressed
 {
     border: 1px solid rgb(0, 204, 143);
+}
+
+QLabel[accessibleName="category-label"]
+{
+    color: rgb(255, 255, 255);
+    font-family: 'Quicksand Medium';
+    font-size: 13px;
+    padding-top: 5px;
+}
+
+QFrame[accessibleName="separator"]
+{
+    color: rgb(0, 204, 143);
 }
 
 QToolTip

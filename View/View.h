@@ -4,6 +4,8 @@
 #include "CoreLogic.h"
 #include "Configuration.h"
 
+#include "QtAwesome.h"
+
 #include <QFrame>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -175,12 +177,21 @@ protected:
     CoreLogic &mCoreLogic;
 
     QTabWidget *mRibbonMenu;
+    QWidget *mStartPage;
     QWidget *mToolboxPage;
     QWidget *mSimulationPage;
     QWidget *mClockPage;
 
+    QtAwesome *mAwesome;
+
     // GUI buttons
     QButtonGroup *mToolboxButtonGroup;
+
+    QToolButton *mOpenCircuitButton;
+    QToolButton *mSaveCircuitButton;
+    QToolButton *mUpdateButton;
+    QToolButton *mHelpButton;
+    QToolButton *mAboutDialogButton;
 
     QToolButton *mEditButton;
     QToolButton *mDeleteButton;
@@ -201,7 +212,21 @@ protected:
     QToolButton *mAddDFlipFlopButton;
     QToolButton *mUndoButton;
     QToolButton *mRedoButton;
+
     QToolButton *mSimulationButton;
+
+    // Category labels
+
+    QLabel *mCategoryToolsLabel;
+    QLabel *mCategoryGatesLabel;
+    QLabel *mCategoryAddersLabel;
+    QLabel *mCategoryMemoryLabel;
+
+    QFrame *mSeparatorLine1;
+    QFrame *mSeparatorLine2;
+    QFrame *mSeparatorLine3;
+    QFrame *mSeparatorLine4;
+    QFrame *mSeparatorLine5;
 
     QLabel *mZoomLabel;
     QLabel *mProcessingOverlay;

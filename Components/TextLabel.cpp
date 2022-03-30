@@ -102,7 +102,6 @@ void TextLabel::ResetZValue()
 
 void TextLabel::UpdatePlainTextEditSize()
 {
-    qDebug() << "Update size";
     Q_ASSERT(mPlainTextEdit);
     QFontMetrics metrics(mPlainTextEdit->font());
 
