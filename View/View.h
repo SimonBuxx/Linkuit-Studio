@@ -13,6 +13,7 @@
 #include <QTabWidget>
 #include <QButtonGroup>
 #include <QGroupBox>
+#include <QGridLayout>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -114,6 +115,12 @@ public:
     /// \param pEnabled: If true, the widgets will be enabled
     void SetToolboxTabEnabled(bool pEnabled);
 
+    void SetStartTabEnabled(bool pEnabled);
+
+    void SetSimulationTabEnabled(bool pEnabled);
+
+    void SetGuiEnabled(bool pEnabled);
+
     /// \brief Performs tasks such as disabling buttons
     void PrepareGuiForSimulation(void);
 
@@ -159,6 +166,22 @@ protected:
     /// \brief Creates all GUI components of the main window
     void CreateGui(void);
 
+    void InitializeRibbonMenu(void);
+
+    void InitializeStartTabWidgets(void);
+
+    void InitializeToolboxTabWidgets(void);
+
+    void InitializeSimulationTabWidgets(void);
+
+    void FillRibbonMenuButtonGroups(void);
+
+    void InitializeRibbonMenuTabLayouts(void);
+
+    QFrame* CreateSeparator(void);
+
+    QIcon CreateIcon(QString pNormalPath, QString pDisabledPath) const;
+
     /// \brief Invokes connectors for all GUI components
     void ConnectGuiSignalsAndSlots(void);
 
@@ -176,16 +199,27 @@ protected:
     QGraphicsScene *mScene;
     CoreLogic &mCoreLogic;
 
+    QGridLayout *mMainLayout;
+
+    // Ribbon menu
+
     QTabWidget *mRibbonMenu;
     QWidget *mStartPage;
     QWidget *mToolboxPage;
     QWidget *mSimulationPage;
     QWidget *mClockPage;
 
-    QtAwesome *mAwesome;
+    QGridLayout *mStartTabLayout;
+    QGridLayout *mToolboxTabLayout;
+    QGridLayout *mSimulationTabLayout;
+
+    QtAwesome *mAwesome; // Contains Fontawesome logos
 
     // GUI buttons
+
+    QButtonGroup *mStartButtonGroup;
     QButtonGroup *mToolboxButtonGroup;
+    QButtonGroup *mSimulationButtonGroup;
 
     QToolButton *mOpenCircuitButton;
     QToolButton *mSaveCircuitButton;
@@ -222,11 +256,19 @@ protected:
     QLabel *mCategoryAddersLabel;
     QLabel *mCategoryMemoryLabel;
 
+    QLabel *mCategoryInfoLabel;
+
+    // Separator lines
+
     QFrame *mSeparatorLine1;
     QFrame *mSeparatorLine2;
     QFrame *mSeparatorLine3;
     QFrame *mSeparatorLine4;
     QFrame *mSeparatorLine5;
+
+    QFrame *mStartSeparatorLine1;
+
+    // Over-canvas elements
 
     QLabel *mZoomLabel;
     QLabel *mProcessingOverlay;

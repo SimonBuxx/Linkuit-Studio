@@ -19,5 +19,19 @@
         <file>fonts/Quicksand-Medium.ttf</file>
         <file>images/linkuit_icon5.png</file>
         <file>styles/style.css</file>
+        <file>images/icons/wire_disabled.png</file>
+        <file>images/icons/and_gate_disabled.png</file>
+        <file>images/icons/button_disabled.png</file>
+        <file>images/icons/clock_disabled.png</file>
+        <file>images/icons/d_flipflop_disabled.png</file>
+        <file>images/icons/full_adder_disabled.png</file>
+        <file>images/icons/half_adder_disabled.png</file>
+        <file>images/icons/input_disabled.png</file>
+        <file>images/icons/label_disabled.png</file>
+        <file>images/icons/not_gate_disabled.png</file>
+        <file>images/icons/or_gate_disabled.png</file>
+        <file>images/icons/output_disabled.png</file>
+        <file>images/icons/rs_flipflop_disabled.png</file>
+        <file>images/icons/xor_gate_disabled.png</file>
     </qresource>
 </RCC>

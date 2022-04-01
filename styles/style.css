@@ -73,11 +73,6 @@ QToolButton
     color: rgb(255, 255, 255);
 }
 
-QToolButton[accessibleName="icon-and-text"]
-{
-    padding: 15px 0;
-}
-
 QToolButton:hover
 {
     border: 1px solid rgb(0, 143, 100);
@@ -86,6 +81,17 @@ QToolButton:hover
 QToolButton:checked, QToolButton:pressed
 {
     border: 1px solid rgb(0, 204, 143);
+}
+
+QToolButton:disabled
+{
+    border: 1px solid rgb(0, 39, 43);
+    color: rgb(100, 100, 100);
+}
+
+QToolButton[accessibleName="icon-and-text"]
+{
+    padding: 15px 0;
 }
 
 QLabel[accessibleName="category-label"]
@@ -98,7 +104,7 @@ QLabel[accessibleName="category-label"]
 
 QFrame[accessibleName="separator"]
 {
-    color: rgb(0, 204, 143);
+    color: rgb(0, 39, 43);
 }
 
 QToolTip

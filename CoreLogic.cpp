@@ -503,6 +503,7 @@ void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::
             pAddedComponents.push_back(static_cast<LogicWire*>(verticalWire));
         }
 
+        Q_ASSERT(w->scene() == mView.Scene());
         pDeletedComponents.push_back(w);
         mView.Scene()->removeItem(w);
 
@@ -954,7 +955,8 @@ int steps = 0;
 int collideCheck = 0;
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {   
-    mView.SetToolboxTabEnabled(false);
+    mView.SetGuiEnabled(false);
+#warning processing screen not displayed when copying many gates, no wires
     StartProcessing();
 
     QElapsedTimer total;
@@ -1032,6 +1034,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
     EndProcessing();
     mView.PrepareGuiForEditing();
+    mView.SetGuiEnabled(true);
     qDebug() << "Steps: " << steps;
     qDebug() << "CollideCheck: " << collideCheck;
     steps = 0;
@@ -1058,6 +1061,7 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
     {
         if (dynamic_cast<ConPoint*>(collidingComp) != nullptr && !collidingComp->isSelected() && IsNoCrossingPoint(static_cast<ConPoint*>(collidingComp)))
         {
+            Q_ASSERT(collidingComp->scene() == mView.Scene());
             mView.Scene()->removeItem(collidingComp);
             deletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
         }
@@ -1067,6 +1071,7 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
     // Delete all ConPoints of the moved components that are not valid anymore
     if (dynamic_cast<ConPoint*>(pComponent) != nullptr && IsNoCrossingPoint(static_cast<ConPoint*>(pComponent)))
     {
+        Q_ASSERT(pComponent->scene() == mView.Scene());
         mView.Scene()->removeItem(pComponent);
         deletedComponents.push_back(pComponent);
     }
