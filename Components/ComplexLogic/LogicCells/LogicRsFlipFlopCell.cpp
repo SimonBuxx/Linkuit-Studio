@@ -47,9 +47,11 @@ void LogicRsFlipFlopCell::OnSimulationAdvance()
 
     if (mStateChanged)
     {
+        mStateChanged = false;
         NotifySuccessor(0, mCurrentState[0]);
         NotifySuccessor(1, mCurrentState[1]);
-        mStateChanged = false;
+
+        emit StateChangedSignal();
     }
 }
 

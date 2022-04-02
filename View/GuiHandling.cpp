@@ -312,7 +312,7 @@ void View::InitializeStartTabWidgets()
     mUpdateButton = new QToolButton();
     mUpdateButton->setAccessibleName("icon-and-text");
     mUpdateButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    mUpdateButton->setText(tr("Look for\nUpdate"));
+    mUpdateButton->setText(tr("Update"));
     mUpdateButton->setIcon(mAwesome->icon(fa::arrowcircleoup));
     mUpdateButton->setIconSize(QSize(30, 30));
     mUpdateButton->setFixedSize(90, 98);
