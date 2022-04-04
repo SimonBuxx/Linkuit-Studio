@@ -1,6 +1,8 @@
 HEADERS += \
+    $$PWD/Components/ComplexLogic/Demultiplexer.h \
     $$PWD/Components/ComplexLogic/FullAdder.h \
     $$PWD/Components/ComplexLogic/HalfAdder.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicMultiplexerCell.h \
@@ -47,8 +49,10 @@ HEADERS += \
     $${PWD}/Configuration.h
 
 SOURCES += \
+    $$PWD/Components/ComplexLogic/Demultiplexer.cpp \
     $$PWD/Components/ComplexLogic/FullAdder.cpp \
     $$PWD/Components/ComplexLogic/HalfAdder.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicMultiplexerCell.cpp \

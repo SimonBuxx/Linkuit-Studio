@@ -14,6 +14,7 @@
 #include "Components/ComplexLogic/RsFlipFlop.h"
 #include "Components/ComplexLogic/DFlipFlop.h"
 #include "Components/ComplexLogic/Multiplexer.h"
+#include "Components/ComplexLogic/Demultiplexer.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -209,6 +210,12 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         {
             const auto inputDigits = std::min(mComponentInputCount, components::multiplexer::MAX_INPUT_DIGITS);
             item = new Multiplexer(this, mComponentDirection, inputDigits);
+            break;
+        }
+        case ComponentType::DEMULTIPLEXER:
+        {
+            const auto inputDigits = std::min(mComponentInputCount, components::multiplexer::MAX_INPUT_DIGITS);
+            item = new Demultiplexer(this, mComponentDirection, inputDigits);
             break;
         }
         default:

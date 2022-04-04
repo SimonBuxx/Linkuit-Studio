@@ -248,6 +248,11 @@ void View::ConnectGuiSignalsAndSlots()
         mCoreLogic.EnterAddControlMode(ComponentType::MULTIPLEXER);
     });
 
+    QObject::connect(mAddDemultiplexerButton, &QAbstractButton::clicked, [&]()
+    {
+        mCoreLogic.EnterAddControlMode(ComponentType::DEMULTIPLEXER);
+    });
+
     QObject::connect(mDeleteButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::DeleteSelectedComponents);
     QObject::connect(mCopyButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::CopySelectedComponents);
     QObject::connect(mUndoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Undo);
@@ -506,11 +511,17 @@ void View::InitializeToolboxTabWidgets()
 
     mAddMultiplexerButton = new QToolButton();
     mAddMultiplexerButton->setCheckable(true);
-    mAddMultiplexerButton->setText(tr("Multiplexer"));
     mAddMultiplexerButton->setIcon(CreateIcon(":/images/icons/multiplexer.png", ":/images/icons/multiplexer_disabled.png"));
-    mAddMultiplexerButton->setIconSize(mAddDFlipFlopButton->icon().availableSizes().first() * 0.9f);
+    mAddMultiplexerButton->setIconSize(mAddMultiplexerButton->icon().availableSizes().first() * 0.7f);
     mAddMultiplexerButton->setFixedSize(90, 98);
     mAddMultiplexerButton->setToolTip(tr("Multiplexer"));
+
+    mAddDemultiplexerButton = new QToolButton();
+    mAddDemultiplexerButton->setCheckable(true);
+    mAddDemultiplexerButton->setIcon(CreateIcon(":/images/icons/demultiplexer.png", ":/images/icons/demultiplexer_disabled.png"));
+    mAddDemultiplexerButton->setIconSize(mAddDemultiplexerButton->icon().availableSizes().first() * 0.7f);
+    mAddDemultiplexerButton->setFixedSize(90, 98);
+    mAddDemultiplexerButton->setToolTip(tr("Demultiplexer"));
 
     mUndoButton = new QToolButton();
     mUndoButton->setText(tr("Undo"));
@@ -571,6 +582,7 @@ void View::FillRibbonMenuButtonGroups()
     mToolboxButtonGroup->addButton(mAddRsFlipFlopButton);
     mToolboxButtonGroup->addButton(mAddDFlipFlopButton);
     mToolboxButtonGroup->addButton(mAddMultiplexerButton);
+    mToolboxButtonGroup->addButton(mAddDemultiplexerButton);
 
     mSimulationButtonGroup = new QButtonGroup(this);
     mSimulationButtonGroup->addButton(mSimulationButton);
@@ -623,13 +635,14 @@ void View::InitializeRibbonMenuTabLayouts()
     mToolboxTabLayout->addWidget(mAddRsFlipFlopButton, 0, 16, 2, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mAddDFlipFlopButton, 0, 17, 2, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mSeparatorLine5, 0, 18, 3, 1, Qt::AlignCenter | Qt::AlignTop);
-    mToolboxTabLayout->addWidget(mCategoryConvertersLabel, 2, 19, 1, 1, Qt::AlignCenter | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mCategoryConvertersLabel, 2, 19, 1, 2, Qt::AlignCenter | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mAddMultiplexerButton, 0, 19, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-    mToolboxTabLayout->addWidget(mSeparatorLine6, 0, 20, 3, 1, Qt::AlignCenter | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mAddDemultiplexerButton, 0, 20, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mSeparatorLine6, 0, 21, 3, 1, Qt::AlignCenter | Qt::AlignTop);
 
 #warning remove undo and redo buttons from toolbox tab? => is undo/redo needed outside toolbox?
-    mToolboxTabLayout->addWidget(mUndoButton, 0, 21, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-    mToolboxTabLayout->addWidget(mRedoButton, 1, 21, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mUndoButton, 0, 22, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mRedoButton, 1, 22, 1, 1, Qt::AlignLeft | Qt::AlignTop);
 
     mSimulationTabLayout = new QGridLayout();
     mSimulationTabLayout->setAlignment(Qt::AlignLeft);

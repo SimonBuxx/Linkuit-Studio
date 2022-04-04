@@ -160,6 +160,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddMultiplexerButton->setChecked(true);
             break;
         }
+        case ComponentType::DEMULTIPLEXER:
+        {
+            mAddDemultiplexerButton->setChecked(true);
+            break;
+        }
         default:
         {
             mEditButton->setChecked(true);

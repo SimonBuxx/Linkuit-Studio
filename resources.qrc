@@ -35,5 +35,7 @@
         <file>images/icons/xor_gate_disabled.png</file>
         <file>images/icons/multiplexer.png</file>
         <file>images/icons/multiplexer_disabled.png</file>
+        <file>images/icons/demultiplexer.png</file>
+        <file>images/icons/demultiplexer_disabled.png</file>
     </qresource>
 </RCC>

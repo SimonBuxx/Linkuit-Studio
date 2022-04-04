@@ -24,7 +24,8 @@ enum class ComponentType
     FULL_ADDER,
     RS_FLIPFLOP,
     D_FLIPFLOP,
-    MULTIPLEXER
+    MULTIPLEXER,
+    DEMULTIPLEXER
 };
 
 enum class Direction

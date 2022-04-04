@@ -179,7 +179,7 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
         if (mSmallerDescription)
         {
             auto font = pPainter->font();
-            font.setPointSize(14);
+            font.setPointSize(10);
             pPainter->setFont(font);
         }
 

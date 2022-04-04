@@ -245,6 +245,7 @@ protected:
     QToolButton *mAddRsFlipFlopButton;
     QToolButton *mAddDFlipFlopButton;
     QToolButton *mAddMultiplexerButton;
+    QToolButton *mAddDemultiplexerButton;
     QToolButton *mUndoButton;
     QToolButton *mRedoButton;
 

@@ -31,7 +31,7 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
     mPlainTextEdit->setCursor(Qt::IBeamCursor);
     mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
 
-    SetTextContent(QString(""));
+    SetTextContent(QString(pText));
 
     mPlainTextEditProxy.setWidget(mPlainTextEdit);
 
