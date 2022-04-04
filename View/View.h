@@ -244,6 +244,7 @@ protected:
     QToolButton *mAddFullAdderButton;
     QToolButton *mAddRsFlipFlopButton;
     QToolButton *mAddDFlipFlopButton;
+    QToolButton *mAddMultiplexerButton;
     QToolButton *mUndoButton;
     QToolButton *mRedoButton;
 
@@ -255,6 +256,7 @@ protected:
     QLabel *mCategoryGatesLabel;
     QLabel *mCategoryAddersLabel;
     QLabel *mCategoryMemoryLabel;
+    QLabel *mCategoryConvertersLabel;
 
     QLabel *mCategoryInfoLabel;
 
@@ -265,6 +267,7 @@ protected:
     QFrame *mSeparatorLine3;
     QFrame *mSeparatorLine4;
     QFrame *mSeparatorLine5;
+    QFrame *mSeparatorLine6;
 
     QFrame *mStartSeparatorLine1;
 

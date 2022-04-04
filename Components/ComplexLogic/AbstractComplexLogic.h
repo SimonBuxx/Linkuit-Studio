@@ -88,6 +88,8 @@ protected:
 
     std::vector<QString> mInputLabels;
     std::vector<QString> mOutputLabels;
+
+    bool mSmallerDescription;
 };
 
 #endif // ABSTRACTCOMPLEXLOGIC_H

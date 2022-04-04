@@ -33,5 +33,7 @@
         <file>images/icons/output_disabled.png</file>
         <file>images/icons/rs_flipflop_disabled.png</file>
         <file>images/icons/xor_gate_disabled.png</file>
+        <file>images/icons/multiplexer.png</file>
+        <file>images/icons/multiplexer_disabled.png</file>
     </qresource>
 </RCC>

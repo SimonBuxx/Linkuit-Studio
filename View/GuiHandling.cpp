@@ -243,6 +243,11 @@ void View::ConnectGuiSignalsAndSlots()
         mCoreLogic.EnterAddControlMode(ComponentType::D_FLIPFLOP);
     });
 
+    QObject::connect(mAddMultiplexerButton, &QAbstractButton::clicked, [&]()
+    {
+        mCoreLogic.EnterAddControlMode(ComponentType::MULTIPLEXER);
+    });
+
     QObject::connect(mDeleteButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::DeleteSelectedComponents);
     QObject::connect(mCopyButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::CopySelectedComponents);
     QObject::connect(mUndoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Undo);
@@ -356,11 +361,17 @@ void View::InitializeToolboxTabWidgets()
     mCategoryMemoryLabel->setAlignment(Qt::AlignCenter);
     mCategoryMemoryLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
+    mCategoryConvertersLabel = new QLabel("Converters");
+    mCategoryConvertersLabel->setAccessibleName("category-label");
+    mCategoryConvertersLabel->setAlignment(Qt::AlignCenter);
+    mCategoryConvertersLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
     mSeparatorLine1 = CreateSeparator();
     mSeparatorLine2 = CreateSeparator();
     mSeparatorLine3 = CreateSeparator();
     mSeparatorLine4 = CreateSeparator();
     mSeparatorLine5 = CreateSeparator();
+    mSeparatorLine6 = CreateSeparator();
 
     mEditButton = new QToolButton();
     mEditButton->setAccessibleName("icon-and-text");
@@ -493,6 +504,14 @@ void View::InitializeToolboxTabWidgets()
     mAddDFlipFlopButton->setFixedSize(90, 98);
     mAddDFlipFlopButton->setToolTip(tr("D flip-flop"));
 
+    mAddMultiplexerButton = new QToolButton();
+    mAddMultiplexerButton->setCheckable(true);
+    mAddMultiplexerButton->setText(tr("Multiplexer"));
+    mAddMultiplexerButton->setIcon(CreateIcon(":/images/icons/multiplexer.png", ":/images/icons/multiplexer_disabled.png"));
+    mAddMultiplexerButton->setIconSize(mAddDFlipFlopButton->icon().availableSizes().first() * 0.9f);
+    mAddMultiplexerButton->setFixedSize(90, 98);
+    mAddMultiplexerButton->setToolTip(tr("Multiplexer"));
+
     mUndoButton = new QToolButton();
     mUndoButton->setText(tr("Undo"));
     mUndoButton->setEnabled(false);
@@ -551,6 +570,7 @@ void View::FillRibbonMenuButtonGroups()
     mToolboxButtonGroup->addButton(mAddFullAdderButton);
     mToolboxButtonGroup->addButton(mAddRsFlipFlopButton);
     mToolboxButtonGroup->addButton(mAddDFlipFlopButton);
+    mToolboxButtonGroup->addButton(mAddMultiplexerButton);
 
     mSimulationButtonGroup = new QButtonGroup(this);
     mSimulationButtonGroup->addButton(mSimulationButton);
@@ -603,10 +623,13 @@ void View::InitializeRibbonMenuTabLayouts()
     mToolboxTabLayout->addWidget(mAddRsFlipFlopButton, 0, 16, 2, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mAddDFlipFlopButton, 0, 17, 2, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mSeparatorLine5, 0, 18, 3, 1, Qt::AlignCenter | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mCategoryConvertersLabel, 2, 19, 1, 1, Qt::AlignCenter | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mAddMultiplexerButton, 0, 19, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mSeparatorLine6, 0, 20, 3, 1, Qt::AlignCenter | Qt::AlignTop);
 
 #warning remove undo and redo buttons from toolbox tab? => is undo/redo needed outside toolbox?
-    mToolboxTabLayout->addWidget(mUndoButton, 0, 19, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-    mToolboxTabLayout->addWidget(mRedoButton, 1, 19, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mUndoButton, 0, 21, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mRedoButton, 1, 21, 1, 1, Qt::AlignLeft | Qt::AlignTop);
 
     mSimulationTabLayout = new QGridLayout();
     mSimulationTabLayout->setAlignment(Qt::AlignLeft);

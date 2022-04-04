@@ -155,6 +155,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddDFlipFlopButton->setChecked(true);
             break;
         }
+        case ComponentType::MULTIPLEXER:
+        {
+            mAddMultiplexerButton->setChecked(true);
+            break;
+        }
         default:
         {
             mEditButton->setChecked(true);

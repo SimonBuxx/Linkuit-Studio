@@ -1,6 +1,13 @@
 #ifndef HELPERSTRUCTURES_H
 #define HELPERSTRUCTURES_H
 
+#include <QString>
+
+namespace helpers
+{
+static const QString SUPERSCRIPTS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+} // namespace
+
 enum class ComponentType
 {
     NONE = 0,
@@ -16,7 +23,8 @@ enum class ComponentType
     HALF_ADDER,
     FULL_ADDER,
     RS_FLIPFLOP,
-    D_FLIPFLOP
+    D_FLIPFLOP,
+    MULTIPLEXER
 };
 
 enum class Direction

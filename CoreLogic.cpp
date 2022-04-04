@@ -13,6 +13,7 @@
 #include "Components/ComplexLogic/FullAdder.h"
 #include "Components/ComplexLogic/RsFlipFlop.h"
 #include "Components/ComplexLogic/DFlipFlop.h"
+#include "Components/ComplexLogic/Multiplexer.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -202,6 +203,12 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         case ComponentType::D_FLIPFLOP:
         {
             item = new DFlipFlop(this, mComponentDirection);
+            break;
+        }
+        case ComponentType::MULTIPLEXER:
+        {
+            const auto inputDigits = std::min(mComponentInputCount, components::multiplexer::MAX_INPUT_DIGITS);
+            item = new Multiplexer(this, mComponentDirection, inputDigits);
             break;
         }
         default:

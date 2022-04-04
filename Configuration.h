@@ -121,12 +121,18 @@ static constexpr uint32_t CLOCK_PULSE_TICKS = 10;
 static constexpr uint32_t CLOCK_TOGGLE_TICKS = 100;
 } // namespace
 
+namespace multiplexer
+{
+static constexpr uint8_t MAX_INPUT_DIGITS = 5;
+} // namespace
+
 namespace complex_logic
 {
 static constexpr const char* HALF_ADDER_TEXT = "HA";
 static constexpr const char* FULL_ADDER_TEXT = "FA";
 static constexpr const char* RS_FLIPFLOP_TEXT = "RS";
 static constexpr const char* D_FLIPFLOP_TEXT = "FF";
+static constexpr const char* MULTIPLEXER_TEXT = "MUL";
 
 static const QFont FONT("Quicksand Medium", 20);
 static const QFont CONNECTOR_FONT("Calibri Light", 10);
