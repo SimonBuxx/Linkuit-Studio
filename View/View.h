@@ -3,6 +3,7 @@
 
 #include "CoreLogic.h"
 #include "Configuration.h"
+#include "AboutDialog.h"
 
 #include "QtAwesome.h"
 
@@ -209,6 +210,8 @@ protected:
     QWidget *mSimulationPage;
     QWidget *mClockPage;
 
+    QScrollArea *mToolboxScrollArea;
+
     QGridLayout *mStartTabLayout;
     QGridLayout *mToolboxTabLayout;
     QGridLayout *mSimulationTabLayout;
@@ -278,6 +281,8 @@ protected:
     QLabel *mProcessingOverlay;
 
     int32_t mZoomLevel = canvas::DEFAULT_ZOOM_LEVEL;
+
+    AboutDialog mAboutDialog;
 };
 
 #endif // VIEW_H

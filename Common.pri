@@ -46,7 +46,8 @@ HEADERS += \
     $${PWD}/Undo/UndoDeleteType.h \
     $${PWD}/Undo/UndoMoveType.h \
     $${PWD}/View/View.h \
-    $${PWD}/Configuration.h
+    $${PWD}/Configuration.h \
+    $${PWD}/AboutDialog.h
 
 SOURCES += \
     $$PWD/Components/ComplexLogic/Demultiplexer.cpp \
@@ -95,6 +96,10 @@ SOURCES += \
     $${PWD}/View/EventHandling.cpp \
     $${PWD}/View/GuiHandling.cpp \
     $${PWD}/MainWindow.cpp \
-    $${PWD}/View/View.cpp
+    $${PWD}/View/View.cpp \
+    $${PWD}/AboutDialog.cpp
 
 INCLUDEPATH += $${PWD}
+
+FORMS += \
+    $$PWD/AboutDialog.ui

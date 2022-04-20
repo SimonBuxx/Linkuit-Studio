@@ -257,6 +257,10 @@ void View::ConnectGuiSignalsAndSlots()
     QObject::connect(mCopyButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::CopySelectedComponents);
     QObject::connect(mUndoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Undo);
     QObject::connect(mRedoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Redo);
+
+    QObject::connect(mAboutDialogButton, &QAbstractButton::clicked, this, [&](){
+        mAboutDialog.show();
+    });
 }
 
 void View::InitializeRibbonMenu()
@@ -272,8 +276,16 @@ void View::InitializeRibbonMenu()
     mStartPage = new QWidget();
     mRibbonMenu->addTab(mStartPage, "Start");
 
-    mToolboxPage = new QWidget();
-    mRibbonMenu->addTab(mToolboxPage, "Toolbox");
+    mToolboxPage = new QWidget(this);
+
+    mToolboxScrollArea = new QScrollArea(this);
+    mToolboxScrollArea->setBackgroundRole(QPalette::ColorRole::NoRole);
+    mToolboxScrollArea->setWidget(mToolboxPage);
+    mToolboxScrollArea->verticalScrollBar()->setEnabled(false);
+    mToolboxScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mToolboxScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+    mRibbonMenu->addTab(mToolboxScrollArea, "Toolbox");
 
     mSimulationPage = new QWidget();
     mRibbonMenu->addTab(mSimulationPage, "Simulation");
@@ -387,7 +399,7 @@ void View::InitializeToolboxTabWidgets()
     mEditButton->setIcon(mAwesome->icon(fa::pencil));
     mEditButton->setIconSize(QSize(30, 30));
     mEditButton->setFixedSize(90, 98);
-    mEditButton->setToolTip(tr("Edit tool"));
+    mEditButton->setToolTip(tr("Edit tool [ESC]"));
 
     mCopyButton = new QToolButton();
     mCopyButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -405,7 +417,7 @@ void View::InitializeToolboxTabWidgets()
     mDeleteButton->setIconSize(QSize(20, 20));
     mDeleteButton->setStyleSheet("padding-left: 5px;"); // Center manually
     mDeleteButton->setFixedSize(90, 47);
-    mDeleteButton->setToolTip(tr("Delete"));
+    mDeleteButton->setToolTip(tr("Delete [DEL]"));
 
     mAddWireButton = new QToolButton();
     mAddWireButton->setAccessibleName("icon-and-text");
@@ -639,6 +651,8 @@ void View::InitializeRibbonMenuTabLayouts()
     mToolboxTabLayout->addWidget(mAddMultiplexerButton, 0, 19, 2, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mAddDemultiplexerButton, 0, 20, 2, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mSeparatorLine6, 0, 21, 3, 1, Qt::AlignCenter | Qt::AlignTop);
+
+    mToolboxTabLayout->setSizeConstraint(QLayout::SetFixedSize);
 
 #warning remove undo and redo buttons from toolbox tab? => is undo/redo needed outside toolbox?
     mToolboxTabLayout->addWidget(mUndoButton, 0, 22, 1, 1, Qt::AlignLeft | Qt::AlignTop);
