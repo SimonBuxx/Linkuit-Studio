@@ -246,14 +246,14 @@ protected:
     /// \brief Gets the collision point of two wires of different direction, assuming they do in fact collide
     /// \param pWireA: The first wire
     /// \param pWireB: The second wire
-    /// \return The collision point of the wires
-    QPointF GetWireCollisionPoint(const LogicWire* pWireA, const LogicWire* pWireB) const;
+    /// \return The collision point of the wires (optional)
+    std::optional<QPointF> GetWireCollisionPoint(const LogicWire* pWireA, const LogicWire* pWireB) const;
 
     /// \brief Checks if a ConPoint of the given type collides with the given position
     /// \param pPos: The position to check
     /// \param pType: The connection type to look for
-    /// \return A pointer to the ConPoint, if a ConPoint is found at pPos with connection type pType, nullptr otherwise
-    ConPoint* GetConPointAtPosition(QPointF pPos, ConnectionType pType) const;
+    /// \return A pointer to the ConPoint (optional)
+    std::optional<ConPoint*> GetConPointAtPosition(QPointF pPos, ConnectionType pType) const;
 
     // Functions for component retreival
 
@@ -265,8 +265,9 @@ protected:
 
     /// \brief Returns all components that are "colliding" (may not be before or behind others) with the given component
     /// \param pComponent: The component to check for colliding components
+    /// \param pOnlyUnselected: If true, selected colliding components are ignored
     /// \return A vector of components that are colliding with pComponent
-    std::vector<IBaseComponent*> GetCollidingComponents(IBaseComponent* pComponent) const;
+    std::vector<IBaseComponent*> GetCollidingComponents(IBaseComponent* pComponent, bool pOnlyUnselected) const;
 
     /// \brief Checks if the given item is a "colliding" component (may not be before or behind others)
     /// \param pComponent: The item to check

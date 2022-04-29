@@ -239,7 +239,7 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
     item.value()->setPos(SnapToGrid(pPosition));
 
-    if (GetCollidingComponents(item.value()).empty())
+    if (GetCollidingComponents(item.value(), false).empty())
     {
         mView.Scene()->clearFocus(); // Remove focus from components like labels that can be edited while in ADD mode
         mView.Scene()->addItem(item.value());
@@ -595,13 +595,13 @@ std::vector<IBaseComponent*> CoreLogic::FilterForWires(const QList<QGraphicsItem
     return wires;
 }
 
-std::vector<IBaseComponent*> CoreLogic::GetCollidingComponents(IBaseComponent* pComponent) const
+std::vector<IBaseComponent*> CoreLogic::GetCollidingComponents(IBaseComponent* pComponent, bool pOnlyUnselected) const
 {
     std::vector<IBaseComponent*> collidingComponents;
 
     for (auto &comp : mView.Scene()->collidingItems(pComponent))
     {
-        if (IsCollidingComponent(comp))
+        if (IsCollidingComponent(comp) && (!pOnlyUnselected || !comp->isSelected()))
         {
             // comp must be IBaseComponent at this point
             collidingComponents.push_back(static_cast<IBaseComponent*>(comp));
@@ -769,23 +769,26 @@ void CoreLogic::ExploreGroup(LogicWire* pWire, int32_t pGroupIndex)
     {
         if (dynamic_cast<LogicWire*>(coll) != nullptr && mWireMap.find(static_cast<LogicWire*>(coll)) == mWireMap.end())
         {
-            auto conPoint = GetConPointAtPosition(GetWireCollisionPoint(pWire, static_cast<LogicWire*>(coll)), ConnectionType::FULL);
-            if (conPoint != nullptr)
+            auto collisionPoint = GetWireCollisionPoint(pWire, static_cast<LogicWire*>(coll));
+            if (collisionPoint.has_value())
             {
-                mWireGroups[pGroupIndex].push_back(conPoint);
-            }
-            if (conPoint != nullptr || IsLCrossing(pWire, static_cast<LogicWire*>(coll)))
-            {
-                ExploreGroup(static_cast<LogicWire*>(coll), pGroupIndex); // Recursive call
+                auto conPoint = GetConPointAtPosition(collisionPoint.value(), ConnectionType::FULL);
+                if (conPoint.has_value())
+                {
+                    mWireGroups[pGroupIndex].push_back(conPoint.value());
+                }
+                if (conPoint.has_value() || IsLCrossing(pWire, static_cast<LogicWire*>(coll)))
+                {
+                    ExploreGroup(static_cast<LogicWire*>(coll), pGroupIndex); // Recursive call
+                }
             }
         }
         ProcessingHeartbeat();
     }
 }
 
-QPointF CoreLogic::GetWireCollisionPoint(const LogicWire* pWireA, const LogicWire* pWireB) const
+std::optional<QPointF> CoreLogic::GetWireCollisionPoint(const LogicWire* pWireA, const LogicWire* pWireB) const
 {
-    // Assuming the wires do collide
     if (pWireA->GetDirection() == WireDirection::HORIZONTAL && pWireB->GetDirection() == WireDirection::VERTICAL)
     {
         return QPointF(pWireB->x(), pWireA->y());
@@ -796,7 +799,7 @@ QPointF CoreLogic::GetWireCollisionPoint(const LogicWire* pWireA, const LogicWir
     }
     else
     {
-        Q_ASSERT(false);
+        return std::nullopt;
     }
 }
 
@@ -824,7 +827,7 @@ bool CoreLogic::IsLCrossing(LogicWire* pWireA, LogicWire* pWireB) const
         || (a->x() == b->x() && b->y() + b->GetLength() == a->y()) || (a->x() + a->GetLength() == b->x() && a->y() == b->y() + b->GetLength()));
 }
 
-ConPoint* CoreLogic::GetConPointAtPosition(QPointF pPos, ConnectionType pType) const
+std::optional<ConPoint*> CoreLogic::GetConPointAtPosition(QPointF pPos, ConnectionType pType) const
 {
     for (const auto& comp : mView.Scene()->items(pPos, Qt::IntersectsItemShape))
     {
@@ -837,7 +840,7 @@ ConPoint* CoreLogic::GetConPointAtPosition(QPointF pPos, ConnectionType pType) c
         }
     }
 
-    return nullptr;
+    return std::nullopt;
 }
 
 void CoreLogic::CreateWireLogicCells()
@@ -1060,7 +1063,7 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
 {
     steps++;
 
-    if (IsCollidingComponent(pComponent) && !GetCollidingComponents(pComponent).empty())
+    if (IsCollidingComponent(pComponent) && !GetCollidingComponents(pComponent, true).empty()) // Abort if collision with unselected component
     {
         return false;
     }
