@@ -8,6 +8,29 @@
 #include <QtWidgets>
 #include <QtMath>
 
+HorizontalScrollArea::HorizontalScrollArea(QWidget* pParent):
+    QScrollArea(pParent)
+{
+    setBackgroundRole(QPalette::ColorRole::NoRole);
+    verticalScrollBar()->setEnabled(false);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+}
+
+void HorizontalScrollArea::wheelEvent(QWheelEvent *pEvent)
+{
+    if (pEvent->angleDelta().y() > 0)
+    {
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() - gui::HORIZONTAL_SCROLL_SPEED);
+    }
+    else
+    {
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() + gui::HORIZONTAL_SCROLL_SPEED);
+    }
+
+    QScrollArea::wheelEvent(pEvent);
+}
+
 GraphicsView::GraphicsView(View &pView, CoreLogic &pCoreLogic):
     QGraphicsView(),
     mView(pView),

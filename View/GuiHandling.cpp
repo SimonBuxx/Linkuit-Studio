@@ -278,12 +278,8 @@ void View::InitializeRibbonMenu()
 
     mToolboxPage = new QWidget(this);
 
-    mToolboxScrollArea = new QScrollArea(this);
-    mToolboxScrollArea->setBackgroundRole(QPalette::ColorRole::NoRole);
+    mToolboxScrollArea = new HorizontalScrollArea(this);
     mToolboxScrollArea->setWidget(mToolboxPage);
-    mToolboxScrollArea->verticalScrollBar()->setEnabled(false);
-    mToolboxScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    mToolboxScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     mRibbonMenu->addTab(mToolboxScrollArea, "Toolbox");
 

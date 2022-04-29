@@ -24,6 +24,15 @@ QT_END_NAMESPACE
 class View;
 class CoreLogic;
 
+class HorizontalScrollArea : public QScrollArea
+{
+    Q_OBJECT
+public:
+    HorizontalScrollArea(QWidget* pParent);
+
+    void wheelEvent(QWheelEvent *pEvent) override;
+};
+
 ///
 /// \brief The GraphicsView class extends QGraphicsView, which contains the main scene
 ///
@@ -210,7 +219,7 @@ protected:
     QWidget *mSimulationPage;
     QWidget *mClockPage;
 
-    QScrollArea *mToolboxScrollArea;
+    HorizontalScrollArea *mToolboxScrollArea;
 
     QGridLayout *mStartTabLayout;
     QGridLayout *mToolboxTabLayout;

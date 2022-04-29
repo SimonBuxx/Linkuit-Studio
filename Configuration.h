@@ -9,9 +9,13 @@
 
 static constexpr uint8_t MAX_UNDO_STACK_SIZE = 100;
 
+static constexpr const char* SW_VERSION_STRING = "0.6.0alpha";
+
 namespace gui
 {
 static constexpr const char* WINDOW_TITLE = "Linkuit Studio - Unnamed Circuit";
+
+static constexpr uint32_t HORIZONTAL_SCROLL_SPEED = 30;
 
 static constexpr std::chrono::milliseconds PROCESSING_OVERLAY_TIMEOUT(100);
 } // namespace

@@ -41,7 +41,6 @@
    <property name="font">
     <font>
      <family>Quicksand Medium</family>
-     <pointsize>-1</pointsize>
      <stylestrategy>PreferAntialias</stylestrategy>
      <kerning>true</kerning>
     </font>
@@ -101,7 +100,7 @@ font-weight: bold;
 color: white;</string>
    </property>
    <property name="text">
-    <string>Linkuit Studio 0.6.0alpha</string>
+    <string>Linkuit Studio 0.0.0alpha</string>
    </property>
    <property name="wordWrap">
     <bool>false</bool>
