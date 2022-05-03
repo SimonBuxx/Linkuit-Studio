@@ -29,7 +29,7 @@
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QDialogButtonBox" name="closeButtonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -55,7 +55,7 @@
     <set>QDialogButtonBox::Close</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="softwareIconLabel">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -74,7 +74,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="softwareNameLabel">
    <property name="geometry">
     <rect>
      <x>160</x>
@@ -106,7 +106,7 @@ color: white;</string>
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="buildInfoLabel">
    <property name="geometry">
     <rect>
      <x>160</x>
@@ -137,7 +137,7 @@ color: white;</string>
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="copyrightLabel">
    <property name="geometry">
     <rect>
      <x>160</x>
@@ -174,7 +174,7 @@ color: white;</string>
  </resources>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>closeButtonBox</sender>
    <signal>accepted()</signal>
    <receiver>AboutDialog</receiver>
    <slot>accept()</slot>
@@ -190,7 +190,7 @@ color: white;</string>
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
+   <sender>closeButtonBox</sender>
    <signal>rejected()</signal>
    <receiver>AboutDialog</receiver>
    <slot>reject()</slot>

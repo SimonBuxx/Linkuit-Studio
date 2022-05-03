@@ -133,6 +133,11 @@ void View::OnComponentTypeChanged(ComponentType pNewType)
             mAddNotGateButton->setChecked(true);
             break;
         }
+        case ComponentType::BUFFER_GATE:
+        {
+            mAddBufferGateButton->setChecked(true);
+            break;
+        }
         case ComponentType::INPUT:
         {
             mAddInputButton->setChecked(true);

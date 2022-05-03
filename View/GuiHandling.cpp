@@ -198,6 +198,11 @@ void View::ConnectGuiSignalsAndSlots()
         mCoreLogic.EnterAddControlMode(ComponentType::NOT_GATE);
     });
 
+    QObject::connect(mAddBufferGateButton, &QAbstractButton::clicked, [&]()
+    {
+        mCoreLogic.EnterAddControlMode(ComponentType::BUFFER_GATE);
+    });
+
     QObject::connect(mAddInputButton, &QAbstractButton::clicked, [&]()
     {
         mCoreLogic.EnterAddControlMode(ComponentType::INPUT);
@@ -258,7 +263,28 @@ void View::ConnectGuiSignalsAndSlots()
     QObject::connect(mUndoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Undo);
     QObject::connect(mRedoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Redo);
 
-    QObject::connect(mAboutDialogButton, &QAbstractButton::clicked, this, [&](){
+    QObject::connect(mOpenCircuitButton, &QAbstractButton::clicked, this, [&]()
+    {
+        qWarning() << "Not implemented";
+    });
+
+    QObject::connect(mSaveCircuitButton, &QAbstractButton::clicked, this, [&]()
+    {
+        qWarning() << "Not implemented";
+    });
+
+    QObject::connect(mUpdateButton, &QAbstractButton::clicked, this, [&]()
+    {
+        qWarning() << "Not implemented";
+    });
+
+    QObject::connect(mHelpButton, &QAbstractButton::clicked, this, [&]()
+    {
+        qWarning() << "Not implemented";
+    });
+
+    QObject::connect(mAboutDialogButton, &QAbstractButton::clicked, this, [&]()
+    {
         mAboutDialog.show();
     });
 }
@@ -450,8 +476,15 @@ void View::InitializeToolboxTabWidgets()
     mAddNotGateButton->setCheckable(true);
     mAddNotGateButton->setIcon(CreateIcon(":/images/icons/not_gate.png", ":/images/icons/not_gate_disabled.png"));
     mAddNotGateButton->setIconSize(mAddNotGateButton->icon().availableSizes().first() * 0.9f);
-    mAddNotGateButton->setFixedSize(90, 98);
+    mAddNotGateButton->setFixedSize(90, 47);
     mAddNotGateButton->setToolTip(tr("NOT gate"));
+
+    mAddBufferGateButton = new QToolButton();
+    mAddBufferGateButton->setCheckable(true);
+    mAddBufferGateButton->setIcon(CreateIcon(":/images/icons/buffer_gate.png", ":/images/icons/buffer_gate_disabled.png"));
+    mAddBufferGateButton->setIconSize(mAddBufferGateButton->icon().availableSizes().first() * 0.9f);
+    mAddBufferGateButton->setFixedSize(90, 47);
+    mAddBufferGateButton->setToolTip(tr("Buffer gate"));
 
     mAddInputButton = new QToolButton();
     mAddInputButton->setCheckable(true);
@@ -580,6 +613,7 @@ void View::FillRibbonMenuButtonGroups()
     mToolboxButtonGroup->addButton(mAddOrGateButton);
     mToolboxButtonGroup->addButton(mAddXorGateButton);
     mToolboxButtonGroup->addButton(mAddNotGateButton);
+    mToolboxButtonGroup->addButton(mAddBufferGateButton);
     mToolboxButtonGroup->addButton(mAddInputButton);
     mToolboxButtonGroup->addButton(mAddButtonButton);
     mToolboxButtonGroup->addButton(mAddClockButton);
@@ -627,7 +661,8 @@ void View::InitializeRibbonMenuTabLayouts()
     mToolboxTabLayout->addWidget(mAddOrGateButton, 0, 5, 2, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mCategoryGatesLabel, 2, 4, 1, 4, Qt::AlignCenter | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mAddXorGateButton, 0, 6, 2, 1, Qt::AlignLeft | Qt::AlignTop);
-    mToolboxTabLayout->addWidget(mAddNotGateButton, 0, 7, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mAddNotGateButton, 0, 7, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+    mToolboxTabLayout->addWidget(mAddBufferGateButton, 1, 7, 1, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mSeparatorLine2, 0, 8, 3, 1, Qt::AlignCenter | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mAddInputButton, 0, 9, 1, 1, Qt::AlignLeft | Qt::AlignTop);
     mToolboxTabLayout->addWidget(mAddButtonButton, 0, 10, 1, 1, Qt::AlignLeft | Qt::AlignTop);

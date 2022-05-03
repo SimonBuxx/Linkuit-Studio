@@ -76,6 +76,7 @@ static constexpr const char* AND_TEXT = "&";
 static constexpr const char* OR_TEXT = "≥1";
 static constexpr const char* XOR_TEXT = "=1";
 static constexpr const char* NOT_TEXT = "1";
+static constexpr const char* BUFFER_TEXT = "1";
 
 static constexpr uint8_t DEFAULT_INPUT_COUNT = 2;
 static constexpr uint8_t GRID_WIDTH = 3;

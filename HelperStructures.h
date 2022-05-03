@@ -15,6 +15,7 @@ enum class ComponentType
     OR_GATE,
     XOR_GATE,
     NOT_GATE,
+    BUFFER_GATE,
     INPUT,
     BUTTON,
     CLOCK,

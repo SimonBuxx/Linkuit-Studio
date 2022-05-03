@@ -4,6 +4,7 @@
 #include "Components/Gates/OrGate.h"
 #include "Components/Gates/XorGate.h"
 #include "Components/Gates/NotGate.h"
+#include "Components/Gates/BufferGate.h"
 #include "Components/Inputs/LogicInput.h"
 #include "Components/Inputs/LogicButton.h"
 #include "Components/Inputs/LogicClock.h"
@@ -159,6 +160,11 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         case ComponentType::NOT_GATE:
         {
             item = new NotGate(this, mComponentDirection);
+            break;
+        }
+        case ComponentType::BUFFER_GATE:
+        {
+            item = new BufferGate(this, mComponentDirection);
             break;
         }
         case ComponentType::INPUT:

@@ -247,6 +247,7 @@ protected:
     QToolButton *mAddOrGateButton;
     QToolButton *mAddXorGateButton;
     QToolButton *mAddNotGateButton;
+    QToolButton *mAddBufferGateButton;
     QToolButton *mAddInputButton;
     QToolButton *mAddButtonButton;
     QToolButton *mAddClockButton;

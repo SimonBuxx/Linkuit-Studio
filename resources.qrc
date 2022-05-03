@@ -12,6 +12,7 @@
         <file>images/icons/button.png</file>
         <file>images/icons/input.png</file>
         <file>images/icons/not_gate.png</file>
+        <file>images/icons/buffer_gate.png</file>
         <file>images/icons/clock.png</file>
         <file>images/icons/label.png</file>
         <file>images/icons/output.png</file>
@@ -29,6 +30,7 @@
         <file>images/icons/input_disabled.png</file>
         <file>images/icons/label_disabled.png</file>
         <file>images/icons/not_gate_disabled.png</file>
+        <file>images/icons/buffer_gate_disabled.png</file>
         <file>images/icons/or_gate_disabled.png</file>
         <file>images/icons/output_disabled.png</file>
         <file>images/icons/rs_flipflop_disabled.png</file>

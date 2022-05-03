@@ -41,6 +41,7 @@ inline LogicState InvertState(LogicState pState)
             break;
         }
     }
+    return LogicState::LOW;
 }
 
 #endif // HELPERFUNCTIONS_H
