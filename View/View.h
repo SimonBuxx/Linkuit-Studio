@@ -125,6 +125,7 @@ public:
     /// \param pEnabled: If true, the widgets will be enabled
     void SetToolboxTabEnabled(bool pEnabled);
 
+#warning undocumented functions
     void SetStartTabEnabled(bool pEnabled);
 
     void SetSimulationTabEnabled(bool pEnabled);
