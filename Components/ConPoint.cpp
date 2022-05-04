@@ -88,8 +88,7 @@ ConnectionType ConPoint::AdvanceConnectionType()
         }
         default:
         {
-            Q_ASSERT(false);
-            break;
+            throw std::logic_error("Connection type invalid");
         }
     }
     return previous;
@@ -137,8 +136,7 @@ void ConPoint::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption
             }
             default:
             {
-                Q_ASSERT(false);
-                break;
+                throw std::logic_error("Connection type invalid");
             }
         }
     }

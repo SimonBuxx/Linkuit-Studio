@@ -6,7 +6,7 @@
 #include "Components/TextLabel.h"
 #include "HelperStructures.h"
 
-namespace Undo
+namespace undo
 {
 
 /// \brief The abstract ConfigChangedData struct represents all data neccessary to revert the contained configuration change
@@ -91,7 +91,7 @@ struct TextLabelContentChangedData : ConfigChangedData
     QString previousText;
     QString currentText;
 };
-}
+} // namespace
 
 ///
 /// \brief The UndoConfigureType class represents an undo action where an object has been altered
@@ -101,18 +101,18 @@ class UndoConfigureType : public UndoBaseType
 public:
     /// \brief Constructor for UndoConfigureType
     /// \param pData: The data of the configuration event
-    UndoConfigureType(std::shared_ptr<Undo::ConfigChangedData> pData);
+    UndoConfigureType(std::shared_ptr<undo::ConfigChangedData> pData);
 
-    /// \brief Returns the Undo::Type of this class
-    /// \return The Undo::Type of this class
-    Undo::Type Type(void) const override;
+    /// \brief Returns the undo::Type of this class
+    /// \return The undo::Type of this class
+    undo::Type Type(void) const override;
 
     /// \brief Returns a pointer to the config data
     /// \return Shared pointer to the config data
-    std::shared_ptr<Undo::ConfigChangedData> Data(void);
+    std::shared_ptr<undo::ConfigChangedData> Data(void);
 
 protected:
-    std::shared_ptr<Undo::ConfigChangedData> mData;
+    std::shared_ptr<undo::ConfigChangedData> mData;
 };
 
 #endif // UNDOCONFIGURETYPE_H

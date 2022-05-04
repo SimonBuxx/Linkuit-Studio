@@ -16,8 +16,8 @@ public:
     virtual ~UndoBaseType() = default;
 
     /// \brief Gets the type of this undo action
-    /// \return An Undo::Type object
-    virtual Undo::Type Type(void) const = 0;
+    /// \return An undo::Type object
+    virtual undo::Type Type(void) const = 0;
 };
 
 #endif // UNDOBASETYPE_H

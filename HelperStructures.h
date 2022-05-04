@@ -77,7 +77,7 @@ enum class ControlMode
     SIMULATION
 };
 
-namespace Undo
+namespace undo
 {
 enum class Type
 {
@@ -99,7 +99,8 @@ namespace gui
 {
 enum class MenuTab
 {
-    COMPONENTS,
+    START,
+    TOOLBOX,
     SIMULATION,
     CLOCK
 };

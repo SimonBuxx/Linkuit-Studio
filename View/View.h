@@ -24,12 +24,20 @@ QT_END_NAMESPACE
 class View;
 class CoreLogic;
 
+///
+/// \brief The HorizontalScrollArea class is a QScrollArea used in the ribbon menu tabs that has
+/// been altered to scroll its contents when the scroll wheel is turned above the contents
+///
 class HorizontalScrollArea : public QScrollArea
 {
     Q_OBJECT
 public:
+    /// \brief Constructor for HorizontalScrollArea; sets default settings for use in the ribbon menu
+    /// \param pParent: Pointer to the layout's parent widget
     HorizontalScrollArea(QWidget* pParent);
 
+    /// \brief Scrolls the contents horizontally when the scroll wheel is turned
+    /// \param pEvent: Pointer to the scroll wheel event
     void wheelEvent(QWheelEvent *pEvent) override;
 };
 
@@ -125,11 +133,16 @@ public:
     /// \param pEnabled: If true, the widgets will be enabled
     void SetToolboxTabEnabled(bool pEnabled);
 
-#warning undocumented functions
+    /// \brief Enables or disables all components of the "Start" tab
+    /// \param pEnabled: If true, the components will be enabled
     void SetStartTabEnabled(bool pEnabled);
 
+    /// \brief Enables or disables all components of the "Simulation" tab
+    /// \param pEnabled: If true, the components will be enabled
     void SetSimulationTabEnabled(bool pEnabled);
 
+    /// \brief Enables or disables all components of the GUI
+    /// \param pEnabled: If true, the components will be enabled
     void SetGuiEnabled(bool pEnabled);
 
     /// \brief Performs tasks such as disabling buttons
@@ -138,12 +151,18 @@ public:
     /// \brief Performs tasks such as enabling buttons
     void PrepareGuiForEditing(void);
 
+    /// \brief Fades out the overlay that indicates that the SW is loading
     void FadeOutProcessingOverlay(void);
 
+    /// \brief Fades in the overlay that indicates that the SW is loading
     void FadeInProcessingOverlay(void);
 
+    /// \brief Displays the given "special" tab, a tab that is only visible under certain conditions
+    /// Note: Only one special tab can be shown at a time
+    /// \param mTab: The tab to display
     void ShowSpecialTab(gui::MenuTab mTab);
 
+    /// \brief Hides the special tab if visible
     void HideSpecialTab(void);
 
 public slots:
@@ -174,23 +193,35 @@ protected slots:
     void SetupMatrix(void);
 
 protected:
-    /// \brief Creates all GUI components of the main window
+    /// \brief Creates all GUI widgets of the main window
     void CreateGui(void);
 
+    /// \brief Initializes all widgets of the ribbon menu
     void InitializeRibbonMenu(void);
 
+    /// \brief Initializes all widgets of the "Start" tab
     void InitializeStartTabWidgets(void);
 
+    /// \brief Initializes all widgets of the "Toolbox" tab
     void InitializeToolboxTabWidgets(void);
 
+    /// \brief Initializes all widgets of the "Simulation" tab
     void InitializeSimulationTabWidgets(void);
 
+    /// \brief Adds all menu buttons to their tab's button group
     void FillRibbonMenuButtonGroups(void);
 
+    /// \brief Initializes the layouts of the ribbon menu tab widgets
     void InitializeRibbonMenuTabLayouts(void);
 
+    /// \brief Creates a new vertical widget separator line
+    /// \return Pointer to the newly created widget
     QFrame* CreateSeparator(void);
 
+    /// \brief Creates a QIcon with a normal and a disabled pixmap
+    /// \param pNormalPath: Path to the normal image source
+    /// \param pDisabledPath: Path to the disabled image source
+    /// \return The newly created QIcon object
     QIcon CreateIcon(QString pNormalPath, QString pDisabledPath) const;
 
     /// \brief Invokes connectors for all GUI components

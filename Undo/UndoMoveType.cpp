@@ -20,9 +20,9 @@ UndoMoveType::~UndoMoveType()
     }
 }
 
-Undo::Type UndoMoveType::Type() const
+undo::Type UndoMoveType::Type() const
 {
-    return Undo::Type::MOVE;
+    return undo::Type::MOVE;
 }
 
 const std::vector<IBaseComponent*>& UndoMoveType::MovedComponents() const

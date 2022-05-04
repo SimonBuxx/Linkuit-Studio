@@ -18,8 +18,8 @@ public:
     ~UndoDeleteType(void);
 
     /// \brief Gets the type of this undo action
-    /// \return An Undo::Type object
-    Undo::Type Type(void) const override;
+    /// \return An undo::Type object
+    undo::Type Type(void) const override;
 
     /// \brief Getter for the deleted components
     /// \return Vector containing pointers to the deleted components

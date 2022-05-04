@@ -74,8 +74,7 @@ void AbstractGate::SetLogicConnectors()
         }
         default:
         {
-            Q_ASSERT(false);
-            break;
+            throw std::logic_error("Direction invalid");
         }
     }
 }
@@ -117,8 +116,7 @@ void AbstractGate::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pIt
             }
             default:
             {
-                Q_ASSERT(false);
-                break;
+                throw std::logic_error("Direction invalid");
             }
         }
     }

@@ -61,8 +61,7 @@ void LogicClock::SetLogicConnectors()
         }
         default:
         {
-            Q_ASSERT(false);
-            break;
+            throw std::logic_error("Direction invalid");
         }
     }
 }
@@ -110,8 +109,7 @@ void LogicClock::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
             }
             default:
             {
-                Q_ASSERT(false);
-                break;
+                throw std::logic_error("Direction invalid");
             }
         }
     }

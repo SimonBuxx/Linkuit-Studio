@@ -12,9 +12,9 @@ UndoDeleteType::~UndoDeleteType()
     }
 }
 
-Undo::Type UndoDeleteType::Type() const
+undo::Type UndoDeleteType::Type() const
 {
-    return Undo::Type::DEL;
+    return undo::Type::DEL;
 }
 
 const std::vector<IBaseComponent*>& UndoDeleteType::Components() const

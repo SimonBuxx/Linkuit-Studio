@@ -37,8 +37,7 @@ inline LogicState InvertState(LogicState pState)
         }
         default:
         {
-            Q_ASSERT(false);
-            break;
+            throw std::logic_error("Logic state invalid");
         }
     }
     return LogicState::LOW;

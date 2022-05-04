@@ -1,15 +1,15 @@
 #include "UndoConfigureType.h"
 
-UndoConfigureType::UndoConfigureType(std::shared_ptr<Undo::ConfigChangedData> pData):
+UndoConfigureType::UndoConfigureType(std::shared_ptr<undo::ConfigChangedData> pData):
     mData(pData)
 {}
 
-Undo::Type UndoConfigureType::Type() const
+undo::Type UndoConfigureType::Type() const
 {
-    return Undo::Type::CONFIGURE;
+    return undo::Type::CONFIGURE;
 }
 
-std::shared_ptr<Undo::ConfigChangedData> UndoConfigureType::Data(void)
+std::shared_ptr<undo::ConfigChangedData> UndoConfigureType::Data(void)
 {
     return mData;
 }

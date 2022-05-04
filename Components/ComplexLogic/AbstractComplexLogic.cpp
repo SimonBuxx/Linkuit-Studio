@@ -112,8 +112,7 @@ void AbstractComplexLogic::SetLogicConnectors()
         }
         default:
         {
-            Q_ASSERT(false);
-            break;
+            throw std::logic_error("Direction invalid");
         }
     }
 }
@@ -155,8 +154,7 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
             }
             default:
             {
-                Q_ASSERT(false);
-                break;
+                throw std::logic_error("Direction invalid");
             }
         }
     }

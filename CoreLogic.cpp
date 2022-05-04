@@ -1179,7 +1179,7 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
                     const auto& connector = static_cast<IBaseComponent*>(item)->InvertConnectorByPoint(pMappedPos);
                     if (connector.has_value())
                     {
-                        auto data = std::make_shared<Undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector.value());
+                        auto data = std::make_shared<undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector.value());
                         AppendUndo(new UndoConfigureType(data));
                         return;
                     }
@@ -1228,7 +1228,7 @@ void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPre
     }
     else
     {
-        auto data = std::make_shared<Undo::ConnectionTypeChangedData>(pConPoint, pPreviousType, pCurrentType);
+        auto data = std::make_shared<undo::ConnectionTypeChangedData>(pConPoint, pPreviousType, pCurrentType);
         AppendUndo(new UndoConfigureType(data));
     }
 }
@@ -1237,7 +1237,7 @@ void CoreLogic::OnTextLabelContentChanged(TextLabel* pTextLabel, QString pPrevio
 {
     Q_ASSERT(pTextLabel);
 
-    auto data = std::make_shared<Undo::TextLabelContentChangedData>(pTextLabel, pPreviousText, pCurrentText);
+    auto data = std::make_shared<undo::TextLabelContentChangedData>(pTextLabel, pPreviousText, pCurrentText);
     AppendUndo(new UndoConfigureType(data));
 }
 
@@ -1330,7 +1330,7 @@ void CoreLogic::Undo()
 
         switch (undoObject->Type())
         {
-            case Undo::Type::ADD:
+            case undo::Type::ADD:
             {
                 for (const auto& comp : static_cast<UndoAddType*>(undoObject)->AddedComponents())
                 {
@@ -1345,7 +1345,7 @@ void CoreLogic::Undo()
                 AppendToUndoQueue(undoObject, mRedoQueue);
                 break;
             }
-            case Undo::Type::DEL:
+            case undo::Type::DEL:
             {
                 for (const auto& comp : static_cast<UndoDeleteType*>(undoObject)->Components())
                 {
@@ -1355,7 +1355,7 @@ void CoreLogic::Undo()
                 AppendToUndoQueue(undoObject, mRedoQueue);
                 break;
             }
-            case Undo::Type::MOVE:
+            case undo::Type::MOVE:
             {
                 const auto undoMoveObject = static_cast<UndoMoveType*>(undoObject);
                 for (const auto& comp : static_cast<UndoMoveType*>(undoObject)->DeletedComponents())
@@ -1376,30 +1376,30 @@ void CoreLogic::Undo()
                 AppendToUndoQueue(undoObject, mRedoQueue);
                 break;
             }
-            case Undo::Type::CONFIGURE:
+            case undo::Type::CONFIGURE:
             {
                 const auto undoConfigureObject = static_cast<UndoConfigureType*>(undoObject);
                 switch (undoConfigureObject->Data()->Type())
                 {
-                    case Undo::ConfigType::CONNECTION_TYPE:
+                    case undo::ConfigType::CONNECTION_TYPE:
                     {
-                        auto data = std::static_pointer_cast<Undo::ConnectionTypeChangedData>(undoConfigureObject->Data());
+                        auto data = std::static_pointer_cast<undo::ConnectionTypeChangedData>(undoConfigureObject->Data());
                         Q_ASSERT(data->conPoint);
                         data->conPoint->SetConnectionType(data->previousType);
                         AppendToUndoQueue(undoObject, mRedoQueue);
                         break;
                     }
-                case Undo::ConfigType::TEXTLABEL_CONTENT:
+                case undo::ConfigType::TEXTLABEL_CONTENT:
                 {
-                    auto data = std::static_pointer_cast<Undo::TextLabelContentChangedData>(undoConfigureObject->Data());
+                    auto data = std::static_pointer_cast<undo::TextLabelContentChangedData>(undoConfigureObject->Data());
                     Q_ASSERT(data->textLabel);
                     data->textLabel->SetTextContent(data->previousText);
                     AppendToUndoQueue(undoObject, mRedoQueue);
                     break;
                 }
-                case Undo::ConfigType::CONNECTOR_INVERSION:
+                case undo::ConfigType::CONNECTOR_INVERSION:
                 {
-                    auto data = std::static_pointer_cast<Undo::ConnectorInversionChangedData>(undoConfigureObject->Data());
+                    auto data = std::static_pointer_cast<undo::ConnectorInversionChangedData>(undoConfigureObject->Data());
                     Q_ASSERT(data->component);
                     Q_ASSERT(data->logicConnector);
                     data->component->InvertConnectorByPoint(data->component->pos() + data->logicConnector->pos);
@@ -1429,7 +1429,7 @@ void CoreLogic::Redo()
 
         switch (redoObject->Type())
         {
-            case Undo::Type::ADD:
+            case undo::Type::ADD:
             {
                 for (const auto& comp : static_cast<UndoAddType*>(redoObject)->AddedComponents())
                 {
@@ -1444,7 +1444,7 @@ void CoreLogic::Redo()
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
             }
-            case Undo::Type::DEL:
+            case undo::Type::DEL:
             {
                 for (const auto& comp : static_cast<UndoDeleteType*>(redoObject)->Components())
                 {
@@ -1454,7 +1454,7 @@ void CoreLogic::Redo()
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
             }
-            case Undo::Type::MOVE:
+            case undo::Type::MOVE:
             {
                 const auto redoMoveObject = static_cast<UndoMoveType*>(redoObject);
                 for (const auto& comp : redoMoveObject->MovedComponents())
@@ -1475,30 +1475,30 @@ void CoreLogic::Redo()
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
             }
-            case Undo::Type::CONFIGURE:
+            case undo::Type::CONFIGURE:
             {
                 const auto undoConfigureObject = static_cast<UndoConfigureType*>(redoObject);
                 switch (undoConfigureObject->Data()->Type())
                 {
-                    case Undo::ConfigType::CONNECTION_TYPE:
+                    case undo::ConfigType::CONNECTION_TYPE:
                     {
-                        auto data = std::static_pointer_cast<Undo::ConnectionTypeChangedData>(undoConfigureObject->Data());
+                        auto data = std::static_pointer_cast<undo::ConnectionTypeChangedData>(undoConfigureObject->Data());
                         Q_ASSERT(data->conPoint);
                         data->conPoint->SetConnectionType(data->currentType);
                         AppendToUndoQueue(redoObject, mUndoQueue);
                         break;
                     }
-                    case Undo::ConfigType::TEXTLABEL_CONTENT:
+                    case undo::ConfigType::TEXTLABEL_CONTENT:
                     {
-                        auto data = std::static_pointer_cast<Undo::TextLabelContentChangedData>(undoConfigureObject->Data());
+                        auto data = std::static_pointer_cast<undo::TextLabelContentChangedData>(undoConfigureObject->Data());
                         Q_ASSERT(data->textLabel);
                         data->textLabel->SetTextContent(data->currentText);
                         AppendToUndoQueue(redoObject, mUndoQueue);
                         break;
                     }
-                    case Undo::ConfigType::CONNECTOR_INVERSION:
+                    case undo::ConfigType::CONNECTOR_INVERSION:
                     {
-                        auto data = std::static_pointer_cast<Undo::ConnectorInversionChangedData>(undoConfigureObject->Data());
+                        auto data = std::static_pointer_cast<undo::ConnectorInversionChangedData>(undoConfigureObject->Data());
                         Q_ASSERT(data->component);
                         Q_ASSERT(data->logicConnector);
                         data->component->InvertConnectorByPoint(data->component->pos() + data->logicConnector->pos);

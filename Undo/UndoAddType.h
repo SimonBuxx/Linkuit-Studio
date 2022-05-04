@@ -23,8 +23,8 @@ public:
     ~UndoAddType(void);
 
     /// \brief Gets the type of this undo action
-    /// \return An Undo::Type object
-    Undo::Type Type(void) const override;
+    /// \return An undo::Type object
+    undo::Type Type(void) const override;
 
     /// \brief Getter for the added components
     /// \return Vector containing pointers to the added components
