@@ -78,6 +78,7 @@ protected:
     Direction mDirection;
 
     uint8_t mInputsSpacing;
+    uint8_t mOutputPositionOffset;
 };
 
 #endif // ABSTRACTGATE_H

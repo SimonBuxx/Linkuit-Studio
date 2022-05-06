@@ -5,7 +5,8 @@ AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBas
     IBaseComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),
     mDirection(pDirection),
-    mInputsSpacing(1)
+    mInputsSpacing(1),
+    mOutputPositionOffset(0)
 {
     Q_ASSERT(mInputCount >= 1);
 
@@ -29,6 +30,11 @@ AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBas
 
     mShape.addRect(0, 0, mWidth, mHeight);
 
+    if (mInputCount >= 4 && mInputCount % 2 == 0)
+    {
+        mOutputPositionOffset = canvas::GRID_SIZE / 2; // Set offset to prevent output from being positioned off-grid
+    }
+
     SetLogicConnectors();
 }
 
@@ -42,7 +48,7 @@ void AbstractGate::SetLogicConnectors()
             {
                 mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(-4, 0)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2), 0, QPointF(4, 0)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2 - mOutputPositionOffset), 0, QPointF(4, 0)));
             break;
         }
         case Direction::DOWN:
@@ -51,7 +57,7 @@ void AbstractGate::SetLogicConnectors()
             {
                 mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0), i, QPointF(0, -4)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, mHeight), 0, QPointF(0, 4)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2 + mOutputPositionOffset, mHeight), 0, QPointF(0, 4)));
             break;
         }
         case Direction::LEFT:
@@ -60,7 +66,7 @@ void AbstractGate::SetLogicConnectors()
             {
                 mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(4, 0)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2), 0, QPointF(-4, 0)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2 + mOutputPositionOffset), 0, QPointF(-4, 0)));
             break;
         }
         case Direction::UP:
@@ -69,7 +75,7 @@ void AbstractGate::SetLogicConnectors()
             {
                 mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight), i, QPointF(0, 4)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, 0), 0, QPointF(0, -4)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2 - mOutputPositionOffset, 0), 0, QPointF(0, -4)));
             break;
         }
         default:
@@ -150,7 +156,7 @@ void AbstractGate::DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGr
 
     // Draw output connector
     SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth, mHeight / 2, mWidth + 8, mHeight / 2);
+    pPainter->drawLine(mWidth, mHeight / 2 - mOutputPositionOffset, mWidth + 8, mHeight / 2 - mOutputPositionOffset);
 
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
@@ -165,7 +171,7 @@ void AbstractGate::DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGr
     if (mLogicCell->IsOutputInverted(0))
     {
         SetInversionPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-        pPainter->drawEllipse(mWidth + 1, mHeight / 2 - 4, 8, 8);
+        pPainter->drawEllipse(mWidth + 1, mHeight / 2 - mOutputPositionOffset - 4, 8, 8);
     }
 }
 
@@ -180,7 +186,7 @@ void AbstractGate::DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGra
 
     // Draw output connector
     SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth / 2, mHeight, mWidth / 2, mHeight + 8);
+    pPainter->drawLine(mWidth / 2 + mOutputPositionOffset, mHeight, mWidth / 2 + mOutputPositionOffset, mHeight + 8);
 
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
@@ -195,7 +201,7 @@ void AbstractGate::DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGra
     if (mLogicCell->IsOutputInverted(0))
     {
         SetInversionPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-        pPainter->drawEllipse(mWidth / 2 - 4, mHeight + 1, 8, 8);
+        pPainter->drawEllipse(mWidth / 2 + mOutputPositionOffset - 4, mHeight + 1, 8, 8);
     }
 }
 
@@ -210,7 +216,7 @@ void AbstractGate::DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGra
 
     // Draw output connector
     SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(-8, mHeight / 2, 0, mHeight / 2);
+    pPainter->drawLine(-8, mHeight / 2 + mOutputPositionOffset, 0, mHeight / 2 + mOutputPositionOffset);
 
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
@@ -225,7 +231,7 @@ void AbstractGate::DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGra
     if (mLogicCell->IsOutputInverted(0))
     {
         SetInversionPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-        pPainter->drawEllipse(-9, mHeight / 2 - 4, 8, 8);
+        pPainter->drawEllipse(-9, mHeight / 2 + mOutputPositionOffset - 4, 8, 8);
     }
 }
 
@@ -240,7 +246,7 @@ void AbstractGate::DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraph
 
     // Draw output connector
     SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth / 2, -8, mWidth / 2, 0);
+    pPainter->drawLine(mWidth / 2 - mOutputPositionOffset, -8, mWidth / 2 - mOutputPositionOffset, 0);
 
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
@@ -255,7 +261,7 @@ void AbstractGate::DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraph
     if (mLogicCell->IsOutputInverted(0))
     {
         SetInversionPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-        pPainter->drawEllipse(mWidth / 2 - 4, -9, 8, 8);
+        pPainter->drawEllipse(mWidth / 2 - mOutputPositionOffset - 4, -9, 8, 8);
     }
 }
 
