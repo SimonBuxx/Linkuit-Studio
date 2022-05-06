@@ -69,11 +69,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
     height: 0px;
 }
 
-QGraphicsView
-{
-    margin-top: 30px;
-}
-
 QTabBar::tab
 {
     border-radius: 1px;

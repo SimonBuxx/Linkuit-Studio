@@ -49,6 +49,7 @@ void View::Init()
 {
     setFrameStyle(QFrame::Plain | QFrame::NoFrame);
 
+    //mGraphicsView.setCacheMode(QGraphicsView::CacheBackground);
     mGraphicsView.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
     mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
     mGraphicsView.setOptimizationFlags(QGraphicsView::DontSavePainterState);

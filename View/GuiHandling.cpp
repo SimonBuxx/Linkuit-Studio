@@ -29,13 +29,12 @@ void View::CreateGui()
     mMainLayout->setSpacing(0);
 
     mMainLayout->addWidget(mRibbonMenu, 0, 0, Qt::AlignTop);
-    mMainLayout->addWidget(&mGraphicsView, 0, 0);
-    mMainLayout->addWidget(mProcessingOverlay, 0, 0, Qt::AlignHCenter | Qt::AlignVCenter);
-    mMainLayout->addWidget(mZoomLabel, 0, 0, Qt::AlignBottom | Qt::AlignLeft);
+    mMainLayout->addWidget(&mGraphicsView, 1, 0);
+    mMainLayout->addWidget(mProcessingOverlay, 1, 0, Qt::AlignHCenter | Qt::AlignVCenter);
+    mMainLayout->addWidget(mZoomLabel, 1, 0, Qt::AlignBottom | Qt::AlignLeft);
 
     setLayout(mMainLayout);
 
-    mGraphicsView.stackUnder(mRibbonMenu);
     mGraphicsView.stackUnder(mProcessingOverlay);
     mGraphicsView.stackUnder(mZoomLabel);
 }
