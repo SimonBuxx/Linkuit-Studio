@@ -44,7 +44,11 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
     QObject::connect(mPlainTextEdit, &PlainTextEdit::SelectParentItem, this, [&]()
     {
         scene()->clearSelection(); // Prevent editing when multiple components are selected
-        setSelected(true);
+        if (hasFocus())
+        {
+            qDebug() << "select";
+            setSelected(true);
+        }
     });
 
     QObject::connect(mPlainTextEdit, &PlainTextEdit::DeselectParentItem, this, [&]()
@@ -62,27 +66,6 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
 
 void TextLabel::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
 {
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal, this, [&]()
-    {
-        if (mPlainTextEdit != nullptr)
-        {
-            // Make read-only
-            mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-            mPlainTextEdit->setCursor(Qt::ArrowCursor);
-            mPlainTextEdit->viewport()->setCursor(Qt::ArrowCursor);
-        }
-    });
-    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&]()
-    {
-        if (mPlainTextEdit != nullptr)
-        {
-            // Make editable
-            mPlainTextEdit->setTextInteractionFlags(Qt::TextEditorInteraction);
-            mPlainTextEdit->setCursor(Qt::IBeamCursor);
-            mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
-        }
-    });
-
     QObject::connect(pCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
     {
         if (mPlainTextEdit != nullptr)
@@ -100,6 +83,20 @@ void TextLabel::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
                 mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
                 mPlainTextEdit->setCursor(Qt::ArrowCursor);
                 mPlainTextEdit->viewport()->setCursor(Qt::ArrowCursor);
+            }
+        }
+    });
+
+    QObject::connect(pCoreLogic, &CoreLogic::ComponentTypeChangedSignal, this, [&](ComponentType pNewType)
+    {
+        if (mPlainTextEdit != nullptr)
+        {
+            if (pNewType == ComponentType::TEXT_LABEL)
+            {
+                // Make editable
+                mPlainTextEdit->setTextInteractionFlags(Qt::TextEditorInteraction);
+                mPlainTextEdit->setCursor(Qt::IBeamCursor);
+                mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
             }
         }
     });
