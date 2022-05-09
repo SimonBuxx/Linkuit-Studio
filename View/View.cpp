@@ -19,6 +19,8 @@ HorizontalScrollArea::HorizontalScrollArea(QWidget* pParent):
 
 void HorizontalScrollArea::wheelEvent(QWheelEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
+
     if (pEvent->angleDelta().y() > 0)
     {
         horizontalScrollBar()->setValue(horizontalScrollBar()->value() - gui::HORIZONTAL_SCROLL_SPEED);
@@ -85,11 +87,13 @@ void View::SetScene(QGraphicsScene &pScene)
 
 QGraphicsScene* View::Scene(void) const
 {
+    Q_ASSERT(mScene);
     return mScene;
 }
 
 QList<QGraphicsItem*> View::Components(void) const
 {
+    Q_ASSERT(mScene);
     return mScene->items();
 }
 
@@ -107,6 +111,8 @@ void View::OnControlModeChanged(ControlMode pNewMode)
             break;
         }
     }
+
+    Q_ASSERT(mScene);
     mScene->clearSelection();
 }
 
@@ -216,10 +222,13 @@ void View::OnSimulationStop()
 
 void View::ShowSpecialTab(gui::MenuTab mTab)
 {
+    Q_ASSERT(mRibbonMenu);
+
     switch(mTab)
     {
         case gui::MenuTab::CLOCK:
         {
+            Q_ASSERT(mClockPage);
             if (!mClockPage->isVisible())
             {
                 mRibbonMenu->setTabVisible(mRibbonMenu->indexOf(mClockPage), true);
@@ -237,8 +246,9 @@ void View::ShowSpecialTab(gui::MenuTab mTab)
 
 void View::HideSpecialTab()
 {
-    mRibbonMenu->setTabVisible(mRibbonMenu->indexOf(mClockPage), false);
+    Q_ASSERT(mRibbonMenu && mClockPage);
 
+    mRibbonMenu->setTabVisible(mRibbonMenu->indexOf(mClockPage), false);
     mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab:last {}");
 }
 

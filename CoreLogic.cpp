@@ -138,7 +138,7 @@ void CoreLogic::OnDisplayTabRequest(gui::MenuTab pTab)
 
 std::optional<IBaseComponent*> CoreLogic::GetItem() const
 {
-    IBaseComponent* item;
+    IBaseComponent* item = nullptr;
 
     switch(mComponentType)
     {
@@ -230,6 +230,7 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         }
     }
 
+    Q_ASSERT(item);
     return item;
 }
 
@@ -263,6 +264,7 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
 void CoreLogic::SetComponentInputCount(uint8_t pCount)
 {
+    Q_ASSERT(pCount > 0 && pCount < 10);
     mComponentInputCount = pCount;
 }
 
@@ -578,6 +580,7 @@ std::optional<LogicWire*> CoreLogic::GetAdjacentWire(QPointF pCheckPosition, Wir
 
     if (wiresAtPosition.size() > 0)
     {
+        Q_ASSERT(static_cast<LogicWire*>(wiresAtPosition.at(0)));
         return std::optional(static_cast<LogicWire*>(wiresAtPosition.at(0)));
     }
 
@@ -607,6 +610,8 @@ std::vector<IBaseComponent*> CoreLogic::GetCollidingComponents(IBaseComponent* p
 
     for (auto &comp : mView.Scene()->collidingItems(pComponent))
     {
+        Q_ASSERT(comp);
+
         if (IsCollidingComponent(comp) && (!pOnlyUnselected || !comp->isSelected()))
         {
             // comp must be IBaseComponent at this point
@@ -626,8 +631,8 @@ bool CoreLogic::IsCollidingComponent(QGraphicsItem* pComponent) const
 
 bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const
 {
-    const LogicWire* a;
-    const LogicWire* b;
+    const LogicWire* a = nullptr;
+    const LogicWire* b = nullptr;
 
     if (pWire1->GetDirection() == WireDirection::VERTICAL && pWire2->GetDirection() == WireDirection::HORIZONTAL)
     {
@@ -707,6 +712,10 @@ bool CoreLogic::IsXCrossingPoint(QPointF pPoint) const
 
 LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, std::optional<LogicWire*> pLeftTopAdjacent, std::optional<LogicWire*> pRightBottomAdjacent) const
 {
+    Q_ASSERT(pNewWire);
+    Q_ASSERT(!pLeftTopAdjacent.has_value() || pLeftTopAdjacent.value());
+    Q_ASSERT(!pRightBottomAdjacent.has_value() || pRightBottomAdjacent.value());
+
     QPointF newStart(pNewWire->pos());
 
     if (pNewWire->GetDirection() == WireDirection::HORIZONTAL)
@@ -726,6 +735,8 @@ LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, std::optional<LogicWire*> 
 
         auto newWire = new LogicWire(this, WireDirection::HORIZONTAL, newEnd.x() - newStart.x());
         newWire->setPos(newStart);
+
+        Q_ASSERT(newWire);
         return newWire;
     }
     else
@@ -768,6 +779,9 @@ void CoreLogic::ParseWireGroups(void)
 
 void CoreLogic::ExploreGroup(LogicWire* pWire, int32_t pGroupIndex)
 {
+    Q_ASSERT(pWire);
+    Q_ASSERT(pGroupIndex >= 0);
+
     mWireMap[pWire] = pGroupIndex;
     mWireGroups[pGroupIndex].push_back(pWire); // Note: pWire must not be part of group pGroupIndex before the call to ExploreGroup
 
@@ -795,6 +809,9 @@ void CoreLogic::ExploreGroup(LogicWire* pWire, int32_t pGroupIndex)
 
 std::optional<QPointF> CoreLogic::GetWireCollisionPoint(const LogicWire* pWireA, const LogicWire* pWireB) const
 {
+    Q_ASSERT(pWireA);
+    Q_ASSERT(pWireB);
+
     if (pWireA->GetDirection() == WireDirection::HORIZONTAL && pWireB->GetDirection() == WireDirection::VERTICAL)
     {
         return QPointF(pWireB->x(), pWireA->y());
@@ -811,8 +828,11 @@ std::optional<QPointF> CoreLogic::GetWireCollisionPoint(const LogicWire* pWireA,
 
 bool CoreLogic::IsLCrossing(LogicWire* pWireA, LogicWire* pWireB) const
 {
-    const LogicWire* a;
-    const LogicWire* b;
+    Q_ASSERT(pWireA);
+    Q_ASSERT(pWireB);
+
+    const LogicWire* a = nullptr;
+    const LogicWire* b = nullptr;
 
     if (pWireA->GetDirection() == WireDirection::VERTICAL && pWireB->GetDirection() == WireDirection::HORIZONTAL)
     {
@@ -1304,6 +1324,8 @@ void CoreLogic::DeleteSelectedComponents()
 
 void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
 {
+    Q_ASSERT(pUndoObject);
+
     AppendToUndoQueue(pUndoObject, mUndoQueue);
     mRedoQueue.clear();
 
@@ -1312,6 +1334,8 @@ void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
 
 void CoreLogic::AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue)
 {
+    Q_ASSERT(pUndoObject);
+
     pQueue.push_back(pUndoObject);
     if (pQueue.size() > MAX_UNDO_STACK_SIZE)
     {

@@ -149,6 +149,7 @@ void View::SetGuiEnabled(bool pEnabled)
 
 void View::SetUndoRedoButtonsEnableState()
 {
+    Q_ASSERT(mUndoButton && mRedoButton);
     mUndoButton->setEnabled(!mCoreLogic.IsSimulationRunning() && !mCoreLogic.IsUndoQueueEmpty());
     mRedoButton->setEnabled(!mCoreLogic.IsSimulationRunning() && !mCoreLogic.IsRedoQueueEmpty());
 }
@@ -708,6 +709,7 @@ QFrame* View::CreateSeparator()
     separator->setFrameShadow(QFrame::Plain);
     separator->setFixedSize(QSize(10, 120));
 
+    Q_ASSERT(separator);
     return separator;
 }
 

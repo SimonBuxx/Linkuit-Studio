@@ -4,7 +4,7 @@
 #include <QGraphicsScene>
 #include <QFile>
 
-std::optional<QString> LoadStylesheet(QString pPath)
+std::optional<QString> LoadStylesheet(const QString &pPath)
 {
     QFile file(pPath);
     if (file.open(QFile::ReadOnly))

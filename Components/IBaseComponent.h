@@ -41,8 +41,8 @@ public:
     /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
     virtual void ResetZValue(void) = 0;
 
-    std::vector<LogicConnector>& GetInConnectors(void);
-    std::vector<LogicConnector>& GetOutConnectors(void);
+    const std::vector<LogicConnector>& GetInConnectors(void) const;
+    const std::vector<LogicConnector>& GetOutConnectors(void) const;
 
     uint32_t GetInConnectorCount(void) const;
     uint32_t GetOutConnectorCount(void) const;

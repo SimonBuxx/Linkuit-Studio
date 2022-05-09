@@ -124,7 +124,10 @@ void AbstractComplexLogic::ResetZValue()
 
 void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget)
 {
+    Q_ASSERT(pPainter);
+    Q_ASSERT(pItem);
     Q_UNUSED(pWidget);
+
     const double levelOfDetail = pItem->levelOfDetailFromTransform(pPainter->worldTransform());
 
     // Draw connectors and inversion circles
@@ -264,6 +267,9 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
 
 void AbstractComplexLogic::DrawComponentDetailsRight(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem)
 {
+    Q_ASSERT(pPainter);
+    Q_ASSERT(pItem);
+
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
@@ -314,6 +320,9 @@ void AbstractComplexLogic::DrawComponentDetailsRight(QPainter *pPainter, const Q
 
 void AbstractComplexLogic::DrawComponentDetailsDown(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem)
 {
+    Q_ASSERT(pPainter);
+    Q_ASSERT(pItem);
+
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
@@ -365,6 +374,9 @@ void AbstractComplexLogic::DrawComponentDetailsDown(QPainter *pPainter, const QS
 
 void AbstractComplexLogic::DrawComponentDetailsLeft(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem)
 {
+    Q_ASSERT(pPainter);
+    Q_ASSERT(pItem);
+
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
@@ -416,6 +428,9 @@ void AbstractComplexLogic::DrawComponentDetailsLeft(QPainter *pPainter, const QS
 
 void AbstractComplexLogic::DrawComponentDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem)
 {
+    Q_ASSERT(pPainter);
+    Q_ASSERT(pItem);
+
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
@@ -466,6 +481,8 @@ void AbstractComplexLogic::DrawComponentDetailsUp(QPainter *pPainter, const QSty
 
 void AbstractComplexLogic::SetConnectorPen(QPainter *pPainter, LogicState pState, bool pSelected)
 {
+    Q_ASSERT(pPainter);
+
     if (pState == LogicState::HIGH)
     {
         pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -479,6 +496,8 @@ void AbstractComplexLogic::SetConnectorPen(QPainter *pPainter, LogicState pState
 
 void AbstractComplexLogic::SetInversionPen(QPainter *pPainter, LogicState pState, bool pSelected)
 {
+    Q_ASSERT(pPainter);
+
     if (pState == LogicState::HIGH)
     {
         pPainter->setPen(QPen(components::wires::WIRE_HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));

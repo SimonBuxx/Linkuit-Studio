@@ -45,12 +45,12 @@ IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<Logi
     }
 }
 
-std::vector<LogicConnector>& IBaseComponent::GetInConnectors()
+const std::vector<LogicConnector>& IBaseComponent::GetInConnectors() const
 {
     return mInConnectors;
 }
 
-std::vector<LogicConnector>& IBaseComponent::GetOutConnectors()
+const std::vector<LogicConnector>& IBaseComponent::GetOutConnectors() const
 {
     return mOutConnectors;
 }

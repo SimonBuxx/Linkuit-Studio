@@ -34,6 +34,8 @@ IBaseComponent* LogicInput::CloneBaseComponent(const CoreLogic* pCoreLogic) cons
 
 void LogicInput::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
+
     if (mSimulationRunning)
     {
         std::static_pointer_cast<LogicInputCell>(mLogicCell)->ToggleState();
@@ -48,6 +50,8 @@ void LogicInput::ResetZValue()
 
 void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)
 {
+    Q_ASSERT(pPainter);
+    Q_ASSERT(pOption);
     Q_UNUSED(pWidget);
 
     if (std::static_pointer_cast<LogicInputCell>(mLogicCell)->GetOutputState() == LogicState::LOW)

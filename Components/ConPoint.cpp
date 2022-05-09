@@ -38,6 +38,7 @@ ConPoint::ConPoint(const ConPoint& pObj, const CoreLogic* pCoreLogic):
 
 void ConPoint::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
 {
+    Q_ASSERT(pCoreLogic);
     QObject::connect(this, &ConPoint::ConnectionTypeChangedSignal, pCoreLogic, &CoreLogic::OnConnectionTypeChanged);
 }
 
@@ -96,6 +97,8 @@ ConnectionType ConPoint::AdvanceConnectionType()
 
 void ConPoint::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption, QWidget *pWidget)
 {
+    Q_ASSERT(pPainter);
+    Q_ASSERT(pOption);
     Q_UNUSED(pWidget);
 
     const double levelOfDetail = pOption->levelOfDetailFromTransform(pPainter->worldTransform());
@@ -152,6 +155,8 @@ void ConPoint::SetLogicCell(std::shared_ptr<LogicBaseCell> pLogicCell)
 
 void ConPoint::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
+
     if (!mWasMoved && isSelected() && scene()->selectedItems().size() == 1)
     {
         auto prevType = AdvanceConnectionType();
@@ -163,6 +168,8 @@ void ConPoint::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 
 void ConPoint::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
+
     if (isSelected() && !mWasMoved && scene()->selectedItems().size() == 1)
     {
         // If selected and moved, pull underlying wires with it
@@ -178,6 +185,8 @@ void ConPoint::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
 
 void ConPoint::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
 {
+    Q_ASSERT(pEvent);
+
     IBaseComponent::mouseReleaseEvent(pEvent);
     mWasMoved = false;
 }
