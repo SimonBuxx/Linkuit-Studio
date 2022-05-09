@@ -6,6 +6,17 @@ LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint
     IBaseComponent(pCoreLogic, nullptr),
     mDirection(pDirection)
 {
+    Q_ASSERT(pCoreLogic);
+
+    if (pCoreLogic->GetControlMode() == ControlMode::EDIT)
+    {
+        setCursor(Qt::PointingHandCursor);
+    }
+    else
+    {
+        setCursor(Qt::ArrowCursor);
+    }
+
     setZValue(components::zvalues::WIRE);
 
     if (mDirection == WireDirection::HORIZONTAL)

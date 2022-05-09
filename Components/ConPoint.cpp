@@ -9,6 +9,17 @@ ConPoint::ConPoint(const CoreLogic* pCoreLogic):
 {
     setZValue(components::zvalues::CONPOINT);
 
+    Q_ASSERT(pCoreLogic);
+
+    if (pCoreLogic->GetControlMode() == ControlMode::EDIT)
+    {
+        setCursor(Qt::PointingHandCursor);
+    }
+    else
+    {
+        setCursor(Qt::ArrowCursor);
+    }
+
     mWidth = components::conpoints::SIZE;
     mHeight = components::conpoints::SIZE;
 

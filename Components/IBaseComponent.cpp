@@ -24,12 +24,25 @@ IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<Logi
         setAcceptHoverEvents(false);
         mSimulationRunning = true;
     });
+
     QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, this, [&]()
     {
         setCursor(Qt::PointingHandCursor);
         setFlags(ItemIsSelectable | ItemIsMovable);
         setAcceptHoverEvents(true);
         mSimulationRunning = false;
+    });
+
+    QObject::connect(pCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
+    {
+        if (pNewMode == ControlMode::EDIT || (dynamic_cast<LogicWire*>(this) == nullptr && dynamic_cast<ConPoint*>(this) == nullptr && pNewMode == ControlMode::ADD)) // Do not display hand cursor in ADD mode for wires or ConPoints
+        {
+            setCursor(Qt::PointingHandCursor);
+        }
+        else
+        {
+            setCursor(Qt::ArrowCursor);
+        }
     });
 
     QObject::connect(this, &IBaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMoved);
