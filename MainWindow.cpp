@@ -179,6 +179,7 @@ void MainWindow::InitializeGlobalShortcuts()
     QObject::connect(mEscapeShortcut, &QShortcut::activated, this, [&]()
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
+        mScene.clearSelection();
     });
 }
 
