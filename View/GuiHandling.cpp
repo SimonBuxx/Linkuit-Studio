@@ -95,6 +95,7 @@ void View::PrepareGuiForSimulation()
 
     mSimulationButton->setText(tr("Stop"));
     mSimulationButton->setIcon(mAwesome->icon(fa::stop));
+    mSimulationButton->setToolTip(tr("Stop simulation [CTRL+⏎]"));
 
     HideSpecialTab();
 
@@ -111,6 +112,7 @@ void View::PrepareGuiForEditing()
 
     mSimulationButton->setText(tr("Start"));
     mSimulationButton->setIcon(mAwesome->icon(fa::play));
+    mSimulationButton->setToolTip(tr("Start simulation [CTRL+⏎]"));
 
     const auto&& componentsTabIndex = mRibbonMenu->indexOf(mToolboxPage);
     mRibbonMenu->setTabEnabled(componentsTabIndex, true);
@@ -344,6 +346,8 @@ void View::InitializeStartTabWidgets()
     mOpenCircuitButton->setIcon(mAwesome->icon(fa::folderopeno));
     mOpenCircuitButton->setIconSize(QSize(30, 30));
     mOpenCircuitButton->setFixedSize(90, 98);
+    mOpenCircuitButton->setToolTip(tr("Open circuit [CTRL+O]"));
+
 
     mSaveCircuitButton = new QToolButton();
     mSaveCircuitButton->setAccessibleName("icon-and-text");
@@ -352,6 +356,7 @@ void View::InitializeStartTabWidgets()
     mSaveCircuitButton->setIcon(mAwesome->icon(fa::floppyo));
     mSaveCircuitButton->setIconSize(QSize(30, 30));
     mSaveCircuitButton->setFixedSize(90, 98);
+    mSaveCircuitButton->setToolTip(tr("Save circuit [CTRL+S]"));
 
     mUpdateButton = new QToolButton();
     mUpdateButton->setAccessibleName("icon-and-text");
@@ -430,7 +435,7 @@ void View::InitializeToolboxTabWidgets()
     mCopyButton->setIconSize(QSize(15, 15));
     mCopyButton->setFixedSize(90, 47);
     mCopyButton->setStyleSheet("padding-left: 12px;"); // Center manually
-    mCopyButton->setToolTip(tr("Copy"));
+    mCopyButton->setToolTip(tr("Copy [CTRL+C]"));
 
     mDeleteButton = new QToolButton();
     mDeleteButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -572,6 +577,7 @@ void View::InitializeToolboxTabWidgets()
     mUndoButton->setIconSize(QSize(20, 20));
     mUndoButton->setStyleSheet("padding-left: 10px;"); // Center manually
     mUndoButton->setFixedSize(90, 47);
+    mUndoButton->setToolTip(tr("Undo [CTRL+Z]"));
 
     mRedoButton = new QToolButton();
     mRedoButton->setText(tr("Redo"));
@@ -581,6 +587,7 @@ void View::InitializeToolboxTabWidgets()
     mRedoButton->setIconSize(QSize(20, 20));
     mRedoButton->setStyleSheet("padding-left: 10px;"); // Center manually
     mRedoButton->setFixedSize(90, 47);
+    mRedoButton->setToolTip(tr("Redo [CTRL+Y]"));
 }
 
 void View::InitializeSimulationTabWidgets()
@@ -592,6 +599,7 @@ void View::InitializeSimulationTabWidgets()
     mSimulationButton->setIcon(mAwesome->icon(fa::play));
     mSimulationButton->setIconSize(QSize(30, 30));
     mSimulationButton->setFixedSize(90, 98);
+    mSimulationButton->setToolTip(tr("Start simulation [CTRL+⏎]"));
 }
 
 void View::FillRibbonMenuButtonGroups()

@@ -70,6 +70,9 @@ protected:
     QShortcut* mSaveShortcut;
     QShortcut* mOpenShortcut;
 
+    QShortcut* mUndoShortcut;
+    QShortcut* mRedoShortcut;
+
     QShortcut* mSimulationShortcut;
 
     QShortcut* mDeleteShortcut;

@@ -122,7 +122,8 @@ void MainWindow::InitializeGlobalShortcuts()
 
     QObject::connect(mCopyShortcut, &QShortcut::activated, this, [&]()
     {
-        qDebug() << "Not implemented";
+#warning temporary implementation of Ctrl-C
+        mCoreLogic.CopySelectedComponents();
     });
     QObject::connect(mPasteShortcut, &QShortcut::activated, this, [&]()
     {
@@ -142,6 +143,21 @@ void MainWindow::InitializeGlobalShortcuts()
     QObject::connect(mOpenShortcut, &QShortcut::activated, this, [&]()
     {
         qDebug() << "Not implemented";
+    });
+
+    mUndoShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Z), this);
+    mRedoShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Y), this);
+
+    mUndoShortcut->setAutoRepeat(true);
+    mRedoShortcut->setAutoRepeat(true);
+
+    QObject::connect(mUndoShortcut, &QShortcut::activated, this, [&]()
+    {
+        mCoreLogic.Undo();
+    });
+    QObject::connect(mRedoShortcut, &QShortcut::activated, this, [&]()
+    {
+        mCoreLogic.Redo();
     });
 
     mSimulationShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), this);
