@@ -63,6 +63,18 @@ protected:
     QShortcut* mComponentDirectionDownShortcut;
     QShortcut* mComponentDirectionLeftShortcut;
     QShortcut* mComponentDirectionUpShortcut;
+
+    QShortcut* mCopyShortcut;
+    QShortcut* mPasteShortcut;
+
+    QShortcut* mSaveShortcut;
+    QShortcut* mOpenShortcut;
+
+    QShortcut* mSimulationShortcut;
+
+    QShortcut* mDeleteShortcut;
+
+    QShortcut* mEscapeShortcut;
 };
 
 #endif // MAINWINDOW_H

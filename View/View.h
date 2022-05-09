@@ -85,10 +85,6 @@ protected:
     /// \param pEvent: The associated double click event
     void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
 
-    /// \brief Handles keyboard events such as shortcuts
-    /// \param pEvent: The associated key event
-    void keyPressEvent(QKeyEvent *pEvent) override;
-
 protected:
     View &mView;
     CoreLogic &mCoreLogic;

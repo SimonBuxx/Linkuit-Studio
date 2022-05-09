@@ -83,6 +83,27 @@ void TextLabel::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
         }
     });
 
+    QObject::connect(pCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
+    {
+        if (mPlainTextEdit != nullptr)
+        {
+            if (pNewMode == ControlMode::EDIT)
+            {
+                // Make editable
+                mPlainTextEdit->setTextInteractionFlags(Qt::TextEditorInteraction);
+                mPlainTextEdit->setCursor(Qt::IBeamCursor);
+                mPlainTextEdit->viewport()->setCursor(Qt::IBeamCursor);
+            }
+            else
+            {
+                // Make read-only
+                mPlainTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+                mPlainTextEdit->setCursor(Qt::ArrowCursor);
+                mPlainTextEdit->viewport()->setCursor(Qt::ArrowCursor);
+            }
+        }
+    });
+
     QObject::connect(this, &TextLabel::TextLabelContentChangedSignal, pCoreLogic, &CoreLogic::OnTextLabelContentChanged);
 }
 

@@ -113,6 +113,73 @@ void MainWindow::InitializeGlobalShortcuts()
     {
         SetComponentDirectionIfInAddMode(Direction::UP);
     });
+
+    mCopyShortcut  = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_C), this);
+    mPasteShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_V), this);
+
+    mCopyShortcut->setAutoRepeat(false);
+    mPasteShortcut->setAutoRepeat(false);
+
+    QObject::connect(mCopyShortcut, &QShortcut::activated, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+    QObject::connect(mPasteShortcut, &QShortcut::activated, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    mSaveShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_S), this);
+    mOpenShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_O), this);
+
+    mSaveShortcut->setAutoRepeat(false);
+    mOpenShortcut->setAutoRepeat(false);
+
+    QObject::connect(mSaveShortcut, &QShortcut::activated, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+    QObject::connect(mOpenShortcut, &QShortcut::activated, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    mSimulationShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), this);
+
+    mSimulationShortcut->setAutoRepeat(false);
+
+    QObject::connect(mSimulationShortcut, &QShortcut::activated, this, [&]()
+    {
+        if (mCoreLogic.IsSimulationRunning())
+        {
+            mCoreLogic.EnterControlMode(ControlMode::EDIT);
+        }
+        else
+        {
+            mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+        }
+    });
+
+    mDeleteShortcut = new QShortcut(QKeySequence(Qt::Key_Delete), this);
+
+    mDeleteShortcut->setAutoRepeat(false);
+
+    QObject::connect(mDeleteShortcut, &QShortcut::activated, this, [&]()
+    {
+        if (!mCoreLogic.IsSimulationRunning())
+        {
+            mCoreLogic.DeleteSelectedComponents();
+        }
+    });
+
+    mEscapeShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
+
+    mEscapeShortcut->setAutoRepeat(false);
+
+    QObject::connect(mEscapeShortcut, &QShortcut::activated, this, [&]()
+    {
+        mCoreLogic.EnterControlMode(ControlMode::EDIT);
+    });
 }
 
 void MainWindow::SetComponentInputCountIfInAddMode(uint8_t pCount)
