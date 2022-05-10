@@ -37,6 +37,8 @@ void View::CreateGui()
 
     mGraphicsView.stackUnder(mProcessingOverlay);
     mGraphicsView.stackUnder(mZoomLabel);
+
+    mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
 }
 
 void View::FadeInProcessingOverlay()
