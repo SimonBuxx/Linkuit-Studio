@@ -52,29 +52,29 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
     mView.Scene()->clearFocus();
     mView.HideSpecialTab();
 
-    const auto& currentMode = mControlMode;
-
-    if (pNewMode != currentMode)
+    if (pNewMode == mControlMode)
     {
-        if (currentMode == ControlMode::SIMULATION)
-        {
-            mControlMode = pNewMode;
-            mPropagationTimer.stop();
-            emit SimulationStopSignal();
-        }
+        return;
+    }
 
+    if (mControlMode == ControlMode::SIMULATION)
+    {
         mControlMode = pNewMode;
-        emit ControlModeChangedSignal(pNewMode);
+        mPropagationTimer.stop();
+        emit SimulationStopSignal();
+    }
 
-        if (pNewMode == ControlMode::ADD)
-        {
-            emit ComponentTypeChangedSignal(mComponentType);
-        }
+    mControlMode = pNewMode;
+    emit ControlModeChangedSignal(pNewMode);
 
-        if (pNewMode == ControlMode::SIMULATION)
-        {
-            StartSimulation();
-        }
+    if (pNewMode == ControlMode::ADD)
+    {
+        emit ComponentTypeChangedSignal(mComponentType);
+    }
+
+    if (pNewMode == ControlMode::SIMULATION)
+    {
+        StartSimulation();
     }
 
     Q_ASSERT(mControlMode == pNewMode);
@@ -246,20 +246,18 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
     item.value()->setPos(SnapToGrid(pPosition));
 
-    if (GetCollidingComponents(item.value(), false).empty())
-    {
-        mView.Scene()->clearFocus(); // Remove focus from components like labels that can be edited while in ADD mode
-        mView.Scene()->addItem(item.value());
-
-        auto addedComponents = std::vector<IBaseComponent*>{static_cast<IBaseComponent*>(item.value())};
-        AppendUndo(new UndoAddType(addedComponents));
-        return true;
-    }
-    else
+    if (!GetCollidingComponents(item.value(), false).empty())
     {
         delete item.value();
         return false;
     }
+
+    mView.Scene()->clearFocus(); // Remove focus from components like labels that can be edited while in ADD mode
+    mView.Scene()->addItem(item.value());
+
+    auto addedComponents = std::vector<IBaseComponent*>{static_cast<IBaseComponent*>(item.value())};
+    AppendUndo(new UndoAddType(addedComponents));
+    return true;
 }
 
 void CoreLogic::SetComponentInputCount(uint8_t pCount)
@@ -664,28 +662,26 @@ bool CoreLogic::IsNoCrossingPoint(const ConPoint* pConPoint) const
         // Including the ConPoint at the position, there can be at max the ConPoint and one wire
         return true;
     }
-    else
+
+    bool foundOne = false;
+    bool firstGoesTrough = false;
+    for (const auto& comp : components)
     {
-        bool foundOne = false;
-        bool firstGoesTrough = false;
-        for (const auto& comp : components)
+        if (dynamic_cast<LogicWire*>(comp) != nullptr)
         {
-            if (dynamic_cast<LogicWire*>(comp) != nullptr)
+            if (!foundOne)
             {
-                if (!foundOne)
-                {
-                    foundOne = true; // Found a crossing wire (either ends in pConPoint or doesn't)
-                    firstGoesTrough = !static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos()); // True, if this wire doesn't end in pConPoint
-                }
-                else if ((foundOne && firstGoesTrough) || (foundOne && !static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos())))
-                {
-                    // T-Crossing wire found (first or second one) and two wires total, this is no L or I crossing
-                    return false;
-                }
+                foundOne = true; // Found a crossing wire (either ends in pConPoint or doesn't)
+                firstGoesTrough = !static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos()); // True, if this wire doesn't end in pConPoint
+            }
+            else if ((foundOne && firstGoesTrough) || (foundOne && !static_cast<LogicWire*>(comp)->StartsOrEndsIn(pConPoint->pos())))
+            {
+                // T-Crossing wire found (first or second one) and two wires total, this is no L or I crossing
+                return false;
             }
         }
-        return true;
     }
+    return true;
 }
 
 bool CoreLogic::IsXCrossingPoint(QPointF pPoint) const
@@ -696,18 +692,15 @@ bool CoreLogic::IsXCrossingPoint(QPointF pPoint) const
     {
         return false;
     }
-    else
+
+    for (const auto& wire : wires)
     {
-        for (const auto& wire : wires)
+        if (static_cast<LogicWire*>(wire)->StartsOrEndsIn(pPoint))
         {
-            if (static_cast<LogicWire*>(wire)->StartsOrEndsIn(pPoint))
-            {
-                // L-Crossing type wire found, this is no X crossing
-                return false;
-            }
+            return false; // L-Crossing type wire found, this is no X crossing
         }
-        return true;
     }
+    return true;
 }
 
 LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, std::optional<LogicWire*> pLeftTopAdjacent, std::optional<LogicWire*> pRightBottomAdjacent) const
@@ -820,33 +813,31 @@ std::optional<QPointF> CoreLogic::GetWireCollisionPoint(const LogicWire* pWireA,
     {
         return QPointF(pWireA->x(), pWireB->y());
     }
-    else
-    {
-        return std::nullopt;
-    }
+
+    return std::nullopt;
 }
 
 bool CoreLogic::IsLCrossing(LogicWire* pWireA, LogicWire* pWireB) const
 {
-    Q_ASSERT(pWireA);
-    Q_ASSERT(pWireB);
+    Q_ASSERT(pWireA && pWireB);
 
     const LogicWire* a = nullptr;
     const LogicWire* b = nullptr;
+
+    if (pWireA->GetDirection() == pWireB->GetDirection())
+    {
+        return false;
+    }
 
     if (pWireA->GetDirection() == WireDirection::VERTICAL && pWireB->GetDirection() == WireDirection::HORIZONTAL)
     {
         a = pWireB;
         b = pWireA;
     }
-    else if (pWireA->GetDirection() == WireDirection::HORIZONTAL && pWireB->GetDirection() == WireDirection::VERTICAL)
+    else // must be pWireA horizontal, pWireB vertical
     {
         a = pWireA;
         b = pWireB;
-    }
-    else
-    {
-        return false;
     }
 
     return ((a->y() == b->y() && a->x() == b->x()) || (a->y() == b->y() && a->x() + a->GetLength() == b->x())
@@ -857,12 +848,9 @@ std::optional<ConPoint*> CoreLogic::GetConPointAtPosition(QPointF pPos, Connecti
 {
     for (const auto& comp : mView.Scene()->items(pPos, Qt::IntersectsItemShape))
     {
-        if (dynamic_cast<ConPoint*>(comp) != nullptr)
+        if ((nullptr != dynamic_cast<ConPoint*>(comp)) && (pType == static_cast<ConPoint*>(comp)->GetConnectionType()))
         {
-            if(static_cast<ConPoint*>(comp)->GetConnectionType() == pType)
-            {
-                return static_cast<ConPoint*>(comp);
-            }
+            return static_cast<ConPoint*>(comp);
         }
     }
 
@@ -896,61 +884,61 @@ void CoreLogic::ConnectLogicCells()
 {
     for (auto& comp : mView.Scene()->items())
     {
-        if (dynamic_cast<IBaseComponent*>(comp) == nullptr || dynamic_cast<LogicWire*>(comp) != nullptr)
+        if (nullptr == dynamic_cast<IBaseComponent*>(comp) || nullptr != dynamic_cast<LogicWire*>(comp))
         {
-            continue;
+            continue; //  Skip if no non-wire component
         }
 
         auto compBase = static_cast<IBaseComponent*>(comp);
 
         for (auto& coll : mView.Scene()->collidingItems(comp, Qt::IntersectsItemBoundingRect))
         {
-            if (dynamic_cast<LogicWire*>(coll) != nullptr)
+            if (nullptr == dynamic_cast<LogicWire*>(coll))
             {
-                // Component <-> Wire connection
-                auto wire = static_cast<LogicWire*>(coll);
+                continue; // Skip if no wire
+            }
 
-                if (dynamic_cast<ConPoint*>(comp) != nullptr)
+            // Component <-> Wire connection
+            auto wire = static_cast<LogicWire*>(coll);
+
+            if (nullptr != dynamic_cast<ConPoint*>(comp))
+            {
+                const auto& conPoint = static_cast<ConPoint*>(comp);
+                if (conPoint->GetConnectionType() != ConnectionType::FULL) // Diode <-> Wire connection
                 {
-                    const auto& conPoint = static_cast<ConPoint*>(comp);
-                    if (conPoint->GetConnectionType() != ConnectionType::FULL)
-                    {
-                        // Diode <-> Wire connection
-                        Q_ASSERT(compBase->GetLogicCell());
-                        auto outputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::HORIZONTAL : WireDirection::VERTICAL);
-                        auto inputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::VERTICAL : WireDirection::HORIZONTAL);
+                    Q_ASSERT(compBase->GetLogicCell());
+                    auto outputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::HORIZONTAL : WireDirection::VERTICAL);
+                    auto inputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::VERTICAL : WireDirection::HORIZONTAL);
 
-                        if ((wire->GetDirection() == outputDirection)
-                                && wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[0].pos)))
-                        {
-                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
-                            compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, 0);
-                        }
-                        else if ((wire->GetDirection() == inputDirection)
-                                && wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[0].pos)))
-                        {
-                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), 0);
-                        }
+                    if ((wire->GetDirection() == outputDirection)
+                            && wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[0].pos)))
+                    {
+                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
+                        compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, 0);
+                    }
+                    else if ((wire->GetDirection() == inputDirection)
+                            && wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[0].pos)))
+                    {
+                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), 0);
                     }
                 }
-                else
+            }
+            else // Other component <-> Wire connection
+            {
+                for (size_t out = 0; out < compBase->GetOutConnectorCount(); out++)
                 {
-                    // Other component <-> Wire connection
-                    for (size_t out = 0; out < compBase->GetOutConnectorCount(); out++)
+                    if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[out].pos)))
                     {
-                        if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[out].pos)))
-                        {
-                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
-                            compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, out);
-                        }
+                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
+                        compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, out);
                     }
+                }
 
-                    for (size_t in = 0; in < compBase->GetInConnectorCount(); in++)
+                for (size_t in = 0; in < compBase->GetInConnectorCount(); in++)
+                {
+                    if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[in].pos)))
                     {
-                        if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetInConnectors()[in].pos)))
-                        {
-                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), in);
-                        }
+                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AppendOutput(compBase->GetLogicCell(), in);
                     }
                 }
             }
@@ -967,8 +955,7 @@ void CoreLogic::StartProcessing()
 
 void CoreLogic::ProcessingHeartbeat()
 {
-    // User input during processing will be handled but ignored
-    QCoreApplication::processEvents();
+    QCoreApplication::processEvents(); // User input during processing will be handled but ignored
 }
 
 void CoreLogic::OnProcessingTimeout()
@@ -994,12 +981,12 @@ void CoreLogic::ClearSelection()
     mView.HideSpecialTab();
 }
 
+#warning temporary performance counter
 int steps = 0;
 int collideCheck = 0;
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {   
     mView.SetGuiEnabled(false);
-#warning processing screen not displayed when copying many gates, no wires
     StartProcessing();
 
     QElapsedTimer total;
@@ -1017,14 +1004,16 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
     for (const auto& comp : mView.Scene()->selectedItems())
     {
-        if (dynamic_cast<IBaseComponent*>(comp) != nullptr)
+        if (nullptr == dynamic_cast<IBaseComponent*>(comp))
         {
-            if (dynamic_cast<LogicWire*>(comp) != nullptr)
-            {
-                affectedWires.push_back(static_cast<LogicWire*>(comp));
-            }
+            continue;
+        }
 
-            affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
+        affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
+
+        if (nullptr != dynamic_cast<LogicWire*>(comp))
+        {
+            affectedWires.push_back(static_cast<LogicWire*>(comp));
         }
 
         ProcessingHeartbeat();
@@ -1043,28 +1032,30 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
     for (const auto& comp : affectedComponents) // Ca. 75% of total cost
     {                   
-        if (!ManageConPointsOneStep(comp, pOffset, movedComponents, addedComponents, deletedComponents))
+        if (ManageConPointsOneStep(comp, pOffset, movedComponents, addedComponents, deletedComponents))
         {
-            // Collision, abort
-            for (const auto& comp : affectedComponents) // Revert moving
-            {
-                comp->moveBy(-pOffset.x(), -pOffset.y());
-            }
-            for (const auto& comp : addedComponents) // Revert adding
-            {
-                delete comp;
-            }
-            for (const auto& comp : deletedComponents) // Revert deleting
-            {
-                mView.Scene()->addItem(comp);
-            }
-            ClearSelection();
-            EndProcessing();
-            mView.PrepareGuiForEditing();
-            return;
+            ProcessingHeartbeat();
+            continue;
         }
 
-        ProcessingHeartbeat();
+        // Collision, abort
+        for (const auto& comp : affectedComponents) // Revert moving
+        {
+            comp->moveBy(-pOffset.x(), -pOffset.y());
+        }
+        for (const auto& comp : addedComponents) // Revert adding
+        {
+            delete comp;
+        }
+        for (const auto& comp : deletedComponents) // Revert deleting
+        {
+            mView.Scene()->addItem(comp);
+        }
+
+        ClearSelection();
+        EndProcessing();
+        mView.PrepareGuiForEditing();
+        return;
     }
 
     ClearSelection();
@@ -1095,14 +1086,13 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
     }
 
     // Delete all invalid ConPoints at the original position colliding with the selection
-    QRectF oldCollisionRect(pComponent->pos() + pComponent->boundingRect().topLeft() - pOffset,
-                                       pComponent->pos() + pComponent->boundingRect().bottomRight() - pOffset);
+    QRectF oldCollisionRect(pComponent->pos() + pComponent->boundingRect().topLeft() - pOffset, pComponent->pos() + pComponent->boundingRect().bottomRight() - pOffset);
 
     const auto&& abandonedComponents = mView.Scene()->items(oldCollisionRect, Qt::IntersectsItemShape);
 
     for (const auto& collidingComp : abandonedComponents)
     {
-        if (dynamic_cast<ConPoint*>(collidingComp) != nullptr && !collidingComp->isSelected() && IsNoCrossingPoint(static_cast<ConPoint*>(collidingComp)))
+        if ((nullptr != dynamic_cast<ConPoint*>(collidingComp)) && !collidingComp->isSelected() && IsNoCrossingPoint(static_cast<ConPoint*>(collidingComp)))
         {
             Q_ASSERT(collidingComp->scene() == mView.Scene());
             mView.Scene()->removeItem(collidingComp);
@@ -1112,7 +1102,7 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
     }
 
     // Delete all ConPoints of the moved components that are not valid anymore
-    if (dynamic_cast<ConPoint*>(pComponent) != nullptr && IsNoCrossingPoint(static_cast<ConPoint*>(pComponent)))
+    if ((nullptr != dynamic_cast<ConPoint*>(pComponent)) && IsNoCrossingPoint(static_cast<ConPoint*>(pComponent)))
     {
         Q_ASSERT(pComponent->scene() == mView.Scene());
         mView.Scene()->removeItem(pComponent);
@@ -1120,7 +1110,7 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
     }
 
     // Add ConPoints to all T Crossings
-    if (dynamic_cast<LogicWire*>(pComponent) != nullptr)
+    if (nullptr != dynamic_cast<LogicWire*>(pComponent))
     {
         AddConPointsToTCrossings(static_cast<LogicWire*>(pComponent), addedComponents);
     }
@@ -1135,34 +1125,36 @@ void CoreLogic::AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComp
 
     for (const auto& collidingComp : collidingComponents)
     {
+        ProcessingHeartbeat();
+
         collideCheck++;
         if (dynamic_cast<LogicWire*>(collidingComp) == nullptr)
         {
             continue;
         }
 
-        if (IsTCrossing(pWire, static_cast<LogicWire*>(collidingComp)))
+        if (!IsTCrossing(pWire, static_cast<LogicWire*>(collidingComp)))
         {
-            QPointF conPointPos;
-            if (pWire->GetDirection() == WireDirection::HORIZONTAL)
-            {
-                conPointPos = QPointF(collidingComp->x(), pWire->y());
-            }
-            else
-            {
-                conPointPos = QPointF(pWire->x(), collidingComp->y());
-            }
-
-            if (!IsComponentAtPosition<ConPoint>(conPointPos))
-            {
-                auto item = new ConPoint(this);
-                item->setPos(conPointPos);
-                addedComponents.push_back(item);
-                mView.Scene()->addItem(item);
-            }
+            continue;
         }
 
-        ProcessingHeartbeat();
+        QPointF conPointPos;
+        if (pWire->GetDirection() == WireDirection::HORIZONTAL)
+        {
+            conPointPos = QPointF(collidingComp->x(), pWire->y());
+        }
+        else
+        {
+            conPointPos = QPointF(pWire->x(), collidingComp->y());
+        }
+
+        if (!IsComponentAtPosition<ConPoint>(conPointPos))
+        {
+            auto item = new ConPoint(this);
+            item->setPos(conPointPos);
+            addedComponents.push_back(item);
+            mView.Scene()->addItem(item);
+        }
     }
 }
 
@@ -1170,64 +1162,57 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
 {
     auto snappedPos = SnapToGrid(pMappedPos);
 
-    if (mControlMode != ControlMode::SIMULATION)
+    // Add ConPoint on X crossing
+    if (mControlMode == ControlMode::EDIT
+            && mView.Scene()->selectedItems().empty()                                               // Scene must be empty (select of clicked item did not yet happen)
+            && dynamic_cast<LogicWire*>(mView.Scene()->itemAt(pMappedPos, QTransform())) != nullptr // Wire is clicked (not crossing below other component)
+            && IsXCrossingPoint(snappedPos)                                                         // There is an X-crossing at that position
+            && !IsComponentAtPosition<ConPoint>(snappedPos))                                        // There is no ConPoint at that position yet
     {
-        // Add ConPoint on X crossing
-        if (mControlMode == ControlMode::EDIT
-                && mView.Scene()->selectedItems().empty() // Scene must be empty (select of clicked item did not yet happen)
-                && dynamic_cast<LogicWire*>(mView.Scene()->itemAt(pMappedPos, QTransform())) != nullptr // Wire is clicked (not crossing below other component)
-                && IsXCrossingPoint(snappedPos) // There is an X-crossing at that position
-                && !IsComponentAtPosition<ConPoint>(snappedPos)) // There is no ConPoint at that position yet
-        {
-            // Create a new ConPoint (removing will be handled by OnConnectionTypeChanged)
-            auto item = new ConPoint(this);
-            item->setPos(snappedPos);
-            std::vector<IBaseComponent*> addedComponents{item};
-            mView.Scene()->addItem(item);
-            AppendUndo(new UndoAddType(addedComponents));
-            return;
-        }
+        auto item = new ConPoint(this); // Create a new ConPoint (removing will be handled by OnConnectionTypeChanged)
+        item->setPos(snappedPos);
+        std::vector<IBaseComponent*> addedComponents{item};
+        mView.Scene()->addItem(item);
+        AppendUndo(new UndoAddType(addedComponents));
+        return;
+    }
 
-        // Invert in/output connectors
-        if (mControlMode == ControlMode::EDIT
-                && mView.Scene()->selectedItems().empty())
+    if (mControlMode == ControlMode::EDIT
+            && mView.Scene()->selectedItems().empty()) // Invert in/output connectors
+    {
+        for (const auto& item : mView.Scene()->items(pMappedPos, Qt::IntersectsItemBoundingRect))
         {
-            for (const auto& item : mView.Scene()->items(pMappedPos, Qt::IntersectsItemBoundingRect))
+            if ((nullptr != dynamic_cast<AbstractGate*>(item)) || (nullptr != dynamic_cast<AbstractComplexLogic*>(item)) || (nullptr != dynamic_cast<LogicClock*>(item)))
             {
-                if (dynamic_cast<AbstractGate*>(item) != nullptr || dynamic_cast<AbstractComplexLogic*>(item) != nullptr || dynamic_cast<LogicClock*>(item) != nullptr)
+                const auto& connector = static_cast<IBaseComponent*>(item)->InvertConnectorByPoint(pMappedPos);
+                if (connector.has_value())
                 {
-                    const auto& connector = static_cast<IBaseComponent*>(item)->InvertConnectorByPoint(pMappedPos);
-                    if (connector.has_value())
-                    {
-                        auto data = std::make_shared<undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector.value());
-                        AppendUndo(new UndoConfigureType(data));
-                        return;
-                    }
+                    auto data = std::make_shared<undo::ConnectorInversionChangedData>(static_cast<IBaseComponent*>(item), connector.value());
+                    AppendUndo(new UndoConfigureType(data));
+                    return;
                 }
             }
         }
+    }
 
-        // Add component at the current position
-        if (mControlMode == ControlMode::ADD)
+    if (mControlMode == ControlMode::ADD) // Add component at the current position
+    {
+        const auto&& success = AddCurrentTypeComponent(snappedPos);
+        if (success)
         {
-            const auto&& success = AddCurrentTypeComponent(snappedPos);
-            if (success)
+            // A new component has been added => clear selection if it wasn't a text label
+            if (mView.Scene()->selectedItems().size() != 1 || dynamic_cast<TextLabel*>(mView.Scene()->selectedItems()[0]) == nullptr)
             {
-                // A new component has been added => clear selection if it wasn't a text label
-                if (mView.Scene()->selectedItems().size() != 1 || dynamic_cast<TextLabel*>(mView.Scene()->selectedItems()[0]) == nullptr)
-                {
-                    ClearSelection();
-                }
-                return;
+                ClearSelection();
             }
-        }
-
-        // Start the preview wire at the current position
-        if (mControlMode == ControlMode::WIRE)
-        {
-            SetPreviewWireStart(snappedPos);
             return;
         }
+    }
+
+    if (mControlMode == ControlMode::WIRE) // Start the preview wire at the current position
+    {
+        SetPreviewWireStart(snappedPos);
+        return;
     }
 
     emit MousePressedEventDefaultSignal(pEvent);
@@ -1282,6 +1267,7 @@ void CoreLogic::CopySelectedComponents()
         mView.Scene()->addItem(copy);
         addedComponents.push_back(copy);
     }
+
     if (addedComponents.size() > 0)
     {
         AppendUndo(new UndoAddType(addedComponents));
