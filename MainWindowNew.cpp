@@ -35,10 +35,42 @@ void MainWindowNew::InitializeToolboxTree()
 {
     QObject::connect(mUi->uToolboxTree, &QTreeView::pressed, this, &MainWindowNew::OnToolboxTreeClicked);
 
+    mUi->uToolboxTree->setExpandsOnDoubleClick(false);
+
+    // Expand/collapse on single click
+    QObject::connect(mUi->uToolboxTree, &QTreeView::clicked, [this]()
+    {
+        if (mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->hasChildren())
+        {
+            if (mUi->uToolboxTree->isExpanded(mUi->uToolboxTree->currentIndex()))
+            {
+                mUi->uToolboxTree->collapse(mUi->uToolboxTree->currentIndex());
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::folder));
+            }
+            else
+            {
+                mUi->uToolboxTree->expand(mUi->uToolboxTree->currentIndex());
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::folderopen));
+            }
+        }
+    });
+
     // Create category and root level items
-    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::folder), "Gates");
+    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::folderopen), "Gates");
     mCategoryGatesItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
+
+    mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::folder), "Adders");
+    mCategoryAddersItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryAddersItem);
+
+    mCategoryMemoryItem = new QStandardItem(mAwesome->icon(fa::folder), "Memory");
+    mCategoryMemoryItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryMemoryItem);
+
+    mCategoryConvertersItem = new QStandardItem(mAwesome->icon(fa::folder), "Converters");
+    mCategoryConvertersItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
     auto textLabelItem = new QStandardItem(mAwesome->icon(fa::font), "Text label");
     mToolboxTreeModel.appendRow(textLabelItem);
@@ -51,6 +83,15 @@ void MainWindowNew::InitializeToolboxTree()
     mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "XOR gate"));
     mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "NOT gate"));
     mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Buffer gate"));
+
+    mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Half adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Full adder"));
+
+    mCategoryMemoryItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "RS flip flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "D flip flop"));
+
+    mCategoryConvertersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Multiplexer"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Demultiplexer"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
@@ -259,73 +300,142 @@ CoreLogic& MainWindowNew::GetCoreLogic()
 
 void MainWindowNew::OnToolboxTreeClicked(const QModelIndex &pIndex)
 {
-    qDebug() << pIndex.parent().row();
-    qDebug() << pIndex.row();
-
-    switch(pIndex.parent().row())
+    if (pIndex.row() == -1)
     {
-        case -1: // Root level
+        throw std::logic_error("QModelIndex invalid");
+    }
+    else if (pIndex.parent().row() == -1)
+    {
+        // Item is on root level
+        switch(pIndex.row())
         {
-            switch(pIndex.row())
+            case 4: // Text label
             {
-                case 1: // Text label
-                {
-                    mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
-                    break;
-                }
-                default:
-                {
-                    qDebug() << "Unknown item in root level";
-                    mCoreLogic.EnterControlMode(ControlMode::EDIT);
-                    mScene.clearSelection();
-                    break;
-                }
+                mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
+                break;
             }
-            break;
-        }
-        case 0: // Gates
-        {
-            switch(pIndex.row())
+            default:
             {
-                case 0: // AND gate
-                {
-                    mCoreLogic.EnterAddControlMode(ComponentType::AND_GATE);
-                    break;
-                }
-                case 1: // OR gate
-                {
-                    mCoreLogic.EnterAddControlMode(ComponentType::OR_GATE);
-                    break;
-                }
-                case 2: // XOR gate
-                {
-                    mCoreLogic.EnterAddControlMode(ComponentType::XOR_GATE);
-                    break;
-                }
-                case 3: // NOT gate
-                {
-                    mCoreLogic.EnterAddControlMode(ComponentType::NOT_GATE);
-                    break;
-                }
-                case 4: // Buffer gate
-                {
-                    mCoreLogic.EnterAddControlMode(ComponentType::BUFFER_GATE);
-                    break;
-                }
-                default:
-                {
-                    qDebug() << "Unknown gate";
-                    break;
-                }
+                qDebug() << "Unknown root level item";
+                mCoreLogic.EnterControlMode(ControlMode::EDIT);
+                mScene.clearSelection();
+                break;
             }
-            break;
         }
-        default:
+    }
+    else if (pIndex.parent().parent().row() == -1)
+    {
+        // Item is on second level
+        switch (pIndex.parent().row())
         {
-            mCoreLogic.EnterControlMode(ControlMode::EDIT);
-            mScene.clearSelection();
-            break;
+            case 0: // Gates
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // AND gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::AND_GATE);
+                        break;
+                    }
+                    case 1: // OR gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::OR_GATE);
+                        break;
+                    }
+                    case 2: // XOR gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::XOR_GATE);
+                        break;
+                    }
+                    case 3: // NOT gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::NOT_GATE);
+                        break;
+                    }
+                    case 4: // Buffer gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::BUFFER_GATE);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown gate";
+                        break;
+                    }
+                }
+                break;
+            }
+            case 1: // Adders
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // Half adder
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::HALF_ADDER);
+                        break;
+                    }
+                    case 1: // Full adder
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::FULL_ADDER);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown adder";
+                        break;
+                    }
+                }
+                break;
+            }
+            case 2: // Memory
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // RS flip flop
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::RS_FLIPFLOP);
+                        break;
+                    }
+                    case 1: // D flip flop
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::D_FLIPFLOP);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown memory";
+                        break;
+                    }
+                }
+                break;
+            }
+            case 3: // Converters
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // Multiplexer
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::MULTIPLEXER);
+                        break;
+                    }
+                    case 1: // Demultiplexer
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::DEMULTIPLEXER);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown converter";
+                        break;
+                    }
+                }
+                break;
+            }
         }
+    }
+    else
+    {
+        qDebug() << "Unknown higher level item";
     }
 }
 

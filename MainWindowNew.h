@@ -64,6 +64,9 @@ protected:
 
     // Category items
     QStandardItem* mCategoryGatesItem;
+    QStandardItem* mCategoryAddersItem;
+    QStandardItem* mCategoryMemoryItem;
+    QStandardItem* mCategoryConvertersItem;
 
     // Global shortcuts
     QShortcut* mOneGateInputShortcut;
