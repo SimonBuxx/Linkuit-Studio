@@ -13,6 +13,7 @@ void View::CreateGui()
 
     InitializeRibbonMenu();
 
+#warning zoom label no longer responsibility of View
     mZoomLabel = new QLabel(this);
     mZoomLabel->setObjectName("zoomLabel");
     mZoomLabel->setText("100%");
@@ -28,16 +29,17 @@ void View::CreateGui()
     mMainLayout->setContentsMargins(0, 0, 0, 0);
     mMainLayout->setSpacing(0);
 
-    mMainLayout->addWidget(mRibbonMenu, 0, 0, Qt::AlignTop);
-    mMainLayout->addWidget(&mGraphicsView, 1, 0);
-    mMainLayout->addWidget(mProcessingOverlay, 1, 0, Qt::AlignHCenter | Qt::AlignVCenter);
-    mMainLayout->addWidget(mZoomLabel, 1, 0, Qt::AlignBottom | Qt::AlignLeft);
+    //mMainLayout->addWidget(mRibbonMenu, 0, 0, Qt::AlignTop);
+    mMainLayout->addWidget(&mGraphicsView, 0, 0);
+    mMainLayout->addWidget(mProcessingOverlay, 0, 0, Qt::AlignHCenter | Qt::AlignVCenter);
+    //mMainLayout->addWidget(mZoomLabel, 1, 0, Qt::AlignBottom | Qt::AlignLeft);
 
     setLayout(mMainLayout);
 
     mGraphicsView.stackUnder(mProcessingOverlay);
-    mGraphicsView.stackUnder(mZoomLabel);
+    //mGraphicsView.stackUnder(mZoomLabel);
 
+#warning about dialog no longer responsibility of View
     mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
 }
 
