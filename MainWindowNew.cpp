@@ -11,10 +11,10 @@ MainWindowNew::MainWindowNew(QWidget *pParent) :
 
     mAwesome = new QtAwesome(this);
     mAwesome->initFontAwesome();
-    mAwesome->setDefaultOption("color", QColor(0, 143, 100));
+    mAwesome->setDefaultOption("color", QColor(255, 255, 255));
     mAwesome->setDefaultOption("color-disabled", QColor(100, 100, 100));
     mAwesome->setDefaultOption( "color-active", QColor(0, 204, 143));
-    mAwesome->setDefaultOption( "color-selected", QColor(0, 204, 143));
+    mAwesome->setDefaultOption( "color-selected", QColor(255, 255, 255));
 
     mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
@@ -34,8 +34,11 @@ MainWindowNew::~MainWindowNew()
 #warning clear selection on simulation start
 void MainWindowNew::InitializeToolboxTree()
 {
+#warning color literals
     QVariantMap leafOption;
     leafOption.insert("color", QColor(0, 204, 143));
+
+    const QBrush folderBrush(QColor(0, 39, 43));
 
     QObject::connect(mUi->uToolboxTree, &QTreeView::pressed, this, &MainWindowNew::OnToolboxTreeClicked);
 
@@ -61,38 +64,43 @@ void MainWindowNew::InitializeToolboxTree()
             if (mUi->uToolboxTree->isExpanded(mUi->uToolboxTree->currentIndex()))
             {
                 mUi->uToolboxTree->collapse(mUi->uToolboxTree->currentIndex());
-                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::folder));
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevrondown));
             }
             else
             {
                 mUi->uToolboxTree->expand(mUi->uToolboxTree->currentIndex());
-                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::folderopen));
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevronup));
             }
         }
     });
 
     // Create category and root level items
-    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::folderopen), "Gates");
+    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Gates");
     mCategoryGatesItem->setSelectable(false);
+    mCategoryGatesItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
 
-    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::folder), "Inputs");
+    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Inputs");
     mCategoryInputsItem->setSelectable(false);
+    mCategoryInputsItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryInputsItem);
 
     auto outputItem = new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Output");
     mToolboxTreeModel.appendRow(outputItem);
 
-    mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::folder), "Adders");
+    mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Adders");
     mCategoryAddersItem->setSelectable(false);
+    mCategoryAddersItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryAddersItem);
 
-    mCategoryMemoryItem = new QStandardItem(mAwesome->icon(fa::folder), "Memory");
+    mCategoryMemoryItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Memory");
     mCategoryMemoryItem->setSelectable(false);
+    mCategoryMemoryItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryMemoryItem);
 
-    mCategoryConvertersItem = new QStandardItem(mAwesome->icon(fa::folder), "Converters");
+    mCategoryConvertersItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Converters");
     mCategoryConvertersItem->setSelectable(false);
+    mCategoryConvertersItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
     auto textLabelItem = new QStandardItem(mAwesome->icon(fa::font, leafOption), "Text label");
@@ -349,7 +357,6 @@ void MainWindowNew::OnToolboxTreeClicked(const QModelIndex &pIndex)
             }
             default:
             {
-                qDebug() << "Unknown root level item";
                 mCoreLogic.EnterControlMode(ControlMode::EDIT);
                 mScene.clearSelection();
                 break;
