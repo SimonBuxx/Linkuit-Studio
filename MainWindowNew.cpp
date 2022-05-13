@@ -11,7 +11,7 @@ MainWindowNew::MainWindowNew(QWidget *pParent) :
 
     mAwesome = new QtAwesome(this);
     mAwesome->initFontAwesome();
-    mAwesome->setDefaultOption("color", QColor(0, 204, 143));
+    mAwesome->setDefaultOption("color", QColor(0, 143, 100));
     mAwesome->setDefaultOption("color-disabled", QColor(100, 100, 100));
     mAwesome->setDefaultOption( "color-active", QColor(0, 204, 143));
     mAwesome->setDefaultOption( "color-selected", QColor(0, 204, 143));
@@ -31,11 +31,27 @@ MainWindowNew::~MainWindowNew()
     delete mUi;
 }
 
+#warning clear selection on simulation start
 void MainWindowNew::InitializeToolboxTree()
 {
+    QVariantMap leafOption;
+    leafOption.insert("color", QColor(0, 204, 143));
+
     QObject::connect(mUi->uToolboxTree, &QTreeView::pressed, this, &MainWindowNew::OnToolboxTreeClicked);
 
-    mUi->uToolboxTree->setExpandsOnDoubleClick(false);
+    // Tracks the currently selected item when it is changed by dragging
+    QObject::connect(mUi->uToolboxTree, &QTreeView::entered, this, [&](const QModelIndex &pIndex)
+    {
+        if ((QGuiApplication::mouseButtons() == Qt::LeftButton) && (mUi->uToolboxTree->currentIndex().row() >= 0))
+        {
+            if (!mToolboxTreeModel.itemFromIndex(pIndex)->isSelectable())
+            {
+                mUi->uToolboxTree->clearSelection();
+            }
+            OnToolboxTreeClicked(pIndex);
+        }
+    });
+
 
     // Expand/collapse on single click
     QObject::connect(mUi->uToolboxTree, &QTreeView::clicked, [this]()
@@ -60,6 +76,13 @@ void MainWindowNew::InitializeToolboxTree()
     mCategoryGatesItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
 
+    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::folder), "Inputs");
+    mCategoryInputsItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryInputsItem);
+
+    auto outputItem = new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Output");
+    mToolboxTreeModel.appendRow(outputItem);
+
     mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::folder), "Adders");
     mCategoryAddersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryAddersItem);
@@ -72,26 +95,30 @@ void MainWindowNew::InitializeToolboxTree()
     mCategoryConvertersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
-    auto textLabelItem = new QStandardItem(mAwesome->icon(fa::font), "Text label");
+    auto textLabelItem = new QStandardItem(mAwesome->icon(fa::font, leafOption), "Text label");
     mToolboxTreeModel.appendRow(textLabelItem);
 
 #warning idea: extend fields for configurations on select
 
     // Create component items
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "AND gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "OR gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "XOR gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "NOT gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Buffer gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "AND gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "OR gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "XOR gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "NOT gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Buffer gate"));
 
-    mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Half adder"));
-    mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Full adder"));
+    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Switch"));
+    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Button"));
+    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Clock"));
 
-    mCategoryMemoryItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "RS flip flop"));
-    mCategoryMemoryItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "D flip flop"));
+    mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Half adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Full adder"));
 
-    mCategoryConvertersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Multiplexer"));
-    mCategoryConvertersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip), "Demultiplexer"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "RS flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "D flip-flop"));
+
+    mCategoryConvertersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Multiplexer"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Demultiplexer"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
@@ -300,16 +327,22 @@ CoreLogic& MainWindowNew::GetCoreLogic()
 
 void MainWindowNew::OnToolboxTreeClicked(const QModelIndex &pIndex)
 {
+#warning use isTopLevel instead
     if (pIndex.row() == -1)
     {
-        throw std::logic_error("QModelIndex invalid");
+        throw std::logic_error("Model index invalid");
     }
     else if (pIndex.parent().row() == -1)
     {
         // Item is on root level
         switch(pIndex.row())
         {
-            case 4: // Text label
+            case 2: // Output
+            {
+                mCoreLogic.EnterAddControlMode(ComponentType::OUTPUT);
+                break;
+            }
+            case 6: // Text label
             {
                 mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
                 break;
@@ -365,7 +398,34 @@ void MainWindowNew::OnToolboxTreeClicked(const QModelIndex &pIndex)
                 }
                 break;
             }
-            case 1: // Adders
+            case 1: // Inputs
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // Switch
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::INPUT);
+                        break;
+                    }
+                    case 1: // Button
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::BUTTON);
+                        break;
+                    }
+                    case 2: // Clock
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::CLOCK);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown input";
+                        break;
+                    }
+                }
+                break;
+            }
+            case 3: // Adders
             {
                 switch(pIndex.row())
                 {
@@ -387,7 +447,7 @@ void MainWindowNew::OnToolboxTreeClicked(const QModelIndex &pIndex)
                 }
                 break;
             }
-            case 2: // Memory
+            case 4: // Memory
             {
                 switch(pIndex.row())
                 {
@@ -409,7 +469,7 @@ void MainWindowNew::OnToolboxTreeClicked(const QModelIndex &pIndex)
                 }
                 break;
             }
-            case 3: // Converters
+            case 5: // Converters
             {
                 switch(pIndex.row())
                 {

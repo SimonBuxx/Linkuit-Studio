@@ -39,5 +39,6 @@
         <file>images/icons/multiplexer_disabled.png</file>
         <file>images/icons/demultiplexer.png</file>
         <file>images/icons/demultiplexer_disabled.png</file>
+        <file>images/linkuit_icon6.png</file>
     </qresource>
 </RCC>

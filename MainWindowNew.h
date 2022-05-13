@@ -64,6 +64,7 @@ protected:
 
     // Category items
     QStandardItem* mCategoryGatesItem;
+    QStandardItem* mCategoryInputsItem;
     QStandardItem* mCategoryAddersItem;
     QStandardItem* mCategoryMemoryItem;
     QStandardItem* mCategoryConvertersItem;
