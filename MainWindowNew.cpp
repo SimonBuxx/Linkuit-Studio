@@ -21,6 +21,8 @@ MainWindowNew::MainWindowNew(QWidget *pParent) :
 
     mUi->uViewLayout->addWidget(&mView, 0, 1);
 
+    mView.stackUnder(mUi->uLeftContainer);
+
     InitializeToolboxTree();
 
     InitializeGlobalShortcuts();
@@ -74,18 +76,36 @@ void MainWindowNew::InitializeToolboxTree()
         }
     });
 
+    // Drop shadows
+
+    auto leftContainerShadow = new QGraphicsDropShadowEffect;
+    leftContainerShadow->setBlurRadius(4);
+    leftContainerShadow->setXOffset(2);
+    leftContainerShadow->setYOffset(0);
+    leftContainerShadow->setColor(QColor(0, 0, 0, 50));
+
+    mUi->uLeftContainer->setGraphicsEffect(leftContainerShadow);
+
+    auto tabBarShadow = new QGraphicsDropShadowEffect;
+    tabBarShadow->setBlurRadius(4);
+    tabBarShadow->setXOffset(0);
+    tabBarShadow->setYOffset(2);
+    tabBarShadow->setColor(QColor(0, 0, 0, 50));
+
+    mUi->uLeftTabWidget->setGraphicsEffect(tabBarShadow);
+
     // Create category and root level items
-    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Gates");
+    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup), "Gates");
     mCategoryGatesItem->setSelectable(false);
     mCategoryGatesItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
 
-    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Inputs");
+    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::chevronup), "Inputs");
     mCategoryInputsItem->setSelectable(false);
     mCategoryInputsItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryInputsItem);
 
-    auto outputItem = new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Output");
+    auto outputItem = new QStandardItem(mAwesome->icon(fa::lightbulbo, leafOption), "Output");
     mToolboxTreeModel.appendRow(outputItem);
 
     mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Adders");
@@ -115,9 +135,9 @@ void MainWindowNew::InitializeToolboxTree()
     mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "NOT gate"));
     mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Buffer gate"));
 
-    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Switch"));
-    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Button"));
-    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Clock"));
+    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::toggleon, leafOption), "Switch"));
+    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::toggleon, leafOption), "Button"));
+    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::clocko, leafOption), "Clock"));
 
     mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Half adder"));
     mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Full adder"));
@@ -130,6 +150,7 @@ void MainWindowNew::InitializeToolboxTree()
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
+    mUi->uToolboxTree->setExpanded(mCategoryInputsItem->index(), true);
 }
 
 void MainWindowNew::InitializeGlobalShortcuts()

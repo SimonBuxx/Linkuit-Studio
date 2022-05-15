@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include <QShortcut>
 #include <QStandardItemModel>
+#include <QGraphicsDropShadowEffect>
 
 namespace Ui {
 class MainWindowNew;

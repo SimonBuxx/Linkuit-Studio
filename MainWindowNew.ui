@@ -52,6 +52,32 @@
       </property>
       <item row="0" column="0" alignment="Qt::AlignLeft">
        <widget class="QWidget" name="uLeftContainer" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+	background: rgb(0, 39, 43);
+}</string>
+        </property>
         <layout class="QGridLayout" name="gridLayout_2">
          <property name="leftMargin">
           <number>0</number>
@@ -87,6 +113,9 @@
              <width>300</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
            </property>
            <property name="styleSheet">
             <string notr="true">QTabWidget {
