@@ -13,19 +13,56 @@ MainWindowNew::MainWindowNew(QWidget *pParent) :
     mAwesome->initFontAwesome();
     mAwesome->setDefaultOption("color", QColor(255, 255, 255));
     mAwesome->setDefaultOption("color-disabled", QColor(100, 100, 100));
-    mAwesome->setDefaultOption( "color-active", QColor(0, 204, 143));
-    mAwesome->setDefaultOption( "color-selected", QColor(255, 255, 255));
+    mAwesome->setDefaultOption("color-active", QColor(0, 204, 143));
+    mAwesome->setDefaultOption("color-selected", QColor(255, 255, 255));
 
     mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
 
-    mUi->uViewLayout->addWidget(&mView, 0, 1);
+    mUi->uViewLayout->addWidget(&mView, 1, 1);
 
     mView.stackUnder(mUi->uLeftContainer);
+
+    QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, &MainWindowNew::OnControlModeChanged);
+
+    ConnectGuiSignalsAndSlots();
 
     InitializeToolboxTree();
 
     InitializeGlobalShortcuts();
+
+    mToolButtonVariant.insert("color", QColor(0, 204, 143));
+    mToolButtonVariant.insert("color-disabled", QColor(64, 64, 64));
+    mToolButtonVariant.insert("color-active", QColor(0, 45, 50));
+    mToolButtonVariant.insert("color-selected", QColor(0, 204, 143));
+
+    mUncheckedButtonVariant.insert("color", QColor(0, 204, 143));
+    mUncheckedButtonVariant.insert("color-disabled", QColor(64, 64, 64));
+    mUncheckedButtonVariant.insert("color-active", QColor(0, 204, 143));
+    mUncheckedButtonVariant.insert("color-selected", QColor(0, 204, 143));
+
+    mCheckedButtonVariant.insert("color", QColor(0, 18, 20));
+    mCheckedButtonVariant.insert("color-disabled", QColor(64, 64, 64));
+    mCheckedButtonVariant.insert("color-active", QColor(0, 18, 20));
+    mCheckedButtonVariant.insert("color-selected", QColor(0, 18, 20));
+
+    //mUi->uEditButton->setIcon(mAwesome->icon(fa::mousepointer, mToolButtonVariant));
+
+    mUi->uEditButton->SetCheckedIcon(mAwesome->icon(fa::mousepointer, mCheckedButtonVariant));
+    mUi->uEditButton->SetUncheckedIcon(mAwesome->icon(fa::mousepointer, mUncheckedButtonVariant));
+    mUi->uWiringButton->SetCheckedIcon(mAwesome->icon(fa::exchange, mCheckedButtonVariant));
+    mUi->uWiringButton->SetUncheckedIcon(mAwesome->icon(fa::exchange, mUncheckedButtonVariant));
+
+    mUi->uCopyButton->SetIcon(mAwesome->icon(fa::clone, mUncheckedButtonVariant));
+    //mUi->uCopyButton->setIcon(mAwesome->icon(fa::clone, mToolButtonVariant));
+    //mUi->uSimulationButton->setIcon(mAwesome->icon(fa::play, mToolButtonVariant));
+
+    mUi->uSimulationButton->SetCheckedIcon(mAwesome->icon(fa::stop, mCheckedButtonVariant));
+    mUi->uSimulationButton->SetUncheckedIcon(mAwesome->icon(fa::play, mUncheckedButtonVariant));
+
+    mUi->uActionAbout->setIcon(mAwesome->icon(fa::infocircle, mToolButtonVariant));
+
+    mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
 }
 
 MainWindowNew::~MainWindowNew()
@@ -33,14 +70,113 @@ MainWindowNew::~MainWindowNew()
     delete mUi;
 }
 
+void MainWindowNew::ConnectGuiSignalsAndSlots()
+{
+    QObject::connect(mUi->uEditButton, &QAbstractButton::clicked, [&]()
+    {
+        mCoreLogic.EnterControlMode(ControlMode::EDIT);
+    });
+
+    QObject::connect(mUi->uWiringButton, &QAbstractButton::clicked, [&]()
+    {
+        mCoreLogic.EnterControlMode(ControlMode::WIRE);
+    });
+
+    QObject::connect(mUi->uCopyButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::CopySelectedComponents);
+
+    QObject::connect(mUi->uSimulationButton, &QAbstractButton::clicked, [&]()
+    {
+        /*QVariantMap buttonIconVariant;
+        buttonIconVariant.insert("color", QColor(0, 204, 143));*/
+        if (mCoreLogic.IsSimulationRunning())
+        {
+#warning move into separate function
+            //mUi->uSimulationButton->setIcon(mAwesome->icon(fa::play, buttonIconVariant));
+            mCoreLogic.EnterControlMode(ControlMode::EDIT);
+        }
+        else
+        {
+            //mUi->uSimulationButton->setIcon(mAwesome->icon(fa::stop, buttonIconVariant));
+            mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+        }
+    });
+
+    QObject::connect(mUi->uActionAbout, &QAction::triggered, &mAboutDialog, &AboutDialog::show);
+}
+
+void MainWindowNew::OnControlModeChanged(ControlMode pNewMode)
+{
+    switch (pNewMode)
+    {
+        case ControlMode::EDIT:
+        {
+            mUi->uToolboxTree->clearSelection();
+            mUi->uToolboxTree->setEnabled(true);
+
+            mUi->uEditButton->setEnabled(true);
+            mUi->uWiringButton->setEnabled(true);
+            mUi->uCopyButton->setEnabled(true);
+            mUi->uEditButton->setChecked(true);
+            mUi->uWiringButton->setChecked(false);
+            mUi->uSimulationButton->setChecked(false);
+            break;
+        }
+        case ControlMode::WIRE:
+        {
+            mUi->uToolboxTree->clearSelection();
+            mUi->uToolboxTree->setEnabled(true);
+
+            mUi->uEditButton->setEnabled(true);
+            mUi->uWiringButton->setEnabled(true);
+            mUi->uCopyButton->setEnabled(true);
+            mUi->uEditButton->setChecked(false);
+            mUi->uWiringButton->setChecked(true);
+            mUi->uSimulationButton->setChecked(false);
+            break;
+        }
+        case ControlMode::ADD:
+        {
+            mUi->uToolboxTree->setEnabled(true);
+
+            mUi->uEditButton->setEnabled(true);
+            mUi->uWiringButton->setEnabled(true);
+            mUi->uCopyButton->setEnabled(true);
+            mUi->buttonGroup->setExclusive(false);
+            mUi->uEditButton->setChecked(false);
+            mUi->uWiringButton->setChecked(false);
+            mUi->buttonGroup->setExclusive(true);
+            mUi->uSimulationButton->setChecked(false);
+            break;
+        }
+        case ControlMode::SIMULATION:
+        {
+            mUi->uToolboxTree->clearSelection();
+            mUi->uToolboxTree->setEnabled(false);
+
+            mUi->uEditButton->setEnabled(false);
+            mUi->uWiringButton->setEnabled(false);
+            mUi->uCopyButton->setEnabled(false);
+            mUi->buttonGroup->setExclusive(false);
+            mUi->uEditButton->setChecked(false);
+            mUi->uWiringButton->setChecked(false);
+            mUi->buttonGroup->setExclusive(true);
+            mUi->uSimulationButton->setChecked(true);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    mScene.clearSelection();
+}
+
+
 #warning clear selection on simulation start
 void MainWindowNew::InitializeToolboxTree()
 {
-#warning color literals
-    QVariantMap leafOption;
-    leafOption.insert("color", QColor(0, 204, 143));
-
-    const QBrush folderBrush(QColor(0, 39, 43));
+    //const QBrush folderBrush(QColor(220, 220, 220));
 
     QObject::connect(mUi->uToolboxTree, &QTreeView::pressed, this, &MainWindowNew::OnToolboxTreeClicked);
 
@@ -78,75 +214,75 @@ void MainWindowNew::InitializeToolboxTree()
 
     // Drop shadows
 
-    auto leftContainerShadow = new QGraphicsDropShadowEffect;
+    /*auto leftContainerShadow = new QGraphicsDropShadowEffect;
     leftContainerShadow->setBlurRadius(4);
     leftContainerShadow->setXOffset(2);
     leftContainerShadow->setYOffset(0);
     leftContainerShadow->setColor(QColor(0, 0, 0, 50));
 
-    mUi->uLeftContainer->setGraphicsEffect(leftContainerShadow);
+    mUi->uLeftContainer->setGraphicsEffect(leftContainerShadow);*/
 
-    auto tabBarShadow = new QGraphicsDropShadowEffect;
-    tabBarShadow->setBlurRadius(4);
-    tabBarShadow->setXOffset(0);
-    tabBarShadow->setYOffset(2);
-    tabBarShadow->setColor(QColor(0, 0, 0, 50));
+    /*auto topBarShadow = new QGraphicsDropShadowEffect;
+    topBarShadow->setBlurRadius(4);
+    topBarShadow->setXOffset(0);
+    topBarShadow->setYOffset(2);
+    topBarShadow->setColor(QColor(0, 0, 0, 50));
 
-    mUi->uLeftTabWidget->setGraphicsEffect(tabBarShadow);
+    mUi->uTopBar->setGraphicsEffect(topBarShadow);*/
 
     // Create category and root level items
     mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup), "Gates");
     mCategoryGatesItem->setSelectable(false);
-    mCategoryGatesItem->setBackground(folderBrush);
+    //mCategoryGatesItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
 
     mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::chevronup), "Inputs");
     mCategoryInputsItem->setSelectable(false);
-    mCategoryInputsItem->setBackground(folderBrush);
+    //mCategoryInputsItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryInputsItem);
 
-    auto outputItem = new QStandardItem(mAwesome->icon(fa::lightbulbo, leafOption), "Output");
+    auto outputItem = new QStandardItem(QIcon(":images/icons/output_icon.png"), "Output");
     mToolboxTreeModel.appendRow(outputItem);
 
     mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Adders");
     mCategoryAddersItem->setSelectable(false);
-    mCategoryAddersItem->setBackground(folderBrush);
+    //mCategoryAddersItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryAddersItem);
 
     mCategoryMemoryItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Memory");
     mCategoryMemoryItem->setSelectable(false);
-    mCategoryMemoryItem->setBackground(folderBrush);
+    //mCategoryMemoryItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryMemoryItem);
 
     mCategoryConvertersItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Converters");
     mCategoryConvertersItem->setSelectable(false);
-    mCategoryConvertersItem->setBackground(folderBrush);
+    //mCategoryConvertersItem->setBackground(folderBrush);
     mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
-    auto textLabelItem = new QStandardItem(mAwesome->icon(fa::font, leafOption), "Text label");
+    auto textLabelItem = new QStandardItem(QIcon(":images/icons/label_icon.png"), "Text label");
     mToolboxTreeModel.appendRow(textLabelItem);
 
 #warning idea: extend fields for configurations on select
 
     // Create component items
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "AND gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "OR gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "XOR gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "NOT gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Buffer gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "AND gate⁺"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "OR gate⁺"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "XOR gate⁺"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "NOT gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Buffer gate"));
 
-    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::toggleon, leafOption), "Switch"));
-    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::toggleon, leafOption), "Button"));
-    mCategoryInputsItem->appendRow(new QStandardItem(mAwesome->icon(fa::clocko, leafOption), "Clock"));
+    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/input_icon.png"), "Switch"));
+    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/button_icon.png"), "Button"));
+    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/clock_icon.png"), "Clock⁺"));
 
-    mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Half adder"));
-    mCategoryAddersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Full adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "Half adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(QIcon(":images/icons/full_adder_icon.png"), "Full adder"));
 
-    mCategoryMemoryItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "RS flip-flop"));
-    mCategoryMemoryItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "D flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "RS flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "D flip-flop"));
 
-    mCategoryConvertersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Multiplexer"));
-    mCategoryConvertersItem->appendRow(new QStandardItem(mAwesome->icon(fa::microchip, leafOption), "Demultiplexer"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer⁺"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer⁺"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);

@@ -140,7 +140,7 @@ static constexpr const char* D_FLIPFLOP_TEXT = "FF";
 static constexpr const char* MULTIPLEXER_TEXT = "MUX";
 static constexpr const char* DEMULTIPLEXER_TEXT = "DEMUX";
 
-static const QFont FONT("Quicksand Medium", 20);
+static const QFont FONT("Source Sans Pro", 20);
 static const QFont CONNECTOR_FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr QColor SMALL_TEXT_FONT_COLOR(225, 225, 225);

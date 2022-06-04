@@ -40,5 +40,22 @@
         <file>images/icons/demultiplexer.png</file>
         <file>images/icons/demultiplexer_disabled.png</file>
         <file>images/linkuit_icon6.png</file>
+        <file>fonts/Quicksand-Bold.ttf</file>
+        <file>fonts/Quicksand-SemiBold.ttf</file>
+        <file>fonts/Quicksand-Light.ttf</file>
+        <file>images/icons/gate.png</file>
+        <file>fonts/SourceSansPro-Regular.ttf</file>
+        <file>images/icons/output_icon.png</file>
+        <file>images/icons/input_icon.png</file>
+        <file>images/icons/button_icon.png</file>
+        <file>images/icons/clock_icon.png</file>
+        <file>images/icons/label_icon.png</file>
+        <file>images/icons/flipflop_icon.png</file>
+        <file>images/icons/full_adder_icon.png</file>
+        <file>images/icons/wire_icon.png</file>
+        <file>images/icons/edit_icon.png</file>
+        <file>images/icons/copy_icon.png</file>
+        <file>images/icons/play_icon.png</file>
+        <file>images/icons/stop_icon.png</file>
     </qresource>
 </RCC>

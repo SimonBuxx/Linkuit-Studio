@@ -11,6 +11,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 SOURCES += \
    $${PWD}/main.cpp \
+   IconToolButton.cpp \
    MainWindowNew.cpp
 
 RESOURCES += \
@@ -23,4 +24,5 @@ FORMS += \
     MainWindowNew.ui
 
 HEADERS += \
+    IconToolButton.h \
     MainWindowNew.h

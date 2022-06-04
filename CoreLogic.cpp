@@ -34,23 +34,15 @@ CoreLogic::CoreLogic(View &pView):
     mPropagationTimer(this),
     mProcessingTimer(this)
 {
-    ConnectToView();
     mView.Init();
 
     QObject::connect(&mPropagationTimer, &QTimer::timeout, this, &CoreLogic::OnPropagationTimeout);
     QObject::connect(&mProcessingTimer, &QTimer::timeout, this, &CoreLogic::OnProcessingTimeout);
 }
 
-void CoreLogic::ConnectToView()
-{
-    QObject::connect(this, &CoreLogic::ControlModeChangedSignal, &mView, &View::OnControlModeChanged);
-    QObject::connect(this, &CoreLogic::ComponentTypeChangedSignal, &mView, &View::OnComponentTypeChanged);
-}
-
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
 {
     mView.Scene()->clearFocus();
-    mView.HideSpecialTab();
 
     if (pNewMode == mControlMode)
     {
@@ -82,7 +74,6 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
 
 void CoreLogic::StartSimulation()
 {
-    mView.SetToolboxTabEnabled(false);
     StartProcessing();
     ParseWireGroups();
     CreateWireLogicCells();
@@ -129,11 +120,6 @@ void CoreLogic::SelectComponentType(ComponentType pComponentType)
     Q_ASSERT(mControlMode == ControlMode::ADD);
     mComponentType = pComponentType;
     emit ComponentTypeChangedSignal(mComponentType);
-}
-
-void CoreLogic::OnDisplayTabRequest(gui::MenuTab pTab)
-{
-    mView.ShowSpecialTab(pTab);
 }
 
 std::optional<IBaseComponent*> CoreLogic::GetItem() const
@@ -978,7 +964,6 @@ bool CoreLogic::IsProcessing() const
 void CoreLogic::ClearSelection()
 {
     mView.Scene()->clearSelection();
-    mView.HideSpecialTab();
 }
 
 #warning temporary performance counter
@@ -986,7 +971,7 @@ int steps = 0;
 int collideCheck = 0;
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {   
-    mView.SetGuiEnabled(false);
+    //mView.SetGuiEnabled(false);
     StartProcessing();
 
     QElapsedTimer total;
@@ -995,7 +980,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     if (pOffset.manhattanLength() <= 0) // No effective movement
     {
         EndProcessing();
-        mView.PrepareGuiForEditing();
+        //mView.PrepareGuiForEditing();
         return;
     }
 
@@ -1054,7 +1039,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
         ClearSelection();
         EndProcessing();
-        mView.PrepareGuiForEditing();
+        //mView.PrepareGuiForEditing();
         return;
     }
 
@@ -1067,8 +1052,8 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     qDebug() << "Moving took " << total.elapsed() << "ms total";
 
     EndProcessing();
-    mView.PrepareGuiForEditing();
-    mView.SetGuiEnabled(true);
+    //mView.PrepareGuiForEditing();
+    //mView.SetGuiEnabled(true);
     qDebug() << "Steps: " << steps;
     qDebug() << "CollideCheck: " << collideCheck;
     steps = 0;
@@ -1315,7 +1300,7 @@ void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
     AppendToUndoQueue(pUndoObject, mUndoQueue);
     mRedoQueue.clear();
 
-    mView.SetUndoRedoButtonsEnableState();
+    //mView.SetUndoRedoButtonsEnableState();
 }
 
 void CoreLogic::AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue)
@@ -1426,7 +1411,7 @@ void CoreLogic::Undo()
         }
     }
     ClearSelection();
-    mView.SetUndoRedoButtonsEnableState();
+    //mView.SetUndoRedoButtonsEnableState();
 }
 
 void CoreLogic::Redo()
@@ -1525,5 +1510,5 @@ void CoreLogic::Redo()
         }
     }
     ClearSelection();
-    mView.SetUndoRedoButtonsEnableState();
+    //mView.SetUndoRedoButtonsEnableState();
 }

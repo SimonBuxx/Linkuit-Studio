@@ -12,12 +12,12 @@ QScrollBar:vertical
 {
     width: 6px;
     border: none;
-    background: rgb(0, 45, 50);
+    background: rgb(255, 255, 255);
 }
 
 QScrollBar::handle:vertical
 {
-    background: rgb(0, 143, 100);
+    background: rgb(0, 204, 143);
     min-width: 20px;
 }
 
@@ -43,7 +43,7 @@ QToolButton
     padding: 0;
     border-radius: 1px;
     background: rgb(0, 39, 43);
-    font-family: 'Quicksand Medium';
+    font-family: 'Quicksand SemiBold';
     font-size: 16px;
     color: rgb(255, 255, 255);
 }
@@ -101,7 +101,7 @@ QPushButton
     padding: 5px 10px;;
     border-radius: 1px;
     background: rgb(0, 39, 43);
-    font-family: 'Quicksand Medium';
+    font-family: 'Quicksand SemiBold';
     font-size: 14px;
     color: rgb(255, 255, 255);
 }

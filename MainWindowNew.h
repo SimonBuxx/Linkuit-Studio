@@ -3,11 +3,15 @@
 
 #include "View/View.h"
 #include "QtAwesome.h"
+#include "AboutDialog.h"
 
 #include <QMainWindow>
 #include <QShortcut>
 #include <QStandardItemModel>
 #include <QGraphicsDropShadowEffect>
+#include <QPushButton>
+
+class View;
 
 namespace Ui {
 class MainWindowNew;
@@ -38,7 +42,14 @@ protected slots:
     /// \param pIndex
     void OnToolboxTreeClicked(const QModelIndex &pIndex);
 
+    /// \brief Performs all GUI adjustments to enter the new control mode
+    /// \param pNewMode: The newly entered control mode
+    void OnControlModeChanged(ControlMode pNewMode);
+
 protected:
+#warning missing documentation
+    void ConnectGuiSignalsAndSlots(void);
+
     /// \brief Creates all items for the toolbox tree
     void InitializeToolboxTree(void);
 
@@ -100,6 +111,12 @@ protected:
     QShortcut* mDeleteShortcut;
 
     QShortcut* mEscapeShortcut;
+
+    AboutDialog mAboutDialog;
+
+    QVariantMap mToolButtonVariant;
+    QVariantMap mCheckedButtonVariant;
+    QVariantMap mUncheckedButtonVariant;
 };
 
 #endif // MAINWINDOWNEW_H

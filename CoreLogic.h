@@ -166,12 +166,7 @@ public slots:
     /// \brief Displays the processing overlay (loading screen); invoked by mProcessingTimer
     void OnProcessingTimeout(void);
 
-    void OnDisplayTabRequest(gui::MenuTab pTab);
-
 protected:
-    /// \brief Connects to the View object via signals and slots
-    void ConnectToView(void);
-
     /// \brief Performs all neccessary steps to enter simulation mode
     void StartSimulation(void);
 

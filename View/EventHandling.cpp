@@ -36,7 +36,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
         return;
     }
 
-    mView.HideSpecialTab();
+    //mView.HideSpecialTab();
 
     Q_ASSERT(pEvent);
 
