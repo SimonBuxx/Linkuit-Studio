@@ -37,33 +37,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     height: 0px;
 }
 
-QToolButton
-{
-    border: 1px solid rgb(0, 39, 43);
-    padding: 0;
-    border-radius: 1px;
-    background: rgb(0, 39, 43);
-    font-family: 'Quicksand SemiBold';
-    font-size: 16px;
-    color: rgb(255, 255, 255);
-}
-
-QToolButton:hover
-{
-    border: 1px solid rgb(0, 143, 100);
-}
-
-QToolButton:checked, QToolButton:pressed
-{
-    border: 1px solid rgb(0, 204, 143);
-}
-
-QToolButton:disabled
-{
-    border: 1px solid rgb(0, 39, 43);
-    color: rgb(100, 100, 100);
-}
-
 QToolTip
 {
     background-color: rgb(0, 39, 43);
@@ -72,18 +45,6 @@ QToolTip
     border-radius: 1px;
     font-family: 'Quicksand Medium';
     font-size: 16px;
-}
-
-QWidget#zoomLabel
-{
-    padding: 5px;
-    margin: 0 0 10px 10px;
-    background: rgb(0, 39, 43);
-    border: 1px solid rgb(0, 143, 100);
-    font-family: 'Quicksand Medium';
-    font-size: 16px;
-    color: rgb(255, 255, 255);
-    border-radius: 1px;
 }
 
 QPlainTextEdit
@@ -97,22 +58,21 @@ QPlainTextEdit
 
 QPushButton
 {
-    border: 1px solid rgb(0, 39, 43);
-    padding: 5px 10px;;
+    padding: 5px 10px;
     border-radius: 1px;
-    background: rgb(0, 39, 43);
-    font-family: 'Quicksand SemiBold';
+    background: rgb(242, 242, 242);
+    font-family: 'Source Sans Pro';
     font-size: 14px;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 45, 50);
 }
 
-QPushButton:hover
+QPushButton:pressed
 {
-    border: 1px solid rgb(0, 143, 100);
+    background: rgb(220, 220, 220);
 }
 
-QPushButton:checked, QPushButton:pressed
+QPushButton:checked
 {
-    border: 1px solid rgb(0, 204, 143);
+    background: rgb(0, 204, 143);
 }
 

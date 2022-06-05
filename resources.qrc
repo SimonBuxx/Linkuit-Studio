@@ -57,5 +57,6 @@
         <file>images/icons/copy_icon.png</file>
         <file>images/icons/play_icon.png</file>
         <file>images/icons/stop_icon.png</file>
+        <file>images/hor_line.png</file>
     </qresource>
 </RCC>

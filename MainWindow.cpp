@@ -60,12 +60,16 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uUndoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Undo);
     QObject::connect(mUi->uRedoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Redo);
 
+    QObject::connect(mUi->uStartButton, &QAbstractButton::clicked, this, &MainWindow::EnterSimulation);
     QObject::connect(mUi->uRunButton, &QAbstractButton::clicked, this, &MainWindow::RunSimulation);
-
+    QObject::connect(mUi->uStepButton, &QAbstractButton::clicked, this, &MainWindow::StepSimulation);
+    QObject::connect(mUi->uResetButton, &QAbstractButton::clicked, this, &MainWindow::ResetSimulation);
+    QObject::connect(mUi->uPauseButton, &QAbstractButton::clicked, this, &MainWindow::PauseSimulation);
     QObject::connect(mUi->uStopButton, &QAbstractButton::clicked, this, &MainWindow::StopSimulation);
 
     QObject::connect(mUi->uActionAbout, &QAction::triggered, &mAboutDialog, &AboutDialog::show);
 
+    QObject::connect(mUi->uActionStart, &QAction::triggered, this, &MainWindow::EnterSimulation);
     QObject::connect(mUi->uActionRun, &QAction::triggered, this, &MainWindow::RunSimulation);
     QObject::connect(mUi->uActionStep, &QAction::triggered, this, &MainWindow::StepSimulation);
     QObject::connect(mUi->uActionReset, &QAction::triggered, this, &MainWindow::ResetSimulation);
@@ -74,7 +78,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
 }
 
-void MainWindow::RunSimulation()
+void MainWindow::EnterSimulation()
 {
     if (!mCoreLogic.IsSimulationRunning())
     {
@@ -82,19 +86,34 @@ void MainWindow::RunSimulation()
     }
 }
 
+void MainWindow::RunSimulation()
+{
+#warning Enter simulation sub mode "running"
+    /*if (!mCoreLogic.IsSimulationRunning())
+    {
+        mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+    }*/
+#warning implement
+    qDebug() << "Not implemented";
+}
+
 void MainWindow::StepSimulation()
 {
 #warning implement
+    qDebug() << "Not implemented";
 }
 
 void MainWindow::ResetSimulation()
 {
 #warning implement
+    qDebug() << "Not implemented";
 }
 
 void MainWindow::PauseSimulation()
 {
+#warning Enter simulation sub mode "stopped"
 #warning implement
+    qDebug() << "Not implemented";
 }
 
 void MainWindow::StopSimulation()
@@ -120,13 +139,23 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uDeleteButton->setEnabled(true);
             mUi->uUndoButton->setEnabled(true);
             mUi->uRedoButton->setEnabled(true);
-            mUi->uRunButton->setEnabled(true);
+            mUi->uStartButton->setEnabled(true);
+            mUi->uRunButton->setEnabled(false);
+#warning introduce simulation sub modes for step/run
+            mUi->uStepButton->setEnabled(false);
+            mUi->uResetButton->setEnabled(false);
+            mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
 
-            mUi->uActionRun->setEnabled(true);
+            mUi->uActionStart->setEnabled(true);
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionReset->setEnabled(false);
+            mUi->uActionStep->setEnabled(false);
+            mUi->uActionPause->setEnabled(false);
             mUi->uActionStop->setEnabled(false);
 
             mUi->uEditButton->setChecked(true);
+            mUi->uRunButton->setChecked(false);
             ForceUncheck(mUi->uWiringButton);
             break;
         }
@@ -141,14 +170,23 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uDeleteButton->setEnabled(true);
             mUi->uUndoButton->setEnabled(true);
             mUi->uRedoButton->setEnabled(true);
-            mUi->uRunButton->setEnabled(true);
+            mUi->uStartButton->setEnabled(true);
+            mUi->uRunButton->setEnabled(false);
+            mUi->uStepButton->setEnabled(false);
+            mUi->uResetButton->setEnabled(false);
+            mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
 
-            mUi->uActionRun->setEnabled(true);
+            mUi->uActionStart->setEnabled(true);
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionReset->setEnabled(false);
+            mUi->uActionStep->setEnabled(false);
+            mUi->uActionPause->setEnabled(false);
             mUi->uActionStop->setEnabled(false);
 
             ForceUncheck(mUi->uEditButton);
             mUi->uWiringButton->setChecked(true);
+            mUi->uRunButton->setChecked(false);
             break;
         }
         case ControlMode::ADD:
@@ -161,14 +199,23 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uDeleteButton->setEnabled(true);
             mUi->uUndoButton->setEnabled(true);
             mUi->uRedoButton->setEnabled(true);
-            mUi->uRunButton->setEnabled(true);
+            mUi->uStartButton->setEnabled(true);
+            mUi->uRunButton->setEnabled(false);
+            mUi->uStepButton->setEnabled(false);
+            mUi->uResetButton->setEnabled(false);
+            mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
 
-            mUi->uActionRun->setEnabled(true);
+            mUi->uActionStart->setEnabled(true);
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionReset->setEnabled(false);
+            mUi->uActionStep->setEnabled(false);
+            mUi->uActionPause->setEnabled(false);
             mUi->uActionStop->setEnabled(false);
 
             ForceUncheck(mUi->uEditButton);
             ForceUncheck(mUi->uWiringButton);
+            mUi->uRunButton->setChecked(false);
             break;
         }
         case ControlMode::SIMULATION:
@@ -182,14 +229,23 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uDeleteButton->setEnabled(false);
             mUi->uUndoButton->setEnabled(false);
             mUi->uRedoButton->setEnabled(false);
-            mUi->uRunButton->setEnabled(false);
+            mUi->uStartButton->setEnabled(false);
+            mUi->uRunButton->setEnabled(true);
+            mUi->uStepButton->setEnabled(true);
+            mUi->uResetButton->setEnabled(true);
+            mUi->uPauseButton->setEnabled(true);
             mUi->uStopButton->setEnabled(true);
 
-            mUi->uActionRun->setEnabled(false);
+            mUi->uActionStart->setEnabled(false);
+            mUi->uActionRun->setEnabled(true);
+            mUi->uActionReset->setEnabled(true);
+            mUi->uActionStep->setEnabled(true);
+            mUi->uActionPause->setEnabled(true);
             mUi->uActionStop->setEnabled(true);
 
             ForceUncheck(mUi->uEditButton);
             ForceUncheck(mUi->uWiringButton);
+            mUi->uRunButton->setChecked(false);
             break;
         }
         default:
@@ -218,6 +274,11 @@ void MainWindow::ForceUncheck(IconToolButton *pButton)
 #warning clear selection on simulation start
 void MainWindow::InitializeToolboxTree()
 {
+    mChevronIconVariant.insert("color", QColor(0, 45, 50));
+    mChevronIconVariant.insert("color-disabled", QColor(100, 100, 100));
+    mChevronIconVariant.insert("color-active", QColor(0, 45, 50));
+    mChevronIconVariant.insert("color-selected", QColor(0, 45, 50));
+
     QObject::connect(mUi->uToolboxTree, &QTreeView::pressed, this, &MainWindow::OnToolboxTreeClicked);
 
     // Tracks the currently selected item when it is changed by dragging
@@ -242,37 +303,37 @@ void MainWindow::InitializeToolboxTree()
             if (mUi->uToolboxTree->isExpanded(mUi->uToolboxTree->currentIndex()))
             {
                 mUi->uToolboxTree->collapse(mUi->uToolboxTree->currentIndex());
-                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevrondown));
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevrondown, mChevronIconVariant));
             }
             else
             {
                 mUi->uToolboxTree->expand(mUi->uToolboxTree->currentIndex());
-                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevronup));
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevronup, mChevronIconVariant));
             }
         }
     });
 
     // Create category and root level items
-    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup), "Gates");
+    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Gates");
     mCategoryGatesItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
 
-    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::chevronup), "Inputs");
+    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Inputs");
     mCategoryInputsItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryInputsItem);
 
     auto outputItem = new QStandardItem(QIcon(":images/icons/output_icon.png"), "Output");
     mToolboxTreeModel.appendRow(outputItem);
 
-    mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Adders");
+    mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Adders");
     mCategoryAddersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryAddersItem);
 
-    mCategoryMemoryItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Memory");
+    mCategoryMemoryItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Memory");
     mCategoryMemoryItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryMemoryItem);
 
-    mCategoryConvertersItem = new QStandardItem(mAwesome->icon(fa::chevrondown), "Converters");
+    mCategoryConvertersItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Converters");
     mCategoryConvertersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
@@ -314,15 +375,15 @@ void MainWindow::InitializeGuiIcons()
     mMenuBarIconVariant.insert("color-active", QColor(0, 39, 43));
     mMenuBarIconVariant.insert("color-selected", QColor(0, 39, 43));
 
-    mUncheckedButtonVariant.insert("color", QColor(0, 204, 143));
-    mUncheckedButtonVariant.insert("color-disabled", QColor(64, 64, 64));
-    mUncheckedButtonVariant.insert("color-active", QColor(0, 204, 143));
-    mUncheckedButtonVariant.insert("color-selected", QColor(0, 204, 143));
+    mUncheckedButtonVariant.insert("color", QColor(0, 45, 50));
+    mUncheckedButtonVariant.insert("color-disabled", QColor(220, 220, 220));
+    mUncheckedButtonVariant.insert("color-active", QColor(0, 45, 50));
+    mUncheckedButtonVariant.insert("color-selected", QColor(0, 45, 50));
 
-    mCheckedButtonVariant.insert("color", QColor(0, 18, 20));
-    mCheckedButtonVariant.insert("color-disabled", QColor(64, 64, 64));
-    mCheckedButtonVariant.insert("color-active", QColor(0, 18, 20));
-    mCheckedButtonVariant.insert("color-selected", QColor(0, 18, 20));
+    mCheckedButtonVariant.insert("color", QColor(0, 45, 50));
+    mCheckedButtonVariant.insert("color-disabled", QColor(220, 220, 220));
+    mCheckedButtonVariant.insert("color-active", QColor(0, 45, 50));
+    mCheckedButtonVariant.insert("color-selected", QColor(0, 45, 50));
 
     // Icons for GUI buttons
     mUi->uEditButton->SetCheckedIcon(mAwesome->icon(fa::mousepointer, mCheckedButtonVariant));
@@ -336,14 +397,19 @@ void MainWindow::InitializeGuiIcons()
     mUi->uUndoButton->SetIcon(mAwesome->icon(fa::undo, mUncheckedButtonVariant));
     mUi->uRedoButton->SetIcon(mAwesome->icon(fa::repeat, mUncheckedButtonVariant));
 
-    mUi->uRunButton->SetIcon(mAwesome->icon(fa::play, mUncheckedButtonVariant));
-    mUi->uStopButton->SetIcon(mAwesome->icon(fa::stop, mUncheckedButtonVariant));
+    mUi->uStartButton->SetIcon(mAwesome->icon(fa::wrench, mUncheckedButtonVariant));
+    mUi->uRunButton->SetUncheckedIcon(mAwesome->icon(fa::play, mUncheckedButtonVariant));
+    mUi->uRunButton->SetCheckedIcon(mAwesome->icon(fa::play, mCheckedButtonVariant));
+    mUi->uStepButton->SetIcon(mAwesome->icon(fa::stepforward, mUncheckedButtonVariant));
+    mUi->uResetButton->SetIcon(mAwesome->icon(fa::refresh, mUncheckedButtonVariant));
     mUi->uPauseButton->SetIcon(mAwesome->icon(fa::pause, mUncheckedButtonVariant));
+    mUi->uStopButton->SetIcon(mAwesome->icon(fa::stop, mUncheckedButtonVariant));
 
     // Icons for menu bar elements
+    mUi->uActionStart->setIcon(mAwesome->icon(fa::wrench, mMenuBarIconVariant));
     mUi->uActionRun->setIcon(mAwesome->icon(fa::play, mMenuBarIconVariant));
     mUi->uActionStep->setIcon(mAwesome->icon(fa::stepforward, mMenuBarIconVariant));
-    mUi->uActionReset->setIcon(mAwesome->icon(fa::undo, mMenuBarIconVariant));
+    mUi->uActionReset->setIcon(mAwesome->icon(fa::refresh, mMenuBarIconVariant));
     mUi->uActionPause->setIcon(mAwesome->icon(fa::pause, mMenuBarIconVariant));
     mUi->uActionStop->setIcon(mAwesome->icon(fa::stop, mMenuBarIconVariant));
 

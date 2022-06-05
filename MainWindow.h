@@ -73,6 +73,7 @@ protected:
     void ForceUncheck(IconToolButton *pButton);
 
 #warning missing documentation
+    void EnterSimulation(void);
     void RunSimulation(void);
     void StepSimulation(void);
     void ResetSimulation(void);
@@ -130,6 +131,7 @@ protected:
     AboutDialog mAboutDialog;
 
     QVariantMap mMenuBarIconVariant;
+    QVariantMap mChevronIconVariant;
     QVariantMap mCheckedButtonVariant;
     QVariantMap mUncheckedButtonVariant;
 };
