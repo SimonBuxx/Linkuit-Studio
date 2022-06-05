@@ -10,9 +10,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 SOURCES += \
-   $${PWD}/main.cpp \
-   IconToolButton.cpp \
-   MainWindowNew.cpp
+   $${PWD}/main.cpp
 
 RESOURCES += \
     resources.qrc
@@ -21,8 +19,4 @@ include(Common.pri)
 include(QtAwesome/QtAwesome.pri)
 
 FORMS += \
-    MainWindowNew.ui
-
-HEADERS += \
-    IconToolButton.h \
-    MainWindowNew.h
+    MainWindow.ui

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindowNew</class>
- <widget class="QMainWindow" name="MainWindowNew">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -314,7 +314,7 @@ QTreeView::item:selected {
 }
 
 QPushButton {
-	background: none;
+	background:  rgb(0, 39, 43);
 	padding: 5px;
 	margin: 0;
 	font: 12pt &quot;Source Sans Pro&quot;;
@@ -340,6 +340,22 @@ QPushButton:checked {
           <number>0</number>
          </property>
          <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>295</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="IconToolButton" name="uEditButton">
            <property name="maximumSize">
             <size>
@@ -348,9 +364,9 @@ QPushButton:checked {
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">IconToolButton:!checked {
+            <string notr="true">/*IconToolButton:!checked {
 	background: rgb(0, 39, 43);
-}</string>
+}*/</string>
            </property>
            <property name="text">
             <string/>
@@ -372,7 +388,7 @@ QPushButton:checked {
             <bool>true</bool>
            </property>
            <attribute name="buttonGroup">
-            <string notr="true">buttonGroup</string>
+            <string notr="true">uEditToolButtonGroup</string>
            </attribute>
           </widget>
          </item>
@@ -385,9 +401,9 @@ QPushButton:checked {
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">IconToolButton:!checked {
+            <string notr="true">/*IconToolButton:!checked {
 	background: rgb(0, 39, 43);
-}</string>
+}*/</string>
            </property>
            <property name="text">
             <string/>
@@ -406,12 +422,51 @@ QPushButton:checked {
             <bool>true</bool>
            </property>
            <attribute name="buttonGroup">
-            <string notr="true">buttonGroup</string>
+            <string notr="true">uEditToolButtonGroup</string>
            </attribute>
           </widget>
          </item>
          <item>
           <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="IconToolButton" name="uDeleteButton">
+           <property name="maximumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -446,8 +501,8 @@ QPushButton:checked {
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>20</width>
+             <height>20</height>
             </size>
            </property>
           </widget>
@@ -469,7 +524,87 @@ QPushButton:checked {
           </spacer>
          </item>
          <item>
-          <widget class="IconToolButton" name="uSimulationButton">
+          <widget class="IconToolButton" name="uUndoButton">
+           <property name="maximumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">/*IconToolButton {
+	background: rgb(0, 39, 43);
+}
+
+IconToolButton:pressed {
+	background: rgb(0, 18, 20);
+}*/</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="IconToolButton" name="uRedoButton">
+           <property name="maximumSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">/*IconToolButton {
+	background: rgb(0, 39, 43);
+}
+
+IconToolButton:pressed {
+	background: rgb(0, 18, 20);
+}*/</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="IconToolButton" name="uRunButton">
            <property name="maximumSize">
             <size>
              <width>32</width>
@@ -490,9 +625,55 @@ QPushButton:checked {
             </size>
            </property>
            <property name="checkable">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="IconToolButton" name="uStopButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="IconToolButton" name="uPauseButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="checkable">
             <bool>false</bool>
            </property>
           </widget>
@@ -537,12 +718,66 @@ QPushButton:checked {
     </property>
     <addaction name="uActionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuSimulation">
+    <property name="title">
+     <string>Simulation</string>
+    </property>
+    <addaction name="uActionRun"/>
+    <addaction name="uActionStep"/>
+    <addaction name="uActionReset"/>
+    <addaction name="uActionPause"/>
+    <addaction name="uActionStop"/>
+   </widget>
    <addaction name="uMenuFile"/>
+   <addaction name="menuSimulation"/>
    <addaction name="uMenuHelp"/>
   </widget>
   <action name="uActionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::TextHeuristicRole</enum>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="uActionRun">
+   <property name="text">
+    <string>Run</string>
+   </property>
+  </action>
+  <action name="uActionReset">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </action>
+  <action name="uActionPause">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="uActionStop">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="uActionStep">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Step</string>
    </property>
   </action>
  </widget>
@@ -558,6 +793,6 @@ QPushButton:checked {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
  </buttongroups>
 </ui>

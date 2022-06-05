@@ -1,4 +1,4 @@
-#include "MainWindowNew.h"
+#include "MainWindow.h"
 #include "Configuration.h"
 
 #include <QApplication>
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    MainWindowNew window;
+    MainWindow window;
     window.showMaximized();
 
     return app.exec();

@@ -1,25 +1,34 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "CoreLogic.h"
+#include "View/View.h"
+#include "QtAwesome.h"
+#include "AboutDialog.h"
+#include "IconToolButton.h"
 
-#include <QVBoxLayout>
+#include <QMainWindow>
 #include <QShortcut>
+#include <QStandardItemModel>
+#include <QGraphicsDropShadowEffect>
+#include <QPushButton>
 
-QT_BEGIN_NAMESPACE
-class QGraphicsScene;
-QT_END_NAMESPACE
+class View;
 
-///
-/// \brief The MainWindow class represents the main window
-///
-class MainWindow : public QWidget
+namespace Ui {
+class MainWindow;
+}
+
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
 public:
     /// \brief Constructor for MainWindow
-    /// \param pScene: The main scene to display
-    MainWindow(QGraphicsScene &pScene);
+    /// \param pParent: The window's parent widget
+    explicit MainWindow(QWidget *pParent = nullptr);
+
+    /// Destructor for MainWindow
+    ~MainWindow(void);
 
     /// \brief Getter for the view frame
     /// \return Reference to the View object
@@ -29,7 +38,25 @@ public:
     /// \return Reference to the core logic
     CoreLogic& GetCoreLogic(void);
 
+protected slots:
+    /// \brief OnToolboxTreeClicked
+    /// \param pIndex
+    void OnToolboxTreeClicked(const QModelIndex &pIndex);
+
+    /// \brief Performs all GUI adjustments to enter the new control mode
+    /// \param pNewMode: The newly entered control mode
+    void OnControlModeChanged(ControlMode pNewMode);
+
 protected:
+#warning missing documentation
+    void ConnectGuiSignalsAndSlots(void);
+
+    /// \brief Creates all items for the toolbox tree
+    void InitializeToolboxTree(void);
+
+    /// \brief Sets icosn for all tool buttons and menu bar elements
+    void InitializeGuiIcons(void);
+
     /// \brief Creates global shortcuts
     void InitializeGlobalShortcuts(void);
 
@@ -41,12 +68,33 @@ protected:
     /// \param pDirection: The direction to set to
     void SetComponentDirectionIfInAddMode(Direction pDirection);
 
+    /// \brief Helper function to uncheck a button inside an exclusive button group
+    /// \param pButton: Pointer to the button to uncheck
+    void ForceUncheck(IconToolButton *pButton);
+
+#warning missing documentation
+    void RunSimulation(void);
+    void StepSimulation(void);
+    void ResetSimulation(void);
+    void PauseSimulation(void);
+    void StopSimulation(void);
+
 protected:
-    QGraphicsScene &mScene;
+    Ui::MainWindow *mUi;
+    QGraphicsScene mScene;
     View mView;
     CoreLogic mCoreLogic;
 
-    QVBoxLayout* mMainLayout;
+    QtAwesome *mAwesome; // Contains Fontawesome logos
+
+    QStandardItemModel mToolboxTreeModel;
+
+    // Category items
+    QStandardItem* mCategoryGatesItem;
+    QStandardItem* mCategoryInputsItem;
+    QStandardItem* mCategoryAddersItem;
+    QStandardItem* mCategoryMemoryItem;
+    QStandardItem* mCategoryConvertersItem;
 
     // Global shortcuts
     QShortcut* mOneGateInputShortcut;
@@ -78,6 +126,12 @@ protected:
     QShortcut* mDeleteShortcut;
 
     QShortcut* mEscapeShortcut;
+
+    AboutDialog mAboutDialog;
+
+    QVariantMap mMenuBarIconVariant;
+    QVariantMap mCheckedButtonVariant;
+    QVariantMap mUncheckedButtonVariant;
 };
 
 #endif // MAINWINDOW_H
