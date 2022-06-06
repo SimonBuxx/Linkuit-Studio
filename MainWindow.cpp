@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
 
-    mUi->uViewLayout->addWidget(&mView, 1, 1);
+    mUi->uViewLayout->addWidget(&mView, 0, 0, 5, 4);
 
     mView.stackUnder(mUi->uLeftContainer);
 

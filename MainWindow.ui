@@ -25,7 +25,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
-	background: rgb(0, 39, 43);
+        background: rgb(242, 242, 242);
 }</string>
   </property>
   <property name="locale">
@@ -46,14 +46,52 @@
      <number>0</number>
     </property>
     <item row="1" column="1">
-     <layout class="QGridLayout" name="uViewLayout">
+     <layout class="QGridLayout" name="uViewLayout" rowstretch="0,0,0,0,0">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
       <property name="spacing">
        <number>0</number>
       </property>
-      <item row="1" column="0" rowspan="4" alignment="Qt::AlignLeft">
+      <item row="1" column="3">
+       <spacer name="horizontalSpacer_12">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="0">
+       <spacer name="horizontalSpacer_11">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="1" alignment="Qt::AlignLeft|Qt::AlignVCenter">
        <widget class="QWidget" name="uLeftContainer" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -75,7 +113,8 @@
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
-	background: rgb(255, 255, 255);
+        background: rgb(255, 255, 255);
+        border-radius: 3px;
 }</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
@@ -94,13 +133,13 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <item row="1" column="0">
+         <item row="0" column="1">
           <widget class="QTreeView" name="uToolboxTree">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -108,13 +147,19 @@
            <property name="minimumSize">
             <size>
              <width>200</width>
-             <height>0</height>
+             <height>600</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>200</width>
              <height>16777215</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
             </size>
            </property>
            <property name="focusPolicy">
@@ -127,29 +172,29 @@
             <string notr="true">QTreeView {
     background: rgb(242, 242, 242);
     color: rgb(0, 45, 50);
-	font: 12pt &quot;Source Sans Pro&quot;;
-	padding: 10px 0 10px 10px;
-	margin: 0;
+        font: 12pt &quot;Source Sans Pro&quot;;
+        padding: 10px 0 10px 10px;
+        margin: 0;
 }
 
 QTreeView::branch {
-	image: none;
+        image: none;
 }
 
 QTreeView::item {
-	margin: 0;
-	padding: 4px 2px;
-	border-radius: 8px;
-	margin-right: 10px;
+        margin: 0;
+        padding: 4px 2px;
+        border-radius: 8px;
+        margin-right: 10px;
 }
 
 QTreeView::item:hover {
-	background: rgb(220, 220, 220);
+        background: rgb(220, 220, 220);
 }
 
 QTreeView::item:selected {
-	background: rgb(200, 200, 200);
-	color: rgb(0, 45, 50);
+        background: rgb(200, 200, 200);
+        color: rgb(0, 45, 50);
 }</string>
            </property>
            <property name="frameShape">
@@ -202,40 +247,72 @@ QTreeView::item:selected {
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="uToolboxLabel">
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2" alignment="Qt::AlignBottom">
+       <widget class="QWidget" name="uFooter" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+    background: rgb(242, 242, 242);
+	border-radius: 3px;
+}</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="uZoomLabel">
            <property name="styleSheet">
             <string notr="true">QLabel {
-	padding: 2px 0px;
-	background: rgb(220, 220, 220);
     color: rgb(0, 45, 50);
-	font: 10pt &quot;Source Sans Pro&quot;;
+        font: 12pt &quot;Source Sans Pro&quot;;
 }</string>
            </property>
            <property name="text">
-            <string>Toolbox</string>
-           </property>
-           <property name="scaledContents">
-            <bool>false</bool>
+            <string>100%</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <property name="margin">
-            <number>2</number>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::NoTextInteraction</set>
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
         </layout>
        </widget>
       </item>
-      <item row="0" column="1" alignment="Qt::AlignTop">
+      <item row="1" column="1" colspan="2" alignment="Qt::AlignHCenter|Qt::AlignTop">
        <widget class="QWidget" name="uTopBar" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -249,40 +326,41 @@ QTreeView::item:selected {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>50</height>
+          <height>70</height>
          </size>
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
-	background: rgb(242, 242, 242);
+        background: rgb(242, 242, 242);
+        border-radius: 3px;
 }
 
 QPushButton {
-	background:  rgb(220, 220, 220);
-	padding: 5px;
-	margin: 0;
-	font: 12pt &quot;Source Sans Pro&quot;;
-	border: none;
-	border-radius: 1px;
+        background:  rgb(220, 220, 220);
+        padding: 5px;
+        margin: 0;
+        font: 12pt &quot;Source Sans Pro&quot;;
+        border: none;
+        border-radius: 1px;
 }
 
 QPushButton:hover {
-	background: rgb(220, 220, 220);
+        background: rgb(220, 220, 220);
 }
 
 QPushButton:pressed {
-	background: rgb(200, 200, 200);
+        background: rgb(200, 200, 200);
 }
 
 QPushButton:checked {
-	background: rgb(0, 204, 143);
+        background: rgb(0, 204, 143);
 }
 
 QToolTip
 {
     background: rgb(242, 242, 242);
     color: rgb(0, 45, 50);
-	border: none;
+        border: none;
     font-family: 'Source Sans Pro';
     font-size: 14px;
 }</string>
@@ -298,7 +376,7 @@ QToolTip
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>40</width>
+             <width>20</width>
              <height>20</height>
             </size>
            </property>
@@ -323,7 +401,7 @@ QToolTip
            </property>
            <property name="styleSheet">
             <string notr="true">/*IconToolButton:!checked {
-	background: rgb(0, 39, 43);
+        background: rgb(0, 39, 43);
 }*/</string>
            </property>
            <property name="text">
@@ -369,7 +447,7 @@ QToolTip
            </property>
            <property name="styleSheet">
             <string notr="true">/*IconToolButton:!checked {
-	background: rgb(0, 39, 43);
+        background: rgb(0, 39, 43);
 }*/</string>
            </property>
            <property name="text">
@@ -527,11 +605,11 @@ QToolTip
            </property>
            <property name="styleSheet">
             <string notr="true">/*IconToolButton {
-	background: rgb(0, 39, 43);
+        background: rgb(0, 39, 43);
 }
 
 IconToolButton:pressed {
-	background: rgb(0, 18, 20);
+        background: rgb(0, 18, 20);
 }*/</string>
            </property>
            <property name="text">
@@ -568,11 +646,11 @@ IconToolButton:pressed {
            </property>
            <property name="styleSheet">
             <string notr="true">/*IconToolButton {
-	background: rgb(0, 39, 43);
+        background: rgb(0, 39, 43);
 }
 
 IconToolButton:pressed {
-	background: rgb(0, 18, 20);
+        background: rgb(0, 18, 20);
 }*/</string>
            </property>
            <property name="text">
@@ -622,8 +700,8 @@ IconToolButton:pressed {
            </property>
            <property name="styleSheet">
             <string notr="true">QWidget {
-	background: rgb(220, 220, 220);
-	margin: 0;
+        background: rgb(220, 220, 220);
+        margin: 0;
 }</string>
            </property>
           </widget>
@@ -924,7 +1002,7 @@ IconToolButton:pressed {
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>40</width>
+             <width>20</width>
              <height>20</height>
             </size>
            </property>
@@ -933,81 +1011,37 @@ IconToolButton:pressed {
         </layout>
        </widget>
       </item>
-      <item row="4" column="0" colspan="2" alignment="Qt::AlignBottom">
-       <widget class="QWidget" name="uFooter" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+      <item row="0" column="1">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
-        <property name="minimumSize">
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
          <size>
-          <width>0</width>
-          <height>30</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QWidget {
-	background: rgb(242, 242, 242);
-}</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLabel" name="uZoomLabel">
-           <property name="styleSheet">
-            <string notr="true">QLabel {
-    color: rgb(0, 45, 50);
-	font: 12pt &quot;Source Sans Pro&quot;;
-}</string>
-           </property>
-           <property name="text">
-            <string>100%</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+       </spacer>
       </item>
-      <item row="0" column="0">
-       <widget class="QWidget" name="uTopSpacer" native="true">
-        <property name="maximumSize">
+      <item row="4" column="1">
+       <spacer name="verticalSpacer2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
          <size>
-          <width>16777215</width>
-          <height>70</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QWidget {
-	background: rgb(242, 242, 242);
-}</string>
-        </property>
-       </widget>
+       </spacer>
       </item>
      </layout>
     </item>
