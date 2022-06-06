@@ -117,20 +117,6 @@ protected:
     QShortcut* mComponentDirectionLeftShortcut;
     QShortcut* mComponentDirectionUpShortcut;
 
-    QShortcut* mCopyShortcut;
-    QShortcut* mPasteShortcut;
-
-    QShortcut* mSaveShortcut;
-    QShortcut* mOpenShortcut;
-
-    QShortcut* mUndoShortcut;
-    QShortcut* mRedoShortcut;
-
-    QShortcut* mEnterSimulationShortcut;
-    QShortcut* mStepSimulationShortcut;
-
-    QShortcut* mDeleteShortcut;
-
     QShortcut* mEscapeShortcut;
 
     AboutDialog mAboutDialog;

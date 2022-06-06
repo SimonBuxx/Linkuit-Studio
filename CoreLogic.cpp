@@ -40,6 +40,18 @@ CoreLogic::CoreLogic(View &pView):
     QObject::connect(&mProcessingTimer, &QTimer::timeout, this, &CoreLogic::OnProcessingTimeout);
 }
 
+void CoreLogic::SelectAll()
+{
+    if (mControlMode == ControlMode::EDIT || mControlMode == ControlMode::WIRE || mControlMode == ControlMode::ADD)
+    {
+        EnterControlMode(ControlMode::EDIT);
+
+        QPainterPath path;
+        path.addRect(mView.Scene()->sceneRect());
+        mView.Scene()->setSelectionArea(path);
+    }
+}
+
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
 {
     mView.Scene()->clearFocus();
@@ -66,6 +78,7 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
     if (pNewMode == ControlMode::SIMULATION)
     {
         EnterSimulation();
+        RunSimulation();
     }
 
     Q_ASSERT(mControlMode == pNewMode);

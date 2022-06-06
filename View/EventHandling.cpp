@@ -36,8 +36,6 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
         return;
     }
 
-    //mView.HideSpecialTab();
-
     Q_ASSERT(pEvent);
 
     if (pEvent->button() == Qt::LeftButton) // RMB ignored

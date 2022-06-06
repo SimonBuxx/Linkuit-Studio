@@ -48,27 +48,16 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         mCoreLogic.EnterControlMode(ControlMode::WIRE);
     });
 
-    QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, [&]()
-    {
-        if (!mCoreLogic.IsSimulationRunning())
-        {
-            mCoreLogic.DeleteSelectedComponents();
-        }
-    });
-
-    QObject::connect(mUi->uCopyButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::CopySelectedComponents);
-
-    QObject::connect(mUi->uUndoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Undo);
-    QObject::connect(mUi->uRedoButton, &QAbstractButton::clicked, &mCoreLogic, &CoreLogic::Redo);
-
-    QObject::connect(mUi->uStartButton, &QAbstractButton::clicked, this, &MainWindow::EnterSimulation);
-    QObject::connect(mUi->uRunButton, &QAbstractButton::clicked, this, &MainWindow::RunSimulation);
-    QObject::connect(mUi->uStepButton, &QAbstractButton::clicked, this, &MainWindow::StepSimulation);
-    QObject::connect(mUi->uResetButton, &QAbstractButton::clicked, this, &MainWindow::ResetSimulation);
-    QObject::connect(mUi->uPauseButton, &QAbstractButton::clicked, this, &MainWindow::PauseSimulation);
-    QObject::connect(mUi->uStopButton, &QAbstractButton::clicked, this, &MainWindow::StopSimulation);
-
-    QObject::connect(mUi->uActionAbout, &QAction::triggered, &mAboutDialog, &AboutDialog::show);
+    QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, mUi->uActionDelete, &QAction::trigger);
+    QObject::connect(mUi->uCopyButton, &QAbstractButton::clicked, mUi->uActionCopy, &QAction::trigger);
+    QObject::connect(mUi->uUndoButton, &QAbstractButton::clicked, mUi->uActionUndo, &QAction::trigger);
+    QObject::connect(mUi->uRedoButton, &QAbstractButton::clicked, mUi->uActionRedo, &QAction::trigger);
+    QObject::connect(mUi->uStartButton, &QAbstractButton::clicked, mUi->uActionStart, &QAction::trigger);
+    QObject::connect(mUi->uRunButton, &QAbstractButton::clicked, mUi->uActionRun, &QAction::trigger);
+    QObject::connect(mUi->uStepButton, &QAbstractButton::clicked, mUi->uActionStep, &QAction::trigger);
+    QObject::connect(mUi->uResetButton, &QAbstractButton::clicked, mUi->uActionReset, &QAction::trigger);
+    QObject::connect(mUi->uPauseButton, &QAbstractButton::clicked, mUi->uActionPause, &QAction::trigger);
+    QObject::connect(mUi->uStopButton, &QAbstractButton::clicked, mUi->uActionStop, &QAction::trigger);
 
     QObject::connect(mUi->uActionStart, &QAction::triggered, this, &MainWindow::EnterSimulation);
     QObject::connect(mUi->uActionRun, &QAction::triggered, this, &MainWindow::RunSimulation);
@@ -76,7 +65,73 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uActionReset, &QAction::triggered, this, &MainWindow::ResetSimulation);
     QObject::connect(mUi->uActionPause, &QAction::triggered, this, &MainWindow::PauseSimulation);
     QObject::connect(mUi->uActionStop, &QAction::triggered, this, &MainWindow::StopSimulation);
+    QObject::connect(mUi->uActionAbout, &QAction::triggered, &mAboutDialog, &AboutDialog::show);
+    QObject::connect(mUi->uActionClose, &QAction::triggered, this, &MainWindow::close);
 
+    QObject::connect(mUi->uActionNew, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionSave, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionSaveAs, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionUndo, &QAction::triggered, &mCoreLogic, &CoreLogic::Undo);
+    QObject::connect(mUi->uActionRedo, &QAction::triggered, &mCoreLogic, &CoreLogic::Redo);
+
+    QObject::connect(mUi->uActionCut, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionCopy, &QAction::triggered, &mCoreLogic, &CoreLogic::CopySelectedComponents);
+
+    QObject::connect(mUi->uActionPaste, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionDelete, &QAction::triggered, this, [&]()
+    {
+        if (!mCoreLogic.IsSimulationRunning())
+        {
+            mCoreLogic.DeleteSelectedComponents();
+        }
+    });
+
+    QObject::connect(mUi->uActionSelectAll, &QAction::triggered, &mCoreLogic, &CoreLogic::SelectAll);
+
+    QObject::connect(mUi->uActionScreenshot, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionReportBugs, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionOpenWebsite, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionCheckUpdates, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
 }
 
 void MainWindow::EnterSimulation()
@@ -132,11 +187,19 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uRedoButton->setEnabled(true);
             mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(false);
-#warning introduce simulation sub modes for step/run
             mUi->uStepButton->setEnabled(false);
             mUi->uResetButton->setEnabled(false);
             mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
+
+#warning set undo/redo enabled depending on stacks
+            mUi->uActionUndo->setEnabled(true);
+            mUi->uActionRedo->setEnabled(true);
+            mUi->uActionCut->setEnabled(true);
+            mUi->uActionCopy->setEnabled(true);
+            mUi->uActionPaste->setEnabled(true);
+            mUi->uActionDelete->setEnabled(true);
+            mUi->uActionSelectAll->setEnabled(true);
 
             mUi->uActionStart->setEnabled(true);
             mUi->uActionRun->setEnabled(false);
@@ -169,6 +232,15 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
 
+#warning set undo/redo enabled depending on stacks
+            mUi->uActionUndo->setEnabled(true);
+            mUi->uActionRedo->setEnabled(true);
+            mUi->uActionCut->setEnabled(true);
+            mUi->uActionCopy->setEnabled(true);
+            mUi->uActionPaste->setEnabled(true);
+            mUi->uActionDelete->setEnabled(true);
+            mUi->uActionSelectAll->setEnabled(true);
+
             mUi->uActionStart->setEnabled(true);
             mUi->uActionRun->setEnabled(false);
             mUi->uActionReset->setEnabled(false);
@@ -198,6 +270,15 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uResetButton->setEnabled(false);
             mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
+
+#warning set undo/redo enabled depending on stacks
+            mUi->uActionUndo->setEnabled(true);
+            mUi->uActionRedo->setEnabled(true);
+            mUi->uActionCut->setEnabled(true);
+            mUi->uActionCopy->setEnabled(true);
+            mUi->uActionPaste->setEnabled(true);
+            mUi->uActionDelete->setEnabled(true);
+            mUi->uActionSelectAll->setEnabled(true);
 
             mUi->uActionStart->setEnabled(true);
             mUi->uActionRun->setEnabled(false);
@@ -229,6 +310,14 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uResetButton->setEnabled(true);
             mUi->uPauseButton->setEnabled(true);
             mUi->uStopButton->setEnabled(true);
+
+            mUi->uActionUndo->setEnabled(false);
+            mUi->uActionRedo->setEnabled(false);
+            mUi->uActionCut->setEnabled(false);
+            mUi->uActionCopy->setEnabled(false);
+            mUi->uActionPaste->setEnabled(false);
+            mUi->uActionDelete->setEnabled(false);
+            mUi->uActionSelectAll->setEnabled(false);
 
             mUi->uActionStart->setEnabled(false);
             mUi->uActionRun->setEnabled(true);
@@ -297,7 +386,6 @@ void MainWindow::ForceUncheck(IconToolButton *pButton)
     }
 }
 
-#warning clear selection on simulation start
 void MainWindow::InitializeToolboxTree()
 {
     mChevronIconVariant.insert("color", QColor(0, 45, 50));
@@ -319,7 +407,6 @@ void MainWindow::InitializeToolboxTree()
             OnToolboxTreeClicked(pIndex);
         }
     });
-
 
     // Expand/collapse on single click
     QObject::connect(mUi->uToolboxTree, &QTreeView::clicked, [this]()
@@ -366,7 +453,7 @@ void MainWindow::InitializeToolboxTree()
     auto textLabelItem = new QStandardItem(QIcon(":images/icons/label_icon.png"), "Text label");
     mToolboxTreeModel.appendRow(textLabelItem);
 
-#warning idea: extend fields for configurations on select
+#warning idea: extend fields for configurations on select (probably impossible using QTreeView)
 
     // Create component items
     mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "AND gate⁺"));
@@ -418,8 +505,8 @@ void MainWindow::InitializeGuiIcons()
     mUi->uWiringButton->SetCheckedIcon(mAwesome->icon(fa::exchange, mCheckedButtonVariant));
     mUi->uWiringButton->SetUncheckedIcon(mAwesome->icon(fa::exchange, mUncheckedButtonVariant));
 
-    mUi->uCopyButton->SetIcon(mAwesome->icon(fa::clipboard, mUncheckedButtonVariant));
-    mUi->uDeleteButton->SetIcon(mAwesome->icon(fa::trash, mUncheckedButtonVariant));
+    mUi->uCopyButton->SetIcon(mAwesome->icon(fa::copy, mUncheckedButtonVariant));
+    mUi->uDeleteButton->SetIcon(mAwesome->icon(fa::trasho, mUncheckedButtonVariant));
     mUi->uUndoButton->SetIcon(mAwesome->icon(fa::undo, mUncheckedButtonVariant));
     mUi->uRedoButton->SetIcon(mAwesome->icon(fa::repeat, mUncheckedButtonVariant));
 
@@ -433,6 +520,17 @@ void MainWindow::InitializeGuiIcons()
     mUi->uStopButton->SetIcon(mAwesome->icon(fa::stop, mUncheckedButtonVariant));
 
     // Icons for menu bar elements
+    mUi->uActionNew->setIcon(mAwesome->icon(fa::fileo, mMenuBarIconVariant));
+    mUi->uActionOpen->setIcon(mAwesome->icon(fa::folderopeno, mMenuBarIconVariant));
+    mUi->uActionSave->setIcon(mAwesome->icon(fa::floppyo, mMenuBarIconVariant));
+
+    mUi->uActionUndo->setIcon(mAwesome->icon(fa::undo, mMenuBarIconVariant));
+    mUi->uActionRedo->setIcon(mAwesome->icon(fa::repeat, mMenuBarIconVariant));
+    mUi->uActionCut->setIcon(mAwesome->icon(fa::scissors, mMenuBarIconVariant));
+    mUi->uActionCopy->setIcon(mAwesome->icon(fa::copy, mMenuBarIconVariant));
+    mUi->uActionPaste->setIcon(mAwesome->icon(fa::clipboard, mMenuBarIconVariant));
+    mUi->uActionDelete->setIcon(mAwesome->icon(fa::trasho, mMenuBarIconVariant));
+
     mUi->uActionStart->setIcon(mAwesome->icon(fa::cog, mMenuBarIconVariant));
     mUi->uActionRun->setIcon(mAwesome->icon(fa::play, mMenuBarIconVariant));
     mUi->uActionStep->setIcon(mAwesome->icon(fa::stepforward, mMenuBarIconVariant));
@@ -440,6 +538,10 @@ void MainWindow::InitializeGuiIcons()
     mUi->uActionPause->setIcon(mAwesome->icon(fa::pause, mMenuBarIconVariant));
     mUi->uActionStop->setIcon(mAwesome->icon(fa::stop, mMenuBarIconVariant));
 
+    mUi->uActionScreenshot->setIcon(mAwesome->icon(fa::camera, mMenuBarIconVariant));
+
+    mUi->uActionReportBugs->setIcon(mAwesome->icon(fa::bug, mMenuBarIconVariant));
+    mUi->uActionOpenWebsite->setIcon(mAwesome->icon(fa::externallink, mMenuBarIconVariant));
     mUi->uActionAbout->setIcon(mAwesome->icon(fa::info, mMenuBarIconVariant));
 }
 
@@ -531,92 +633,6 @@ void MainWindow::InitializeGlobalShortcuts()
         SetComponentDirectionIfInAddMode(Direction::UP);
     });
 
-    mCopyShortcut  = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_C), this);
-    mPasteShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_V), this);
-
-    mCopyShortcut->setAutoRepeat(false);
-    mPasteShortcut->setAutoRepeat(false);
-
-    QObject::connect(mCopyShortcut, &QShortcut::activated, this, [&]()
-    {
-#warning temporary implementation of Ctrl-C
-        mCoreLogic.CopySelectedComponents();
-    });
-    QObject::connect(mPasteShortcut, &QShortcut::activated, this, [&]()
-    {
-        qDebug() << "Not implemented";
-    });
-
-    mSaveShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_S), this);
-    mOpenShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_O), this);
-
-    mSaveShortcut->setAutoRepeat(false);
-    mOpenShortcut->setAutoRepeat(false);
-
-    QObject::connect(mSaveShortcut, &QShortcut::activated, this, [&]()
-    {
-        qDebug() << "Not implemented";
-    });
-    QObject::connect(mOpenShortcut, &QShortcut::activated, this, [&]()
-    {
-        qDebug() << "Not implemented";
-    });
-
-    mUndoShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Z), this);
-    mRedoShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Y), this);
-
-    mUndoShortcut->setAutoRepeat(true);
-    mRedoShortcut->setAutoRepeat(true);
-
-    QObject::connect(mUndoShortcut, &QShortcut::activated, this, [&]()
-    {
-        mCoreLogic.Undo();
-    });
-    QObject::connect(mRedoShortcut, &QShortcut::activated, this, [&]()
-    {
-        mCoreLogic.Redo();
-    });
-
-    mEnterSimulationShortcut = new QShortcut(QKeySequence(Qt::ALT | Qt::Key_Return), this);
-
-    mEnterSimulationShortcut->setAutoRepeat(false);
-
-    QObject::connect(mEnterSimulationShortcut, &QShortcut::activated, this, [&]()
-    {
-        if (mCoreLogic.IsSimulationRunning())
-        {
-            mCoreLogic.EnterControlMode(ControlMode::EDIT);
-        }
-        else
-        {
-            mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
-        }
-    });
-
-    mStepSimulationShortcut = new QShortcut(QKeySequence(Qt::ALT | Qt::Key_Right), this);
-
-    mStepSimulationShortcut->setAutoRepeat(true);
-
-    QObject::connect(mStepSimulationShortcut, &QShortcut::activated, this, [&]()
-    {
-        if (mCoreLogic.IsSimulationRunning())
-        {
-            mCoreLogic.StepSimulation();
-        }
-    });
-
-    mDeleteShortcut = new QShortcut(QKeySequence(Qt::Key_Delete), this);
-
-    mDeleteShortcut->setAutoRepeat(false);
-
-    QObject::connect(mDeleteShortcut, &QShortcut::activated, this, [&]()
-    {
-        if (!mCoreLogic.IsSimulationRunning())
-        {
-            mCoreLogic.DeleteSelectedComponents();
-        }
-    });
-
     mEscapeShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
 
     mEscapeShortcut->setAutoRepeat(false);
@@ -625,7 +641,6 @@ void MainWindow::InitializeGlobalShortcuts()
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
         mScene.clearSelection();
-#warning clear selection on ControlModeChangedSignal
         mUi->uToolboxTree->clearSelection();
     });
 }

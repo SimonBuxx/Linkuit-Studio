@@ -26,6 +26,9 @@ public:
     /// \param pView: The view that contains the main scene
     CoreLogic(View &pView);
 
+    /// \brief Selects all items in the scene
+    void SelectAll(void);
+
     /// \brief Creates a new scene component
     /// \return Optional pointer to the new component
     std::optional<IBaseComponent*> GetItem(void) const;

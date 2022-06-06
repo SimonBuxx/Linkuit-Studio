@@ -1,6 +1,6 @@
 QWidget#mainWindow
 {
-    background: rgb(0, 39, 43);
+    background: rgb(242, 242, 242);
 }
 
 QGraphicsView
@@ -37,16 +37,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     height: 0px;
 }
 
-QToolTip
-{
-    background-color: rgb(0, 39, 43);
-    color: rgb(255, 255, 255);
-    border: 1px solid rgb(0, 204, 143);
-    border-radius: 1px;
-    font-family: 'Quicksand Medium';
-    font-size: 16px;
-}
-
 QPlainTextEdit
 {
     color: white;
@@ -60,7 +50,7 @@ QPushButton
 {
     padding: 5px 10px;
     border-radius: 1px;
-    background: rgb(242, 242, 242);
+    background: rgb(220, 220, 220);
     font-family: 'Source Sans Pro';
     font-size: 14px;
     color: rgb(0, 45, 50);
@@ -68,7 +58,7 @@ QPushButton
 
 QPushButton:pressed
 {
-    background: rgb(220, 220, 220);
+    background: rgb(200, 200, 200);
 }
 
 QPushButton:checked
