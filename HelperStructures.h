@@ -77,6 +77,12 @@ enum class ControlMode
     SIMULATION
 };
 
+enum class SimulationMode
+{
+    STOPPED = 0,
+    RUNNING
+};
+
 namespace undo
 {
 enum class Type
@@ -89,20 +95,9 @@ enum class Type
 
 enum class ConfigType
 {
-    CONNECTION_TYPE,
+    CONNECTION_TYPE = 0,
     TEXTLABEL_CONTENT,
     CONNECTOR_INVERSION
-};
-} // namespace
-
-namespace gui
-{
-enum class MenuTab
-{
-    START,
-    TOOLBOX,
-    SIMULATION,
-    CLOCK
 };
 } // namespace
 

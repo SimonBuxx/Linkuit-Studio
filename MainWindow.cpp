@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     mView.stackUnder(mUi->uLeftContainer);
 
     QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, &MainWindow::OnControlModeChanged);
+    QObject::connect(&mCoreLogic, &CoreLogic::SimulationModeChangedSignal, this, &MainWindow::OnSimulationModeChanged);
 
     ConnectGuiSignalsAndSlots();
 
@@ -88,32 +89,22 @@ void MainWindow::EnterSimulation()
 
 void MainWindow::RunSimulation()
 {
-#warning Enter simulation sub mode "running"
-    /*if (!mCoreLogic.IsSimulationRunning())
-    {
-        mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
-    }*/
-#warning implement
-    qDebug() << "Not implemented";
+    mCoreLogic.RunSimulation();
 }
 
 void MainWindow::StepSimulation()
 {
-#warning implement
-    qDebug() << "Not implemented";
+    mCoreLogic.StepSimulation();
 }
 
 void MainWindow::ResetSimulation()
 {
-#warning implement
-    qDebug() << "Not implemented";
+    mCoreLogic.ResetSimulation();
 }
 
 void MainWindow::PauseSimulation()
 {
-#warning Enter simulation sub mode "stopped"
-#warning implement
-    qDebug() << "Not implemented";
+    mCoreLogic.PauseSimulation();
 }
 
 void MainWindow::StopSimulation()
@@ -155,8 +146,9 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uActionStop->setEnabled(false);
 
             mUi->uEditButton->setChecked(true);
-            mUi->uRunButton->setChecked(false);
+            ForceUncheck(mUi->uRunButton);
             ForceUncheck(mUi->uWiringButton);
+            ForceUncheck(mUi->uPauseButton);
             break;
         }
         case ControlMode::WIRE:
@@ -186,7 +178,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             ForceUncheck(mUi->uEditButton);
             mUi->uWiringButton->setChecked(true);
-            mUi->uRunButton->setChecked(false);
+            ForceUncheck(mUi->uRunButton);
+            ForceUncheck(mUi->uPauseButton);
             break;
         }
         case ControlMode::ADD:
@@ -215,7 +208,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             ForceUncheck(mUi->uEditButton);
             ForceUncheck(mUi->uWiringButton);
-            mUi->uRunButton->setChecked(false);
+            ForceUncheck(mUi->uRunButton);
+            ForceUncheck(mUi->uPauseButton);
             break;
         }
         case ControlMode::SIMULATION:
@@ -240,12 +234,13 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uActionRun->setEnabled(true);
             mUi->uActionReset->setEnabled(true);
             mUi->uActionStep->setEnabled(true);
-            mUi->uActionPause->setEnabled(true);
+            mUi->uActionPause->setEnabled(false);
             mUi->uActionStop->setEnabled(true);
 
             ForceUncheck(mUi->uEditButton);
             ForceUncheck(mUi->uWiringButton);
-            mUi->uRunButton->setChecked(false);
+            ForceUncheck(mUi->uRunButton);
+            mUi->uPauseButton->setChecked(true);
             break;
         }
         default:
@@ -255,6 +250,37 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
     }
 
     mScene.clearSelection();
+}
+
+void MainWindow::OnSimulationModeChanged(SimulationMode pNewMode)
+{
+    switch (pNewMode)
+    {
+        case SimulationMode::STOPPED:
+        {
+            mUi->uPauseButton->setChecked(true);
+            mUi->uStepButton->setEnabled(true);
+
+            mUi->uActionRun->setEnabled(true);
+            mUi->uActionPause->setEnabled(false);
+            mUi->uActionStep->setEnabled(true);
+            break;
+        }
+        case SimulationMode::RUNNING:
+        {
+            mUi->uRunButton->setChecked(true);
+            mUi->uStepButton->setEnabled(false);
+
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionPause->setEnabled(true);
+            mUi->uActionStep->setEnabled(false);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
 }
 
 void MainWindow::ForceUncheck(IconToolButton *pButton)
@@ -376,14 +402,14 @@ void MainWindow::InitializeGuiIcons()
     mMenuBarIconVariant.insert("color-selected", QColor(0, 39, 43));
 
     mUncheckedButtonVariant.insert("color", QColor(0, 45, 50));
-    mUncheckedButtonVariant.insert("color-disabled", QColor(220, 220, 220));
+    mUncheckedButtonVariant.insert("color-disabled", QColor(200, 200, 200));
     mUncheckedButtonVariant.insert("color-active", QColor(0, 45, 50));
     mUncheckedButtonVariant.insert("color-selected", QColor(0, 45, 50));
 
-    mCheckedButtonVariant.insert("color", QColor(0, 45, 50));
-    mCheckedButtonVariant.insert("color-disabled", QColor(220, 220, 220));
-    mCheckedButtonVariant.insert("color-active", QColor(0, 45, 50));
-    mCheckedButtonVariant.insert("color-selected", QColor(0, 45, 50));
+    mCheckedButtonVariant.insert("color", QColor(255, 255, 255));
+    mCheckedButtonVariant.insert("color-disabled", QColor(200, 200, 200));
+    mCheckedButtonVariant.insert("color-active", QColor(255, 255, 255));
+    mCheckedButtonVariant.insert("color-selected", QColor(255, 255, 255));
 
     // Icons for GUI buttons
     mUi->uEditButton->SetCheckedIcon(mAwesome->icon(fa::mousepointer, mCheckedButtonVariant));
@@ -392,21 +418,22 @@ void MainWindow::InitializeGuiIcons()
     mUi->uWiringButton->SetCheckedIcon(mAwesome->icon(fa::exchange, mCheckedButtonVariant));
     mUi->uWiringButton->SetUncheckedIcon(mAwesome->icon(fa::exchange, mUncheckedButtonVariant));
 
-    mUi->uCopyButton->SetIcon(mAwesome->icon(fa::clone, mUncheckedButtonVariant));
+    mUi->uCopyButton->SetIcon(mAwesome->icon(fa::clipboard, mUncheckedButtonVariant));
     mUi->uDeleteButton->SetIcon(mAwesome->icon(fa::trash, mUncheckedButtonVariant));
     mUi->uUndoButton->SetIcon(mAwesome->icon(fa::undo, mUncheckedButtonVariant));
     mUi->uRedoButton->SetIcon(mAwesome->icon(fa::repeat, mUncheckedButtonVariant));
 
-    mUi->uStartButton->SetIcon(mAwesome->icon(fa::wrench, mUncheckedButtonVariant));
+    mUi->uStartButton->SetIcon(mAwesome->icon(fa::cog, mUncheckedButtonVariant));
     mUi->uRunButton->SetUncheckedIcon(mAwesome->icon(fa::play, mUncheckedButtonVariant));
     mUi->uRunButton->SetCheckedIcon(mAwesome->icon(fa::play, mCheckedButtonVariant));
+    mUi->uPauseButton->SetUncheckedIcon(mAwesome->icon(fa::pause, mUncheckedButtonVariant));
+    mUi->uPauseButton->SetCheckedIcon(mAwesome->icon(fa::pause, mCheckedButtonVariant));
     mUi->uStepButton->SetIcon(mAwesome->icon(fa::stepforward, mUncheckedButtonVariant));
     mUi->uResetButton->SetIcon(mAwesome->icon(fa::refresh, mUncheckedButtonVariant));
-    mUi->uPauseButton->SetIcon(mAwesome->icon(fa::pause, mUncheckedButtonVariant));
     mUi->uStopButton->SetIcon(mAwesome->icon(fa::stop, mUncheckedButtonVariant));
 
     // Icons for menu bar elements
-    mUi->uActionStart->setIcon(mAwesome->icon(fa::wrench, mMenuBarIconVariant));
+    mUi->uActionStart->setIcon(mAwesome->icon(fa::cog, mMenuBarIconVariant));
     mUi->uActionRun->setIcon(mAwesome->icon(fa::play, mMenuBarIconVariant));
     mUi->uActionStep->setIcon(mAwesome->icon(fa::stepforward, mMenuBarIconVariant));
     mUi->uActionReset->setIcon(mAwesome->icon(fa::refresh, mMenuBarIconVariant));
@@ -550,11 +577,11 @@ void MainWindow::InitializeGlobalShortcuts()
         mCoreLogic.Redo();
     });
 
-    mSimulationShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), this);
+    mEnterSimulationShortcut = new QShortcut(QKeySequence(Qt::ALT | Qt::Key_Return), this);
 
-    mSimulationShortcut->setAutoRepeat(false);
+    mEnterSimulationShortcut->setAutoRepeat(false);
 
-    QObject::connect(mSimulationShortcut, &QShortcut::activated, this, [&]()
+    QObject::connect(mEnterSimulationShortcut, &QShortcut::activated, this, [&]()
     {
         if (mCoreLogic.IsSimulationRunning())
         {
@@ -563,6 +590,18 @@ void MainWindow::InitializeGlobalShortcuts()
         else
         {
             mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+        }
+    });
+
+    mStepSimulationShortcut = new QShortcut(QKeySequence(Qt::ALT | Qt::Key_Right), this);
+
+    mStepSimulationShortcut->setAutoRepeat(true);
+
+    QObject::connect(mStepSimulationShortcut, &QShortcut::activated, this, [&]()
+    {
+        if (mCoreLogic.IsSimulationRunning())
+        {
+            mCoreLogic.StepSimulation();
         }
     });
 

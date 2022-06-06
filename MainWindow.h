@@ -47,6 +47,10 @@ protected slots:
     /// \param pNewMode: The newly entered control mode
     void OnControlModeChanged(ControlMode pNewMode);
 
+    /// \brief Performs all GUI adjustments to enter the new simulation mode
+    /// \param pNewMode: The newly entered simulation mode
+    void OnSimulationModeChanged(SimulationMode pNewMode);
+
 protected:
 #warning missing documentation
     void ConnectGuiSignalsAndSlots(void);
@@ -122,7 +126,8 @@ protected:
     QShortcut* mUndoShortcut;
     QShortcut* mRedoShortcut;
 
-    QShortcut* mSimulationShortcut;
+    QShortcut* mEnterSimulationShortcut;
+    QShortcut* mStepSimulationShortcut;
 
     QShortcut* mDeleteShortcut;
 

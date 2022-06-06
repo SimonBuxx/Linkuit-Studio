@@ -92,6 +92,14 @@ public:
     /// \return True, if the software is currently processing or loading
     bool IsProcessing(void) const;
 
+    // Functions for simulation control
+
+#warning missing documentation
+    void RunSimulation(void);
+    void PauseSimulation(void);
+    void ResetSimulation(void);
+    void StepSimulation(void);
+
     // Functions for undo and redo
 
     /// \brief Returns true, if the undo queue has no elements
@@ -114,6 +122,10 @@ signals:
     /// \brief Emitted when the current control mode changes
     /// \param pNewMode: The newly entered control mode
     void ControlModeChangedSignal(ControlMode pNewMode);
+
+    /// \brief Emitted when the current simulation mode changes
+    /// \param pNewMode: The newly entered simulation mode
+    void SimulationModeChangedSignal(SimulationMode pNewMode);
 
     /// \brief Emitted when the selected component type for new components changes
     /// \param pNewType: The newly selected component type
@@ -168,7 +180,14 @@ public slots:
 
 protected:
     /// \brief Performs all neccessary steps to enter simulation mode
-    void StartSimulation(void);
+    void EnterSimulation(void);
+
+    /// \brief Performs all neccessary steps to leave simulation mode
+    void LeaveSimulation(void);
+
+    /// \brief Sets the current simulation mode to the given mode and emits the change signal
+    /// \param pNewMode: The new simulation mode to go into
+    void SetSimulationMode(SimulationMode pNewMode);
 
     // Functions for wire processing
 
@@ -316,6 +335,7 @@ protected:
 
     // Variables for general states and modes
     ControlMode mControlMode = ControlMode::EDIT;
+    SimulationMode mSimulationMode = SimulationMode::STOPPED;
     ComponentType mComponentType = ComponentType::NONE;
     Direction mComponentDirection = components::DEFAULT_DIRECTION;
     uint8_t mComponentInputCount = components::gates::DEFAULT_INPUT_COUNT;

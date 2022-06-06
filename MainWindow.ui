@@ -125,7 +125,7 @@
            </property>
            <property name="styleSheet">
             <string notr="true">QTreeView {
-    background: rgb(255, 255, 255);
+    background: rgb(242, 242, 242);
     color: rgb(0, 45, 50);
 	font: 12pt &quot;Source Sans Pro&quot;;
 	padding: 10px 0 10px 10px;
@@ -144,11 +144,11 @@ QTreeView::item {
 }
 
 QTreeView::item:hover {
-	background: rgb(242, 242, 242);
+	background: rgb(220, 220, 220);
 }
 
 QTreeView::item:selected {
-	background: rgb(220, 220, 220);
+	background: rgb(200, 200, 200);
 	color: rgb(0, 45, 50);
 }</string>
            </property>
@@ -207,7 +207,7 @@ QTreeView::item:selected {
            <property name="styleSheet">
             <string notr="true">QLabel {
 	padding: 2px 0px;
-	background: rgb(242, 242, 242);
+	background: rgb(220, 220, 220);
     color: rgb(0, 45, 50);
 	font: 10pt &quot;Source Sans Pro&quot;;
 }</string>
@@ -254,11 +254,11 @@ QTreeView::item:selected {
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
-	background: rgb(255, 255, 255);
+	background: rgb(242, 242, 242);
 }
 
 QPushButton {
-	background:  rgb(242, 242, 242);
+	background:  rgb(220, 220, 220);
 	padding: 5px;
 	margin: 0;
 	font: 12pt &quot;Source Sans Pro&quot;;
@@ -267,11 +267,11 @@ QPushButton {
 }
 
 QPushButton:hover {
-	background: rgb(242, 242, 242);
+	background: rgb(220, 220, 220);
 }
 
 QPushButton:pressed {
-	background: rgb(220, 220, 220);
+	background: rgb(200, 200, 200);
 }
 
 QPushButton:checked {
@@ -466,8 +466,8 @@ QPushButton:checked {
            </property>
            <property name="iconSize">
             <size>
-             <width>20</width>
-             <height>20</height>
+             <width>22</width>
+             <height>22</height>
             </size>
            </property>
           </widget>
@@ -610,22 +610,6 @@ IconToolButton:pressed {
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>10</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
           <widget class="IconToolButton" name="uRunButton">
            <property name="enabled">
             <bool>false</bool>
@@ -661,6 +645,9 @@ IconToolButton:pressed {
            <property name="checked">
             <bool>false</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">uSimulationButtonGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -726,8 +713,11 @@ IconToolButton:pressed {
             </size>
            </property>
            <property name="checkable">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
+           <attribute name="buttonGroup">
+            <string notr="true">uSimulationButtonGroup</string>
+           </attribute>
           </widget>
          </item>
          <item>
@@ -835,7 +825,7 @@ IconToolButton:pressed {
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
-	background: rgb(255, 255, 255);
+	background: rgb(242, 242, 242);
 }</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -884,7 +874,7 @@ IconToolButton:pressed {
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
-	background: rgb(255, 255, 255);
+	background: rgb(242, 242, 242);
 }</string>
         </property>
        </widget>
@@ -998,5 +988,6 @@ IconToolButton:pressed {
  <connections/>
  <buttongroups>
   <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>

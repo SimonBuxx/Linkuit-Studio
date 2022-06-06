@@ -52,8 +52,7 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
     if (mControlMode == ControlMode::SIMULATION)
     {
         mControlMode = pNewMode;
-        mPropagationTimer.stop();
-        emit SimulationStopSignal();
+        LeaveSimulation();
     }
 
     mControlMode = pNewMode;
@@ -66,13 +65,22 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
 
     if (pNewMode == ControlMode::SIMULATION)
     {
-        StartSimulation();
+        EnterSimulation();
     }
 
     Q_ASSERT(mControlMode == pNewMode);
 }
 
-void CoreLogic::StartSimulation()
+void CoreLogic::SetSimulationMode(SimulationMode pNewMode)
+{
+    if (mSimulationMode != pNewMode)
+    {
+        mSimulationMode = pNewMode;
+        emit SimulationModeChangedSignal(mSimulationMode);
+    }
+}
+
+void CoreLogic::EnterSimulation()
 {
     StartProcessing();
     ParseWireGroups();
@@ -80,8 +88,51 @@ void CoreLogic::StartSimulation()
     ConnectLogicCells();
     //qDebug() << "Found " << mWireGroups.size() << " groups";
     EndProcessing();
-    mPropagationTimer.start(simulation::PROPAGATION_DELAY);
+    SetSimulationMode(SimulationMode::STOPPED);
     emit SimulationStartSignal();
+    StepSimulation();
+}
+
+void CoreLogic::RunSimulation()
+{
+    if (mControlMode == ControlMode::SIMULATION && mSimulationMode == SimulationMode::STOPPED)
+    {
+        mPropagationTimer.start(simulation::PROPAGATION_DELAY);
+        SetSimulationMode(SimulationMode::RUNNING);
+    }
+}
+
+void CoreLogic::StepSimulation()
+{
+    if (mControlMode == ControlMode::SIMULATION)
+    {
+        OnPropagationTimeout();
+    }
+}
+
+void CoreLogic::ResetSimulation()
+{
+    if (mControlMode == ControlMode::SIMULATION)
+    {
+        LeaveSimulation();
+        EnterSimulation();
+    }
+}
+
+void CoreLogic::PauseSimulation()
+{
+    if (mControlMode == ControlMode::SIMULATION && mSimulationMode == SimulationMode::RUNNING)
+    {
+        mPropagationTimer.stop();
+        SetSimulationMode(SimulationMode::STOPPED);
+    }
+}
+
+void CoreLogic::LeaveSimulation()
+{
+    mPropagationTimer.stop();
+    SetSimulationMode(SimulationMode::STOPPED);
+    emit SimulationStopSignal();
 }
 
 void CoreLogic::EnterAddControlMode(ComponentType pComponentType)
