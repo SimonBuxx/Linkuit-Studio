@@ -147,6 +147,9 @@ signals:
     /// \brief Emitted when the core logic has stopped the simulation
     void SimulationStopSignal(void);
 
+    /// \brief Emitted when any action is appended to the undo queue
+    void AppendToUndoQueueSignal(void);
+
 public slots:
     /// \brief Checks for collisions, merges moved wires and brings the ConPoints in a valid state
     /// \param pOffset: The relative offset by which the selected components have been moved

@@ -90,22 +90,26 @@ void View::SetupMatrix()
 
     mGraphicsView.setTransform(matrix);
     mGraphicsView.setBackgroundBrush(DrawGridPattern(mZoomLevel));
+
+    emit ZoomLevelChangedSignal(scale * 100);
 }
 
 void View::ZoomIn(int32_t pAmount)
 {
     mZoomLevel += pAmount;
     mZoomLevel = std::min(mZoomLevel, canvas::MAX_ZOOM_LEVEL);
-    //UpdateZoomLabel(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
     SetupMatrix();
+
+    emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
 }
 
 void View::ZoomOut(int32_t pAmount)
 {
     mZoomLevel -= pAmount;
     mZoomLevel = std::max(mZoomLevel, canvas::MIN_ZOOM_LEVEL);
-    //UpdateZoomLabel(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
     SetupMatrix();
+
+    emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
 }
 
 QPixmap View::DrawGridPattern(int32_t pZoomLevel)

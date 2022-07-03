@@ -51,6 +51,12 @@ protected slots:
     /// \param pNewMode: The newly entered simulation mode
     void OnSimulationModeChanged(SimulationMode pNewMode);
 
+protected slots:
+
+    /// \brief Sets the displayed zoom level to the given percentage value
+    /// \param pPercentage: The new zoom label to display
+    void UpdateZoomLabel(uint8_t pPercentage);
+
 protected:
 #warning missing documentation
     void ConnectGuiSignalsAndSlots(void);
@@ -83,6 +89,11 @@ protected:
     void ResetSimulation(void);
     void PauseSimulation(void);
     void StopSimulation(void);
+
+    void UpdateUndoRedoEnabled(bool pEnable);
+
+    void Undo(void);
+    void Redo(void);
 
 protected:
     Ui::MainWindow *mUi;

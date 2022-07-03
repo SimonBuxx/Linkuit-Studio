@@ -109,6 +109,11 @@ public:
     /// \brief Fades in the overlay that indicates that the SW is loading
     void FadeInProcessingOverlay(void);
 
+signals:
+    /// \brief Emitted when the scene is zoomed in or out
+    /// \param mPercentage: The new zoom percentage
+    void ZoomLevelChangedSignal(uint8_t mPercentage);
+
 public slots:
     /// \brief Increases the zoom level and updates the displayed percentage
     /// \param pAmount: The amount to increase the zoom by

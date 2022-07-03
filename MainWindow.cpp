@@ -38,6 +38,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::ConnectGuiSignalsAndSlots()
 {
+    QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabel);
+
+    QObject::connect(&mCoreLogic, &CoreLogic::AppendToUndoQueueSignal, this, [this]()
+    {
+        UpdateUndoRedoEnabled(true);
+    });
+
     QObject::connect(mUi->uEditButton, &QAbstractButton::clicked, [&]()
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
@@ -88,8 +95,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         qDebug() << "Not implemented";
     });
 
-    QObject::connect(mUi->uActionUndo, &QAction::triggered, &mCoreLogic, &CoreLogic::Undo);
-    QObject::connect(mUi->uActionRedo, &QAction::triggered, &mCoreLogic, &CoreLogic::Redo);
+    QObject::connect(mUi->uActionUndo, &QAction::triggered, this, &MainWindow::Undo);
+    QObject::connect(mUi->uActionRedo, &QAction::triggered, this, &MainWindow::Redo);
 
     QObject::connect(mUi->uActionCut, &QAction::triggered, this, [&]()
     {
@@ -118,6 +125,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         qDebug() << "Not implemented";
     });
 
+    QObject::connect(mUi->uActionStartTutorial, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
     QObject::connect(mUi->uActionReportBugs, &QAction::triggered, this, [&]()
     {
         qDebug() << "Not implemented";
@@ -132,6 +144,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         qDebug() << "Not implemented";
     });
+}
+
+void MainWindow::UpdateZoomLabel(uint8_t pPercentage)
+{
+    mUi->uZoomLabel->setText(QString("%0%").arg(pPercentage));
 }
 
 void MainWindow::EnterSimulation()
@@ -170,6 +187,36 @@ void MainWindow::StopSimulation()
     }
 }
 
+void MainWindow::UpdateUndoRedoEnabled(bool pEnable)
+{
+    if (pEnable)
+    {
+        mUi->uActionUndo->setEnabled(!mCoreLogic.IsUndoQueueEmpty());
+        mUi->uActionRedo->setEnabled(!mCoreLogic.IsRedoQueueEmpty());
+        mUi->uUndoButton->setEnabled(!mCoreLogic.IsUndoQueueEmpty());
+        mUi->uRedoButton->setEnabled(!mCoreLogic.IsRedoQueueEmpty());
+    }
+    else
+    {
+        mUi->uActionUndo->setEnabled(false);
+        mUi->uActionRedo->setEnabled(false);
+        mUi->uUndoButton->setEnabled(false);
+        mUi->uRedoButton->setEnabled(false);
+    }
+}
+
+void MainWindow::Undo()
+{
+    mCoreLogic.Undo();
+    UpdateUndoRedoEnabled(true);
+}
+
+void MainWindow::Redo()
+{
+    mCoreLogic.Redo();
+    UpdateUndoRedoEnabled(true);
+}
+
 void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 {
     switch (pNewMode)
@@ -183,8 +230,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uWiringButton->setEnabled(true);
             mUi->uCopyButton->setEnabled(true);
             mUi->uDeleteButton->setEnabled(true);
-            mUi->uUndoButton->setEnabled(true);
-            mUi->uRedoButton->setEnabled(true);
             mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(false);
             mUi->uStepButton->setEnabled(false);
@@ -192,9 +237,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
 
-#warning set undo/redo enabled depending on stacks
-            mUi->uActionUndo->setEnabled(true);
-            mUi->uActionRedo->setEnabled(true);
+            UpdateUndoRedoEnabled(true);
+
             mUi->uActionCut->setEnabled(true);
             mUi->uActionCopy->setEnabled(true);
             mUi->uActionPaste->setEnabled(true);
@@ -223,8 +267,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uWiringButton->setEnabled(true);
             mUi->uCopyButton->setEnabled(true);
             mUi->uDeleteButton->setEnabled(true);
-            mUi->uUndoButton->setEnabled(true);
-            mUi->uRedoButton->setEnabled(true);
             mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(false);
             mUi->uStepButton->setEnabled(false);
@@ -232,9 +274,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
 
-#warning set undo/redo enabled depending on stacks
-            mUi->uActionUndo->setEnabled(true);
-            mUi->uActionRedo->setEnabled(true);
+            UpdateUndoRedoEnabled(true);
+
             mUi->uActionCut->setEnabled(true);
             mUi->uActionCopy->setEnabled(true);
             mUi->uActionPaste->setEnabled(true);
@@ -262,8 +303,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uWiringButton->setEnabled(true);
             mUi->uCopyButton->setEnabled(true);
             mUi->uDeleteButton->setEnabled(true);
-            mUi->uUndoButton->setEnabled(true);
-            mUi->uRedoButton->setEnabled(true);
             mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(false);
             mUi->uStepButton->setEnabled(false);
@@ -271,9 +310,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uPauseButton->setEnabled(false);
             mUi->uStopButton->setEnabled(false);
 
-#warning set undo/redo enabled depending on stacks
-            mUi->uActionUndo->setEnabled(true);
-            mUi->uActionRedo->setEnabled(true);
+            UpdateUndoRedoEnabled(true);
+
             mUi->uActionCut->setEnabled(true);
             mUi->uActionCopy->setEnabled(true);
             mUi->uActionPaste->setEnabled(true);
@@ -302,8 +340,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uWiringButton->setEnabled(false);
             mUi->uCopyButton->setEnabled(false);
             mUi->uDeleteButton->setEnabled(false);
-            mUi->uUndoButton->setEnabled(false);
-            mUi->uRedoButton->setEnabled(false);
             mUi->uStartButton->setEnabled(false);
             mUi->uRunButton->setEnabled(true);
             mUi->uStepButton->setEnabled(true);
@@ -311,8 +347,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uPauseButton->setEnabled(true);
             mUi->uStopButton->setEnabled(true);
 
-            mUi->uActionUndo->setEnabled(false);
-            mUi->uActionRedo->setEnabled(false);
+            UpdateUndoRedoEnabled(false);
+
             mUi->uActionCut->setEnabled(false);
             mUi->uActionCopy->setEnabled(false);
             mUi->uActionPaste->setEnabled(false);
@@ -540,6 +576,7 @@ void MainWindow::InitializeGuiIcons()
 
     mUi->uActionScreenshot->setIcon(mAwesome->icon(fa::camera, mMenuBarIconVariant));
 
+    mUi->uActionStartTutorial->setIcon(mAwesome->icon(fa::graduationcap, mMenuBarIconVariant));
     mUi->uActionReportBugs->setIcon(mAwesome->icon(fa::bug, mMenuBarIconVariant));
     mUi->uActionOpenWebsite->setIcon(mAwesome->icon(fa::externallink, mMenuBarIconVariant));
     mUi->uActionAbout->setIcon(mAwesome->icon(fa::info, mMenuBarIconVariant));

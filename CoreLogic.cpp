@@ -1364,7 +1364,7 @@ void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
     AppendToUndoQueue(pUndoObject, mUndoQueue);
     mRedoQueue.clear();
 
-    //mView.SetUndoRedoButtonsEnableState();
+    emit AppendToUndoQueueSignal();
 }
 
 void CoreLogic::AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue)
@@ -1475,7 +1475,6 @@ void CoreLogic::Undo()
         }
     }
     ClearSelection();
-    //mView.SetUndoRedoButtonsEnableState();
 }
 
 void CoreLogic::Redo()
@@ -1574,5 +1573,4 @@ void CoreLogic::Redo()
         }
     }
     ClearSelection();
-    //mView.SetUndoRedoButtonsEnableState();
 }
