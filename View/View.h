@@ -111,10 +111,15 @@ public:
 
 signals:
     /// \brief Emitted when the scene is zoomed in or out
-    /// \param mPercentage: The new zoom percentage
-    void ZoomLevelChangedSignal(uint8_t mPercentage);
+    /// \param pPercentage: The new zoom percentage
+    /// \param pValue: The new zoom value
+    void ZoomLevelChangedSignal(uint8_t pPercentage, uint32_t pValue);
 
 public slots:
+    /// \brief Sets the zoom level and updates the displayed percentage
+    /// \param pZoomLevel: The new zoom level
+    void SetZoom(int32_t pZoomLevel);
+
     /// \brief Increases the zoom level and updates the displayed percentage
     /// \param pAmount: The amount to increase the zoom by
     void ZoomIn(int32_t pAmount);

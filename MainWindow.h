@@ -51,11 +51,9 @@ protected slots:
     /// \param pNewMode: The newly entered simulation mode
     void OnSimulationModeChanged(SimulationMode pNewMode);
 
-protected slots:
-
-    /// \brief Sets the displayed zoom level to the given percentage value
-    /// \param pPercentage: The new zoom label to display
-    void UpdateZoomLabel(uint8_t pPercentage);
+    /// \brief Sets the displayed zoom level and the slider to the given values
+    /// \param pPercentage: The new zoom value to display
+    void UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue);
 
 protected:
 #warning missing documentation
@@ -136,6 +134,8 @@ protected:
     QVariantMap mChevronIconVariant;
     QVariantMap mCheckedButtonVariant;
     QVariantMap mUncheckedButtonVariant;
+    QVariantMap mStatusBarIconVariant;
+    QVariantMap mPlusMinusIconVariant;
 };
 
 #endif // MAINWINDOW_H

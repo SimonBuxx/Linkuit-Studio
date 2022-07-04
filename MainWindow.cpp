@@ -38,12 +38,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::ConnectGuiSignalsAndSlots()
 {
-    QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabel);
+    QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabelAndSlider);
 
     QObject::connect(&mCoreLogic, &CoreLogic::AppendToUndoQueueSignal, this, [this]()
     {
         UpdateUndoRedoEnabled(true);
     });
+
+    QObject::connect(mUi->uZoomSlider, &QSlider::valueChanged, &mView, &View::SetZoom);
 
     QObject::connect(mUi->uEditButton, &QAbstractButton::clicked, [&]()
     {
@@ -146,9 +148,10 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     });
 }
 
-void MainWindow::UpdateZoomLabel(uint8_t pPercentage)
+void MainWindow::UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue)
 {
     mUi->uZoomLabel->setText(QString("%0%").arg(pPercentage));
+    mUi->uZoomSlider->setValue(pValue);
 }
 
 void MainWindow::EnterSimulation()
@@ -534,6 +537,16 @@ void MainWindow::InitializeGuiIcons()
     mCheckedButtonVariant.insert("color-active", QColor(255, 255, 255));
     mCheckedButtonVariant.insert("color-selected", QColor(255, 255, 255));
 
+    mStatusBarIconVariant.insert("color", QColor(0, 204, 143));
+    mStatusBarIconVariant.insert("color-disabled", QColor(100, 100, 100));
+    mStatusBarIconVariant.insert("color-active", QColor(0, 204, 143));
+    mStatusBarIconVariant.insert("color-selected", QColor(0, 204, 143));
+
+    mPlusMinusIconVariant.insert("color", QColor(0, 45, 50));
+    mPlusMinusIconVariant.insert("color-disabled", QColor(100, 100, 100));
+    mPlusMinusIconVariant.insert("color-active", QColor(0, 45, 50));
+    mPlusMinusIconVariant.insert("color-selected", QColor(0, 45, 50));
+
     // Icons for GUI buttons
     mUi->uEditButton->SetCheckedIcon(mAwesome->icon(fa::mousepointer, mCheckedButtonVariant));
     mUi->uEditButton->SetUncheckedIcon(mAwesome->icon(fa::mousepointer, mUncheckedButtonVariant));
@@ -554,6 +567,11 @@ void MainWindow::InitializeGuiIcons()
     mUi->uStepButton->SetIcon(mAwesome->icon(fa::stepforward, mUncheckedButtonVariant));
     mUi->uResetButton->SetIcon(mAwesome->icon(fa::refresh, mUncheckedButtonVariant));
     mUi->uStopButton->SetIcon(mAwesome->icon(fa::stop, mUncheckedButtonVariant));
+
+    // Icons for status bar elements
+    mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     // Icons for menu bar elements
     mUi->uActionNew->setIcon(mAwesome->icon(fa::fileo, mMenuBarIconVariant));

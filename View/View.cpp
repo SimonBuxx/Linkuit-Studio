@@ -91,7 +91,21 @@ void View::SetupMatrix()
     mGraphicsView.setTransform(matrix);
     mGraphicsView.setBackgroundBrush(DrawGridPattern(mZoomLevel));
 
-    emit ZoomLevelChangedSignal(scale * 100);
+    emit ZoomLevelChangedSignal(scale * 100, mZoomLevel);
+}
+
+void View::SetZoom(int32_t pZoomLevel)
+{
+    Q_ASSERT(pZoomLevel >= canvas::MIN_ZOOM_LEVEL);
+    Q_ASSERT(pZoomLevel <= canvas::MAX_ZOOM_LEVEL);
+
+    if (!mCoreLogic.IsProcessing())
+    {
+        mZoomLevel = pZoomLevel;
+        SetupMatrix();
+
+        emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100, mZoomLevel);
+    }
 }
 
 void View::ZoomIn(int32_t pAmount)
@@ -100,7 +114,7 @@ void View::ZoomIn(int32_t pAmount)
     mZoomLevel = std::min(mZoomLevel, canvas::MAX_ZOOM_LEVEL);
     SetupMatrix();
 
-    emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
+    emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100, mZoomLevel);
 }
 
 void View::ZoomOut(int32_t pAmount)
@@ -109,7 +123,7 @@ void View::ZoomOut(int32_t pAmount)
     mZoomLevel = std::max(mZoomLevel, canvas::MIN_ZOOM_LEVEL);
     SetupMatrix();
 
-    emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
+    emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100, mZoomLevel);
 }
 
 QPixmap View::DrawGridPattern(int32_t pZoomLevel)
