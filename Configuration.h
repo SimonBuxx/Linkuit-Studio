@@ -117,13 +117,14 @@ namespace inputs
 {
 static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(50 * simulation::PROPAGATION_DELAY);
 
-// Whether the clock should toggle at timeout or pulse for CLOCK_PULSE_TICKS ticks
-static constexpr bool CLOCK_ENABLE_PULSE = true;
+// The default clock mode (whether the clock should toggle at timeout or pulse)
+static constexpr ClockMode DEFAULT_CLOCK_MODE = ClockMode::PULSE;
 
-static constexpr uint32_t CLOCK_PULSE_TICKS = 10;
+// The default pulse duration
+static constexpr uint32_t DEFAULT_CLOCK_PULSE_TICKS = 10;
 
-// The amount of ticks to pass before the clock timeouts
-static constexpr uint32_t CLOCK_TOGGLE_TICKS = 100;
+// The default amount of ticks to pass before the clock timeouts
+static constexpr uint32_t DEFAULT_CLOCK_TOGGLE_TICKS = 100;
 } // namespace
 
 namespace multiplexer
@@ -140,7 +141,7 @@ static constexpr const char* D_FLIPFLOP_TEXT = "FF";
 static constexpr const char* MULTIPLEXER_TEXT = "MUX";
 static constexpr const char* DEMULTIPLEXER_TEXT = "DEMUX";
 
-static const QFont FONT("Quicksand Medium", 20);
+static const QFont FONT("Source Sans Pro", 20);
 static const QFont CONNECTOR_FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr QColor SMALL_TEXT_FONT_COLOR(225, 225, 225);

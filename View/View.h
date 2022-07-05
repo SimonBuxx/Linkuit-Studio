@@ -3,7 +3,6 @@
 
 #include "CoreLogic.h"
 #include "Configuration.h"
-#include "AboutDialog.h"
 
 #include "QtAwesome.h"
 
@@ -23,23 +22,6 @@ QT_END_NAMESPACE
 
 class View;
 class CoreLogic;
-
-///
-/// \brief The HorizontalScrollArea class is a QScrollArea used in the ribbon menu tabs that has
-/// been altered to scroll its contents when the scroll wheel is turned above the contents
-///
-class HorizontalScrollArea : public QScrollArea
-{
-    Q_OBJECT
-public:
-    /// \brief Constructor for HorizontalScrollArea; sets default settings for use in the ribbon menu
-    /// \param pParent: Pointer to the layout's parent widget
-    HorizontalScrollArea(QWidget* pParent);
-
-    /// \brief Scrolls the contents horizontally when the scroll wheel is turned
-    /// \param pEvent: Pointer to the scroll wheel event
-    void wheelEvent(QWheelEvent *pEvent) override;
-};
 
 ///
 /// \brief The GraphicsView class extends QGraphicsView, which contains the main scene
@@ -121,47 +103,23 @@ public:
     /// \return A QList of all items in mScene
     QList<QGraphicsItem*> Components(void) const;
 
-    /// \brief Sets the state of the undo and redo buttons according to whether the simulation
-    /// is running and if undo or redo operations are available to execute
-    void SetUndoRedoButtonsEnableState(void);
-
-    /// \brief Enables or disables all widgets on the toolbox tab
-    /// \param pEnabled: If true, the widgets will be enabled
-    void SetToolboxTabEnabled(bool pEnabled);
-
-    /// \brief Enables or disables all components of the "Start" tab
-    /// \param pEnabled: If true, the components will be enabled
-    void SetStartTabEnabled(bool pEnabled);
-
-    /// \brief Enables or disables all components of the "Simulation" tab
-    /// \param pEnabled: If true, the components will be enabled
-    void SetSimulationTabEnabled(bool pEnabled);
-
-    /// \brief Enables or disables all components of the GUI
-    /// \param pEnabled: If true, the components will be enabled
-    void SetGuiEnabled(bool pEnabled);
-
-    /// \brief Performs tasks such as disabling buttons
-    void PrepareGuiForSimulation(void);
-
-    /// \brief Performs tasks such as enabling buttons
-    void PrepareGuiForEditing(void);
-
     /// \brief Fades out the overlay that indicates that the SW is loading
     void FadeOutProcessingOverlay(void);
 
     /// \brief Fades in the overlay that indicates that the SW is loading
     void FadeInProcessingOverlay(void);
 
-    /// \brief Displays the given "special" tab, a tab that is only visible under certain conditions
-    /// Note: Only one special tab can be shown at a time
-    /// \param mTab: The tab to display
-    void ShowSpecialTab(gui::MenuTab mTab);
-
-    /// \brief Hides the special tab if visible
-    void HideSpecialTab(void);
+signals:
+    /// \brief Emitted when the scene is zoomed in or out
+    /// \param pPercentage: The new zoom percentage
+    /// \param pValue: The new zoom value
+    void ZoomLevelChangedSignal(uint8_t pPercentage, uint32_t pValue);
 
 public slots:
+    /// \brief Sets the zoom level and updates the displayed percentage
+    /// \param pZoomLevel: The new zoom level
+    void SetZoom(int32_t pZoomLevel);
+
     /// \brief Increases the zoom level and updates the displayed percentage
     /// \param pAmount: The amount to increase the zoom by
     void ZoomIn(int32_t pAmount);
@@ -169,14 +127,6 @@ public slots:
     /// \brief Decreases the zoom level and updates the displayed percentage
     /// \param pAmount: The amount to decrease the zoom by
     void ZoomOut(int32_t pAmount);
-
-    /// \brief Performs all GUI adjustments to enter the new control mode
-    /// \param pNewMode: The newly entered control mode
-    void OnControlModeChanged(ControlMode pNewMode);
-
-    /// \brief Checks the button associated with pNewType
-    /// \param pNewType: The type of components to be added
-    void OnComponentTypeChanged(ComponentType pNewType);
 
     /// \brief Disables buttons not available in simulation and disables component selection
     void OnSimulationStart(void);
@@ -192,28 +142,6 @@ protected:
     /// \brief Creates all GUI widgets of the main window
     void CreateGui(void);
 
-    /// \brief Initializes all widgets of the ribbon menu
-    void InitializeRibbonMenu(void);
-
-    /// \brief Initializes all widgets of the "Start" tab
-    void InitializeStartTabWidgets(void);
-
-    /// \brief Initializes all widgets of the "Toolbox" tab
-    void InitializeToolboxTabWidgets(void);
-
-    /// \brief Initializes all widgets of the "Simulation" tab
-    void InitializeSimulationTabWidgets(void);
-
-    /// \brief Adds all menu buttons to their tab's button group
-    void FillRibbonMenuButtonGroups(void);
-
-    /// \brief Initializes the layouts of the ribbon menu tab widgets
-    void InitializeRibbonMenuTabLayouts(void);
-
-    /// \brief Creates a new vertical widget separator line
-    /// \return Pointer to the newly created widget
-    QFrame* CreateSeparator(void);
-
     /// \brief Creates a QIcon with a normal and a disabled pixmap
     /// \param pNormalPath: Path to the normal image source
     /// \param pDisabledPath: Path to the disabled image source
@@ -228,10 +156,6 @@ protected:
     /// \return A pixel map containing a background grid tile
     QPixmap DrawGridPattern(int32_t pZoomLevel);
 
-    /// \brief Updates the zoom GUI label to display the given value
-    /// \param pZoomPercentage: The zoom percentage to display
-    void UpdateZoomLabel(uint8_t pZoomPercentage);
-
 protected:
     GraphicsView mGraphicsView;
     QGraphicsScene *mScene;
@@ -239,88 +163,11 @@ protected:
 
     QGridLayout *mMainLayout;
 
-    // Ribbon menu
-
-    QTabWidget *mRibbonMenu;
-    QWidget *mStartPage;
-    QWidget *mToolboxPage;
-    QWidget *mSimulationPage;
-    QWidget *mClockPage;
-
-    HorizontalScrollArea *mToolboxScrollArea;
-
-    QGridLayout *mStartTabLayout;
-    QGridLayout *mToolboxTabLayout;
-    QGridLayout *mSimulationTabLayout;
-
-    QtAwesome *mAwesome; // Contains Fontawesome logos
-
-    // GUI buttons
-
-    QButtonGroup *mStartButtonGroup;
-    QButtonGroup *mToolboxButtonGroup;
-    QButtonGroup *mSimulationButtonGroup;
-
-    QToolButton *mOpenCircuitButton;
-    QToolButton *mSaveCircuitButton;
-    QToolButton *mUpdateButton;
-    QToolButton *mHelpButton;
-    QToolButton *mAboutDialogButton;
-
-    QToolButton *mEditButton;
-    QToolButton *mDeleteButton;
-    QToolButton *mCopyButton;
-    QToolButton *mAddWireButton;
-    QToolButton *mAddAndGateButton;
-    QToolButton *mAddOrGateButton;
-    QToolButton *mAddXorGateButton;
-    QToolButton *mAddNotGateButton;
-    QToolButton *mAddBufferGateButton;
-    QToolButton *mAddInputButton;
-    QToolButton *mAddButtonButton;
-    QToolButton *mAddClockButton;
-    QToolButton *mAddOutputButton;
-    QToolButton *mAddTextLabelButton;
-    QToolButton *mAddHalfAdderButton;
-    QToolButton *mAddFullAdderButton;
-    QToolButton *mAddRsFlipFlopButton;
-    QToolButton *mAddDFlipFlopButton;
-    QToolButton *mAddMultiplexerButton;
-    QToolButton *mAddDemultiplexerButton;
-    QToolButton *mUndoButton;
-    QToolButton *mRedoButton;
-
-    QToolButton *mSimulationButton;
-
-    // Category labels
-
-    QLabel *mCategoryToolsLabel;
-    QLabel *mCategoryGatesLabel;
-    QLabel *mCategoryAddersLabel;
-    QLabel *mCategoryMemoryLabel;
-    QLabel *mCategoryConvertersLabel;
-
-    QLabel *mCategoryInfoLabel;
-
-    // Separator lines
-
-    QFrame *mSeparatorLine1;
-    QFrame *mSeparatorLine2;
-    QFrame *mSeparatorLine3;
-    QFrame *mSeparatorLine4;
-    QFrame *mSeparatorLine5;
-    QFrame *mSeparatorLine6;
-
-    QFrame *mStartSeparatorLine1;
-
     // Over-canvas elements
 
-    QLabel *mZoomLabel;
     QLabel *mProcessingOverlay;
 
     int32_t mZoomLevel = canvas::DEFAULT_ZOOM_LEVEL;
-
-    AboutDialog mAboutDialog;
 };
 
 #endif // VIEW_H

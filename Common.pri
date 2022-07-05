@@ -49,7 +49,8 @@ HEADERS += \
     $${PWD}/Undo/UndoMoveType.h \
     $${PWD}/View/View.h \
     $${PWD}/Configuration.h \
-    $${PWD}/AboutDialog.h
+    $${PWD}/AboutDialog.h \
+    $${PWD}/IconToolButton.h
 
 SOURCES += \
     $$PWD/Components/ComplexLogic/Demultiplexer.cpp \
@@ -101,7 +102,8 @@ SOURCES += \
     $${PWD}/View/GuiHandling.cpp \
     $${PWD}/MainWindow.cpp \
     $${PWD}/View/View.cpp \
-    $${PWD}/AboutDialog.cpp
+    $${PWD}/AboutDialog.cpp \
+    $${PWD}/IconToolButton.cpp
 
 INCLUDEPATH += $${PWD}
 

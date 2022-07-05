@@ -1,8 +1,10 @@
 #include "MainWindow.h"
+#include "Configuration.h"
 
 #include <QApplication>
 #include <QGraphicsScene>
 #include <QFile>
+#include <QFontDatabase>
 
 std::optional<QString> LoadStylesheet(const QString &pPath)
 {
@@ -36,10 +38,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QGraphicsScene scene;
-    scene.setSceneRect(canvas::DIMENSIONS);
-
-    MainWindow window(scene);
+    MainWindow window;
     window.showMaximized();
 
     return app.exec();

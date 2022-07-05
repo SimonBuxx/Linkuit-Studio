@@ -21,6 +21,15 @@ public:
     /// \return The logic state of this cell's output number pOutput
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
+#warning missing documentation
+    void SetToggleTicks(uint32_t pTicks);
+    void SetPulseTicks(uint32_t pTicks);
+    void SetClockMode(ClockMode pMode);
+
+    uint32_t GetToggleTicks(void);
+    uint32_t GetPulseTicks(void);
+    ClockMode GetClockMode(void);
+
 public slots:
     /// \brief Advances the simulation of this cell by one logic tick
     void OnSimulationAdvance(void) override;
@@ -34,10 +43,15 @@ public slots:
 protected:
     LogicState mState;
 
+    uint32_t mToggleTicks;
+    uint32_t mPulseTicks;
+
     uint32_t mTickCountdown;
     uint32_t mPulseCountdown;
 
     bool mStateChanged;
+
+    ClockMode mMode;
 };
 
 #endif // LOGICCLOCKCELL_H

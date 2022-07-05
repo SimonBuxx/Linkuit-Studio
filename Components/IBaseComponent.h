@@ -59,8 +59,6 @@ protected slots:
 signals:
     void SelectedComponentMovedSignal(QPointF pOffset);
 
-    void DisplaySpecialTabSignal(gui::MenuTab pTab);
-
 protected:
     uint32_t mWidth;
     uint32_t mHeight;

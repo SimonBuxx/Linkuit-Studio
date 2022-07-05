@@ -26,6 +26,8 @@ LogicClock::LogicClock(const CoreLogic* pCoreLogic, Direction pDirection):
     mSquareWave.lineTo(32, mHeight / 2 - amplitude);
 
     SetLogicConnectors();
+
+    QObject::connect(this, &LogicClock::DisplayClockConfigurationSignal, pCoreLogic, &CoreLogic::OnDisplayClockConfigurationRequest);
 }
 
 LogicClock::LogicClock(const LogicClock& pObj, const CoreLogic* pCoreLogic):
@@ -221,7 +223,9 @@ void LogicClock::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
     IBaseComponent::mousePressEvent(pEvent);
     if (this->isSelected() && this->scene()->selectedItems().size() == 1)
     {
-        emit DisplaySpecialTabSignal(gui::MenuTab::CLOCK);
+        emit DisplayClockConfigurationSignal(std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetClockMode(),
+                                             std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetToggleTicks(),
+                                             std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetPulseTicks());
     }
 }
 

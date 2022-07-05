@@ -8,31 +8,6 @@
 #include <QtWidgets>
 #include <QtMath>
 
-HorizontalScrollArea::HorizontalScrollArea(QWidget* pParent):
-    QScrollArea(pParent)
-{
-    setBackgroundRole(QPalette::ColorRole::NoRole);
-    verticalScrollBar()->setEnabled(false);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-}
-
-void HorizontalScrollArea::wheelEvent(QWheelEvent *pEvent)
-{
-    Q_ASSERT(pEvent);
-
-    if (pEvent->angleDelta().y() > 0)
-    {
-        horizontalScrollBar()->setValue(horizontalScrollBar()->value() - gui::HORIZONTAL_SCROLL_SPEED);
-    }
-    else
-    {
-        horizontalScrollBar()->setValue(horizontalScrollBar()->value() + gui::HORIZONTAL_SCROLL_SPEED);
-    }
-
-    QScrollArea::wheelEvent(pEvent);
-}
-
 GraphicsView::GraphicsView(View &pView, CoreLogic &pCoreLogic):
     QGraphicsView(),
     mView(pView),
@@ -62,7 +37,6 @@ void View::Init()
     mGraphicsView.setFrameStyle(QGraphicsView::NoFrame);
 
     CreateGui();
-    ConnectGuiSignalsAndSlots();
 
     QObject::connect(&mGraphicsView, &GraphicsView::LeftMouseButtonPressedWithoutCtrlEvent, &mCoreLogic, &CoreLogic::OnLeftMouseButtonPressedWithoutCtrl);
     QObject::connect(&mCoreLogic, &CoreLogic::MousePressedEventDefaultSignal, &mGraphicsView, &GraphicsView::OnMousePressedEventDefault);
@@ -97,159 +71,14 @@ QList<QGraphicsItem*> View::Components(void) const
     return mScene->items();
 }
 
-void View::OnControlModeChanged(ControlMode pNewMode)
-{
-    switch (pNewMode)
-    {
-        case ControlMode::EDIT:
-        {
-            mEditButton->setChecked(true);
-            break;
-        }
-        default:
-        {
-            break;
-        }
-    }
-
-    Q_ASSERT(mScene);
-    mScene->clearSelection();
-}
-
-void View::OnComponentTypeChanged(ComponentType pNewType)
-{
-    switch (pNewType)
-    {
-        case ComponentType::AND_GATE:
-        {
-            mAddAndGateButton->setChecked(true);
-            break;
-        }
-        case ComponentType::OR_GATE:
-        {
-            mAddOrGateButton->setChecked(true);
-            break;
-        }
-        case ComponentType::XOR_GATE:
-        {
-            mAddXorGateButton->setChecked(true);
-            break;
-        }
-        case ComponentType::NOT_GATE:
-        {
-            mAddNotGateButton->setChecked(true);
-            break;
-        }
-        case ComponentType::BUFFER_GATE:
-        {
-            mAddBufferGateButton->setChecked(true);
-            break;
-        }
-        case ComponentType::INPUT:
-        {
-            mAddInputButton->setChecked(true);
-            break;
-        }
-        case ComponentType::BUTTON:
-        {
-            mAddButtonButton->setChecked(true);
-            break;
-        }
-        case ComponentType::CLOCK:
-        {
-            mAddClockButton->setChecked(true);
-            break;
-        }
-        case ComponentType::OUTPUT:
-        {
-            mAddOutputButton->setChecked(true);
-            break;
-        }
-        case ComponentType::TEXT_LABEL:
-        {
-            mAddTextLabelButton->setChecked(true);
-            break;
-        }
-        case ComponentType::HALF_ADDER:
-        {
-            mAddHalfAdderButton->setChecked(true);
-            break;
-        }
-        case ComponentType::FULL_ADDER:
-        {
-            mAddFullAdderButton->setChecked(true);
-            break;
-        }
-        case ComponentType::RS_FLIPFLOP:
-        {
-            mAddRsFlipFlopButton->setChecked(true);
-            break;
-        }
-        case ComponentType::D_FLIPFLOP:
-        {
-            mAddDFlipFlopButton->setChecked(true);
-            break;
-        }
-        case ComponentType::MULTIPLEXER:
-        {
-            mAddMultiplexerButton->setChecked(true);
-            break;
-        }
-        case ComponentType::DEMULTIPLEXER:
-        {
-            mAddDemultiplexerButton->setChecked(true);
-            break;
-        }
-        default:
-        {
-            mEditButton->setChecked(true);
-            break;
-        }
-    }
-}
-
 void View::OnSimulationStart()
 {
-    PrepareGuiForSimulation();
     mGraphicsView.setDragMode(QGraphicsView::NoDrag);
 }
 
 void View::OnSimulationStop()
 {
-    PrepareGuiForEditing();
     mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
-}
-
-void View::ShowSpecialTab(gui::MenuTab mTab)
-{
-    Q_ASSERT(mRibbonMenu);
-
-    switch(mTab)
-    {
-        case gui::MenuTab::CLOCK:
-        {
-            Q_ASSERT(mClockPage);
-            if (!mClockPage->isVisible())
-            {
-                mRibbonMenu->setTabVisible(mRibbonMenu->indexOf(mClockPage), true);
-            }
-            break;
-        }
-        default:
-        {
-            break;
-        }
-    }
-
-    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab:last {color: rgb(0, 204, 143);}");
-}
-
-void View::HideSpecialTab()
-{
-    Q_ASSERT(mRibbonMenu && mClockPage);
-
-    mRibbonMenu->setTabVisible(mRibbonMenu->indexOf(mClockPage), false);
-    mRibbonMenu->tabBar()->setStyleSheet("QTabBar::tab:last {}");
 }
 
 void View::SetupMatrix()
@@ -261,28 +90,40 @@ void View::SetupMatrix()
 
     mGraphicsView.setTransform(matrix);
     mGraphicsView.setBackgroundBrush(DrawGridPattern(mZoomLevel));
+
+    emit ZoomLevelChangedSignal(scale * 100, mZoomLevel);
+}
+
+void View::SetZoom(int32_t pZoomLevel)
+{
+    Q_ASSERT(pZoomLevel >= canvas::MIN_ZOOM_LEVEL);
+    Q_ASSERT(pZoomLevel <= canvas::MAX_ZOOM_LEVEL);
+
+    if (!mCoreLogic.IsProcessing())
+    {
+        mZoomLevel = pZoomLevel;
+        SetupMatrix();
+
+        emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100, mZoomLevel);
+    }
 }
 
 void View::ZoomIn(int32_t pAmount)
 {
     mZoomLevel += pAmount;
     mZoomLevel = std::min(mZoomLevel, canvas::MAX_ZOOM_LEVEL);
-    UpdateZoomLabel(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
     SetupMatrix();
+
+    emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100, mZoomLevel);
 }
 
 void View::ZoomOut(int32_t pAmount)
 {
     mZoomLevel -= pAmount;
     mZoomLevel = std::max(mZoomLevel, canvas::MIN_ZOOM_LEVEL);
-    UpdateZoomLabel(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100);
     SetupMatrix();
-}
 
-void View::UpdateZoomLabel(uint8_t pZoomPercentage)
-{
-    Q_ASSERT(mZoomLabel);
-    mZoomLabel->setText(QString::fromStdString(std::to_string(pZoomPercentage) + "%"));
+    emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100, mZoomLevel);
 }
 
 QPixmap View::DrawGridPattern(int32_t pZoomLevel)

@@ -34,23 +34,28 @@ CoreLogic::CoreLogic(View &pView):
     mPropagationTimer(this),
     mProcessingTimer(this)
 {
-    ConnectToView();
     mView.Init();
 
     QObject::connect(&mPropagationTimer, &QTimer::timeout, this, &CoreLogic::OnPropagationTimeout);
     QObject::connect(&mProcessingTimer, &QTimer::timeout, this, &CoreLogic::OnProcessingTimeout);
 }
 
-void CoreLogic::ConnectToView()
+void CoreLogic::SelectAll()
 {
-    QObject::connect(this, &CoreLogic::ControlModeChangedSignal, &mView, &View::OnControlModeChanged);
-    QObject::connect(this, &CoreLogic::ComponentTypeChangedSignal, &mView, &View::OnComponentTypeChanged);
+    if (mControlMode == ControlMode::EDIT || mControlMode == ControlMode::WIRE || mControlMode == ControlMode::ADD)
+    {
+        EnterControlMode(ControlMode::EDIT);
+
+        QPainterPath path;
+        path.addRect(mView.Scene()->sceneRect());
+        mView.Scene()->setSelectionArea(path);
+    }
 }
 
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
 {
     mView.Scene()->clearFocus();
-    mView.HideSpecialTab();
+    emit HideConfigurationGuiSignal();
 
     if (pNewMode == mControlMode)
     {
@@ -60,8 +65,7 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
     if (mControlMode == ControlMode::SIMULATION)
     {
         mControlMode = pNewMode;
-        mPropagationTimer.stop();
-        emit SimulationStopSignal();
+        LeaveSimulation();
     }
 
     mControlMode = pNewMode;
@@ -74,23 +78,108 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
 
     if (pNewMode == ControlMode::SIMULATION)
     {
-        StartSimulation();
+        EnterSimulation();
+        RunSimulation();
     }
 
     Q_ASSERT(mControlMode == pNewMode);
 }
 
-void CoreLogic::StartSimulation()
+void CoreLogic::SetSimulationMode(SimulationMode pNewMode)
 {
-    mView.SetToolboxTabEnabled(false);
+    if (mSimulationMode != pNewMode)
+    {
+        mSimulationMode = pNewMode;
+        emit SimulationModeChangedSignal(mSimulationMode);
+    }
+}
+
+void CoreLogic::EnterSimulation()
+{
     StartProcessing();
     ParseWireGroups();
     CreateWireLogicCells();
     ConnectLogicCells();
     //qDebug() << "Found " << mWireGroups.size() << " groups";
     EndProcessing();
-    mPropagationTimer.start(simulation::PROPAGATION_DELAY);
+    SetSimulationMode(SimulationMode::STOPPED);
     emit SimulationStartSignal();
+    StepSimulation();
+}
+
+void CoreLogic::RunSimulation()
+{
+    if (mControlMode == ControlMode::SIMULATION && mSimulationMode == SimulationMode::STOPPED)
+    {
+        mPropagationTimer.start(simulation::PROPAGATION_DELAY);
+        SetSimulationMode(SimulationMode::RUNNING);
+    }
+}
+
+void CoreLogic::StepSimulation()
+{
+    if (mControlMode == ControlMode::SIMULATION)
+    {
+        OnPropagationTimeout();
+    }
+}
+
+void CoreLogic::ResetSimulation()
+{
+    if (mControlMode == ControlMode::SIMULATION)
+    {
+        LeaveSimulation();
+        EnterSimulation();
+    }
+}
+
+void CoreLogic::PauseSimulation()
+{
+    if (mControlMode == ControlMode::SIMULATION && mSimulationMode == SimulationMode::RUNNING)
+    {
+        mPropagationTimer.stop();
+        SetSimulationMode(SimulationMode::STOPPED);
+    }
+}
+
+void CoreLogic::LeaveSimulation()
+{
+    mPropagationTimer.stop();
+    SetSimulationMode(SimulationMode::STOPPED);
+    emit SimulationStopSignal();
+}
+
+void CoreLogic::OnToggleValueChanged(uint32_t pValue)
+{
+    if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
+    {
+        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        {
+            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetToggleTicks(pValue);
+        }
+    }
+}
+
+void CoreLogic::OnPulseValueChanged(uint32_t pValue)
+{
+    if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
+    {
+        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        {
+            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetPulseTicks(pValue);
+        }
+    }
+}
+
+void CoreLogic::OnClockModeChanged(ClockMode pMode)
+{
+    if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
+    {
+        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        {
+            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetClockMode(pMode);
+        }
+    }
 }
 
 void CoreLogic::EnterAddControlMode(ComponentType pComponentType)
@@ -129,11 +218,6 @@ void CoreLogic::SelectComponentType(ComponentType pComponentType)
     Q_ASSERT(mControlMode == ControlMode::ADD);
     mComponentType = pComponentType;
     emit ComponentTypeChangedSignal(mComponentType);
-}
-
-void CoreLogic::OnDisplayTabRequest(gui::MenuTab pTab)
-{
-    mView.ShowSpecialTab(pTab);
 }
 
 std::optional<IBaseComponent*> CoreLogic::GetItem() const
@@ -978,7 +1062,7 @@ bool CoreLogic::IsProcessing() const
 void CoreLogic::ClearSelection()
 {
     mView.Scene()->clearSelection();
-    mView.HideSpecialTab();
+    emit HideConfigurationGuiSignal();
 }
 
 #warning temporary performance counter
@@ -986,7 +1070,7 @@ int steps = 0;
 int collideCheck = 0;
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {   
-    mView.SetGuiEnabled(false);
+    //mView.SetGuiEnabled(false);
     StartProcessing();
 
     QElapsedTimer total;
@@ -995,7 +1079,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     if (pOffset.manhattanLength() <= 0) // No effective movement
     {
         EndProcessing();
-        mView.PrepareGuiForEditing();
+        //mView.PrepareGuiForEditing();
         return;
     }
 
@@ -1054,7 +1138,7 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
         ClearSelection();
         EndProcessing();
-        mView.PrepareGuiForEditing();
+        //mView.PrepareGuiForEditing();
         return;
     }
 
@@ -1067,8 +1151,8 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     qDebug() << "Moving took " << total.elapsed() << "ms total";
 
     EndProcessing();
-    mView.PrepareGuiForEditing();
-    mView.SetGuiEnabled(true);
+    //mView.PrepareGuiForEditing();
+    //mView.SetGuiEnabled(true);
     qDebug() << "Steps: " << steps;
     qDebug() << "CollideCheck: " << collideCheck;
     steps = 0;
@@ -1158,9 +1242,16 @@ void CoreLogic::AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComp
     }
 }
 
+void CoreLogic::OnDisplayClockConfigurationRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
+{
+    emit DisplayClockConfigurationSignal(pMode, pToggle, pPulse);
+}
+
 void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent)
 {
     auto snappedPos = SnapToGrid(pMappedPos);
+
+    emit HideConfigurationGuiSignal();
 
     // Add ConPoint on X crossing
     if (mControlMode == ControlMode::EDIT
@@ -1315,7 +1406,7 @@ void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
     AppendToUndoQueue(pUndoObject, mUndoQueue);
     mRedoQueue.clear();
 
-    mView.SetUndoRedoButtonsEnableState();
+    emit AppendToUndoQueueSignal();
 }
 
 void CoreLogic::AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue)
@@ -1426,7 +1517,6 @@ void CoreLogic::Undo()
         }
     }
     ClearSelection();
-    mView.SetUndoRedoButtonsEnableState();
 }
 
 void CoreLogic::Redo()
@@ -1525,5 +1615,4 @@ void CoreLogic::Redo()
         }
     }
     ClearSelection();
-    mView.SetUndoRedoButtonsEnableState();
 }

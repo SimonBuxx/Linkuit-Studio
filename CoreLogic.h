@@ -26,6 +26,9 @@ public:
     /// \param pView: The view that contains the main scene
     CoreLogic(View &pView);
 
+    /// \brief Selects all items in the scene
+    void SelectAll(void);
+
     /// \brief Creates a new scene component
     /// \return Optional pointer to the new component
     std::optional<IBaseComponent*> GetItem(void) const;
@@ -92,6 +95,20 @@ public:
     /// \return True, if the software is currently processing or loading
     bool IsProcessing(void) const;
 
+    // Functions for simulation control
+
+    /// \brief Starts the simulation if in simulation mode and the simulation is not yet started
+    void RunSimulation(void);
+
+    /// \brief Pauses the simulation if it is currently running
+    void PauseSimulation(void);
+
+    /// \brief Resets the simulation if in simulation mode
+    void ResetSimulation(void);
+
+    /// \brief Advances the simulation by one tick if in simulation mode
+    void StepSimulation(void);
+
     // Functions for undo and redo
 
     /// \brief Returns true, if the undo queue has no elements
@@ -108,12 +125,22 @@ public:
     /// \brief Redos the last undone undo action if existant
     void Redo(void);
 
+    // Functions for item configuration
+#warning missing documentation
+    void OnToggleValueChanged(uint32_t pValue);
+    void OnPulseValueChanged(uint32_t pValue);
+    void OnClockModeChanged(ClockMode pMode);
+
     // ////////////////////////////
 
 signals:
     /// \brief Emitted when the current control mode changes
     /// \param pNewMode: The newly entered control mode
     void ControlModeChangedSignal(ControlMode pNewMode);
+
+    /// \brief Emitted when the current simulation mode changes
+    /// \param pNewMode: The newly entered simulation mode
+    void SimulationModeChangedSignal(SimulationMode pNewMode);
 
     /// \brief Emitted when the selected component type for new components changes
     /// \param pNewType: The newly selected component type
@@ -132,6 +159,14 @@ signals:
     /// \brief Emitted when the core logic has stopped the simulation
     void SimulationStopSignal(void);
 
+    /// \brief Emitted when any action is appended to the undo queue
+    void AppendToUndoQueueSignal(void);
+
+#warning missing documentation
+    void DisplayClockConfigurationSignal(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
+
+    void HideConfigurationGuiSignal(void);
+
 public slots:
     /// \brief Checks for collisions, merges moved wires and brings the ConPoints in a valid state
     /// \param pOffset: The relative offset by which the selected components have been moved
@@ -143,6 +178,8 @@ public slots:
     /// \param pMappedPos: The position in the scene where the mouse press happened
     /// \param pEvent: The mouse press event to pass back to MousePressedEventDefaultSignal
     void OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent);
+
+    void OnDisplayClockConfigurationRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
 
     // Slots for configuration events
 
@@ -166,14 +203,16 @@ public slots:
     /// \brief Displays the processing overlay (loading screen); invoked by mProcessingTimer
     void OnProcessingTimeout(void);
 
-    void OnDisplayTabRequest(gui::MenuTab pTab);
-
 protected:
-    /// \brief Connects to the View object via signals and slots
-    void ConnectToView(void);
-
     /// \brief Performs all neccessary steps to enter simulation mode
-    void StartSimulation(void);
+    void EnterSimulation(void);
+
+    /// \brief Performs all neccessary steps to leave simulation mode
+    void LeaveSimulation(void);
+
+    /// \brief Sets the current simulation mode to the given mode and emits the change signal
+    /// \param pNewMode: The new simulation mode to go into
+    void SetSimulationMode(SimulationMode pNewMode);
 
     // Functions for wire processing
 
@@ -217,6 +256,9 @@ protected:
     bool ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
                                            std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents);
 
+    /// \brief Adds ConPoints on T-crossings that include the given wire
+    /// \param pWire: The wire to add ConPoints to
+    /// \param addedComponents: Reference to the vector to add the ConPoints to
     void AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComponent*>& addedComponents);
 
     // Functions to check for wire crossings and ConPoint positions
@@ -314,6 +356,7 @@ protected:
     /// \brief Called when the longer process has been finished
     void EndProcessing(void);
 
+    /// \brief Unselects all items in the scene
     void ClearSelection(void);
 
 protected:
@@ -321,6 +364,7 @@ protected:
 
     // Variables for general states and modes
     ControlMode mControlMode = ControlMode::EDIT;
+    SimulationMode mSimulationMode = SimulationMode::STOPPED;
     ComponentType mComponentType = ComponentType::NONE;
     Direction mComponentDirection = components::DEFAULT_DIRECTION;
     uint8_t mComponentInputCount = components::gates::DEFAULT_INPUT_COUNT;

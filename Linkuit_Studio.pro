@@ -17,3 +17,6 @@ RESOURCES += \
 
 include(Common.pri)
 include(QtAwesome/QtAwesome.pri)
+
+FORMS += \
+    MainWindow.ui

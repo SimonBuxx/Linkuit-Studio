@@ -1,29 +1,674 @@
-#include "Components/Gates/AndGate.h"
-#include "Components/Gates/OrGate.h"
-#include "Components/Gates/XorGate.h"
-
 #include "MainWindow.h"
-#include "View/View.h"
-#include "Configuration.h"
+#include "ui_MainWindow.h"
 
-MainWindow::MainWindow(QGraphicsScene &pScene):
-    mScene(pScene),
+MainWindow::MainWindow(QWidget *pParent) :
+    QMainWindow(pParent),
+    mUi(new Ui::MainWindow),
     mView(mCoreLogic),
     mCoreLogic(mView)
 {
+    mUi->setupUi(this);
+
+    mAwesome = new QtAwesome(this);
+    mAwesome->initFontAwesome();
+
+    mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
 
-    mMainLayout = new QVBoxLayout(this);
-    mMainLayout->setContentsMargins(0, 10, 0, 0);
+    mUi->uViewLayout->addWidget(&mView, 0, 0, 5, 4);
 
-    setWindowTitle(tr(gui::WINDOW_TITLE));
-    setWindowIcon(QIcon(":/images/linkuit_icon5.png"));
-    setObjectName("mainWindow");
+    mView.stackUnder(mUi->uLeftContainer);
 
-    mMainLayout->addWidget(&mView);
-    setLayout(mMainLayout);
+    QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, &MainWindow::OnControlModeChanged);
+    QObject::connect(&mCoreLogic, &CoreLogic::SimulationModeChangedSignal, this, &MainWindow::OnSimulationModeChanged);
 
+    ConnectGuiSignalsAndSlots();
+
+    InitializeToolboxTree();
+    InitializeGuiIcons();
     InitializeGlobalShortcuts();
+
+    mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
+}
+
+MainWindow::~MainWindow()
+{
+    delete mUi;
+}
+
+void MainWindow::ConnectGuiSignalsAndSlots()
+{
+    QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabelAndSlider);
+
+    QObject::connect(&mCoreLogic, &CoreLogic::DisplayClockConfigurationSignal, this, &MainWindow::DisplayClockConfiguration);
+    QObject::connect(&mCoreLogic, &CoreLogic::HideConfigurationGuiSignal, this, &MainWindow::HideConfigurationGui);
+
+    QObject::connect(&mCoreLogic, &CoreLogic::AppendToUndoQueueSignal, this, [this]()
+    {
+        UpdateUndoRedoEnabled(true);
+    });
+
+    QObject::connect(mUi->uZoomSlider, &QSlider::valueChanged, &mView, &View::SetZoom);
+
+    QObject::connect(mUi->uEditButton, &QAbstractButton::clicked, [&]()
+    {
+        mCoreLogic.EnterControlMode(ControlMode::EDIT);
+    });
+
+    QObject::connect(mUi->uWiringButton, &QAbstractButton::clicked, [&]()
+    {
+        mCoreLogic.EnterControlMode(ControlMode::WIRE);
+    });
+
+    QObject::connect(mUi->uButtonToggle, &QPushButton::toggled, this, &MainWindow::OnToggleButtonToggled);
+    QObject::connect(mUi->uToggleSlider, &QSlider::valueChanged, this, &MainWindow::OnToggleSliderValueChanged);
+    QObject::connect(mUi->uPulseSlider, &QSlider::valueChanged, this, &MainWindow::OnPulseSliderValueChanged);
+
+    QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, mUi->uActionDelete, &QAction::trigger);
+    QObject::connect(mUi->uCopyButton, &QAbstractButton::clicked, mUi->uActionCopy, &QAction::trigger);
+    QObject::connect(mUi->uUndoButton, &QAbstractButton::clicked, mUi->uActionUndo, &QAction::trigger);
+    QObject::connect(mUi->uRedoButton, &QAbstractButton::clicked, mUi->uActionRedo, &QAction::trigger);
+    QObject::connect(mUi->uStartButton, &QAbstractButton::clicked, mUi->uActionStart, &QAction::trigger);
+    QObject::connect(mUi->uRunButton, &QAbstractButton::clicked, mUi->uActionRun, &QAction::trigger);
+    QObject::connect(mUi->uStepButton, &QAbstractButton::clicked, mUi->uActionStep, &QAction::trigger);
+    QObject::connect(mUi->uResetButton, &QAbstractButton::clicked, mUi->uActionReset, &QAction::trigger);
+    QObject::connect(mUi->uPauseButton, &QAbstractButton::clicked, mUi->uActionPause, &QAction::trigger);
+    QObject::connect(mUi->uStopButton, &QAbstractButton::clicked, mUi->uActionStop, &QAction::trigger);
+
+    QObject::connect(mUi->uActionStart, &QAction::triggered, this, &MainWindow::EnterSimulation);
+    QObject::connect(mUi->uActionRun, &QAction::triggered, this, &MainWindow::RunSimulation);
+    QObject::connect(mUi->uActionStep, &QAction::triggered, this, &MainWindow::StepSimulation);
+    QObject::connect(mUi->uActionReset, &QAction::triggered, this, &MainWindow::ResetSimulation);
+    QObject::connect(mUi->uActionPause, &QAction::triggered, this, &MainWindow::PauseSimulation);
+    QObject::connect(mUi->uActionStop, &QAction::triggered, this, &MainWindow::StopSimulation);
+    QObject::connect(mUi->uActionAbout, &QAction::triggered, &mAboutDialog, &AboutDialog::show);
+    QObject::connect(mUi->uActionClose, &QAction::triggered, this, &MainWindow::close);
+
+    QObject::connect(mUi->uActionNew, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionSave, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionSaveAs, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionUndo, &QAction::triggered, this, &MainWindow::Undo);
+    QObject::connect(mUi->uActionRedo, &QAction::triggered, this, &MainWindow::Redo);
+
+    QObject::connect(mUi->uActionCut, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionCopy, &QAction::triggered, &mCoreLogic, &CoreLogic::CopySelectedComponents);
+
+    QObject::connect(mUi->uActionPaste, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionDelete, &QAction::triggered, this, [&]()
+    {
+        if (!mCoreLogic.IsSimulationRunning())
+        {
+            mCoreLogic.DeleteSelectedComponents();
+        }
+    });
+
+    QObject::connect(mUi->uActionSelectAll, &QAction::triggered, &mCoreLogic, &CoreLogic::SelectAll);
+
+    QObject::connect(mUi->uActionScreenshot, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionStartTutorial, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionReportBugs, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionOpenWebsite, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+
+    QObject::connect(mUi->uActionCheckUpdates, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+}
+
+void MainWindow::UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue)
+{
+    mUi->uZoomLabel->setText(QString("%0%").arg(pPercentage));
+    mUi->uZoomSlider->setValue(pValue);
+}
+
+void MainWindow::OnToggleButtonToggled(bool pChecked)
+{
+    if (pChecked)
+    {
+        // Set to toggle
+        mUi->uPulseFrame->setEnabled(false);
+        mCoreLogic.OnClockModeChanged(ClockMode::TOGGLE);
+    }
+    else
+    {
+        // Set to pulse
+        mUi->uPulseFrame->setEnabled(true);
+        mCoreLogic.OnClockModeChanged(ClockMode::PULSE);
+    }
+}
+
+void MainWindow::OnToggleSliderValueChanged(int32_t pValue)
+{
+    mUi->uLabelToggle->setText(QString(pValue > 1 ? "%0 Ticks / Toggle" : "%0 Tick / Toggle").arg(pValue));
+
+    mUi->uPulseSlider->setMaximum(pValue);
+
+    mCoreLogic.OnToggleValueChanged(pValue);
+    mCoreLogic.OnPulseValueChanged(mUi->uPulseSlider->value());
+}
+
+void MainWindow::OnPulseSliderValueChanged(int32_t pValue)
+{
+    mUi->uLabelPulse->setText(QString(pValue > 1 ? "%0 Ticks / Pulse" : "%0 Tick / Pulse").arg(pValue));
+
+    mCoreLogic.OnPulseValueChanged(pValue);
+}
+
+void MainWindow::DisplayClockConfiguration(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
+{
+    mUi->uClockConfiguration->setVisible(true);
+
+    if (pMode == ClockMode::TOGGLE)
+    {
+        mUi->uButtonToggle->setChecked(true);
+    }
+    else
+    {
+        mUi->uButtonPulse->setChecked(true);
+    }
+
+    mUi->uToggleSlider->setValue(pToggle);
+    mUi->uPulseSlider->setValue(pPulse);
+}
+
+void MainWindow::HideConfigurationGui()
+{
+    mUi->uClockConfiguration->setVisible(false);
+}
+
+void MainWindow::EnterSimulation()
+{
+    if (!mCoreLogic.IsSimulationRunning())
+    {
+        mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+        mUi->uLeftContainer->setVisible(false);
+    }
+}
+
+void MainWindow::RunSimulation()
+{
+    mCoreLogic.RunSimulation();
+}
+
+void MainWindow::StepSimulation()
+{
+    mCoreLogic.StepSimulation();
+}
+
+void MainWindow::ResetSimulation()
+{
+    mCoreLogic.ResetSimulation();
+}
+
+void MainWindow::PauseSimulation()
+{
+    mCoreLogic.PauseSimulation();
+}
+
+void MainWindow::StopSimulation()
+{
+    if (mCoreLogic.IsSimulationRunning())
+    {
+        mCoreLogic.EnterControlMode(ControlMode::EDIT);
+        mUi->uLeftContainer->setVisible(true);
+    }
+}
+
+void MainWindow::UpdateUndoRedoEnabled(bool pEnable)
+{
+    if (pEnable)
+    {
+        mUi->uActionUndo->setEnabled(!mCoreLogic.IsUndoQueueEmpty());
+        mUi->uActionRedo->setEnabled(!mCoreLogic.IsRedoQueueEmpty());
+        mUi->uUndoButton->setEnabled(!mCoreLogic.IsUndoQueueEmpty());
+        mUi->uRedoButton->setEnabled(!mCoreLogic.IsRedoQueueEmpty());
+    }
+    else
+    {
+        mUi->uActionUndo->setEnabled(false);
+        mUi->uActionRedo->setEnabled(false);
+        mUi->uUndoButton->setEnabled(false);
+        mUi->uRedoButton->setEnabled(false);
+    }
+}
+
+void MainWindow::Undo()
+{
+    mCoreLogic.Undo();
+    UpdateUndoRedoEnabled(true);
+}
+
+void MainWindow::Redo()
+{
+    mCoreLogic.Redo();
+    UpdateUndoRedoEnabled(true);
+}
+
+void MainWindow::OnControlModeChanged(ControlMode pNewMode)
+{
+    switch (pNewMode)
+    {
+        case ControlMode::EDIT:
+        {
+            mUi->uToolboxTree->clearSelection();
+            mUi->uToolboxTree->setEnabled(true);
+
+            mUi->uEditButton->setEnabled(true);
+            mUi->uWiringButton->setEnabled(true);
+            mUi->uCopyButton->setEnabled(true);
+            mUi->uDeleteButton->setEnabled(true);
+            mUi->uStartButton->setEnabled(true);
+            mUi->uRunButton->setEnabled(false);
+            mUi->uStepButton->setEnabled(false);
+            mUi->uResetButton->setEnabled(false);
+            mUi->uPauseButton->setEnabled(false);
+            mUi->uStopButton->setEnabled(false);
+
+            UpdateUndoRedoEnabled(true);
+
+            mUi->uActionCut->setEnabled(true);
+            mUi->uActionCopy->setEnabled(true);
+            mUi->uActionPaste->setEnabled(true);
+            mUi->uActionDelete->setEnabled(true);
+            mUi->uActionSelectAll->setEnabled(true);
+
+            mUi->uActionStart->setEnabled(true);
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionReset->setEnabled(false);
+            mUi->uActionStep->setEnabled(false);
+            mUi->uActionPause->setEnabled(false);
+            mUi->uActionStop->setEnabled(false);
+
+            mUi->uEditButton->setChecked(true);
+            ForceUncheck(mUi->uRunButton);
+            ForceUncheck(mUi->uWiringButton);
+            ForceUncheck(mUi->uPauseButton);
+            break;
+        }
+        case ControlMode::WIRE:
+        {
+            mUi->uToolboxTree->clearSelection();
+            mUi->uToolboxTree->setEnabled(true);
+
+            mUi->uEditButton->setEnabled(true);
+            mUi->uWiringButton->setEnabled(true);
+            mUi->uCopyButton->setEnabled(true);
+            mUi->uDeleteButton->setEnabled(true);
+            mUi->uStartButton->setEnabled(true);
+            mUi->uRunButton->setEnabled(false);
+            mUi->uStepButton->setEnabled(false);
+            mUi->uResetButton->setEnabled(false);
+            mUi->uPauseButton->setEnabled(false);
+            mUi->uStopButton->setEnabled(false);
+
+            UpdateUndoRedoEnabled(true);
+
+            mUi->uActionCut->setEnabled(true);
+            mUi->uActionCopy->setEnabled(true);
+            mUi->uActionPaste->setEnabled(true);
+            mUi->uActionDelete->setEnabled(true);
+            mUi->uActionSelectAll->setEnabled(true);
+
+            mUi->uActionStart->setEnabled(true);
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionReset->setEnabled(false);
+            mUi->uActionStep->setEnabled(false);
+            mUi->uActionPause->setEnabled(false);
+            mUi->uActionStop->setEnabled(false);
+
+            ForceUncheck(mUi->uEditButton);
+            mUi->uWiringButton->setChecked(true);
+            ForceUncheck(mUi->uRunButton);
+            ForceUncheck(mUi->uPauseButton);
+            break;
+        }
+        case ControlMode::ADD:
+        {
+            mUi->uToolboxTree->setEnabled(true);
+
+            mUi->uEditButton->setEnabled(true);
+            mUi->uWiringButton->setEnabled(true);
+            mUi->uCopyButton->setEnabled(true);
+            mUi->uDeleteButton->setEnabled(true);
+            mUi->uStartButton->setEnabled(true);
+            mUi->uRunButton->setEnabled(false);
+            mUi->uStepButton->setEnabled(false);
+            mUi->uResetButton->setEnabled(false);
+            mUi->uPauseButton->setEnabled(false);
+            mUi->uStopButton->setEnabled(false);
+
+            UpdateUndoRedoEnabled(true);
+
+            mUi->uActionCut->setEnabled(true);
+            mUi->uActionCopy->setEnabled(true);
+            mUi->uActionPaste->setEnabled(true);
+            mUi->uActionDelete->setEnabled(true);
+            mUi->uActionSelectAll->setEnabled(true);
+
+            mUi->uActionStart->setEnabled(true);
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionReset->setEnabled(false);
+            mUi->uActionStep->setEnabled(false);
+            mUi->uActionPause->setEnabled(false);
+            mUi->uActionStop->setEnabled(false);
+
+            ForceUncheck(mUi->uEditButton);
+            ForceUncheck(mUi->uWiringButton);
+            ForceUncheck(mUi->uRunButton);
+            ForceUncheck(mUi->uPauseButton);
+            break;
+        }
+        case ControlMode::SIMULATION:
+        {
+            mUi->uToolboxTree->clearSelection();
+            mUi->uToolboxTree->setEnabled(false);
+
+            mUi->uEditButton->setEnabled(false);
+            mUi->uWiringButton->setEnabled(false);
+            mUi->uCopyButton->setEnabled(false);
+            mUi->uDeleteButton->setEnabled(false);
+            mUi->uStartButton->setEnabled(false);
+            mUi->uRunButton->setEnabled(true);
+            mUi->uStepButton->setEnabled(true);
+            mUi->uResetButton->setEnabled(true);
+            mUi->uPauseButton->setEnabled(true);
+            mUi->uStopButton->setEnabled(true);
+
+            UpdateUndoRedoEnabled(false);
+
+            mUi->uActionCut->setEnabled(false);
+            mUi->uActionCopy->setEnabled(false);
+            mUi->uActionPaste->setEnabled(false);
+            mUi->uActionDelete->setEnabled(false);
+            mUi->uActionSelectAll->setEnabled(false);
+
+            mUi->uActionStart->setEnabled(false);
+            mUi->uActionRun->setEnabled(true);
+            mUi->uActionReset->setEnabled(true);
+            mUi->uActionStep->setEnabled(true);
+            mUi->uActionPause->setEnabled(false);
+            mUi->uActionStop->setEnabled(true);
+
+            ForceUncheck(mUi->uEditButton);
+            ForceUncheck(mUi->uWiringButton);
+            ForceUncheck(mUi->uRunButton);
+            mUi->uPauseButton->setChecked(true);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    mScene.clearSelection();
+}
+
+void MainWindow::OnSimulationModeChanged(SimulationMode pNewMode)
+{
+    switch (pNewMode)
+    {
+        case SimulationMode::STOPPED:
+        {
+            mUi->uPauseButton->setChecked(true);
+            mUi->uStepButton->setEnabled(true);
+
+            mUi->uActionRun->setEnabled(true);
+            mUi->uActionPause->setEnabled(false);
+            mUi->uActionStep->setEnabled(true);
+            break;
+        }
+        case SimulationMode::RUNNING:
+        {
+            mUi->uRunButton->setChecked(true);
+            mUi->uStepButton->setEnabled(false);
+
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionPause->setEnabled(true);
+            mUi->uActionStep->setEnabled(false);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+}
+
+void MainWindow::ForceUncheck(IconToolButton *pButton)
+{
+    if (nullptr != pButton->group() && pButton->group()->exclusive())
+    {
+        pButton->group()->setExclusive(false);
+        pButton->setChecked(false);
+        pButton->group()->setExclusive(true);
+    }
+    else
+    {
+        pButton->setChecked(false);
+    }
+}
+
+void MainWindow::InitializeToolboxTree()
+{
+    mChevronIconVariant.insert("color", QColor(0, 45, 50));
+    mChevronIconVariant.insert("color-disabled", QColor(100, 100, 100));
+    mChevronIconVariant.insert("color-active", QColor(0, 45, 50));
+    mChevronIconVariant.insert("color-selected", QColor(0, 45, 50));
+
+    QObject::connect(mUi->uToolboxTree, &QTreeView::pressed, this, &MainWindow::OnToolboxTreeClicked);
+
+    // Tracks the currently selected item when it is changed by dragging
+    QObject::connect(mUi->uToolboxTree, &QTreeView::entered, this, [&](const QModelIndex &pIndex)
+    {
+        if ((QGuiApplication::mouseButtons() == Qt::LeftButton) && (mUi->uToolboxTree->currentIndex().row() >= 0))
+        {
+            if (!mToolboxTreeModel.itemFromIndex(pIndex)->isSelectable())
+            {
+                mUi->uToolboxTree->clearSelection();
+            }
+            OnToolboxTreeClicked(pIndex);
+        }
+    });
+
+    // Expand/collapse on single click
+    QObject::connect(mUi->uToolboxTree, &QTreeView::clicked, [this]()
+    {
+        if (mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->hasChildren())
+        {
+            if (mUi->uToolboxTree->isExpanded(mUi->uToolboxTree->currentIndex()))
+            {
+                mUi->uToolboxTree->collapse(mUi->uToolboxTree->currentIndex());
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevrondown, mChevronIconVariant));
+            }
+            else
+            {
+                mUi->uToolboxTree->expand(mUi->uToolboxTree->currentIndex());
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevronup, mChevronIconVariant));
+            }
+        }
+    });
+
+    // Create category and root level items
+    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Gates");
+    mCategoryGatesItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryGatesItem);
+
+    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Inputs");
+    mCategoryInputsItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryInputsItem);
+
+    auto outputItem = new QStandardItem(QIcon(":images/icons/output_icon.png"), "Output");
+    mToolboxTreeModel.appendRow(outputItem);
+
+    mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Adders");
+    mCategoryAddersItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryAddersItem);
+
+    mCategoryMemoryItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Memory");
+    mCategoryMemoryItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryMemoryItem);
+
+    mCategoryConvertersItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Converters");
+    mCategoryConvertersItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryConvertersItem);
+
+    auto textLabelItem = new QStandardItem(QIcon(":images/icons/label_icon.png"), "Text label");
+    mToolboxTreeModel.appendRow(textLabelItem);
+
+    // Create component items
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "AND gate⁺"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "OR gate⁺"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "XOR gate⁺"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "NOT gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Buffer gate"));
+
+    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/input_icon.png"), "Switch"));
+    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/button_icon.png"), "Button"));
+    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/clock_icon.png"), "Clock⁺"));
+
+    mCategoryAddersItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "Half adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(QIcon(":images/icons/full_adder_icon.png"), "Full adder"));
+
+    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "RS flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "D flip-flop"));
+
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer⁺"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer⁺"));
+
+    mUi->uToolboxTree->setModel(&mToolboxTreeModel);
+    mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
+    mUi->uToolboxTree->setExpanded(mCategoryInputsItem->index(), true);
+}
+
+void MainWindow::InitializeGuiIcons()
+{
+    // Initialize icon color variants
+    mMenuBarIconVariant.insert("color", QColor(0, 39, 43));
+    mMenuBarIconVariant.insert("color-disabled", QColor(100, 100, 100));
+    mMenuBarIconVariant.insert("color-active", QColor(0, 39, 43));
+    mMenuBarIconVariant.insert("color-selected", QColor(0, 39, 43));
+
+    mUncheckedButtonVariant.insert("color", QColor(0, 45, 50));
+    mUncheckedButtonVariant.insert("color-disabled", QColor(200, 200, 200));
+    mUncheckedButtonVariant.insert("color-active", QColor(0, 45, 50));
+    mUncheckedButtonVariant.insert("color-selected", QColor(0, 45, 50));
+
+    mCheckedButtonVariant.insert("color", QColor(255, 255, 255));
+    mCheckedButtonVariant.insert("color-disabled", QColor(200, 200, 200));
+    mCheckedButtonVariant.insert("color-active", QColor(255, 255, 255));
+    mCheckedButtonVariant.insert("color-selected", QColor(255, 255, 255));
+
+    mStatusBarIconVariant.insert("color", QColor(0, 204, 143));
+    mStatusBarIconVariant.insert("color-disabled", QColor(180, 180, 180));
+    mStatusBarIconVariant.insert("color-active", QColor(0, 204, 143));
+    mStatusBarIconVariant.insert("color-selected", QColor(0, 204, 143));
+
+    mPlusMinusIconVariant.insert("color", QColor(0, 45, 50));
+    mPlusMinusIconVariant.insert("color-disabled", QColor(180, 180, 180));
+    mPlusMinusIconVariant.insert("color-active", QColor(0, 45, 50));
+    mPlusMinusIconVariant.insert("color-selected", QColor(0, 45, 50));
+
+    // Icons for GUI buttons
+    mUi->uEditButton->SetCheckedIcon(mAwesome->icon(fa::mousepointer, mCheckedButtonVariant));
+    mUi->uEditButton->SetUncheckedIcon(mAwesome->icon(fa::mousepointer, mUncheckedButtonVariant));
+
+    mUi->uWiringButton->SetCheckedIcon(mAwesome->icon(fa::exchange, mCheckedButtonVariant));
+    mUi->uWiringButton->SetUncheckedIcon(mAwesome->icon(fa::exchange, mUncheckedButtonVariant));
+
+    mUi->uCopyButton->SetIcon(mAwesome->icon(fa::copy, mUncheckedButtonVariant));
+    mUi->uDeleteButton->SetIcon(mAwesome->icon(fa::trasho, mUncheckedButtonVariant));
+    mUi->uUndoButton->SetIcon(mAwesome->icon(fa::undo, mUncheckedButtonVariant));
+    mUi->uRedoButton->SetIcon(mAwesome->icon(fa::repeat, mUncheckedButtonVariant));
+
+    mUi->uStartButton->SetIcon(mAwesome->icon(fa::cog, mUncheckedButtonVariant));
+    mUi->uRunButton->SetUncheckedIcon(mAwesome->icon(fa::play, mUncheckedButtonVariant));
+    mUi->uRunButton->SetCheckedIcon(mAwesome->icon(fa::play, mCheckedButtonVariant));
+    mUi->uPauseButton->SetUncheckedIcon(mAwesome->icon(fa::pause, mUncheckedButtonVariant));
+    mUi->uPauseButton->SetCheckedIcon(mAwesome->icon(fa::pause, mCheckedButtonVariant));
+    mUi->uStepButton->SetIcon(mAwesome->icon(fa::stepforward, mUncheckedButtonVariant));
+    mUi->uResetButton->SetIcon(mAwesome->icon(fa::refresh, mUncheckedButtonVariant));
+    mUi->uStopButton->SetIcon(mAwesome->icon(fa::stop, mUncheckedButtonVariant));
+
+    // Icons for configuration elements
+    mUi->uLabelToggleIcon->setPixmap(mAwesome->icon(fa::tachometer, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelTogglePlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelToggleMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    mUi->uLabelPulseIcon->setPixmap(mAwesome->icon(fa::hourglasso, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelPulsePlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelPulseMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    // Icons for status bar elements
+    mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    // Icons for menu bar elements
+    mUi->uActionNew->setIcon(mAwesome->icon(fa::fileo, mMenuBarIconVariant));
+    mUi->uActionOpen->setIcon(mAwesome->icon(fa::folderopeno, mMenuBarIconVariant));
+    mUi->uActionSave->setIcon(mAwesome->icon(fa::floppyo, mMenuBarIconVariant));
+
+    mUi->uActionUndo->setIcon(mAwesome->icon(fa::undo, mMenuBarIconVariant));
+    mUi->uActionRedo->setIcon(mAwesome->icon(fa::repeat, mMenuBarIconVariant));
+    mUi->uActionCut->setIcon(mAwesome->icon(fa::scissors, mMenuBarIconVariant));
+    mUi->uActionCopy->setIcon(mAwesome->icon(fa::copy, mMenuBarIconVariant));
+    mUi->uActionPaste->setIcon(mAwesome->icon(fa::clipboard, mMenuBarIconVariant));
+    mUi->uActionDelete->setIcon(mAwesome->icon(fa::trasho, mMenuBarIconVariant));
+
+    mUi->uActionStart->setIcon(mAwesome->icon(fa::cog, mMenuBarIconVariant));
+    mUi->uActionRun->setIcon(mAwesome->icon(fa::play, mMenuBarIconVariant));
+    mUi->uActionStep->setIcon(mAwesome->icon(fa::stepforward, mMenuBarIconVariant));
+    mUi->uActionReset->setIcon(mAwesome->icon(fa::refresh, mMenuBarIconVariant));
+    mUi->uActionPause->setIcon(mAwesome->icon(fa::pause, mMenuBarIconVariant));
+    mUi->uActionStop->setIcon(mAwesome->icon(fa::stop, mMenuBarIconVariant));
+
+    mUi->uActionScreenshot->setIcon(mAwesome->icon(fa::camera, mMenuBarIconVariant));
+
+    mUi->uActionStartTutorial->setIcon(mAwesome->icon(fa::graduationcap, mMenuBarIconVariant));
+    mUi->uActionReportBugs->setIcon(mAwesome->icon(fa::bug, mMenuBarIconVariant));
+    mUi->uActionOpenWebsite->setIcon(mAwesome->icon(fa::externallink, mMenuBarIconVariant));
+    mUi->uActionAbout->setIcon(mAwesome->icon(fa::info, mMenuBarIconVariant));
 }
 
 void MainWindow::InitializeGlobalShortcuts()
@@ -114,80 +759,6 @@ void MainWindow::InitializeGlobalShortcuts()
         SetComponentDirectionIfInAddMode(Direction::UP);
     });
 
-    mCopyShortcut  = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_C), this);
-    mPasteShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_V), this);
-
-    mCopyShortcut->setAutoRepeat(false);
-    mPasteShortcut->setAutoRepeat(false);
-
-    QObject::connect(mCopyShortcut, &QShortcut::activated, this, [&]()
-    {
-#warning temporary implementation of Ctrl-C
-        mCoreLogic.CopySelectedComponents();
-    });
-    QObject::connect(mPasteShortcut, &QShortcut::activated, this, [&]()
-    {
-        qDebug() << "Not implemented";
-    });
-
-    mSaveShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_S), this);
-    mOpenShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_O), this);
-
-    mSaveShortcut->setAutoRepeat(false);
-    mOpenShortcut->setAutoRepeat(false);
-
-    QObject::connect(mSaveShortcut, &QShortcut::activated, this, [&]()
-    {
-        qDebug() << "Not implemented";
-    });
-    QObject::connect(mOpenShortcut, &QShortcut::activated, this, [&]()
-    {
-        qDebug() << "Not implemented";
-    });
-
-    mUndoShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Z), this);
-    mRedoShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Y), this);
-
-    mUndoShortcut->setAutoRepeat(true);
-    mRedoShortcut->setAutoRepeat(true);
-
-    QObject::connect(mUndoShortcut, &QShortcut::activated, this, [&]()
-    {
-        mCoreLogic.Undo();
-    });
-    QObject::connect(mRedoShortcut, &QShortcut::activated, this, [&]()
-    {
-        mCoreLogic.Redo();
-    });
-
-    mSimulationShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), this);
-
-    mSimulationShortcut->setAutoRepeat(false);
-
-    QObject::connect(mSimulationShortcut, &QShortcut::activated, this, [&]()
-    {
-        if (mCoreLogic.IsSimulationRunning())
-        {
-            mCoreLogic.EnterControlMode(ControlMode::EDIT);
-        }
-        else
-        {
-            mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
-        }
-    });
-
-    mDeleteShortcut = new QShortcut(QKeySequence(Qt::Key_Delete), this);
-
-    mDeleteShortcut->setAutoRepeat(false);
-
-    QObject::connect(mDeleteShortcut, &QShortcut::activated, this, [&]()
-    {
-        if (!mCoreLogic.IsSimulationRunning())
-        {
-            mCoreLogic.DeleteSelectedComponents();
-        }
-    });
-
     mEscapeShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
 
     mEscapeShortcut->setAutoRepeat(false);
@@ -196,6 +767,7 @@ void MainWindow::InitializeGlobalShortcuts()
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
         mScene.clearSelection();
+        mUi->uToolboxTree->clearSelection();
     });
 }
 
@@ -224,3 +796,176 @@ CoreLogic& MainWindow::GetCoreLogic()
 {
     return mCoreLogic;
 }
+
+void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
+{
+    if (pIndex.row() == -1)
+    {
+        throw std::logic_error("Model index invalid");
+    }
+    else if (pIndex.parent().row() == -1)
+    {
+        // Item is on root level
+        switch(pIndex.row())
+        {
+            case 2: // Output
+            {
+                mCoreLogic.EnterAddControlMode(ComponentType::OUTPUT);
+                break;
+            }
+            case 6: // Text label
+            {
+                mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
+                break;
+            }
+            default:
+            {
+                mCoreLogic.EnterControlMode(ControlMode::EDIT);
+                mScene.clearSelection();
+                break;
+            }
+        }
+    }
+    else if (pIndex.parent().parent().row() == -1)
+    {
+        // Item is on second level
+        switch (pIndex.parent().row())
+        {
+            case 0: // Gates
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // AND gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::AND_GATE);
+                        break;
+                    }
+                    case 1: // OR gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::OR_GATE);
+                        break;
+                    }
+                    case 2: // XOR gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::XOR_GATE);
+                        break;
+                    }
+                    case 3: // NOT gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::NOT_GATE);
+                        break;
+                    }
+                    case 4: // Buffer gate
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::BUFFER_GATE);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown gate";
+                        break;
+                    }
+                }
+                break;
+            }
+            case 1: // Inputs
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // Switch
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::INPUT);
+                        break;
+                    }
+                    case 1: // Button
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::BUTTON);
+                        break;
+                    }
+                    case 2: // Clock
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::CLOCK);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown input";
+                        break;
+                    }
+                }
+                break;
+            }
+            case 3: // Adders
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // Half adder
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::HALF_ADDER);
+                        break;
+                    }
+                    case 1: // Full adder
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::FULL_ADDER);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown adder";
+                        break;
+                    }
+                }
+                break;
+            }
+            case 4: // Memory
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // RS flip flop
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::RS_FLIPFLOP);
+                        break;
+                    }
+                    case 1: // D flip flop
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::D_FLIPFLOP);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown memory";
+                        break;
+                    }
+                }
+                break;
+            }
+            case 5: // Converters
+            {
+                switch(pIndex.row())
+                {
+                    case 0: // Multiplexer
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::MULTIPLEXER);
+                        break;
+                    }
+                    case 1: // Demultiplexer
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::DEMULTIPLEXER);
+                        break;
+                    }
+                    default:
+                    {
+                        qDebug() << "Unknown converter";
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    else
+    {
+        qDebug() << "Unknown higher level item";
+    }
+}
+
