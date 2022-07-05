@@ -55,6 +55,7 @@ void CoreLogic::SelectAll()
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
 {
     mView.Scene()->clearFocus();
+    emit HideConfigurationGuiSignal();
 
     if (pNewMode == mControlMode)
     {
@@ -146,6 +147,39 @@ void CoreLogic::LeaveSimulation()
     mPropagationTimer.stop();
     SetSimulationMode(SimulationMode::STOPPED);
     emit SimulationStopSignal();
+}
+
+void CoreLogic::OnToggleValueChanged(uint32_t pValue)
+{
+    if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
+    {
+        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        {
+            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetToggleTicks(pValue);
+        }
+    }
+}
+
+void CoreLogic::OnPulseValueChanged(uint32_t pValue)
+{
+    if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
+    {
+        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        {
+            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetPulseTicks(pValue);
+        }
+    }
+}
+
+void CoreLogic::OnClockModeChanged(ClockMode pMode)
+{
+    if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
+    {
+        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        {
+            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetClockMode(pMode);
+        }
+    }
 }
 
 void CoreLogic::EnterAddControlMode(ComponentType pComponentType)
@@ -1028,6 +1062,7 @@ bool CoreLogic::IsProcessing() const
 void CoreLogic::ClearSelection()
 {
     mView.Scene()->clearSelection();
+    emit HideConfigurationGuiSignal();
 }
 
 #warning temporary performance counter
@@ -1207,9 +1242,16 @@ void CoreLogic::AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComp
     }
 }
 
+void CoreLogic::OnDisplayClockConfigurationRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
+{
+    emit DisplayClockConfigurationSignal(pMode, pToggle, pPulse);
+}
+
 void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent)
 {
     auto snappedPos = SnapToGrid(pMappedPos);
+
+    emit HideConfigurationGuiSignal();
 
     // Add ConPoint on X crossing
     if (mControlMode == ControlMode::EDIT

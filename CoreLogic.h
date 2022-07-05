@@ -97,10 +97,16 @@ public:
 
     // Functions for simulation control
 
-#warning missing documentation
+    /// \brief Starts the simulation if in simulation mode and the simulation is not yet started
     void RunSimulation(void);
+
+    /// \brief Pauses the simulation if it is currently running
     void PauseSimulation(void);
+
+    /// \brief Resets the simulation if in simulation mode
     void ResetSimulation(void);
+
+    /// \brief Advances the simulation by one tick if in simulation mode
     void StepSimulation(void);
 
     // Functions for undo and redo
@@ -118,6 +124,12 @@ public:
 
     /// \brief Redos the last undone undo action if existant
     void Redo(void);
+
+    // Functions for item configuration
+#warning missing documentation
+    void OnToggleValueChanged(uint32_t pValue);
+    void OnPulseValueChanged(uint32_t pValue);
+    void OnClockModeChanged(ClockMode pMode);
 
     // ////////////////////////////
 
@@ -150,6 +162,11 @@ signals:
     /// \brief Emitted when any action is appended to the undo queue
     void AppendToUndoQueueSignal(void);
 
+#warning missing documentation
+    void DisplayClockConfigurationSignal(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
+
+    void HideConfigurationGuiSignal(void);
+
 public slots:
     /// \brief Checks for collisions, merges moved wires and brings the ConPoints in a valid state
     /// \param pOffset: The relative offset by which the selected components have been moved
@@ -161,6 +178,8 @@ public slots:
     /// \param pMappedPos: The position in the scene where the mouse press happened
     /// \param pEvent: The mouse press event to pass back to MousePressedEventDefaultSignal
     void OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent);
+
+    void OnDisplayClockConfigurationRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
 
     // Slots for configuration events
 
@@ -237,6 +256,9 @@ protected:
     bool ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
                                            std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents);
 
+    /// \brief Adds ConPoints on T-crossings that include the given wire
+    /// \param pWire: The wire to add ConPoints to
+    /// \param addedComponents: Reference to the vector to add the ConPoints to
     void AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComponent*>& addedComponents);
 
     // Functions to check for wire crossings and ConPoint positions
@@ -334,6 +356,7 @@ protected:
     /// \brief Called when the longer process has been finished
     void EndProcessing(void);
 
+    /// \brief Unselects all items in the scene
     void ClearSelection(void);
 
 protected:

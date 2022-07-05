@@ -26,6 +26,8 @@ LogicClock::LogicClock(const CoreLogic* pCoreLogic, Direction pDirection):
     mSquareWave.lineTo(32, mHeight / 2 - amplitude);
 
     SetLogicConnectors();
+
+    QObject::connect(this, &LogicClock::DisplayClockConfigurationSignal, pCoreLogic, &CoreLogic::OnDisplayClockConfigurationRequest);
 }
 
 LogicClock::LogicClock(const LogicClock& pObj, const CoreLogic* pCoreLogic):
@@ -212,6 +214,18 @@ void LogicClock::SetInversionPen(QPainter *pPainter, LogicState pState, bool pSe
         pPainter->setPen(QPen(pSelected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
                               components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         pPainter->setBrush(pSelected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR);
+    }
+}
+
+#warning use reimplemented itemChange() instead with QGraphicsItem::ItemSelectedChange
+void LogicClock::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
+{
+    IBaseComponent::mousePressEvent(pEvent);
+    if (this->isSelected() && this->scene()->selectedItems().size() == 1)
+    {
+        emit DisplayClockConfigurationSignal(std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetClockMode(),
+                                             std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetToggleTicks(),
+                                             std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetPulseTicks());
     }
 }
 

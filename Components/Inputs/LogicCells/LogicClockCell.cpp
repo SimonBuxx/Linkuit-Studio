@@ -3,9 +3,12 @@
 LogicClockCell::LogicClockCell():
     LogicBaseCell(0, 1),
     mState(LogicState::LOW),
+    mToggleTicks(components::inputs::DEFAULT_CLOCK_TOGGLE_TICKS),
+    mPulseTicks(components::inputs::DEFAULT_CLOCK_PULSE_TICKS),
     mTickCountdown(0),
     mPulseCountdown(0),
-    mStateChanged(true)
+    mStateChanged(true),
+    mMode(components::inputs::DEFAULT_CLOCK_MODE)
 {}
 
 void LogicClockCell::LogicFunction()
@@ -14,7 +17,7 @@ void LogicClockCell::LogicFunction()
     mPulseCountdown--;
     if (mTickCountdown == 0)
     {
-        if (components::inputs::CLOCK_ENABLE_PULSE)
+        if (mMode == ClockMode::PULSE)
         {
             if (mState != LogicState::HIGH)
             {
@@ -23,7 +26,7 @@ void LogicClockCell::LogicFunction()
                 emit StateChangedSignal();
             }
 
-            mPulseCountdown = components::inputs::CLOCK_PULSE_TICKS;
+            mPulseCountdown = mPulseTicks;
         }
         else
         {
@@ -32,7 +35,7 @@ void LogicClockCell::LogicFunction()
             emit StateChangedSignal();
         }
 
-        mTickCountdown = components::inputs::CLOCK_TOGGLE_TICKS;
+        mTickCountdown = mToggleTicks;
     }
     else if (mPulseCountdown == 0)
     {
@@ -42,7 +45,7 @@ void LogicClockCell::LogicFunction()
             mStateChanged = true;
             emit StateChangedSignal();
         }
-        mPulseCountdown = components::inputs::CLOCK_PULSE_TICKS;
+        mPulseCountdown = mPulseTicks;
     }
 }
 
@@ -77,8 +80,8 @@ void LogicClockCell::OnWakeUp()
     mState = LogicState::LOW;
     mNextUpdateTime = UpdateTime::NOW;
 
-    mTickCountdown = components::inputs::CLOCK_TOGGLE_TICKS;
-    mPulseCountdown = components::inputs::CLOCK_PULSE_TICKS;
+    mTickCountdown = mToggleTicks;
+    mPulseCountdown = mPulseTicks;
 
     mStateChanged = true; // Successors should be notified about wake up
     mIsActive = true;
@@ -92,3 +95,34 @@ void LogicClockCell::OnShutdown()
     mIsActive = false;
     emit StateChangedSignal();
 }
+
+void LogicClockCell::SetToggleTicks(uint32_t pTicks)
+{
+    mToggleTicks = pTicks;
+}
+
+void LogicClockCell::SetPulseTicks(uint32_t pTicks)
+{
+    mPulseTicks = pTicks;
+}
+
+void LogicClockCell::SetClockMode(ClockMode pMode)
+{
+    mMode = pMode;
+}
+
+uint32_t LogicClockCell::GetToggleTicks()
+{
+    return mToggleTicks;
+}
+
+uint32_t LogicClockCell::GetPulseTicks()
+{
+   return  mPulseTicks;
+}
+
+ClockMode LogicClockCell::GetClockMode()
+{
+    return mMode;
+}
+

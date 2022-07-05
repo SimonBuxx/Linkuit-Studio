@@ -55,8 +55,19 @@ protected slots:
     /// \param pPercentage: The new zoom value to display
     void UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue);
 
-protected:
 #warning missing documentation
+    void OnToggleButtonToggled(bool pChecked);
+
+    void OnToggleSliderValueChanged(int32_t pValue);
+
+    void OnPulseSliderValueChanged(int32_t pValue);
+
+    void DisplayClockConfiguration(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
+
+    void HideConfigurationGui(void);
+
+protected:
+    /// \brief Connects signals and slots of the GUI widgets and core logic
     void ConnectGuiSignalsAndSlots(void);
 
     /// \brief Creates all items for the toolbox tree
@@ -80,17 +91,32 @@ protected:
     /// \param pButton: Pointer to the button to uncheck
     void ForceUncheck(IconToolButton *pButton);
 
-#warning missing documentation
+    /// \brief Enters the simulation mode if not currently in simulation mode
     void EnterSimulation(void);
+
+    /// \brief Runs the simulation
     void RunSimulation(void);
+
+    /// \brief Advances the simulation by one tick
     void StepSimulation(void);
+
+    /// \brief Resets the simulation
     void ResetSimulation(void);
+
+    /// \brief Pauses the simulation
     void PauseSimulation(void);
+
+    /// \brief Leaves the simulation if currently in simulation mode
     void StopSimulation(void);
 
+    /// \brief Updates the enabled state of the undo/redo button and menu entry
+    /// \param pEnable: If false, the widgets are disabled
     void UpdateUndoRedoEnabled(bool pEnable);
 
+    /// \brief Undos the last action
     void Undo(void);
+
+    /// \brief Redos the last undone action
     void Redo(void);
 
 protected:

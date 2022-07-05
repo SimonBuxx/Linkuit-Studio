@@ -40,6 +40,9 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 {
     QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabelAndSlider);
 
+    QObject::connect(&mCoreLogic, &CoreLogic::DisplayClockConfigurationSignal, this, &MainWindow::DisplayClockConfiguration);
+    QObject::connect(&mCoreLogic, &CoreLogic::HideConfigurationGuiSignal, this, &MainWindow::HideConfigurationGui);
+
     QObject::connect(&mCoreLogic, &CoreLogic::AppendToUndoQueueSignal, this, [this]()
     {
         UpdateUndoRedoEnabled(true);
@@ -56,6 +59,10 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         mCoreLogic.EnterControlMode(ControlMode::WIRE);
     });
+
+    QObject::connect(mUi->uButtonToggle, &QPushButton::toggled, this, &MainWindow::OnToggleButtonToggled);
+    QObject::connect(mUi->uToggleSlider, &QSlider::valueChanged, this, &MainWindow::OnToggleSliderValueChanged);
+    QObject::connect(mUi->uPulseSlider, &QSlider::valueChanged, this, &MainWindow::OnPulseSliderValueChanged);
 
     QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, mUi->uActionDelete, &QAction::trigger);
     QObject::connect(mUi->uCopyButton, &QAbstractButton::clicked, mUi->uActionCopy, &QAction::trigger);
@@ -154,11 +161,67 @@ void MainWindow::UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue)
     mUi->uZoomSlider->setValue(pValue);
 }
 
+void MainWindow::OnToggleButtonToggled(bool pChecked)
+{
+    if (pChecked)
+    {
+        // Set to toggle
+        mUi->uPulseFrame->setEnabled(false);
+        mCoreLogic.OnClockModeChanged(ClockMode::TOGGLE);
+    }
+    else
+    {
+        // Set to pulse
+        mUi->uPulseFrame->setEnabled(true);
+        mCoreLogic.OnClockModeChanged(ClockMode::PULSE);
+    }
+}
+
+void MainWindow::OnToggleSliderValueChanged(int32_t pValue)
+{
+    mUi->uLabelToggle->setText(QString(pValue > 1 ? "%0 Ticks / Toggle" : "%0 Tick / Toggle").arg(pValue));
+
+    mUi->uPulseSlider->setMaximum(pValue);
+
+    mCoreLogic.OnToggleValueChanged(pValue);
+    mCoreLogic.OnPulseValueChanged(mUi->uPulseSlider->value());
+}
+
+void MainWindow::OnPulseSliderValueChanged(int32_t pValue)
+{
+    mUi->uLabelPulse->setText(QString(pValue > 1 ? "%0 Ticks / Pulse" : "%0 Tick / Pulse").arg(pValue));
+
+    mCoreLogic.OnPulseValueChanged(pValue);
+}
+
+void MainWindow::DisplayClockConfiguration(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
+{
+    mUi->uClockConfiguration->setVisible(true);
+
+    if (pMode == ClockMode::TOGGLE)
+    {
+        mUi->uButtonToggle->setChecked(true);
+    }
+    else
+    {
+        mUi->uButtonPulse->setChecked(true);
+    }
+
+    mUi->uToggleSlider->setValue(pToggle);
+    mUi->uPulseSlider->setValue(pPulse);
+}
+
+void MainWindow::HideConfigurationGui()
+{
+    mUi->uClockConfiguration->setVisible(false);
+}
+
 void MainWindow::EnterSimulation()
 {
     if (!mCoreLogic.IsSimulationRunning())
     {
         mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
+        mUi->uLeftContainer->setVisible(false);
     }
 }
 
@@ -187,6 +250,7 @@ void MainWindow::StopSimulation()
     if (mCoreLogic.IsSimulationRunning())
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
+        mUi->uLeftContainer->setVisible(true);
     }
 }
 
@@ -492,8 +556,6 @@ void MainWindow::InitializeToolboxTree()
     auto textLabelItem = new QStandardItem(QIcon(":images/icons/label_icon.png"), "Text label");
     mToolboxTreeModel.appendRow(textLabelItem);
 
-#warning idea: extend fields for configurations on select (probably impossible using QTreeView)
-
     // Create component items
     mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "AND gate⁺"));
     mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "OR gate⁺"));
@@ -538,12 +600,12 @@ void MainWindow::InitializeGuiIcons()
     mCheckedButtonVariant.insert("color-selected", QColor(255, 255, 255));
 
     mStatusBarIconVariant.insert("color", QColor(0, 204, 143));
-    mStatusBarIconVariant.insert("color-disabled", QColor(100, 100, 100));
+    mStatusBarIconVariant.insert("color-disabled", QColor(180, 180, 180));
     mStatusBarIconVariant.insert("color-active", QColor(0, 204, 143));
     mStatusBarIconVariant.insert("color-selected", QColor(0, 204, 143));
 
     mPlusMinusIconVariant.insert("color", QColor(0, 45, 50));
-    mPlusMinusIconVariant.insert("color-disabled", QColor(100, 100, 100));
+    mPlusMinusIconVariant.insert("color-disabled", QColor(180, 180, 180));
     mPlusMinusIconVariant.insert("color-active", QColor(0, 45, 50));
     mPlusMinusIconVariant.insert("color-selected", QColor(0, 45, 50));
 
@@ -567,6 +629,15 @@ void MainWindow::InitializeGuiIcons()
     mUi->uStepButton->SetIcon(mAwesome->icon(fa::stepforward, mUncheckedButtonVariant));
     mUi->uResetButton->SetIcon(mAwesome->icon(fa::refresh, mUncheckedButtonVariant));
     mUi->uStopButton->SetIcon(mAwesome->icon(fa::stop, mUncheckedButtonVariant));
+
+    // Icons for configuration elements
+    mUi->uLabelToggleIcon->setPixmap(mAwesome->icon(fa::tachometer, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelTogglePlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelToggleMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    mUi->uLabelPulseIcon->setPixmap(mAwesome->icon(fa::hourglasso, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelPulsePlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelPulseMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     // Icons for status bar elements
     mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
@@ -728,7 +799,6 @@ CoreLogic& MainWindow::GetCoreLogic()
 
 void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
 {
-#warning use isTopLevel instead
     if (pIndex.row() == -1)
     {
         throw std::logic_error("Model index invalid");

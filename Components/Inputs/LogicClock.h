@@ -34,6 +34,12 @@ public:
     /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
     void ResetZValue(void) override;
 
+#warning missing documentation
+    void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
+
+signals:
+    void DisplayClockConfigurationSignal(ClockMode pMode, int32_t pToggle, int32_t pPulse);
+
 protected:
     /// \brief Paints the clock component
     /// \param pPainter: The painter to use

@@ -83,6 +83,12 @@ enum class SimulationMode
     RUNNING
 };
 
+enum class ClockMode
+{
+    TOGGLE = 0,
+    PULSE
+};
+
 namespace undo
 {
 enum class Type

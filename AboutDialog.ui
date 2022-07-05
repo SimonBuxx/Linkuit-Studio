@@ -73,7 +73,32 @@ QLabel {
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QPushButton
+{
+    padding: 5px 10px;
+    border-radius: 1px;
+    background: rgb(230, 230, 230);
+    font-family: 'Source Sans Pro';
+    font-size: 14px;
+    color: rgb(0, 45, 50);
+}
+
+QPushButton:hover
+{
+    background: rgb(220, 220, 220);
+}
+
+QPushButton:pressed
+{
+    background: rgb(200, 200, 200);
+}
+
+QPushButton:checked
+{
+    background: rgb(0, 204, 143);
+}
+
+</string>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
