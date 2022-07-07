@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
 
-    mUi->uViewLayout->addWidget(&mView, 0, 0, 5, 4);
+    mUi->uViewLayout->addWidget(&mView, 0, 0, 4, 6);
 
     mView.stackUnder(mUi->uLeftContainer);
 
@@ -27,6 +27,11 @@ MainWindow::MainWindow(QWidget *pParent) :
     InitializeToolboxTree();
     InitializeGuiIcons();
     InitializeGlobalShortcuts();
+
+    mUi->uItemRightButton->setChecked(true);
+
+    mUi->uItemConfigContainer->setVisible(false);
+    mUi->uClockConfiguration->setVisible(false);
 
     mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
 }
@@ -42,6 +47,27 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(&mCoreLogic, &CoreLogic::DisplayClockConfigurationSignal, this, &MainWindow::DisplayClockConfiguration);
     QObject::connect(&mCoreLogic, &CoreLogic::HideConfigurationGuiSignal, this, &MainWindow::HideConfigurationGui);
+    QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
+    {
+        if (pNewMode != ControlMode::ADD)
+        {
+            HideItemConfigurationGui();
+        }
+    });
+
+    QObject::connect(&mCoreLogic, &CoreLogic::ComponentTypeChangedSignal, this, [&](ComponentType pNewType)
+    {
+        mUi->uInputCountFrame->setEnabled(true);
+
+        if (pNewType > ComponentType::BUFFER_GATE)
+        {
+            HideItemConfigurationGui();
+        }
+        else if (pNewType > ComponentType::XOR_GATE)
+        {
+            mUi->uInputCountFrame->setEnabled(false);
+        }
+    });
 
     QObject::connect(&mCoreLogic, &CoreLogic::AppendToUndoQueueSignal, this, [this]()
     {
@@ -59,6 +85,17 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         mCoreLogic.EnterControlMode(ControlMode::WIRE);
     });
+
+    // Connect widgets from item configuration GUI
+
+    QObject::connect(mUi->uItemRightButton, &QPushButton::toggled, this, &MainWindow::OnItemRightButtonToggled);
+    QObject::connect(mUi->uItemDownButton, &QPushButton::toggled, this, &MainWindow::OnItemDownButtonToggled);
+    QObject::connect(mUi->uItemLeftButton, &QPushButton::toggled, this, &MainWindow::OnItemLeftButtonToggled);
+    QObject::connect(mUi->uItemUpButton, &QPushButton::toggled, this, &MainWindow::OnItemUpButtonToggled);
+
+    QObject::connect(mUi->uItemInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnItemInputCountSliderValueChanged);
+
+    // Connect widgets from clock configuration GUI
 
     QObject::connect(mUi->uButtonToggle, &QPushButton::toggled, this, &MainWindow::OnToggleButtonToggled);
     QObject::connect(mUi->uToggleSlider, &QSlider::valueChanged, this, &MainWindow::OnToggleSliderValueChanged);
@@ -215,6 +252,46 @@ void MainWindow::HideConfigurationGui()
 {
     mUi->uClockConfiguration->setVisible(false);
 }
+
+void MainWindow::ShowItemConfigurationGui(void)
+{
+    mUi->uItemConfigContainer->setVisible(true);
+}
+
+void MainWindow::HideItemConfigurationGui(void)
+{
+    mUi->uItemConfigContainer->setVisible(false);
+}
+
+void MainWindow::OnItemRightButtonToggled(bool pChecked)
+{
+    mUi->uItemRightButton->setIcon(mAwesome->icon(fa::arrowright, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
+    SetComponentDirectionIfInAddMode(Direction::RIGHT);
+}
+
+void MainWindow::OnItemDownButtonToggled(bool pChecked)
+{
+    mUi->uItemDownButton->setIcon(mAwesome->icon(fa::arrowdown, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
+    SetComponentDirectionIfInAddMode(Direction::DOWN);
+}
+
+void MainWindow::OnItemLeftButtonToggled(bool pChecked)
+{
+    mUi->uItemLeftButton->setIcon(mAwesome->icon(fa::arrowleft, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
+    SetComponentDirectionIfInAddMode(Direction::LEFT);
+}
+
+void MainWindow::OnItemUpButtonToggled(bool pChecked)
+{
+    mUi->uItemUpButton->setIcon(mAwesome->icon(fa::arrowup, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
+    SetComponentDirectionIfInAddMode(Direction::UP);
+}
+
+void MainWindow::OnItemInputCountSliderValueChanged(int32_t pValue)
+{
+    SetComponentInputCountIfInAddMode(pValue);
+}
+
 
 void MainWindow::EnterSimulation()
 {
@@ -609,6 +686,16 @@ void MainWindow::InitializeGuiIcons()
     mPlusMinusIconVariant.insert("color-active", QColor(0, 45, 50));
     mPlusMinusIconVariant.insert("color-selected", QColor(0, 45, 50));
 
+    mConfigButtonIconVariant.insert("color", QColor(180, 180, 180));
+    mConfigButtonIconVariant.insert("color-disabled", QColor(180, 180, 180));
+    mConfigButtonIconVariant.insert("color-active", QColor(180, 180, 180));
+    mConfigButtonIconVariant.insert("color-selected", QColor(180, 180, 180));
+
+    mWhiteIconVariant.insert("color", QColor(255, 255, 255));
+    mWhiteIconVariant.insert("color-disabled", QColor(255, 255, 255));
+    mWhiteIconVariant.insert("color-active", QColor(255, 255, 255));
+    mWhiteIconVariant.insert("color-selected", QColor(255, 255, 255));
+
     // Icons for GUI buttons
     mUi->uEditButton->SetCheckedIcon(mAwesome->icon(fa::mousepointer, mCheckedButtonVariant));
     mUi->uEditButton->SetUncheckedIcon(mAwesome->icon(fa::mousepointer, mUncheckedButtonVariant));
@@ -638,6 +725,15 @@ void MainWindow::InitializeGuiIcons()
     mUi->uLabelPulseIcon->setPixmap(mAwesome->icon(fa::hourglasso, mStatusBarIconVariant).pixmap(20, 20));
     mUi->uLabelPulsePlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
     mUi->uLabelPulseMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    mUi->uLabelItemInputCountIcon->setPixmap(mAwesome->icon(fa::signin, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelItemInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelItemInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    mUi->uItemRightButton->setIcon(mAwesome->icon(fa::arrowright, mConfigButtonIconVariant));
+    mUi->uItemDownButton->setIcon(mAwesome->icon(fa::arrowdown, mConfigButtonIconVariant));
+    mUi->uItemLeftButton->setIcon(mAwesome->icon(fa::arrowleft, mConfigButtonIconVariant));
+    mUi->uItemUpButton->setIcon(mAwesome->icon(fa::arrowup, mConfigButtonIconVariant));
 
     // Icons for status bar elements
     mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
@@ -731,34 +827,6 @@ void MainWindow::InitializeGlobalShortcuts()
        SetComponentInputCountIfInAddMode(9);
     });
 
-    // Shortcuts to change component direction
-    mComponentDirectionRightShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Right), this);
-    mComponentDirectionDownShortcut  = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), this);
-    mComponentDirectionLeftShortcut  = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Left), this);
-    mComponentDirectionUpShortcut    = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), this);
-
-    mComponentDirectionRightShortcut->setAutoRepeat(false);
-    mComponentDirectionDownShortcut->setAutoRepeat(false);
-    mComponentDirectionLeftShortcut->setAutoRepeat(false);
-    mComponentDirectionUpShortcut->setAutoRepeat(false);
-
-    QObject::connect(mComponentDirectionRightShortcut, &QShortcut::activated, this, [&]()
-    {
-        SetComponentDirectionIfInAddMode(Direction::RIGHT);
-    });
-    QObject::connect(mComponentDirectionDownShortcut, &QShortcut::activated, this, [&]()
-    {
-        SetComponentDirectionIfInAddMode(Direction::DOWN);
-    });
-    QObject::connect(mComponentDirectionLeftShortcut, &QShortcut::activated, this, [&]()
-    {
-        SetComponentDirectionIfInAddMode(Direction::LEFT);
-    });
-    QObject::connect(mComponentDirectionUpShortcut, &QShortcut::activated, this, [&]()
-    {
-        SetComponentDirectionIfInAddMode(Direction::UP);
-    });
-
     mEscapeShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
 
     mEscapeShortcut->setAutoRepeat(false);
@@ -773,9 +841,13 @@ void MainWindow::InitializeGlobalShortcuts()
 
 void MainWindow::SetComponentInputCountIfInAddMode(uint8_t pCount)
 {
+    Q_ASSERT(pCount >= components::gates::MIN_INPUT_COUNT && pCount <= components::gates::MAX_INPUT_COUNT);
+
     if (mCoreLogic.GetControlMode() == ControlMode::ADD)
     {
         mCoreLogic.SetComponentInputCount(pCount);
+        mUi->uLabelItemInputCount->setText(QString(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
+        mUi->uItemInputCountSlider->setValue(pCount);
     }
 }
 
@@ -866,6 +938,9 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                         break;
                     }
                 }
+
+                ShowItemConfigurationGui();
+
                 break;
             }
             case 1: // Inputs

@@ -3,6 +3,15 @@ QGraphicsView
     selection-background-color: rgb(0, 39, 43);
 }
 
+QToolTip
+{
+    background: rgb(242, 242, 242);
+    color: rgb(0, 45, 50);
+    border: none;
+    font-family: 'Source Sans Pro';
+    font-size: 14px;
+}
+
 QScrollBar:vertical
 {
     width: 6px;

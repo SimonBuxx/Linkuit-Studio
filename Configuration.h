@@ -79,6 +79,8 @@ static constexpr const char* NOT_TEXT = "1";
 static constexpr const char* BUFFER_TEXT = "1";
 
 static constexpr uint8_t DEFAULT_INPUT_COUNT = 2;
+static constexpr uint8_t MIN_INPUT_COUNT = 1;
+static constexpr uint8_t MAX_INPUT_COUNT = 9;
 static constexpr uint8_t GRID_WIDTH = 3;
 
 static const QFont FONT("Calibri Light", 25);

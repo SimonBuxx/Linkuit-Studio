@@ -66,6 +66,16 @@ protected slots:
 
     void HideConfigurationGui(void);
 
+    void OnItemRightButtonToggled(bool pChecked);
+    void OnItemDownButtonToggled(bool pChecked);
+    void OnItemLeftButtonToggled(bool pChecked);
+    void OnItemUpButtonToggled(bool pChecked);
+
+    void OnItemInputCountSliderValueChanged(int32_t pValue);
+
+    void ShowItemConfigurationGui(void);
+    void HideItemConfigurationGui(void);
+
 protected:
     /// \brief Connects signals and slots of the GUI widgets and core logic
     void ConnectGuiSignalsAndSlots(void);
@@ -147,11 +157,6 @@ protected:
     QShortcut* mEightGateInputsShortcut;
     QShortcut* mNineGateInputsShortcut;
 
-    QShortcut* mComponentDirectionRightShortcut;
-    QShortcut* mComponentDirectionDownShortcut;
-    QShortcut* mComponentDirectionLeftShortcut;
-    QShortcut* mComponentDirectionUpShortcut;
-
     QShortcut* mEscapeShortcut;
 
     AboutDialog mAboutDialog;
@@ -162,6 +167,8 @@ protected:
     QVariantMap mUncheckedButtonVariant;
     QVariantMap mStatusBarIconVariant;
     QVariantMap mPlusMinusIconVariant;
+    QVariantMap mConfigButtonIconVariant;
+    QVariantMap mWhiteIconVariant;
 };
 
 #endif // MAINWINDOW_H
