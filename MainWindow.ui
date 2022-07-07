@@ -1332,7 +1332,7 @@ QFrame {
                <number>5</number>
               </property>
               <property name="bottomMargin">
-               <number>5</number>
+               <number>0</number>
               </property>
               <item>
                <widget class="QLabel" name="uLabelToggleIcon">
@@ -1488,7 +1488,7 @@ QLabel:disabled {
          <item row="2" column="0" colspan="2">
           <widget class="QFrame" name="uPulseFrame">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="styleSheet">
             <string notr="true"/>
@@ -1524,7 +1524,7 @@ QLabel:disabled {
                <number>0</number>
               </property>
               <property name="bottomMargin">
-               <number>5</number>
+               <number>0</number>
               </property>
               <item>
                <widget class="QLabel" name="uLabelPulseIcon">
@@ -1671,13 +1671,13 @@ QLabel:disabled {
         <property name="minimumSize">
          <size>
           <width>200</width>
-          <height>100</height>
+          <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>200</width>
-          <height>100</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -1881,6 +1881,12 @@ QLabel:disabled {
          </item>
          <item row="1" column="0" colspan="4">
           <layout class="QHBoxLayout" name="uInputCountLayout">
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QLabel" name="uLabelItemInputCountIcon">
              <property name="minimumSize">
@@ -2351,8 +2357,8 @@ QLabel:disabled {
  <connections/>
  <buttongroups>
   <buttongroup name="uItemDirectionButtonGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>
