@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mUi->uItemRightButton->setChecked(true);
 
-    mUi->uItemConfigContainer->setVisible(false);
+    HideItemConfigurationGui();
     mUi->uClockConfiguration->setVisible(false);
 
     mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
@@ -53,19 +53,23 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         {
             HideItemConfigurationGui();
         }
+        else
+        {
+            //ShowItemConfigurationGui(mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE);
+            ShowItemConfigurationGui();
+        }
     });
 
     QObject::connect(&mCoreLogic, &CoreLogic::ComponentTypeChangedSignal, this, [&](ComponentType pNewType)
     {
-        mUi->uInputCountFrame->setEnabled(true);
-
-        if (pNewType > ComponentType::BUFFER_GATE)
+        if (pNewType > ComponentType::XOR_GATE)
         {
             HideItemConfigurationGui();
         }
-        else if (pNewType > ComponentType::XOR_GATE)
+        else
         {
-            mUi->uInputCountFrame->setEnabled(false);
+            //ShowItemConfigurationGui(mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE);
+            ShowItemConfigurationGui();
         }
     });
 
@@ -203,13 +207,13 @@ void MainWindow::OnToggleButtonToggled(bool pChecked)
     if (pChecked)
     {
         // Set to toggle
-        mUi->uPulseFrame->setEnabled(false);
+        mUi->uPulseFrame->setVisible(false);
         mCoreLogic.OnClockModeChanged(ClockMode::TOGGLE);
     }
     else
     {
         // Set to pulse
-        mUi->uPulseFrame->setEnabled(true);
+        mUi->uPulseFrame->setVisible(true);
         mCoreLogic.OnClockModeChanged(ClockMode::PULSE);
     }
 }
@@ -233,7 +237,7 @@ void MainWindow::OnPulseSliderValueChanged(int32_t pValue)
 
 void MainWindow::DisplayClockConfiguration(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
 {
-    mUi->uClockConfiguration->setVisible(true);
+    mUi->uClockConfiguration->show();
 
     if (pMode == ClockMode::TOGGLE)
     {
@@ -250,17 +254,21 @@ void MainWindow::DisplayClockConfiguration(ClockMode pMode, uint32_t pToggle, ui
 
 void MainWindow::HideConfigurationGui()
 {
-    mUi->uClockConfiguration->setVisible(false);
+    mUi->uClockConfiguration->hide();
 }
 
-void MainWindow::ShowItemConfigurationGui(void)
+void MainWindow::ShowItemConfigurationGui()
 {
-    mUi->uItemConfigContainer->setVisible(true);
+    mUi->uItemConfigContainer->show();
+
+    auto mousePos = QWidget::mapFromGlobal(QCursor::pos());
+
+    mUi->uItemConfigContainer->move(mUi->uItemConfigContainer->x(), mousePos.y() - mUi->menuBar->height() - mUi->uItemConfigContainer->height() / 2);
 }
 
 void MainWindow::HideItemConfigurationGui(void)
 {
-    mUi->uItemConfigContainer->setVisible(false);
+    mUi->uItemConfigContainer->hide();
 }
 
 void MainWindow::OnItemRightButtonToggled(bool pChecked)
@@ -289,7 +297,7 @@ void MainWindow::OnItemUpButtonToggled(bool pChecked)
 
 void MainWindow::OnItemInputCountSliderValueChanged(int32_t pValue)
 {
-    SetComponentInputCountIfInAddMode(pValue);
+    SetGateInputCountIfAllowed(pValue);
 }
 
 
@@ -634,15 +642,15 @@ void MainWindow::InitializeToolboxTree()
     mToolboxTreeModel.appendRow(textLabelItem);
 
     // Create component items
-    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "AND gate⁺"));
-    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "OR gate⁺"));
-    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "XOR gate⁺"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "AND gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "OR gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "XOR gate"));
     mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "NOT gate"));
     mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Buffer gate"));
 
     mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/input_icon.png"), "Switch"));
     mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/button_icon.png"), "Button"));
-    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/clock_icon.png"), "Clock⁺"));
+    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/clock_icon.png"), "Clock"));
 
     mCategoryAddersItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "Half adder"));
     mCategoryAddersItem->appendRow(new QStandardItem(QIcon(":images/icons/full_adder_icon.png"), "Full adder"));
@@ -650,8 +658,8 @@ void MainWindow::InitializeToolboxTree()
     mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "RS flip-flop"));
     mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "D flip-flop"));
 
-    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer⁺"));
-    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer⁺"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
@@ -792,39 +800,39 @@ void MainWindow::InitializeGlobalShortcuts()
 
     QObject::connect(mOneGateInputShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(1);
+       SetGateInputCountIfAllowed(1);
     });
     QObject::connect(mTwoGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(2);
+       SetGateInputCountIfAllowed(2);
     });
     QObject::connect(mThreeGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(3);
+       SetGateInputCountIfAllowed(3);
     });
     QObject::connect(mFourGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(4);
+       SetGateInputCountIfAllowed(4);
     });
     QObject::connect(mFiveGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(5);
+       SetGateInputCountIfAllowed(5);
     });
     QObject::connect(mSixGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(6);
+       SetGateInputCountIfAllowed(6);
     });
     QObject::connect(mSevenGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(7);
+       SetGateInputCountIfAllowed(7);
     });
     QObject::connect(mEightGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(8);
+       SetGateInputCountIfAllowed(8);
     });
     QObject::connect(mNineGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
-       SetComponentInputCountIfInAddMode(9);
+       SetGateInputCountIfAllowed(9);
     });
 
     mEscapeShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
@@ -839,11 +847,11 @@ void MainWindow::InitializeGlobalShortcuts()
     });
 }
 
-void MainWindow::SetComponentInputCountIfInAddMode(uint8_t pCount)
+void MainWindow::SetGateInputCountIfAllowed(uint8_t pCount)
 {
     Q_ASSERT(pCount >= components::gates::MIN_INPUT_COUNT && pCount <= components::gates::MAX_INPUT_COUNT);
 
-    if (mCoreLogic.GetControlMode() == ControlMode::ADD)
+    if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE)
     {
         mCoreLogic.SetComponentInputCount(pCount);
         mUi->uLabelItemInputCount->setText(QString(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
@@ -853,6 +861,7 @@ void MainWindow::SetComponentInputCountIfInAddMode(uint8_t pCount)
 
 void MainWindow::SetComponentDirectionIfInAddMode(Direction pDirection)
 {
+#warning make non-gate components turnable again
     if (mCoreLogic.GetControlMode() == ControlMode::ADD)
     {
         mCoreLogic.SetComponentDirection(pDirection);
@@ -938,8 +947,6 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                         break;
                     }
                 }
-
-                ShowItemConfigurationGui();
 
                 break;
             }

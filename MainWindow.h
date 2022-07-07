@@ -89,9 +89,9 @@ protected:
     /// \brief Creates global shortcuts
     void InitializeGlobalShortcuts(void);
 
-    /// \brief Sets the current component input count to the given value if SW is in ControlMode::ADD
+    /// \brief Sets the current gate input count to the given value if SW is in ControlMode::ADD and either AND, OR or XOR is selected
     /// \param pCount: The input count value to set to
-    void SetComponentInputCountIfInAddMode(uint8_t pCount);
+    void SetGateInputCountIfAllowed(uint8_t pCount);
 
     /// \brief Sets the current component direction to the given direction if SW is in ControlMode::ADD
     /// \param pDirection: The direction to set to
