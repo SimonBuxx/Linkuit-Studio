@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mUi->uViewLayout->addWidget(&mView, 0, 0, 4, 6);
 
-    mView.stackUnder(mUi->uLeftContainer);
+    mView.stackUnder(mUi->uToolboxContainer);
 
     QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, &MainWindow::OnControlModeChanged);
     QObject::connect(&mCoreLogic, &CoreLogic::SimulationModeChangedSignal, this, &MainWindow::OnSimulationModeChanged);
@@ -209,13 +209,13 @@ void MainWindow::OnToggleButtonToggled(bool pChecked)
     if (pChecked)
     {
         // Set to toggle
-        mUi->uPulseFrame->setVisible(false);
+        mUi->uPulseFrame->hide();
         mCoreLogic.OnClockModeChanged(ClockMode::TOGGLE);
     }
     else
     {
         // Set to pulse
-        mUi->uPulseFrame->setVisible(true);
+        mUi->uPulseFrame->show();
         mCoreLogic.OnClockModeChanged(ClockMode::PULSE);
     }
 }
@@ -347,7 +347,7 @@ void MainWindow::EnterSimulation()
     if (!mCoreLogic.IsSimulationRunning())
     {
         mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
-        mUi->uLeftContainer->setVisible(false);
+        mUi->uToolboxContainer->hide();
     }
 }
 
@@ -376,7 +376,7 @@ void MainWindow::StopSimulation()
     if (mCoreLogic.IsSimulationRunning())
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
-        mUi->uLeftContainer->setVisible(true);
+        mUi->uToolboxContainer->show();
     }
 }
 
@@ -884,6 +884,7 @@ void MainWindow::InitializeGlobalShortcuts()
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
         mScene.clearSelection();
         mUi->uToolboxTree->clearSelection();
+        mUi->uToolboxContainer->show();
     });
 }
 

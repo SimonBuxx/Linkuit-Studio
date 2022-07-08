@@ -73,7 +73,7 @@
        </spacer>
       </item>
       <item row="2" column="1" alignment="Qt::AlignLeft|Qt::AlignVCenter">
-       <widget class="QWidget" name="uLeftContainer" native="true">
+       <widget class="QWidget" name="uToolboxContainer" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -2310,9 +2310,9 @@ QFrame {
     <addaction name="uActionReportBugs"/>
     <addaction name="separator"/>
     <addaction name="uActionOpenWebsite"/>
-    <addaction name="uActionAbout"/>
-    <addaction name="separator"/>
     <addaction name="uActionCheckUpdates"/>
+    <addaction name="separator"/>
+    <addaction name="uActionAbout"/>
    </widget>
    <widget class="QMenu" name="menuSimulation">
     <property name="title">
@@ -2608,9 +2608,9 @@ QFrame {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
  </buttongroups>
 </ui>
