@@ -101,9 +101,24 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uStepButton, &QAbstractButton::clicked, mUi->uActionStep, &QAction::trigger);
     QObject::connect(mUi->uResetButton, &QAbstractButton::clicked, mUi->uActionReset, &QAction::trigger);
     QObject::connect(mUi->uPauseButton, &QAbstractButton::clicked, mUi->uActionPause, &QAction::trigger);
-    QObject::connect(mUi->uStopButton, &QAbstractButton::clicked, mUi->uActionStop, &QAction::trigger);
 
-    QObject::connect(mUi->uActionStart, &QAction::triggered, this, &MainWindow::EnterSimulation);
+    QObject::connect(mUi->uActionStart, &QAction::triggered, this, [&]()
+    {
+        if (!mCoreLogic.IsSimulationRunning())
+        {
+            EnterSimulation();
+            mUi->uStartButton->setToolTip(tr("Stop [Alt+Return]"));
+            mUi->uStartButton->setChecked(true);
+            mUi->uActionStart->setText(tr("Stop"));
+        }
+        else
+        {
+            StopSimulation();
+            mUi->uStartButton->setToolTip(tr("Start [Alt+Return]"));
+            mUi->uStartButton->setChecked(false);
+            mUi->uActionStart->setText(tr("Start"));
+        }
+    });
     QObject::connect(mUi->uActionRun, &QAction::triggered, this, &MainWindow::RunSimulation);
     QObject::connect(mUi->uActionStep, &QAction::triggered, this, &MainWindow::StepSimulation);
     QObject::connect(mUi->uActionReset, &QAction::triggered, this, &MainWindow::ResetSimulation);
@@ -399,7 +414,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uStepButton->setEnabled(false);
             mUi->uResetButton->setEnabled(false);
             mUi->uPauseButton->setEnabled(false);
-            mUi->uStopButton->setEnabled(false);
 
             UpdateUndoRedoEnabled(true);
 
@@ -436,7 +450,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uStepButton->setEnabled(false);
             mUi->uResetButton->setEnabled(false);
             mUi->uPauseButton->setEnabled(false);
-            mUi->uStopButton->setEnabled(false);
 
             UpdateUndoRedoEnabled(true);
 
@@ -472,7 +485,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uStepButton->setEnabled(false);
             mUi->uResetButton->setEnabled(false);
             mUi->uPauseButton->setEnabled(false);
-            mUi->uStopButton->setEnabled(false);
 
             UpdateUndoRedoEnabled(true);
 
@@ -504,12 +516,11 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uWiringButton->setEnabled(false);
             mUi->uCopyButton->setEnabled(false);
             mUi->uDeleteButton->setEnabled(false);
-            mUi->uStartButton->setEnabled(false);
+            mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(true);
             mUi->uStepButton->setEnabled(true);
             mUi->uResetButton->setEnabled(true);
             mUi->uPauseButton->setEnabled(true);
-            mUi->uStopButton->setEnabled(true);
 
             UpdateUndoRedoEnabled(false);
 
@@ -519,7 +530,7 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uActionDelete->setEnabled(false);
             mUi->uActionSelectAll->setEnabled(false);
 
-            mUi->uActionStart->setEnabled(false);
+            mUi->uActionStart->setEnabled(true);
             mUi->uActionRun->setEnabled(true);
             mUi->uActionReset->setEnabled(true);
             mUi->uActionStep->setEnabled(true);
@@ -728,14 +739,14 @@ void MainWindow::InitializeGuiIcons()
     mUi->uUndoButton->SetIcon(mAwesome->icon(fa::undo, mUncheckedButtonVariant));
     mUi->uRedoButton->SetIcon(mAwesome->icon(fa::repeat, mUncheckedButtonVariant));
 
-    mUi->uStartButton->SetIcon(mAwesome->icon(fa::cog, mUncheckedButtonVariant));
+    mUi->uStartButton->SetUncheckedIcon(mAwesome->icon(fa::poweroff, mUncheckedButtonVariant));
+    mUi->uStartButton->SetCheckedIcon(mAwesome->icon(fa::poweroff, mCheckedButtonVariant));
     mUi->uRunButton->SetUncheckedIcon(mAwesome->icon(fa::play, mUncheckedButtonVariant));
     mUi->uRunButton->SetCheckedIcon(mAwesome->icon(fa::play, mCheckedButtonVariant));
     mUi->uPauseButton->SetUncheckedIcon(mAwesome->icon(fa::pause, mUncheckedButtonVariant));
     mUi->uPauseButton->SetCheckedIcon(mAwesome->icon(fa::pause, mCheckedButtonVariant));
     mUi->uStepButton->SetIcon(mAwesome->icon(fa::stepforward, mUncheckedButtonVariant));
     mUi->uResetButton->SetIcon(mAwesome->icon(fa::refresh, mUncheckedButtonVariant));
-    mUi->uStopButton->SetIcon(mAwesome->icon(fa::stop, mUncheckedButtonVariant));
 
     // Icons for configuration elements
     mUi->uLabelToggleIcon->setPixmap(mAwesome->icon(fa::tachometer, mStatusBarIconVariant).pixmap(20, 20));
@@ -772,7 +783,7 @@ void MainWindow::InitializeGuiIcons()
     mUi->uActionPaste->setIcon(mAwesome->icon(fa::clipboard, mMenuBarIconVariant));
     mUi->uActionDelete->setIcon(mAwesome->icon(fa::trasho, mMenuBarIconVariant));
 
-    mUi->uActionStart->setIcon(mAwesome->icon(fa::cog, mMenuBarIconVariant));
+    mUi->uActionStart->setIcon(mAwesome->icon(fa::poweroff, mMenuBarIconVariant));
     mUi->uActionRun->setIcon(mAwesome->icon(fa::play, mMenuBarIconVariant));
     mUi->uActionStep->setIcon(mAwesome->icon(fa::stepforward, mMenuBarIconVariant));
     mUi->uActionReset->setIcon(mAwesome->icon(fa::refresh, mMenuBarIconVariant));

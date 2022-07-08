@@ -992,6 +992,9 @@ IconToolButton:pressed {
              <height>22</height>
             </size>
            </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -1211,60 +1214,6 @@ IconToolButton:pressed {
            <attribute name="buttonGroup">
             <string notr="true">uSimulationButtonGroup</string>
            </attribute>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_9">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>10</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="IconToolButton" name="uStopButton">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>40</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Stop</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>22</width>
-             <height>22</height>
-            </size>
-           </property>
-           <property name="checkable">
-            <bool>false</bool>
-           </property>
           </widget>
          </item>
         </layout>
@@ -2136,8 +2085,6 @@ QFrame {
     <addaction name="uActionStep"/>
     <addaction name="uActionRun"/>
     <addaction name="uActionPause"/>
-    <addaction name="separator"/>
-    <addaction name="uActionStop"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -2433,9 +2380,9 @@ QFrame {
  </resources>
  <connections/>
  <buttongroups>
+  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>
