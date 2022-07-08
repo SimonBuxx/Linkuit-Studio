@@ -124,7 +124,6 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uActionStep, &QAction::triggered, this, &MainWindow::StepSimulation);
     QObject::connect(mUi->uActionReset, &QAction::triggered, this, &MainWindow::ResetSimulation);
     QObject::connect(mUi->uActionPause, &QAction::triggered, this, &MainWindow::PauseSimulation);
-    QObject::connect(mUi->uActionStop, &QAction::triggered, this, &MainWindow::StopSimulation);
     QObject::connect(mUi->uActionAbout, &QAction::triggered, &mAboutDialog, &AboutDialog::show);
     QObject::connect(mUi->uActionClose, &QAction::triggered, this, &MainWindow::close);
 
@@ -443,12 +442,12 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uActionReset->setEnabled(false);
             mUi->uActionStep->setEnabled(false);
             mUi->uActionPause->setEnabled(false);
-            mUi->uActionStop->setEnabled(false);
 
             mUi->uEditButton->setChecked(true);
             ForceUncheck(mUi->uRunButton);
             ForceUncheck(mUi->uWiringButton);
             ForceUncheck(mUi->uPauseButton);
+            mUi->uStartButton->setChecked(false);
             break;
         }
         case ControlMode::WIRE:
@@ -479,12 +478,12 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uActionReset->setEnabled(false);
             mUi->uActionStep->setEnabled(false);
             mUi->uActionPause->setEnabled(false);
-            mUi->uActionStop->setEnabled(false);
 
             ForceUncheck(mUi->uEditButton);
             mUi->uWiringButton->setChecked(true);
             ForceUncheck(mUi->uRunButton);
             ForceUncheck(mUi->uPauseButton);
+            mUi->uStartButton->setChecked(false);
             break;
         }
         case ControlMode::ADD:
@@ -514,12 +513,12 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uActionReset->setEnabled(false);
             mUi->uActionStep->setEnabled(false);
             mUi->uActionPause->setEnabled(false);
-            mUi->uActionStop->setEnabled(false);
 
             ForceUncheck(mUi->uEditButton);
             ForceUncheck(mUi->uWiringButton);
             ForceUncheck(mUi->uRunButton);
             ForceUncheck(mUi->uPauseButton);
+            mUi->uStartButton->setChecked(false);
             break;
         }
         case ControlMode::SIMULATION:
@@ -550,12 +549,12 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uActionReset->setEnabled(true);
             mUi->uActionStep->setEnabled(true);
             mUi->uActionPause->setEnabled(false);
-            mUi->uActionStop->setEnabled(true);
 
             ForceUncheck(mUi->uEditButton);
             ForceUncheck(mUi->uWiringButton);
             ForceUncheck(mUi->uRunButton);
             mUi->uPauseButton->setChecked(true);
+            mUi->uStartButton->setChecked(true);
             break;
         }
         default:
@@ -807,7 +806,6 @@ void MainWindow::InitializeGuiIcons()
     mUi->uActionStep->setIcon(mAwesome->icon(fa::stepforward, mMenuBarIconVariant));
     mUi->uActionReset->setIcon(mAwesome->icon(fa::refresh, mMenuBarIconVariant));
     mUi->uActionPause->setIcon(mAwesome->icon(fa::pause, mMenuBarIconVariant));
-    mUi->uActionStop->setIcon(mAwesome->icon(fa::stop, mMenuBarIconVariant));
 
     mUi->uActionScreenshot->setIcon(mAwesome->icon(fa::camera, mMenuBarIconVariant));
 

@@ -2398,17 +2398,6 @@ QFrame {
     <bool>false</bool>
    </property>
   </action>
-  <action name="uActionStop">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Stop</string>
-   </property>
-   <property name="autoRepeat">
-    <bool>false</bool>
-   </property>
-  </action>
   <action name="uActionStep">
    <property name="enabled">
     <bool>false</bool>

@@ -994,7 +994,6 @@ void CoreLogic::ConnectLogicCells()
                 const auto& conPoint = static_cast<ConPoint*>(comp);
                 if (conPoint->GetConnectionType() != ConnectionType::FULL) // Diode <-> Wire connection
                 {
-#warning failed once
                     Q_ASSERT(compBase->GetLogicCell());
                     auto outputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::HORIZONTAL : WireDirection::VERTICAL);
                     auto inputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::VERTICAL : WireDirection::HORIZONTAL);

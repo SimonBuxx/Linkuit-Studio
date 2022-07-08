@@ -45,6 +45,10 @@ ConPoint::ConPoint(const ConPoint& pObj, const CoreLogic* pCoreLogic):
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
     mConnectionType = pObj.mConnectionType;
+    if (mConnectionType != ConnectionType::FULL)
+    {
+        mLogicCell = mLogicDiodeCell;
+    }
 };
 
 void ConPoint::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
