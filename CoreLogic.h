@@ -126,9 +126,16 @@ public:
     void Redo(void);
 
     // Functions for item configuration
-#warning missing documentation
+    /// \brief Sets the toggle value of the selected clock to the new value
+    /// \param pValue: The new toggle value
     void OnToggleValueChanged(uint32_t pValue);
+
+    /// \brief Sets the pulse value of the selected clock to the new value
+    /// \param pValue: The new pulse value
     void OnPulseValueChanged(uint32_t pValue);
+
+    /// \brief Sets the clock mode of the selected clock to the new mode
+    /// \param pMode: The new clock mode
     void OnClockModeChanged(ClockMode pMode);
 
     // ////////////////////////////
@@ -162,10 +169,14 @@ signals:
     /// \brief Emitted when any action is appended to the undo queue
     void AppendToUndoQueueSignal(void);
 
-#warning missing documentation
-    void DisplayClockConfigurationSignal(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
+    /// \brief Emitted when the clock configurator should be displayed with the given settings
+    /// \param pMode: The clock mode (either toggle or pulse)
+    /// \param pToggle: The toggle speed
+    /// \param pPulse: The pulse duration
+    void ShowClockConfiguratorSignal(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
 
-    void HideConfigurationGuiSignal(void);
+    /// \brief Emitted when the clock configurator should be hidden
+    void HideClockConfiguratorSignal(void);
 
 public slots:
     /// \brief Checks for collisions, merges moved wires and brings the ConPoints in a valid state
@@ -179,7 +190,7 @@ public slots:
     /// \param pEvent: The mouse press event to pass back to MousePressedEventDefaultSignal
     void OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent);
 
-    void OnDisplayClockConfigurationRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
+    void OnShowClockConfiguratorRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
 
     // Slots for configuration events
 

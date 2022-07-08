@@ -2,43 +2,11 @@
     <qresource prefix="/">
         <file>images/loading.gif</file>
         <file>images/linkuit_icon4.png</file>
-        <file>images/icons/and_gate.png</file>
-        <file>images/icons/d_flipflop.png</file>
-        <file>images/icons/full_adder.png</file>
-        <file>images/icons/half_adder.png</file>
-        <file>images/icons/or_gate.png</file>
-        <file>images/icons/rs_flipflop.png</file>
-        <file>images/icons/xor_gate.png</file>
-        <file>images/icons/button.png</file>
-        <file>images/icons/input.png</file>
-        <file>images/icons/not_gate.png</file>
-        <file>images/icons/buffer_gate.png</file>
-        <file>images/icons/clock.png</file>
-        <file>images/icons/label.png</file>
-        <file>images/icons/output.png</file>
         <file>images/icons/wire.png</file>
         <file>fonts/Quicksand-Medium.ttf</file>
         <file>images/linkuit_icon5.png</file>
         <file>styles/style.css</file>
         <file>images/icons/wire_disabled.png</file>
-        <file>images/icons/and_gate_disabled.png</file>
-        <file>images/icons/button_disabled.png</file>
-        <file>images/icons/clock_disabled.png</file>
-        <file>images/icons/d_flipflop_disabled.png</file>
-        <file>images/icons/full_adder_disabled.png</file>
-        <file>images/icons/half_adder_disabled.png</file>
-        <file>images/icons/input_disabled.png</file>
-        <file>images/icons/label_disabled.png</file>
-        <file>images/icons/not_gate_disabled.png</file>
-        <file>images/icons/buffer_gate_disabled.png</file>
-        <file>images/icons/or_gate_disabled.png</file>
-        <file>images/icons/output_disabled.png</file>
-        <file>images/icons/rs_flipflop_disabled.png</file>
-        <file>images/icons/xor_gate_disabled.png</file>
-        <file>images/icons/multiplexer.png</file>
-        <file>images/icons/multiplexer_disabled.png</file>
-        <file>images/icons/demultiplexer.png</file>
-        <file>images/icons/demultiplexer_disabled.png</file>
         <file>images/linkuit_icon6.png</file>
         <file>fonts/Quicksand-Bold.ttf</file>
         <file>fonts/Quicksand-SemiBold.ttf</file>
@@ -58,7 +26,5 @@
         <file>images/icons/play_icon.png</file>
         <file>images/icons/stop_icon.png</file>
         <file>images/hor_line.png</file>
-        <file>images/linkuit_icon7.png</file>
-        <file>images/linkuit_icon8.png</file>
     </qresource>
 </RCC>

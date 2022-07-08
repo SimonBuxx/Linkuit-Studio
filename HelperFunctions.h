@@ -13,7 +13,7 @@ static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{Co
                                                                              {ComponentType::BUFFER_GATE, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::INPUT, ConfiguratorMode::NO_CONFIGURATION},
                                                                              {ComponentType::BUTTON, ConfiguratorMode::NO_CONFIGURATION},
-                                                                             {ComponentType::CLOCK, ConfiguratorMode::NO_CONFIGURATION},
+                                                                             {ComponentType::CLOCK, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::OUTPUT, ConfiguratorMode::NO_CONFIGURATION},
                                                                              {ComponentType::TEXT_LABEL, ConfiguratorMode::NO_CONFIGURATION},
                                                                              {ComponentType::HALF_ADDER, ConfiguratorMode::DIRECTION_ONLY},

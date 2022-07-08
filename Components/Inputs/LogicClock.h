@@ -34,11 +34,16 @@ public:
     /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
     void ResetZValue(void) override;
 
-#warning missing documentation
+    /// \brief Emits a signal to show the clock configurator if this is the only selected clock
+    /// \param pEvent: The mouse event
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
 
 signals:
-    void DisplayClockConfigurationSignal(ClockMode pMode, int32_t pToggle, int32_t pPulse);
+    /// \brief Emitted when the clock configurator should be displayed with the given settings
+    /// \param pMode: The clock mode
+    /// \param pToggle: The toggle speed
+    /// \param pPulse: The pulse duration
+    void ShowClockConfiguratorSignal(ClockMode pMode, int32_t pToggle, int32_t pPulse);
 
 protected:
     /// \brief Paints the clock component

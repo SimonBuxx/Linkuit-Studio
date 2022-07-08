@@ -21,13 +21,28 @@ public:
     /// \return The logic state of this cell's output number pOutput
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
-#warning missing documentation
+    /// \brief Sets the toggle speed of this clock logic cell
+    /// \param pTicks: The new toggle speed in ticks
     void SetToggleTicks(uint32_t pTicks);
+
+    /// \brief Sets the pulse duration of this clock logic cell
+    /// \param pTicks: The new pulse duration in ticks
     void SetPulseTicks(uint32_t pTicks);
+
+    /// \brief Sets the clock mode of this clock logic cell
+    /// \param pMode: The new clock mode (toggle or pulse)
     void SetClockMode(ClockMode pMode);
 
+    /// \brief Getter for the toggle speed of this clock logic cell
+    /// \return The toggle speed in ticks
     uint32_t GetToggleTicks(void);
+
+    /// \brief Getter for the pulse duration of this clock logic cell
+    /// \return The pulse duration in ticks
     uint32_t GetPulseTicks(void);
+
+    /// \brief Getter for the clock mode of this clock logic cell
+    /// \return The clock mode (toggle or pulse)
     ClockMode GetClockMode(void);
 
 public slots:

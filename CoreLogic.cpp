@@ -55,7 +55,7 @@ void CoreLogic::SelectAll()
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
 {
     mView.Scene()->clearFocus();
-    emit HideConfigurationGuiSignal();
+    emit HideClockConfiguratorSignal();
 
     if (pNewMode == mControlMode)
     {
@@ -990,7 +990,6 @@ void CoreLogic::ConnectLogicCells()
                 const auto& conPoint = static_cast<ConPoint*>(comp);
                 if (conPoint->GetConnectionType() != ConnectionType::FULL) // Diode <-> Wire connection
                 {
-#warning clock inverted output not copied
 #warning failed once
                     Q_ASSERT(compBase->GetLogicCell());
                     auto outputDirection = (conPoint->GetConnectionType() == ConnectionType::DIODE_X ? WireDirection::HORIZONTAL : WireDirection::VERTICAL);
@@ -1064,7 +1063,7 @@ bool CoreLogic::IsProcessing() const
 void CoreLogic::ClearSelection()
 {
     mView.Scene()->clearSelection();
-    emit HideConfigurationGuiSignal();
+    emit HideClockConfiguratorSignal();
 }
 
 #warning temporary performance counter
@@ -1244,16 +1243,16 @@ void CoreLogic::AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComp
     }
 }
 
-void CoreLogic::OnDisplayClockConfigurationRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
+void CoreLogic::OnShowClockConfiguratorRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
 {
-    emit DisplayClockConfigurationSignal(pMode, pToggle, pPulse);
+    emit ShowClockConfiguratorSignal(pMode, pToggle, pPulse);
 }
 
 void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent)
 {
     auto snappedPos = SnapToGrid(pMappedPos);
 
-    emit HideConfigurationGuiSignal();
+    emit HideClockConfiguratorSignal();
 
     // Add ConPoint on X crossing
     if (mControlMode == ControlMode::EDIT

@@ -30,8 +30,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mUi->uItemRightButton->setChecked(true);
 
-    HideItemConfigurator();
-    mUi->uClockConfiguration->setVisible(false);
+    mUi->uItemConfigurator->hide();
+    mUi->uClockConfigurator->hide();
 
     mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
 }
@@ -45,31 +45,18 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 {
     QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabelAndSlider);
 
-    QObject::connect(&mCoreLogic, &CoreLogic::DisplayClockConfigurationSignal, this, &MainWindow::DisplayClockConfiguration);
-    QObject::connect(&mCoreLogic, &CoreLogic::HideConfigurationGuiSignal, this, &MainWindow::HideConfigurationGui);
+    QObject::connect(&mCoreLogic, &CoreLogic::ShowClockConfiguratorSignal, this, &MainWindow::ShowClockConfigurator);
+    QObject::connect(&mCoreLogic, &CoreLogic::HideClockConfiguratorSignal, mUi->uClockConfigurator, &QWidget::hide);
     QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
     {
         if (pNewMode != ControlMode::ADD)
         {
-            HideItemConfigurator();
+            mUi->uItemConfigurator->hide();
         }
     });
 
     QObject::connect(&mCoreLogic, &CoreLogic::ComponentTypeChangedSignal, this, [&](ComponentType pNewType)
     {
-        /*if (pNewType > ComponentType::BUFFER_GATE)
-        {
-            HideItemConfigurator();
-        }
-        else if (pNewType > ComponentType::XOR_GATE)
-        {
-            ShowItemConfigurator(ConfiguratorMode::DIRECTION_ONLY);
-        }
-        else
-        {
-            ShowItemConfigurator(ConfiguratorMode::DIRECTION_AND_INPUT_COUNT);
-        }*/
-
         ShowItemConfigurator(GetConfiguratorModeForComponentType(pNewType));
     });
 
@@ -235,9 +222,9 @@ void MainWindow::OnPulseSliderValueChanged(int32_t pValue)
     mCoreLogic.OnPulseValueChanged(pValue);
 }
 
-void MainWindow::DisplayClockConfiguration(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
+void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
 {
-    mUi->uClockConfiguration->show();
+    mUi->uClockConfigurator->show();
 
     if (pMode == ClockMode::TOGGLE)
     {
@@ -252,18 +239,13 @@ void MainWindow::DisplayClockConfiguration(ClockMode pMode, uint32_t pToggle, ui
     mUi->uPulseSlider->setValue(pPulse);
 }
 
-void MainWindow::HideConfigurationGui()
-{
-    mUi->uClockConfiguration->hide();
-}
-
 void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
 {
     switch (pMode)
     {
         case ConfiguratorMode::NO_CONFIGURATION:
         {
-            HideItemConfigurator();
+            mUi->uItemConfigurator->hide();
             return;
         }
         case ConfiguratorMode::DIRECTION_ONLY:
@@ -280,51 +262,56 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         }
         default:
         {
-            break;
-            //throw std::logic_error("Invalid ConfiguratorMode");
+            throw std::logic_error("ConfiguratorMode unimplemented or invalid");
         }
     }
 
-    mUi->uItemConfigContainer->show();
+    mUi->uItemConfigurator->show();
 
     /*auto mousePos = QWidget::mapFromGlobal(QCursor::pos());
     mUi->uItemConfigContainer->move(mUi->uItemConfigContainer->x(), mousePos.y() - mUi->menuBar->height() - mUi->uItemConfigContainer->height() / 2);*/
 }
 
-void MainWindow::HideItemConfigurator()
-{
-    mUi->uItemConfigContainer->hide();
-}
-
 void MainWindow::OnItemRightButtonToggled(bool pChecked)
 {
     mUi->uItemRightButton->setIcon(mAwesome->icon(fa::arrowright, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
-    SetComponentDirectionIfInAddMode(Direction::RIGHT);
+    if (pChecked)
+    {
+        SetComponentDirectionIfInAddMode(Direction::RIGHT);
+    }
 }
 
 void MainWindow::OnItemDownButtonToggled(bool pChecked)
 {
     mUi->uItemDownButton->setIcon(mAwesome->icon(fa::arrowdown, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
-    SetComponentDirectionIfInAddMode(Direction::DOWN);
+    if (pChecked)
+    {
+        SetComponentDirectionIfInAddMode(Direction::DOWN);
+    }
 }
 
 void MainWindow::OnItemLeftButtonToggled(bool pChecked)
 {
     mUi->uItemLeftButton->setIcon(mAwesome->icon(fa::arrowleft, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
-    SetComponentDirectionIfInAddMode(Direction::LEFT);
+    if (pChecked)
+    {
+        SetComponentDirectionIfInAddMode(Direction::LEFT);
+    }
 }
 
 void MainWindow::OnItemUpButtonToggled(bool pChecked)
 {
     mUi->uItemUpButton->setIcon(mAwesome->icon(fa::arrowup, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
-    SetComponentDirectionIfInAddMode(Direction::UP);
+    if (pChecked)
+    {
+        SetComponentDirectionIfInAddMode(Direction::UP);
+    }
 }
 
 void MainWindow::OnItemInputCountSliderValueChanged(int32_t pValue)
 {
     SetGateInputCountIfAllowed(pValue);
 }
-
 
 void MainWindow::EnterSimulation()
 {
@@ -886,7 +873,6 @@ void MainWindow::SetGateInputCountIfAllowed(uint8_t pCount)
 
 void MainWindow::SetComponentDirectionIfInAddMode(Direction pDirection)
 {
-#warning make non-gate components turnable again
     if (mCoreLogic.GetControlMode() == ControlMode::ADD)
     {
         mCoreLogic.SetComponentDirection(pDirection);
