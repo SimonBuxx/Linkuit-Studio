@@ -131,7 +131,8 @@ static constexpr uint32_t DEFAULT_CLOCK_TOGGLE_TICKS = 100;
 
 namespace multiplexer
 {
-static constexpr uint8_t MAX_INPUT_DIGITS = 5;
+static constexpr uint8_t MAX_BIT_WIDTH = 5;
+static constexpr uint8_t DEFAULT_BIT_WIDTH = 2;
 } // namespace
 
 namespace complex_logic

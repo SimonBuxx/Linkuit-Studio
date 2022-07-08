@@ -1338,6 +1338,171 @@ QFrame {
          <property name="bottomMargin">
           <number>15</number>
          </property>
+         <item row="2" column="0" colspan="2">
+          <widget class="QFrame" name="uPulseFrame">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="uLabelPulseIcon">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+        background: none;
+}</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelPulseMinus">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+    color: rgb(0, 45, 50);
+    font: 12pt &quot;Source Sans Pro&quot;;
+        background: none;
+}</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="uPulseSlider">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Pulse duration</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QSlider {
+        background: none;
+}
+
+QSlider::groove:horizontal {
+    height: 1px;
+    margin: 2px 0;
+    background: rgb(0, 204, 143);
+}
+
+QSlider::handle:horizontal {
+    background: rgb(0, 204, 143);
+    width: 6px;
+    margin: -8px 0;
+}
+
+QSlider::groove:horizontal:disabled {
+    background: rgb(180, 180, 180);
+}
+
+QSlider::handle:horizontal:disabled {
+    background: rgb(180, 180, 180);
+}</string>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelPulsePlus">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+    color: rgb(0, 45, 50);
+    font: 12pt &quot;Source Sans Pro&quot;;
+        background: none;
+}</string>
+              </property>
+              <property name="text">
+               <string>+</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelPulse">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+    color: rgb(0, 45, 50);
+    font: 11pt &quot;Source Sans Pro&quot;;
+        background: none;
+}
+
+QLabel:disabled {
+                color: rgb(180, 180, 180);
+}</string>
+              </property>
+              <property name="text">
+               <string>1 Tick / Pulse</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
          <item row="0" column="0" alignment="Qt::AlignTop">
           <widget class="QPushButton" name="uButtonPulse">
            <property name="text">
@@ -1348,6 +1513,25 @@ QFrame {
            </property>
            <property name="checked">
             <bool>false</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">uTogglePulseButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="0" column="1" alignment="Qt::AlignTop">
+          <widget class="QPushButton" name="uButtonToggle">
+           <property name="text">
+            <string>Toggle</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
            <property name="autoExclusive">
             <bool>false</bool>
@@ -1445,6 +1629,9 @@ QFrame {
                 <height>16777215</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>Toggle speed</string>
+              </property>
               <property name="styleSheet">
                <string notr="true">QSlider {
         background: none;
@@ -1505,187 +1692,6 @@ QLabel:disabled {
               </property>
               <property name="text">
                <string>50 Ticks / Toggle</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="0" column="1" alignment="Qt::AlignTop">
-          <widget class="QPushButton" name="uButtonToggle">
-           <property name="text">
-            <string>Toggle</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">uTogglePulseButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="2">
-          <widget class="QFrame" name="uPulseFrame">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>5</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="uLabelPulseIcon">
-              <property name="minimumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-        background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelPulseMinus">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-    color: rgb(0, 45, 50);
-    font: 12pt &quot;Source Sans Pro&quot;;
-        background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string>-</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="uPulseSlider">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QSlider {
-        background: none;
-}
-
-QSlider::groove:horizontal {
-    height: 1px;
-    margin: 2px 0;
-    background: rgb(0, 204, 143);
-}
-
-QSlider::handle:horizontal {
-    background: rgb(0, 204, 143);
-    width: 6px;
-    margin: -8px 0;
-}
-
-QSlider::groove:horizontal:disabled {
-    background: rgb(180, 180, 180);
-}
-
-QSlider::handle:horizontal:disabled {
-    background: rgb(180, 180, 180);
-}</string>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelPulsePlus">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-    color: rgb(0, 45, 50);
-    font: 12pt &quot;Source Sans Pro&quot;;
-        background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string>+</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelPulse">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-    color: rgb(0, 45, 50);
-    font: 11pt &quot;Source Sans Pro&quot;;
-        background: none;
-}
-
-QLabel:disabled {
-                color: rgb(180, 180, 180);
-}</string>
-              </property>
-              <property name="text">
-               <string>1 Tick / Pulse</string>
               </property>
              </widget>
             </item>
@@ -1948,10 +1954,10 @@ QFrame {
             </size>
            </property>
            <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+            <enum>QFrame::NoFrame</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
+            <enum>QFrame::Plain</enum>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <property name="leftMargin">
@@ -1993,6 +1999,12 @@ QFrame {
             </item>
             <item>
              <widget class="QLabel" name="uLabelItemInputCountMinus">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -2007,6 +2019,21 @@ QFrame {
             </item>
             <item>
              <widget class="QSlider" name="uItemInputCountSlider">
+              <property name="minimumSize">
+               <size>
+                <width>64</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>64</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Gate inputs</string>
+              </property>
               <property name="styleSheet">
                <string notr="true">QSlider {
               background: none;
@@ -2031,7 +2058,7 @@ QFrame {
                <number>9</number>
               </property>
               <property name="pageStep">
-               <number>5</number>
+               <number>1</number>
               </property>
               <property name="value">
                <number>2</number>
@@ -2070,6 +2097,164 @@ QFrame {
               </property>
               <property name="text">
                <string>2 Inputs</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="2">
+          <widget class="QFrame" name="uBitWidthFrame">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="uLabelBitWidthIcon">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelBitWidthMinus">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+          color: rgb(0, 45, 50);
+          font: 12pt &quot;Source Sans Pro&quot;;
+              background: none;
+      }</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item alignment="Qt::AlignLeft">
+             <widget class="QSlider" name="uBitWidthSlider">
+              <property name="minimumSize">
+               <size>
+                <width>64</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>64</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Bit width</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QSlider {
+              background: none;
+      }
+
+      QSlider::groove:horizontal {
+          height: 1px;
+          margin: 2px 0;
+              background: rgb(0, 204, 143);
+      }
+
+      QSlider::handle:horizontal {
+          background: rgb(0, 204, 143);
+          width: 6px;
+          margin: -8px 0;
+      }</string>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>5</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>2</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelBitWidthPlus">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+          color: rgb(0, 45, 50);
+          font: 12pt &quot;Source Sans Pro&quot;;
+              background: none;
+      }</string>
+              </property>
+              <property name="text">
+               <string>+</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelBitWidth">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+          color: rgb(0, 45, 50);
+          font: 11pt &quot;Source Sans Pro&quot;;
+              background: none;
+      }
+
+      QLabel:disabled {
+                      color: rgb(100, 100, 100);
+      }</string>
+              </property>
+              <property name="text">
+               <string>2 Bits</string>
               </property>
              </widget>
             </item>

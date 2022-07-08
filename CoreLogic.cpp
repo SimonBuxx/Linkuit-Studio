@@ -298,14 +298,12 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         }
         case ComponentType::MULTIPLEXER:
         {
-            const auto inputDigits = std::min(mComponentInputCount, components::multiplexer::MAX_INPUT_DIGITS);
-            item = new Multiplexer(this, mComponentDirection, inputDigits);
+            item = new Multiplexer(this, mComponentDirection, mMultiplexerBitWidth);
             break;
         }
         case ComponentType::DEMULTIPLEXER:
         {
-            const auto inputDigits = std::min(mComponentInputCount, components::multiplexer::MAX_INPUT_DIGITS);
-            item = new Demultiplexer(this, mComponentDirection, inputDigits);
+            item = new Demultiplexer(this, mComponentDirection, mMultiplexerBitWidth);
             break;
         }
         default:
@@ -353,6 +351,12 @@ void CoreLogic::SetComponentInputCount(uint8_t pCount)
 void CoreLogic::SetComponentDirection(Direction pDirection)
 {
     mComponentDirection = pDirection;
+}
+
+void CoreLogic::SetMultiplexerBitWidth(uint8_t pBitWidth)
+{
+    Q_ASSERT(pBitWidth > 0 && pBitWidth <= components::multiplexer::MAX_BIT_WIDTH);
+    mMultiplexerBitWidth = pBitWidth;
 }
 
 void CoreLogic::SetPreviewWireStart(QPointF pPoint)

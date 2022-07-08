@@ -85,6 +85,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uItemUpButton, &QPushButton::toggled, this, &MainWindow::OnItemUpButtonToggled);
 
     QObject::connect(mUi->uItemInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnItemInputCountSliderValueChanged);
+    QObject::connect(mUi->uBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnBitWidthSliderValueChanged);
 
     // Connect widgets from clock configuration GUI
 
@@ -267,12 +268,21 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         {
             mUi->uItemDirectionButtonsFrame->show();
             mUi->uInputCountFrame->hide();
+            mUi->uBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
         {
             mUi->uItemDirectionButtonsFrame->show();
             mUi->uInputCountFrame->show();
+            mUi->uBitWidthFrame->hide();
+            break;
+        }
+        case ConfiguratorMode::MULTIPLEXER_BITS:
+        {
+            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uInputCountFrame->hide();
+            mUi->uBitWidthFrame->show();
             break;
         }
         default:
@@ -326,6 +336,11 @@ void MainWindow::OnItemUpButtonToggled(bool pChecked)
 void MainWindow::OnItemInputCountSliderValueChanged(int32_t pValue)
 {
     SetGateInputCountIfAllowed(pValue);
+}
+
+void MainWindow::OnBitWidthSliderValueChanged(int32_t pValue)
+{
+    SetMultiplexerBitWidthIfAllowed(pValue);
 }
 
 void MainWindow::EnterSimulation()
@@ -757,14 +772,18 @@ void MainWindow::InitializeGuiIcons()
     mUi->uLabelPulsePlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
     mUi->uLabelPulseMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
-    mUi->uLabelItemInputCountIcon->setPixmap(mAwesome->icon(fa::signin, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelItemInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelItemInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
-
     mUi->uItemRightButton->setIcon(mAwesome->icon(fa::arrowright, mConfigButtonIconVariant));
     mUi->uItemDownButton->setIcon(mAwesome->icon(fa::arrowdown, mConfigButtonIconVariant));
     mUi->uItemLeftButton->setIcon(mAwesome->icon(fa::arrowleft, mConfigButtonIconVariant));
     mUi->uItemUpButton->setIcon(mAwesome->icon(fa::arrowup, mConfigButtonIconVariant));
+
+    mUi->uLabelItemInputCountIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelItemInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelItemInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    mUi->uLabelBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     // Icons for status bar elements
     mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
@@ -879,6 +898,19 @@ void MainWindow::SetGateInputCountIfAllowed(uint8_t pCount)
         mCoreLogic.SetComponentInputCount(pCount);
         mUi->uLabelItemInputCount->setText(QString(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
         mUi->uItemInputCountSlider->setValue(pCount);
+    }
+}
+
+void MainWindow::SetMultiplexerBitWidthIfAllowed(uint8_t pBitWidth)
+{
+    Q_ASSERT(pBitWidth > 0 && pBitWidth <= components::multiplexer::MAX_BIT_WIDTH);
+
+    if (mCoreLogic.GetControlMode() == ControlMode::ADD && (mCoreLogic.GetSelectedComponentType() == ComponentType::MULTIPLEXER
+                                                            || mCoreLogic.GetSelectedComponentType() == ComponentType::DEMULTIPLEXER))
+    {
+        mCoreLogic.SetMultiplexerBitWidth(pBitWidth);
+        mUi->uLabelBitWidth->setText(QString(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
+        mUi->uBitWidthSlider->setValue(pBitWidth);
     }
 }
 

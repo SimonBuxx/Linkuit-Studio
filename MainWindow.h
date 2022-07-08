@@ -97,6 +97,10 @@ protected slots:
     /// \param pValue: The new item input count
     void OnItemInputCountSliderValueChanged(int32_t pValue);
 
+    /// \brief Sets the (de-)multiplexer bit width to the given value, if allowed
+    /// \param pValue: The new multiplexer bit width
+    void OnBitWidthSliderValueChanged(int32_t pValue);
+
 protected:
     // Initialization
 
@@ -121,6 +125,10 @@ protected:
     /// \brief Sets the current gate input count to the given value if SW is in ControlMode::ADD and either AND, OR or XOR is selected
     /// \param pCount: The input count value to set to
     void SetGateInputCountIfAllowed(uint8_t pCount);
+
+    /// \brief Sets the current (de-)multiplexer bit width to the given value if SW is in ControlMode::ADD
+    /// \param pBitWidth: The bit width to set to
+    void SetMultiplexerBitWidthIfAllowed(uint8_t pBitWidth);
 
     /// \brief Sets the current component direction to the given direction if SW is in ControlMode::ADD
     /// \param pDirection: The direction to set to

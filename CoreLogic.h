@@ -68,6 +68,10 @@ public:
     /// \param pDirection: The new component direction (output-side of the component)
     void SetComponentDirection(Direction pDirection);
 
+    /// \brief Setter for the (de-)multiplexer bit width
+    /// \param pBitWidth: The new (de-)multiplexer bit width
+    void SetMultiplexerBitWidth(uint8_t pBitWidth);
+
     /// \brief Sets the starting point of the preview wires to the given point and adds them to the scene
     /// \param pStartPoint: The point where the new wire drawing action started
     void SetPreviewWireStart(QPointF pStartPoint);
@@ -379,6 +383,7 @@ protected:
     ComponentType mComponentType = ComponentType::NONE;
     Direction mComponentDirection = components::DEFAULT_DIRECTION;
     uint8_t mComponentInputCount = components::gates::DEFAULT_INPUT_COUNT;
+    uint8_t mMultiplexerBitWidth = components::multiplexer::DEFAULT_BIT_WIDTH;
 
     // Variables for wire insertion
     QPointF mPreviewWireStart;

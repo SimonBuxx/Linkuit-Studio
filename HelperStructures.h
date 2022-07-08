@@ -95,8 +95,7 @@ enum class ConfiguratorMode
     DIRECTION_AND_INPUT_COUNT,
     DIRECTION_ONLY,
     OUTPUT_COLOR,
-    MULTIPLEXER_BITS,
-    DEMULTIPLEXER_BITS
+    MULTIPLEXER_BITS
 };
 
 namespace undo
