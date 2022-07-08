@@ -161,7 +161,7 @@ QWidget:hover {
     background: rgba(242, 242, 242, 0);
     color: rgb(0, 45, 50);
     font: 12pt &quot;Source Sans Pro&quot;;
-    padding: 10px 0 10px 10px;
+    padding: 15px 0 15px 15px;
     margin: 0;
 }
 
@@ -172,16 +172,16 @@ QTreeView::branch {
 QTreeView::item {
         margin: 0;
         padding: 4px 2px;
-        border-radius: 8px;
-        margin-right: 10px;
+        border-radius: 3px;
+        margin-right: 15px;
 }
 
 QTreeView::item:hover {
-        background: rgb(220, 220, 220);
+        background: rgb(230, 230, 230);
 }
 
 QTreeView::item:selected {
-        background: rgb(200, 200, 200);
+        background: rgb(220, 220, 220);
         color: rgb(0, 45, 50);
 }</string>
            </property>
@@ -521,13 +521,13 @@ QSlider::handle:horizontal {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>70</height>
+          <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>70</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -541,12 +541,12 @@ QWidget:hover {
 }
 
 QPushButton {
-        background: rgba(0, 0, 0, 15);
+        background: rgba(0, 0, 0, 13);
         padding: 5px;
         margin: 0;
         font: 12pt &quot;Source Sans Pro&quot;;
         border: none;
-        border-radius: 1px;
+        border-radius: 3px;
 }
 
 QPushButton:hover {
@@ -574,19 +574,18 @@ QToolTip
          <property name="spacing">
           <number>0</number>
          </property>
-         <item>
-          <spacer name="horizontalSpacer_6">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
+         <property name="leftMargin">
+          <number>15</number>
+         </property>
+         <property name="topMargin">
+          <number>15</number>
+         </property>
+         <property name="rightMargin">
+          <number>15</number>
+         </property>
+         <property name="bottomMargin">
+          <number>15</number>
+         </property>
          <item>
           <widget class="IconToolButton" name="uEditButton">
            <property name="minimumSize">
@@ -605,9 +604,7 @@ QToolTip
             <string>Edit tool [Esc]</string>
            </property>
            <property name="styleSheet">
-            <string notr="true">/*IconToolButton:!checked {
-        background: rgb(0, 39, 43);
-}*/</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -632,6 +629,22 @@ QToolTip
             <string notr="true">uEditToolButtonGroup</string>
            </attribute>
           </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_15">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>2</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
           <widget class="IconToolButton" name="uWiringButton">
@@ -836,6 +849,22 @@ IconToolButton:pressed {
           </widget>
          </item>
          <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>2</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="IconToolButton" name="uRedoButton">
            <property name="enabled">
             <bool>false</bool>
@@ -964,6 +993,22 @@ IconToolButton:pressed {
             </size>
            </property>
           </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_16">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>2</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
           <widget class="IconToolButton" name="uResetButton">
@@ -1112,6 +1157,22 @@ IconToolButton:pressed {
           </widget>
          </item>
          <item>
+          <spacer name="horizontalSpacer_17">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>2</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="IconToolButton" name="uPauseButton">
            <property name="enabled">
             <bool>false</bool>
@@ -1206,19 +1267,6 @@ IconToolButton:pressed {
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="uTopBarSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
         </layout>
        </widget>
       </item>
@@ -1241,33 +1289,37 @@ IconToolButton:pressed {
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
-        background: rgba(242, 242, 242, 242);
-        border-radius: 3px;
+    background: rgba(242, 242, 242, 242);
+    border-radius: 3px;
 }
 
 QWidget:hover {
-        background: rgb(242, 242, 242);
+    background: rgb(242, 242, 242);
 }
 
 QPushButton {
-                background: rgb(220, 220, 220);
-                padding: 5px;
-                color: rgb(180, 180, 180);
-        font: 11pt &quot;Source Sans Pro&quot;;
+    background: rgba(0, 0, 0, 13);
+    padding: 5px;
+    color: rgb(180, 180, 180);
+    font: 11pt &quot;Source Sans Pro&quot;;
 }
 
 QPushButton:hover {
-                background: rgb(200, 200, 200);
-                color: rgb(160, 160, 160);
+    background: rgb(220, 220, 220);
+    color: rgb(160, 160, 160);
+}
+
+QPushButton:pressed {
+    background: rgb(200, 200, 200);
 }
 
 QPushButton:checked {
-                background: rgb(0, 204, 143);
-                color: rgb(255, 255, 255);
+    background: rgb(0, 204, 143);
+    color: rgb(255, 255, 255);
 }
 
 QFrame {
-                background: none;
+    background: none;
 }</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
@@ -1318,7 +1370,7 @@ QFrame {
              <number>0</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
@@ -1329,7 +1381,7 @@ QFrame {
             <item>
              <layout class="QHBoxLayout" name="uToggleLayout">
               <property name="topMargin">
-               <number>5</number>
+               <number>0</number>
               </property>
               <property name="bottomMargin">
                <number>0</number>
@@ -1504,7 +1556,7 @@ QLabel:disabled {
              <number>0</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>5</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
@@ -1518,7 +1570,7 @@ QLabel:disabled {
                <number>0</number>
               </property>
               <property name="topMargin">
-               <number>5</number>
+               <number>0</number>
               </property>
               <property name="rightMargin">
                <number>0</number>
@@ -1682,34 +1734,38 @@ QLabel:disabled {
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
-              background: rgba(242, 242, 242, 242);
-              border-radius: 3px;
-      }
+    background: rgba(242, 242, 242, 242);
+    border-radius: 3px;
+}
 
-      QWidget:hover {
-              background: rgb(242, 242, 242);
-      }
+QWidget:hover {
+    background: rgb(242, 242, 242);
+}
 
-      QPushButton {
-                      background: rgb(220, 220, 220);
-                      padding: 5px;
-                      color: rgb(180, 180, 180);
-                              font: 11pt &quot;Source Sans Pro&quot;;
-      }
+QPushButton {
+    background: rgba(0, 0, 0, 13);
+    padding: 5px;
+    color: rgb(180, 180, 180);
+    font: 11pt &quot;Source Sans Pro&quot;;
+}
 
-      QPushButton:hover {
-                      background: rgb(200, 200, 200);
-                      color: rgb(160, 160, 160);
-      }
+QPushButton:hover {
+    background: rgb(220, 220, 220);
+    color: rgb(160, 160, 160);
+}
 
-      QPushButton:checked {
-                      background: rgb(0, 204, 143);
-                      color: rgb(255, 255, 255);
-      }
+QPushButton:pressed {
+    background: rgb(200, 200, 200);
+}
 
-      QFrame {
-                      background: none;
-      }</string>
+QPushButton:checked {
+    background: rgb(0, 204, 143);
+    color: rgb(255, 255, 255);
+}
+
+QFrame {
+    background: none;
+}</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_4">
          <property name="leftMargin">
@@ -1724,212 +1780,87 @@ QLabel:disabled {
          <property name="bottomMargin">
           <number>15</number>
          </property>
-         <item row="0" column="1" alignment="Qt::AlignTop">
-          <widget class="QPushButton" name="uItemRightButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>29</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Right [Ctrl+Right]</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
-           <property name="shortcut">
-            <string>Ctrl+Right</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">uItemDirectionButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QPushButton" name="uItemLeftButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>29</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Left [Ctrl+Left]</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
-           <property name="shortcut">
-            <string>Ctrl+Left</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">uItemDirectionButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QPushButton" name="uItemDownButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>29</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Down [Ctrl+Down]</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
-           <property name="shortcut">
-            <string>Ctrl+Down</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">uItemDirectionButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QPushButton" name="uItemUpButton">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>29</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Up [Ctrl+Up]</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
-           <property name="shortcut">
-            <string>Ctrl+Up</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">uItemDirectionButtonGroup</string>
-           </attribute>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="4">
+         <property name="verticalSpacing">
+          <number>6</number>
+         </property>
+         <item row="2" column="0" colspan="4">
           <layout class="QHBoxLayout" name="uInputCountLayout">
            <property name="topMargin">
-            <number>5</number>
+            <number>0</number>
            </property>
            <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="QLabel" name="uLabelItemInputCountIcon">
+            <widget class="QFrame" name="uInputCountFrame">
              <property name="minimumSize">
               <size>
-               <width>20</width>
-               <height>20</height>
+               <width>10</width>
+               <height>0</height>
               </size>
              </property>
-             <property name="maximumSize">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
              </property>
-             <property name="text">
-              <string/>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
              </property>
-             <property name="pixmap">
-              <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="uLabelItemInputCountMinus">
-             <property name="styleSheet">
-              <string notr="true">QLabel {
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>5</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="uLabelItemInputCountIcon">
+                <property name="minimumSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="uLabelItemInputCountMinus">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
           color: rgb(0, 45, 50);
           font: 12pt &quot;Source Sans Pro&quot;;
               background: none;
       }</string>
-             </property>
-             <property name="text">
-              <string>-</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSlider" name="uItemInputCountSlider">
-             <property name="styleSheet">
-              <string notr="true">QSlider {
+                </property>
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="uItemInputCountSlider">
+                <property name="styleSheet">
+                 <string notr="true">QSlider {
               background: none;
       }
 
@@ -1944,42 +1875,42 @@ QLabel:disabled {
           width: 6px;
           margin: -8px 0;
       }</string>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-             <property name="maximum">
-              <number>9</number>
-             </property>
-             <property name="pageStep">
-              <number>5</number>
-             </property>
-             <property name="value">
-              <number>2</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="uLabelItemInputCountPlus">
-             <property name="styleSheet">
-              <string notr="true">QLabel {
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>9</number>
+                </property>
+                <property name="pageStep">
+                 <number>5</number>
+                </property>
+                <property name="value">
+                 <number>2</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="uLabelItemInputCountPlus">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
           color: rgb(0, 45, 50);
           font: 12pt &quot;Source Sans Pro&quot;;
               background: none;
       }</string>
-             </property>
-             <property name="text">
-              <string>+</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="uLabelItemInputCount">
-             <property name="styleSheet">
-              <string notr="true">QLabel {
+                </property>
+                <property name="text">
+                 <string>+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="uLabelItemInputCount">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
           color: rgb(0, 45, 50);
           font: 11pt &quot;Source Sans Pro&quot;;
               background: none;
@@ -1988,13 +1919,195 @@ QLabel:disabled {
       QLabel:disabled {
                       color: rgb(100, 100, 100);
       }</string>
-             </property>
-             <property name="text">
-              <string>2 Inputs</string>
-             </property>
+                </property>
+                <property name="text">
+                 <string>2 Inputs</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
+         </item>
+         <item row="1" column="0" colspan="4">
+          <widget class="QFrame" name="uItemDirectionButtonsFrame">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="uItemLeftButton">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>29</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Left [Ctrl+Left]</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="shortcut">
+               <string>Ctrl+Left</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="autoExclusive">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">uItemDirectionButtonGroup</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="uItemRightButton">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>29</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Right [Ctrl+Right]</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="shortcut">
+               <string>Ctrl+Right</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <property name="autoExclusive">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">uItemDirectionButtonGroup</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="uItemDownButton">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>29</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Down [Ctrl+Down]</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="shortcut">
+               <string>Ctrl+Down</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="autoExclusive">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">uItemDirectionButtonGroup</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="uItemUpButton">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>29</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Up [Ctrl+Up]</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="shortcut">
+               <string>Ctrl+Up</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="autoExclusive">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">uItemDirectionButtonGroup</string>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -2356,9 +2469,9 @@ QLabel:disabled {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uItemDirectionButtonGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>

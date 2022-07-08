@@ -89,6 +89,16 @@ enum class ClockMode
     PULSE
 };
 
+enum class ConfiguratorMode
+{
+    NO_CONFIGURATION,
+    DIRECTION_AND_INPUT_COUNT,
+    DIRECTION_ONLY,
+    OUTPUT_COLOR,
+    MULTIPLEXER_BITS,
+    DEMULTIPLEXER_BITS
+};
+
 namespace undo
 {
 enum class Type

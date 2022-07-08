@@ -6,6 +6,23 @@
 #include <QGraphicsItem>
 #include <QPoint>
 
+static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{ComponentType::AND_GATE, ConfiguratorMode::DIRECTION_AND_INPUT_COUNT},
+                                                                             {ComponentType::OR_GATE, ConfiguratorMode::DIRECTION_AND_INPUT_COUNT},
+                                                                             {ComponentType::XOR_GATE, ConfiguratorMode::DIRECTION_AND_INPUT_COUNT},
+                                                                             {ComponentType::NOT_GATE, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::BUFFER_GATE, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::INPUT, ConfiguratorMode::NO_CONFIGURATION},
+                                                                             {ComponentType::BUTTON, ConfiguratorMode::NO_CONFIGURATION},
+                                                                             {ComponentType::CLOCK, ConfiguratorMode::NO_CONFIGURATION},
+                                                                             {ComponentType::OUTPUT, ConfiguratorMode::NO_CONFIGURATION},
+                                                                             {ComponentType::TEXT_LABEL, ConfiguratorMode::NO_CONFIGURATION},
+                                                                             {ComponentType::HALF_ADDER, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::FULL_ADDER, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::RS_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::D_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::MULTIPLEXER, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::DEMULTIPLEXER, ConfiguratorMode::DIRECTION_ONLY}};
+
 /// \brief Rounds the given point to the nearest grid point
 /// \param pPoint: The point to round
 /// \return The rounded point
@@ -41,6 +58,16 @@ inline LogicState InvertState(LogicState pState)
         }
     }
     return LogicState::LOW;
+}
+
+inline ConfiguratorMode GetConfiguratorModeForComponentType(ComponentType pType)
+{
+    if (CONFIGURATOR_MODE_MAP.find(pType) != CONFIGURATOR_MODE_MAP.end())
+    {
+        return CONFIGURATOR_MODE_MAP.at(pType);
+    }
+
+    return ConfiguratorMode::NO_CONFIGURATION;
 }
 
 #endif // HELPERFUNCTIONS_H

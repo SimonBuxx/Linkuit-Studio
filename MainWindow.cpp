@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mUi->uItemRightButton->setChecked(true);
 
-    HideItemConfigurationGui();
+    HideItemConfigurator();
     mUi->uClockConfiguration->setVisible(false);
 
     mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
@@ -51,26 +51,26 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         if (pNewMode != ControlMode::ADD)
         {
-            HideItemConfigurationGui();
-        }
-        else
-        {
-            //ShowItemConfigurationGui(mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE);
-            ShowItemConfigurationGui();
+            HideItemConfigurator();
         }
     });
 
     QObject::connect(&mCoreLogic, &CoreLogic::ComponentTypeChangedSignal, this, [&](ComponentType pNewType)
     {
-        if (pNewType > ComponentType::XOR_GATE)
+        /*if (pNewType > ComponentType::BUFFER_GATE)
         {
-            HideItemConfigurationGui();
+            HideItemConfigurator();
+        }
+        else if (pNewType > ComponentType::XOR_GATE)
+        {
+            ShowItemConfigurator(ConfiguratorMode::DIRECTION_ONLY);
         }
         else
         {
-            //ShowItemConfigurationGui(mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE);
-            ShowItemConfigurationGui();
-        }
+            ShowItemConfigurator(ConfiguratorMode::DIRECTION_AND_INPUT_COUNT);
+        }*/
+
+        ShowItemConfigurator(GetConfiguratorModeForComponentType(pNewType));
     });
 
     QObject::connect(&mCoreLogic, &CoreLogic::AppendToUndoQueueSignal, this, [this]()
@@ -257,16 +257,41 @@ void MainWindow::HideConfigurationGui()
     mUi->uClockConfiguration->hide();
 }
 
-void MainWindow::ShowItemConfigurationGui()
+void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
 {
+    switch (pMode)
+    {
+        case ConfiguratorMode::NO_CONFIGURATION:
+        {
+            HideItemConfigurator();
+            return;
+        }
+        case ConfiguratorMode::DIRECTION_ONLY:
+        {
+            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uInputCountFrame->hide();
+            break;
+        }
+        case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
+        {
+            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uInputCountFrame->show();
+            break;
+        }
+        default:
+        {
+            break;
+            //throw std::logic_error("Invalid ConfiguratorMode");
+        }
+    }
+
     mUi->uItemConfigContainer->show();
 
-    auto mousePos = QWidget::mapFromGlobal(QCursor::pos());
-
-    mUi->uItemConfigContainer->move(mUi->uItemConfigContainer->x(), mousePos.y() - mUi->menuBar->height() - mUi->uItemConfigContainer->height() / 2);
+    /*auto mousePos = QWidget::mapFromGlobal(QCursor::pos());
+    mUi->uItemConfigContainer->move(mUi->uItemConfigContainer->x(), mousePos.y() - mUi->menuBar->height() - mUi->uItemConfigContainer->height() / 2);*/
 }
 
-void MainWindow::HideItemConfigurationGui(void)
+void MainWindow::HideItemConfigurator()
 {
     mUi->uItemConfigContainer->hide();
 }

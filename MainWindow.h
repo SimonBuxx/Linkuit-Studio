@@ -73,8 +73,8 @@ protected slots:
 
     void OnItemInputCountSliderValueChanged(int32_t pValue);
 
-    void ShowItemConfigurationGui(void);
-    void HideItemConfigurationGui(void);
+    void ShowItemConfigurator(ConfiguratorMode pMode);
+    void HideItemConfigurator(void);
 
 protected:
     /// \brief Connects signals and slots of the GUI widgets and core logic
