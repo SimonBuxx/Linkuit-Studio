@@ -51,6 +51,28 @@ ConPoint::ConPoint(const ConPoint& pObj, const CoreLogic* pCoreLogic):
     }
 };
 
+ConPoint::ConPoint(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    ConPoint(pCoreLogic)
+{
+    setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
+
+    if (pJson.contains("dir"))
+    {
+        if (pJson["dir"] == static_cast<int32_t>(DiodeDirection::HORIZONTAL))
+        {
+            mConnectionType = ConnectionType::DIODE_X;
+        } else if (pJson["dir"] == static_cast<int32_t>(DiodeDirection::VERTICAL))
+        {
+            mConnectionType = ConnectionType::DIODE_Y;
+        }
+    }
+
+    if (mConnectionType != ConnectionType::FULL)
+    {
+        mLogicCell = mLogicDiodeCell;
+    }
+}
+
 void ConPoint::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
 {
     Q_ASSERT(pCoreLogic);
@@ -210,4 +232,26 @@ QRectF ConPoint::boundingRect() const
 {
     return QRectF(-components::wires::BOUNDING_RECT_SIZE / 2.0f, -components::wires::BOUNDING_RECT_SIZE / 2.0f,
                   components::wires::BOUNDING_RECT_SIZE, components::wires::BOUNDING_RECT_SIZE);
+}
+
+QJsonObject ConPoint::GetJson() const
+{
+#warning do not create JSON for T crossing ConPoints
+    QJsonObject json;
+
+    if (mConnectionType == ConnectionType::DIODE_X)
+    {
+        json["dir"] = static_cast<int32_t>(DiodeDirection::HORIZONTAL);
+    }
+    else if (mConnectionType == ConnectionType::DIODE_Y)
+    {
+        json["dir"] = static_cast<int32_t>(DiodeDirection::VERTICAL);
+    }
+
+#warning use type string lookup table
+    json["type"] = "CONPOINT";
+    json["x"] = x();
+    json["y"] = y();
+
+    return json;
 }

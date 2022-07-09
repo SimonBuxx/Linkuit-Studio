@@ -20,7 +20,10 @@ public:
     /// \param pObj: The object to be copied
     /// \param pCoreLogic: Pointer to the core logic
     AndGate(const AndGate& pObj, const CoreLogic* pCoreLogic);
-#warning missing documentation
+
+    /// \brief Constructor for loading from JSON
+    /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
+    /// \param pJson: The JSON object to load the component's data from
     AndGate(const CoreLogic* pCoreLogic, const QJsonObject& pJson);
 
     /// \brief Clone function for the gate

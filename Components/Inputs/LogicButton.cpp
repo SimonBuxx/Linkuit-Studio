@@ -27,6 +27,12 @@ LogicButton::LogicButton(const LogicButton& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
 };
 
+LogicButton::LogicButton(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    LogicButton(pCoreLogic)
+{
+    setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
+}
+
 IBaseComponent* LogicButton::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicButton(*this, pCoreLogic);
@@ -99,3 +105,16 @@ QRectF LogicButton::boundingRect() const
 {
     return QRectF(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
 }
+
+QJsonObject LogicButton::GetJson() const
+{
+    QJsonObject json;
+
+#warning use type string lookup table
+    json["type"] = "BUTTON";
+    json["x"] = x();
+    json["y"] = y();
+
+    return json;
+}
+

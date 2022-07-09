@@ -1451,16 +1451,65 @@ void CoreLogic::ReadJson(const QJsonObject& pJson)
     mUndoQueue.clear();
     mRedoQueue.clear();
 
-    UpdateUndoRedoEnabledSignal();
+    emit UpdateUndoRedoEnabledSignal();
 }
 
 void CoreLogic::CreateComponent(const QJsonObject &pJson)
 {
     if (pJson.contains("type") && pJson["type"].isString())
     {
+        IBaseComponent* item = nullptr;
         if (pJson["type"].toString() == "AND_GATE")
         {
-            auto item = new AndGate(this, pJson);
+            item = new AndGate(this, pJson);
+        }
+        else if (pJson["type"].toString() == "OR_GATE")
+        {
+            item = new OrGate(this, pJson);
+        }
+        else if (pJson["type"].toString() == "XOR_GATE")
+        {
+            item = new XorGate(this, pJson);
+        }
+        else if (pJson["type"].toString() == "NOT_GATE")
+        {
+            item = new NotGate(this, pJson);
+        }
+        else if (pJson["type"].toString() == "BUFFER_GATE")
+        {
+            item = new BufferGate(this, pJson);
+        }
+        else if (pJson["type"].toString() == "WIRE")
+        {
+            item = new LogicWire(this, pJson);
+        }
+        else if (pJson["type"].toString() == "CONPOINT")
+        {
+            item = new ConPoint(this, pJson);
+        }
+        else if (pJson["type"].toString() == "LABEL")
+        {
+            item = new TextLabel(this, pJson);
+        }
+        else if (pJson["type"].toString() == "INPUT")
+        {
+            item = new LogicInput(this, pJson);
+        }
+        else if (pJson["type"].toString() == "OUTPUT")
+        {
+            item = new LogicOutput(this, pJson);
+        }
+        else if (pJson["type"].toString() == "BUTTON")
+        {
+            item = new LogicButton(this, pJson);
+        }
+        else if (pJson["type"].toString() == "CLOCK")
+        {
+            item = new LogicClock(this, pJson);
+        }
+
+        if (nullptr != item)
+        {
             mView.Scene()->addItem(item);
         }
     }

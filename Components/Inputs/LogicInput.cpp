@@ -27,6 +27,12 @@ LogicInput::LogicInput(const LogicInput& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
 };
 
+LogicInput::LogicInput(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    LogicInput(pCoreLogic)
+{
+    setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
+}
+
 IBaseComponent* LogicInput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicInput(*this, pCoreLogic);
@@ -76,4 +82,16 @@ void LogicInput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
 QRectF LogicInput::boundingRect() const
 {
     return QRectF(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
+}
+
+QJsonObject LogicInput::GetJson() const
+{
+    QJsonObject json;
+
+#warning use type string lookup table
+    json["type"] = "INPUT";
+    json["x"] = x();
+    json["y"] = y();
+
+    return json;
 }

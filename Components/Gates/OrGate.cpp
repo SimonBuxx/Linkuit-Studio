@@ -18,7 +18,49 @@ OrGate::OrGate(const OrGate& pObj, const CoreLogic* pCoreLogic):
     mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
 };
 
+OrGate::OrGate(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    OrGate(pCoreLogic, pJson["inputs"].toInt(), static_cast<Direction>(pJson["dir"].toInt()))
+{
+    setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
+
+    std::vector<bool> ininv;
+    auto ininvArray = pJson["ininv"].toArray();
+    foreach (auto inv, ininvArray)
+    {
+        ininv.push_back(inv.toBool());
+    }
+    GetLogicCell()->SetInputInversions(ininv);
+    GetLogicCell()->SetOutputInversions(std::vector<bool>{pJson["outinv"].toBool()});
+}
+
 IBaseComponent* OrGate::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new OrGate(*this, pCoreLogic);
+}
+
+QJsonObject OrGate::GetJson() const
+{
+    QJsonObject json;
+
+#warning use type string lookup table
+    json["type"] = "OR_GATE";
+    json["x"] = x();
+    json["y"] = y();
+    json["dir"] = static_cast<int32_t>(mDirection);
+    json["inputs"] = mInputCount;
+
+    {
+        QJsonArray ininv;
+
+        foreach(const auto inv, mLogicCell->GetInputInversions())
+        {
+            ininv.append(inv);
+        }
+
+        json["ininv"] = ininv;
+
+        json["outinv"] = QJsonValue(mLogicCell->GetOutputInversions()[0]);
+    }
+
+    return json;
 }

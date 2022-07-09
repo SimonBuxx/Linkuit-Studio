@@ -22,6 +22,12 @@ LogicOutput::LogicOutput(const LogicOutput& pObj, const CoreLogic* pCoreLogic):
     mHeight = pObj.mHeight;
 };
 
+LogicOutput::LogicOutput(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    LogicOutput(pCoreLogic)
+{
+    setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
+}
+
 IBaseComponent* LogicOutput::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicOutput(*this, pCoreLogic);
@@ -58,4 +64,16 @@ void LogicOutput::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpt
 QRectF LogicOutput::boundingRect() const
 {
     return QRectF(mWidth * -0.5f, mHeight * -0.5f, mWidth, mHeight);
+}
+
+QJsonObject LogicOutput::GetJson() const
+{
+    QJsonObject json;
+
+#warning use type string lookup table
+    json["type"] = "OUTPUT";
+    json["x"] = x();
+    json["y"] = y();
+
+    return json;
 }

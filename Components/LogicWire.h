@@ -23,6 +23,11 @@ public:
     /// \param pCoreLogic: Pointer to the core logic
     LogicWire(const LogicWire& pObj, const CoreLogic* pCoreLogic);
 
+    /// \brief Constructor for loading from JSON
+    /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
+    /// \param pJson: The JSON object to load the component's data from
+    LogicWire(const CoreLogic* pCoreLogic, const QJsonObject& pJson);
+
     /// \brief Clone function for the wire component
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \return A pointer to the new component
@@ -56,10 +61,9 @@ public:
     /// \param pLogicCell: The logic cell
     void SetLogicCell(const std::shared_ptr<LogicWireCell>& pLogicCell);
 
-#warning implement JSON conversion for this component
     /// \brief Saves the dats of this component to the given JSON object
     /// \return The JSON object with the component data
-    virtual QJsonObject GetJson(void) const override {};
+    virtual QJsonObject GetJson(void) const override;
 
 protected:
     /// \brief Paints the wire component

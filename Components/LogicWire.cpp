@@ -38,6 +38,12 @@ LogicWire::LogicWire(const LogicWire& pObj, const CoreLogic* pCoreLogic):
     LogicWire(pCoreLogic, pObj.mDirection, pObj.GetLength())
 {};
 
+LogicWire::LogicWire(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    LogicWire(pCoreLogic, static_cast<WireDirection>(pJson["dir"].toInt()), pJson["length"].toInt())
+{
+    setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
+}
+
 IBaseComponent* LogicWire::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
     return new LogicWire(*this, pCoreLogic);
@@ -127,4 +133,25 @@ QRectF LogicWire::boundingRect() const
     {
         return QRectF(mWidth * -0.5f, -2, mWidth, mHeight + 4);
     }
+}
+
+QJsonObject LogicWire::GetJson() const
+{
+    QJsonObject json;
+
+#warning use type string lookup table
+    json["type"] = "WIRE";
+    json["x"] = x();
+    json["y"] = y();
+    if (mDirection == WireDirection::HORIZONTAL)
+    {
+        json["length"] = static_cast<int32_t>(mWidth);
+    }
+    else
+    {
+        json["length"] = static_cast<int32_t>(mHeight);
+    }
+    json["dir"] = static_cast<int32_t>(mDirection);
+
+    return json;
 }

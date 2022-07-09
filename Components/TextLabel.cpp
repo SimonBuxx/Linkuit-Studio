@@ -35,10 +35,9 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, const QString& pText)
 
     mPlainTextEditProxy.setWidget(mPlainTextEdit);
 
-#warning mind label focus when implementing circuit loading
     if (pTakeFocus)
     {
-        mPlainTextEdit->setFocus(); // Take focus if not generated via copy constructor
+        mPlainTextEdit->setFocus(); // Take focus if not generated via copy or load constructor
     }
 
     QObject::connect(mPlainTextEdit, &PlainTextEdit::SelectParentItem, this, [&]()
@@ -107,6 +106,13 @@ void TextLabel::ConnectToCoreLogic(const CoreLogic* pCoreLogic)
 TextLabel::TextLabel(const TextLabel& pObj, const CoreLogic* pCoreLogic):
     TextLabel(pCoreLogic, pObj.mPlainTextEdit ? pObj.mPlainTextEdit->document()->toPlainText(): "", false)
 {};
+
+TextLabel::TextLabel(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    TextLabel(pCoreLogic, pJson["text"].toString(), false)
+{
+    setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
+}
+
 
 IBaseComponent* TextLabel::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
@@ -193,6 +199,20 @@ void TextLabel::SetTextContent(const QString& pText)
         mPlainTextEdit->document()->setModified(false);
         UpdatePlainTextEditSize();
     }
+}
+
+QJsonObject TextLabel::GetJson() const
+{
+    QJsonObject json;
+
+#warning use type string lookup table
+    json["type"] = "LABEL";
+    json["x"] = x();
+    json["y"] = y();
+
+    json["text"] = mPlainTextEdit->document()->toPlainText();
+
+    return json;
 }
 
 void PlainTextEdit::SetLastTextState(const QString& pText)

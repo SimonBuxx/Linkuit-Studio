@@ -44,6 +44,19 @@ LogicClock::LogicClock(const LogicClock& pObj, const CoreLogic* pCoreLogic):
     std::static_pointer_cast<LogicClockCell>(mLogicCell)->SetPulseTicks(std::static_pointer_cast<LogicClockCell>(pObj.mLogicCell)->GetPulseTicks());
 };
 
+LogicClock::LogicClock(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    LogicClock(pCoreLogic, static_cast<Direction>(pJson["dir"].toInt()))
+{
+    setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
+
+    // Configure logic clock cell
+    std::static_pointer_cast<LogicClockCell>(mLogicCell)->SetClockMode(static_cast<ClockMode>(pJson["mode"].toInt()));
+    std::static_pointer_cast<LogicClockCell>(mLogicCell)->SetToggleTicks(pJson["toggle"].toInt());
+    std::static_pointer_cast<LogicClockCell>(mLogicCell)->SetPulseTicks(pJson["pulse"].toInt());
+
+    GetLogicCell()->SetOutputInversions(std::vector<bool>{pJson["outinv"].toBool()});
+}
+
 void LogicClock::SetLogicConnectors()
 {
     switch (mDirection)
@@ -247,3 +260,24 @@ QRectF LogicClock::boundingRect() const
         return QRectF(-3, -13, mWidth + 6, mHeight + 26);
     }
 }
+
+QJsonObject LogicClock::GetJson() const
+{
+    QJsonObject json;
+
+#warning use type string lookup table
+    json["type"] = "CLOCK";
+    json["x"] = x();
+    json["y"] = y();
+
+    json["dir"] = static_cast<int32_t>(mDirection);
+
+    json["mode"] = static_cast<int32_t>(std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetClockMode());
+    json["toggle"] = static_cast<int32_t>(std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetToggleTicks());
+    json["pulse"] = static_cast<int32_t>(std::static_pointer_cast<LogicClockCell>(mLogicCell)->GetPulseTicks());
+
+    json["outinv"] = QJsonValue(mLogicCell->GetOutputInversions()[0]);
+
+    return json;
+}
+
