@@ -60,7 +60,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         ShowItemConfigurator(GetConfiguratorModeForComponentType(pNewType));
     });
 
-    QObject::connect(&mCoreLogic, &CoreLogic::AppendToUndoQueueSignal, this, [this]()
+    QObject::connect(&mCoreLogic, &CoreLogic::UpdateUndoRedoEnabledSignal, this, [this]()
     {
         UpdateUndoRedoEnabled(true);
     });
@@ -134,12 +134,12 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+        mCoreLogic.LoadJson("circuits/test.json");
     });
 
     QObject::connect(mUi->uActionSave, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+        mCoreLogic.SaveJson("circuits/test.json");
     });
 
     QObject::connect(mUi->uActionSaveAs, &QAction::triggered, this, [&]()
@@ -431,6 +431,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             UpdateUndoRedoEnabled(true);
 
+            mUi->uActionOpen->setEnabled(true);
+
             mUi->uActionCut->setEnabled(true);
             mUi->uActionCopy->setEnabled(true);
             mUi->uActionPaste->setEnabled(true);
@@ -467,6 +469,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             UpdateUndoRedoEnabled(true);
 
+            mUi->uActionOpen->setEnabled(true);
+
             mUi->uActionCut->setEnabled(true);
             mUi->uActionCopy->setEnabled(true);
             mUi->uActionPaste->setEnabled(true);
@@ -501,6 +505,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uPauseButton->setEnabled(false);
 
             UpdateUndoRedoEnabled(true);
+
+            mUi->uActionOpen->setEnabled(true);
 
             mUi->uActionCut->setEnabled(true);
             mUi->uActionCopy->setEnabled(true);
@@ -537,6 +543,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uPauseButton->setEnabled(true);
 
             UpdateUndoRedoEnabled(false);
+
+            mUi->uActionOpen->setEnabled(false);
 
             mUi->uActionCut->setEnabled(false);
             mUi->uActionCopy->setEnabled(false);

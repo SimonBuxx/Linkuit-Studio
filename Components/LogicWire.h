@@ -56,6 +56,11 @@ public:
     /// \param pLogicCell: The logic cell
     void SetLogicCell(const std::shared_ptr<LogicWireCell>& pLogicCell);
 
+#warning implement JSON conversion for this component
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const override {};
+
 protected:
     /// \brief Paints the wire component
     /// \param pPainter: The painter to use

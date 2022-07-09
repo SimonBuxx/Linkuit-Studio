@@ -38,6 +38,11 @@ public:
     /// \param pEvent: The mouse event
     void mousePressEvent(QGraphicsSceneMouseEvent *pEvent) override;
 
+#warning implement JSON conversion for this component
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const override {};
+
 signals:
     /// \brief Emitted when the clock configurator should be displayed with the given settings
     /// \param pMode: The clock mode

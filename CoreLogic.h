@@ -11,6 +11,9 @@
 
 #include <QGraphicsItem>
 #include <QTimer>
+#include <QFile>
+#include <QJsonDocument>
+#include <QCborMap>
 #include <deque>
 
 class View;
@@ -142,6 +145,18 @@ public:
     /// \param pMode: The new clock mode
     void OnClockModeChanged(ClockMode pMode);
 
+    // Functions for saving and loading
+
+    /// \brief Saves the current circuit into the given file path
+    /// \param pPath: The path and file name to save into
+    /// \return True, if saving was successful
+    bool SaveJson(const QString& pPath) const;
+
+    /// \brief Load the circuit at the given file path
+    /// \param pPath: The path and file name to load
+    /// \return True, if loading was successful
+    bool LoadJson(const QString& pPath);
+
     // ////////////////////////////
 
 signals:
@@ -170,8 +185,8 @@ signals:
     /// \brief Emitted when the core logic has stopped the simulation
     void SimulationStopSignal(void);
 
-    /// \brief Emitted when any action is appended to the undo queue
-    void AppendToUndoQueueSignal(void);
+    /// \brief Emitted when the undo/redo button enabled state should be updated
+    void UpdateUndoRedoEnabledSignal(void);
 
     /// \brief Emitted when the clock configurator should be displayed with the given settings
     /// \param pMode: The clock mode (either toggle or pulse)
@@ -373,6 +388,14 @@ protected:
 
     /// \brief Unselects all items in the scene
     void ClearSelection(void);
+
+    // Functions for loading and saving
+#warning missing documentation
+    QJsonObject GetJson(void) const;
+
+    void ReadJson(const QJsonObject& pJson);
+
+    void CreateComponent(const QJsonObject& pJson);
 
 protected:
     View &mView;

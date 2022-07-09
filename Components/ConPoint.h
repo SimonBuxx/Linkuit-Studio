@@ -62,6 +62,11 @@ public:
     /// \param pLogicCell: The logic cell
     void SetLogicCell(const std::shared_ptr<LogicBaseCell>& pLogicCell);
 
+#warning implement JSON conversion for this component
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const override {};
+
 signals:
     /// \brief Emitted when the connection type of this ConPoint changed
     /// \param pConPoint: Pointer to this ConPoint

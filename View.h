@@ -109,6 +109,9 @@ public:
     /// \brief Fades in the overlay that indicates that the SW is loading
     void FadeInProcessingOverlay(void);
 
+    /// \brief Resets zoom and position
+    void ResetViewport(void);
+
 signals:
     /// \brief Emitted when the scene is zoomed in or out
     /// \param pPercentage: The new zoom percentage

@@ -191,6 +191,7 @@ void View::Init()
     QObject::connect(&mCoreLogic, &CoreLogic::SimulationStopSignal, this, &View::OnSimulationStop);
 
     SetupMatrix();
+    ResetViewport();
 }
 
 void View::SetScene(QGraphicsScene &pScene)
@@ -252,6 +253,14 @@ void View::SetZoom(int32_t pZoomLevel)
 
         emit ZoomLevelChangedSignal(std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f) * 100, mZoomLevel);
     }
+}
+
+void View::ResetViewport()
+{
+    SetZoom(canvas::DEFAULT_ZOOM_LEVEL);
+
+    mGraphicsView.horizontalScrollBar()->setValue(0);
+    mGraphicsView.verticalScrollBar()->setValue(0);
 }
 
 void View::ZoomIn(int32_t pAmount)

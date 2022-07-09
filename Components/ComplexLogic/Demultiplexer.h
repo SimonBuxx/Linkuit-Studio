@@ -26,6 +26,11 @@ public:
     /// \return A pointer to the new component
     virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
+#warning implement JSON conversion for this component
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const override {};
+
 protected:
     uint8_t mDigitCount;
 };

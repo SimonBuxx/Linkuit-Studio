@@ -1403,6 +1403,107 @@ void CoreLogic::DeleteSelectedComponents()
     ClearSelection();
 }
 
+QJsonObject CoreLogic::GetJson() const
+{
+    QJsonObject json;
+
+    QJsonArray components;
+
+    for (const auto& item : mView.Scene()->items())
+    {
+        if (nullptr != dynamic_cast<IBaseComponent*>(item))
+        {
+            components.append(static_cast<IBaseComponent*>(item)->GetJson());
+        }
+    }
+
+    json["components"] = components;
+
+    return json;
+}
+
+void CoreLogic::ReadJson(const QJsonObject& pJson)
+{
+    EnterControlMode(ControlMode::EDIT); // Always start in edit mode after loading
+
+    // Delete all components
+    for (const auto& item : mView.Scene()->items())
+    {
+        mView.Scene()->removeItem(item);
+    }
+
+    mView.ResetViewport();
+
+    // Create components
+    if (pJson.contains("components") && pJson["components"].isArray())
+    {
+        auto components = pJson["components"].toArray();
+
+        for (uint32_t compIndex = 0; compIndex < components.size(); compIndex++)
+        {
+            auto component = components[compIndex].toObject();
+
+            CreateComponent(component);
+        }
+    }
+
+    // Clear undo and redo stacks
+    mUndoQueue.clear();
+    mRedoQueue.clear();
+
+    UpdateUndoRedoEnabledSignal();
+}
+
+void CoreLogic::CreateComponent(const QJsonObject &pJson)
+{
+    if (pJson.contains("type") && pJson["type"].isString())
+    {
+        if (pJson["type"].toString() == "AND_GATE")
+        {
+            auto item = new AndGate(this, pJson);
+            mView.Scene()->addItem(item);
+        }
+    }
+}
+
+bool CoreLogic::SaveJson(const QString& pPath) const
+{
+    QFile saveFile(pPath);
+
+    if (!saveFile.open(QIODevice::WriteOnly))
+    {
+        return false;
+    }
+
+    auto jsonObject = GetJson();
+
+    saveFile.write(file::SAVE_FORMAT == SaveFormat::JSON
+                   ? QJsonDocument(jsonObject).toJson()
+                   : QCborValue::fromJsonValue(jsonObject).toCbor());
+
+    return true;
+}
+
+bool CoreLogic::LoadJson(const QString& pPath)
+{
+    QFile loadFile(pPath);
+
+    if (!loadFile.open(QIODevice::ReadOnly))
+    {
+        return false;
+    }
+
+    QByteArray rawData = loadFile.readAll();
+
+    QJsonDocument jsonDoc(file::SAVE_FORMAT == SaveFormat::JSON
+                    ? QJsonDocument::fromJson(rawData)
+                    : QJsonDocument(QCborValue::fromCbor(rawData).toMap().toJsonObject()));
+
+    ReadJson(jsonDoc.object());
+
+    return true;
+}
+
 void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
 {
     Q_ASSERT(pUndoObject);
@@ -1410,7 +1511,7 @@ void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
     AppendToUndoQueue(pUndoObject, mUndoQueue);
     mRedoQueue.clear();
 
-    emit AppendToUndoQueueSignal();
+    emit UpdateUndoRedoEnabledSignal();
 }
 
 void CoreLogic::AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBaseType*> &pQueue)

@@ -25,6 +25,11 @@ public:
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \return A pointer to the new gate component
     virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
+
+#warning implement JSON conversion for this component
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const override {};
 };
 
 #endif // XORGATE_H

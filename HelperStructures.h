@@ -8,6 +8,12 @@ namespace helpers
 static const QString SUPERSCRIPTS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 } // namespace
 
+enum class SaveFormat
+{
+    JSON = 0,
+    BINARY
+};
+
 enum class ComponentType
 {
     NONE = 0,

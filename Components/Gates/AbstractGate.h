@@ -29,6 +29,10 @@ public:
     /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
     void ResetZValue(void) override;
 
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const override = 0;
+
 protected:
     /// \brief Paints the abstract gate component
     /// \param pPainter: The painter to use

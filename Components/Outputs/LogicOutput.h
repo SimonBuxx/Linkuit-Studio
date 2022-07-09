@@ -33,6 +33,11 @@ public:
     /// \brief Sets the Z-value to its defined value, to reset it after components have been copied
     void ResetZValue(void) override;
 
+#warning implement JSON conversion for this component
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const override {};
+
 protected:
     /// \brief Paints the output component
     /// \param pPainter: The painter to use

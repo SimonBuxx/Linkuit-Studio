@@ -11,6 +11,11 @@ static constexpr uint8_t MAX_UNDO_STACK_SIZE = 100;
 
 static constexpr const char* SW_VERSION_STRING = "0.7.0alpha";
 
+namespace file
+{
+static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::JSON;
+} // namespace
+
 namespace gui
 {
 static constexpr const char* WINDOW_TITLE = "Linkuit Studio - Unnamed Circuit";

@@ -7,6 +7,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+#include <QJsonObject>
+#include <QJsonArray>
 
 class CoreLogic;
 
@@ -52,6 +54,10 @@ public:
     std::optional<const LogicConnector*> InvertConnectorByPoint(QPointF pPoint);
 
     QPainterPath shape(void) const override;
+
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const = 0;
 
 protected slots:
     void OnLogicStateChanged(void);

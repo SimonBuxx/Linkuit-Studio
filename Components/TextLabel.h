@@ -78,6 +78,11 @@ public:
     /// \param pText: The text to display in the label
     void SetTextContent(const QString& pText);
 
+#warning implement JSON conversion for this component
+    /// \brief Saves the dats of this component to the given JSON object
+    /// \return The JSON object with the component data
+    virtual QJsonObject GetJson(void) const override {};
+
 signals:
     /// \brief Emitted when the content of the text label changes
     /// \param pTextLabel: Pointer to this text label
