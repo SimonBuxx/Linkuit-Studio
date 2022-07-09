@@ -35,6 +35,13 @@ LogicClock::LogicClock(const LogicClock& pObj, const CoreLogic* pCoreLogic):
 {
     mWidth = pObj.mWidth;
     mHeight = pObj.mHeight;
+
+    mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
+
+    // Configure logic clock cell
+    std::static_pointer_cast<LogicClockCell>(mLogicCell)->SetClockMode(std::static_pointer_cast<LogicClockCell>(pObj.mLogicCell)->GetClockMode());
+    std::static_pointer_cast<LogicClockCell>(mLogicCell)->SetToggleTicks(std::static_pointer_cast<LogicClockCell>(pObj.mLogicCell)->GetToggleTicks());
+    std::static_pointer_cast<LogicClockCell>(mLogicCell)->SetPulseTicks(std::static_pointer_cast<LogicClockCell>(pObj.mLogicCell)->GetPulseTicks());
 };
 
 void LogicClock::SetLogicConnectors()
