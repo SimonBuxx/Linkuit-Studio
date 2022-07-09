@@ -39,7 +39,7 @@ void LogicClockCell::LogicFunction()
     }
     else if (mPulseCountdown == 0)
     {
-        if (mState != LogicState::LOW)
+        if (mState != LogicState::LOW && mMode == ClockMode::PULSE)
         {
             mState = LogicState::LOW;
             mStateChanged = true;
