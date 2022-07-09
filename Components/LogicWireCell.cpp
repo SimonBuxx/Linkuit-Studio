@@ -30,9 +30,9 @@ void LogicWireCell::LogicFunction()
     }
 }
 
-void LogicWireCell::AppendOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput)
+void LogicWireCell::AppendOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput)
 {
-    mOutputCells.push_back(std::make_pair(pCell, pInput));
+    mOutputCells.push_back(std::make_pair(pLogicCell, pInput));
     mOutputInverted.push_back(false);
 }
 

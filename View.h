@@ -142,12 +142,6 @@ protected:
     /// \brief Creates all GUI widgets of the main window
     void CreateGui(void);
 
-    /// \brief Creates a QIcon with a normal and a disabled pixmap
-    /// \param pNormalPath: Path to the normal image source
-    /// \param pDisabledPath: Path to the disabled image source
-    /// \return The newly created QIcon object
-    QIcon CreateIcon(QString pNormalPath, QString pDisabledPath) const;
-
     /// \brief Invokes connectors for all GUI components
     void ConnectGuiSignalsAndSlots(void);
 

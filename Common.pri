@@ -41,16 +41,16 @@ HEADERS += \
     $${PWD}/CoreLogic.h \
     $${PWD}/HelperFunctions.h \
     $${PWD}/HelperStructures.h \
-    $${PWD}/MainWindow.h \
+    $${PWD}/Gui/MainWindow.h \
     $${PWD}/Undo/UndoAddType.h \
     $${PWD}/Undo/UndoBaseType.h \
     $${PWD}/Undo/UndoConfigureType.h \
     $${PWD}/Undo/UndoDeleteType.h \
     $${PWD}/Undo/UndoMoveType.h \
-    $${PWD}/View/View.h \
+    $${PWD}/View.h \
     $${PWD}/Configuration.h \
-    $${PWD}/AboutDialog.h \
-    $${PWD}/IconToolButton.h
+    $${PWD}/Gui/AboutDialog.h \
+    $${PWD}/Gui/IconToolButton.h
 
 SOURCES += \
     $$PWD/Components/ComplexLogic/Demultiplexer.cpp \
@@ -98,14 +98,14 @@ SOURCES += \
     $${PWD}/Undo/UndoConfigureType.cpp \
     $${PWD}/Undo/UndoDeleteType.cpp \
     $${PWD}/Undo/UndoMoveType.cpp \
-    $${PWD}/View/EventHandling.cpp \
-    $${PWD}/View/GuiHandling.cpp \
-    $${PWD}/MainWindow.cpp \
-    $${PWD}/View/View.cpp \
-    $${PWD}/AboutDialog.cpp \
-    $${PWD}/IconToolButton.cpp
+    $${PWD}/Gui/MainWindow.cpp \
+    $${PWD}/View.cpp \
+    $${PWD}/Gui/AboutDialog.cpp \
+    $${PWD}/Gui/IconToolButton.cpp
 
 INCLUDEPATH += $${PWD}
 
 FORMS += \
-    $$PWD/AboutDialog.ui
+    $$PWD/Gui/MainWindow.ui \
+    $$PWD/Gui/AboutDialog.ui
+

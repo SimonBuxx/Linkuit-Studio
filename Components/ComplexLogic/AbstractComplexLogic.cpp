@@ -1,7 +1,7 @@
 #include "AbstractComplexLogic.h"
 #include "Configuration.h"
 
-AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, uint8_t pOutputCount,
+AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell, uint8_t pInputCount, uint8_t pOutputCount,
                                            Direction pDirection, uint8_t pTopInputCount):
     IBaseComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),

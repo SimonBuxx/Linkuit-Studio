@@ -110,7 +110,7 @@ bool LogicWire::StartsOrEndsIn(QPointF pPoint) const
             (pos() == pPoint));
 }
 
-void LogicWire::SetLogicCell(std::shared_ptr<LogicWireCell> pLogicCell)
+void LogicWire::SetLogicCell(const std::shared_ptr<LogicWireCell>& pLogicCell)
 {
     mLogicCell = pLogicCell;
 

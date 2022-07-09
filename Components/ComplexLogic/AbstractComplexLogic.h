@@ -17,7 +17,7 @@ public:
     /// \param pOutputCount: The amount of outputs of this component
     /// \param pDirection: The direction of the component
     /// \param pTopInputCount: The input number up to which the inputs should be drawn on top of the component (exclusive)
-    AbstractComplexLogic(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, uint8_t pOutputCount,
+    AbstractComplexLogic(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell, uint8_t pInputCount, uint8_t pOutputCount,
                          Direction pDirection, uint8_t pTopInputCount = 0);
 
     /// \brief Clone function for the component

@@ -636,12 +636,12 @@ std::vector<LogicWire*> CoreLogic::DeleteContainedWires(const LogicWire* pWire)
     QRectF collisionRect;
     if (pWire->GetDirection() == WireDirection::HORIZONTAL)
     {
-        collisionRect = QRectF(pWire->x() - 2, pWire->y() - components::wires::BOUNDING_RECT_SIZE / 2 - 2,
+        collisionRect = QRectF(pWire->x() - 2, pWire->y() - components::wires::BOUNDING_RECT_SIZE / 2.0f - 2,
                                pWire->GetLength() + 4, components::wires::BOUNDING_RECT_SIZE + 4);
     }
     else
     {
-        collisionRect = QRectF(pWire->x() - components::wires::BOUNDING_RECT_SIZE / 2 - 2, pWire->y() - 2,
+        collisionRect = QRectF(pWire->x() - components::wires::BOUNDING_RECT_SIZE / 2.0f - 2, pWire->y() - 2,
                                components::wires::BOUNDING_RECT_SIZE + 4, pWire->GetLength() + 4);
     }
 
@@ -1333,7 +1333,7 @@ void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPre
     }
 }
 
-void CoreLogic::OnTextLabelContentChanged(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText)
+void CoreLogic::OnTextLabelContentChanged(TextLabel* pTextLabel, const QString& pPreviousText, const QString& pCurrentText)
 {
     Q_ASSERT(pTextLabel);
 

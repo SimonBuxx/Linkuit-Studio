@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "View/View.h"
+#include "View.h"
 #include "QtAwesome.h"
-#include "AboutDialog.h"
-#include "IconToolButton.h"
+#include "Gui/AboutDialog.h"
+#include "Gui/IconToolButton.h"
 
 #include <QMainWindow>
 #include <QShortcut>

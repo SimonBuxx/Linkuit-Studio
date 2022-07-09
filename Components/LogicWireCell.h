@@ -25,9 +25,9 @@ public:
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
     /// \brief Appends a logic cell as a new output to this wire cell
-    /// \param pCell: The logic cell to connect
+    /// \param pLogicCell: The logic cell to connect
     /// \param pInput: The number of the input of pCell to connect to
-    void AppendOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput);
+    void AppendOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput);
 
     /// \brief Adds an input slot to this wire cell where other logic cells can connect to
     void AddInputSlot(void);

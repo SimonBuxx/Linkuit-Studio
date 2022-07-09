@@ -60,7 +60,7 @@ public:
 
     /// \brief Sets the logic cell to the cell of the associated wire group or to a diode logic cell
     /// \param pLogicCell: The logic cell
-    void SetLogicCell(std::shared_ptr<LogicBaseCell> pLogicCell);
+    void SetLogicCell(const std::shared_ptr<LogicBaseCell>& pLogicCell);
 
 signals:
     /// \brief Emitted when the connection type of this ConPoint changed

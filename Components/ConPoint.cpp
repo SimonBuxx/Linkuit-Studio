@@ -1,5 +1,5 @@
 #include "ConPoint.h"
-#include "View/View.h"
+#include "CoreLogic.h"
 #include "Configuration.h"
 #include "HelperFunctions.h"
 
@@ -33,7 +33,7 @@ ConPoint::ConPoint(const CoreLogic* pCoreLogic):
     mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, 0), 0, QPointF(0, 0)));
     mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, 0), 0, QPointF(0, 0)));
 
-    mShape.addRect(-components::wires::BOUNDING_RECT_SIZE / 2, -components::wires::BOUNDING_RECT_SIZE / 2,
+    mShape.addRect(-components::wires::BOUNDING_RECT_SIZE / 2.0f, -components::wires::BOUNDING_RECT_SIZE / 2.0f,
                  components::wires::BOUNDING_RECT_SIZE, components::wires::BOUNDING_RECT_SIZE);
 
     QObject::connect(mLogicDiodeCell.get(), &LogicBaseCell::StateChangedSignal, this, &ConPoint::OnLogicStateChanged);
@@ -160,7 +160,7 @@ void ConPoint::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption
     }
 }
 
-void ConPoint::SetLogicCell(std::shared_ptr<LogicBaseCell> pLogicCell)
+void ConPoint::SetLogicCell(const std::shared_ptr<LogicBaseCell>& pLogicCell)
 {
     Q_ASSERT(pLogicCell);
     mLogicCell = pLogicCell;
@@ -208,6 +208,6 @@ void ConPoint::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
 
 QRectF ConPoint::boundingRect() const
 {
-    return QRectF(-components::wires::BOUNDING_RECT_SIZE / 2, -components::wires::BOUNDING_RECT_SIZE / 2,
+    return QRectF(-components::wires::BOUNDING_RECT_SIZE / 2.0f, -components::wires::BOUNDING_RECT_SIZE / 2.0f,
                   components::wires::BOUNDING_RECT_SIZE, components::wires::BOUNDING_RECT_SIZE);
 }

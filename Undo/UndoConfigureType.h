@@ -101,7 +101,7 @@ class UndoConfigureType : public UndoBaseType
 public:
     /// \brief Constructor for UndoConfigureType
     /// \param pData: The data of the configuration event
-    UndoConfigureType(std::shared_ptr<undo::ConfigChangedData> pData);
+    UndoConfigureType(const std::shared_ptr<undo::ConfigChangedData>& pData);
 
     /// \brief Returns the undo::Type of this class
     /// \return The undo::Type of this class

@@ -1,11 +1,11 @@
 #include "IBaseComponent.h"
-#include "View/View.h"
+#include "CoreLogic.h"
 #include "HelperFunctions.h"
 
 #include <QApplication>
 #include <QGraphicsScene>
 
-IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell):
+IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell):
     mMoveStartPoint(pos()),
     mSimulationRunning(false),
     mLogicCell(pLogicCell)

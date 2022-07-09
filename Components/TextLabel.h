@@ -17,7 +17,7 @@ class PlainTextEdit : public QPlainTextEdit
 public:
     /// \brief Sets the text state for which the latest ContentChangedSignal was emitted
     /// \param pText: The text string
-    void SetLastTextState(QString pText);
+    void SetLastTextState(const QString& pText);
 
 protected:
     /// \brief Deselects the TextLabel and triggers an undo action if the text was changed
@@ -55,7 +55,7 @@ public:
     /// \param pCoreLogic: Pointer to the core logic
     /// \param pText: The text to display in the label
     /// \param pTakeFocus: If true, the text label will be focused
-    TextLabel(const CoreLogic* pCoreLogic, QString pText = "", bool pTakeFocus = true);
+    TextLabel(const CoreLogic* pCoreLogic, const QString& pText = "", bool pTakeFocus = true);
 
     /// \brief Copy constructor for TextLabel
     /// \param pObj: The object to be copied
@@ -76,7 +76,7 @@ public:
 
     /// \brief Sets the text of this label and updates its size
     /// \param pText: The text to display in the label
-    void SetTextContent(QString pText);
+    void SetTextContent(const QString& pText);
 
 signals:
     /// \brief Emitted when the content of the text label changes
@@ -99,7 +99,7 @@ protected:
     /// \brief Initializes the proxy widget that contains the text edit widget
     /// \param pTakeFocus: If true, the text edit widget will be focused
     /// \param pText: The text to display in the text edit widget
-    void InitProxyWidget(bool pTakeFocus, QString pText);
+    void InitProxyWidget(bool pTakeFocus, const QString& pText);
 
     /// \brief Connects this label to the core logic using signals and slots
     /// \param pCoreLogic: Pointer to the core logic

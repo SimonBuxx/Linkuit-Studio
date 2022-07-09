@@ -2600,7 +2600,7 @@ QFrame {
   <customwidget>
    <class>IconToolButton</class>
    <extends>QPushButton</extends>
-   <header>IconToolButton.h</header>
+   <header>Gui/IconToolButton.h</header>
   </customwidget>
  </customwidgets>
  <resources>

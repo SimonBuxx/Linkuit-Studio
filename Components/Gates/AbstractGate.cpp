@@ -1,7 +1,7 @@
 #include "AbstractGate.h"
 #include "Configuration.h"
 
-AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, Direction pDirection):
+AbstractGate::AbstractGate(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell, uint8_t pInputCount, Direction pDirection):
     IBaseComponent(pCoreLogic, pLogicCell),
     mInputCount(pInputCount),
     mDirection(pDirection),
@@ -48,7 +48,7 @@ void AbstractGate::SetLogicConnectors()
             {
                 mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(0, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(-4, 0)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2 - mOutputPositionOffset), 0, QPointF(4, 0)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2.0f - mOutputPositionOffset), 0, QPointF(4, 0)));
             break;
         }
         case Direction::DOWN:
@@ -57,7 +57,7 @@ void AbstractGate::SetLogicConnectors()
             {
                 mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0), i, QPointF(0, -4)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2 + mOutputPositionOffset, mHeight), 0, QPointF(0, 4)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2.0f + mOutputPositionOffset, mHeight), 0, QPointF(0, 4)));
             break;
         }
         case Direction::LEFT:
@@ -66,7 +66,7 @@ void AbstractGate::SetLogicConnectors()
             {
                 mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mWidth, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE), i, QPointF(4, 0)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2 + mOutputPositionOffset), 0, QPointF(-4, 0)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2.0f + mOutputPositionOffset), 0, QPointF(-4, 0)));
             break;
         }
         case Direction::UP:
@@ -75,7 +75,7 @@ void AbstractGate::SetLogicConnectors()
             {
                 mInConnectors.push_back(LogicConnector(ConnectorType::IN, QPointF(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight), i, QPointF(0, 4)));
             }
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2 - mOutputPositionOffset, 0), 0, QPointF(0, -4)));
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2.0f - mOutputPositionOffset, 0), 0, QPointF(0, -4)));
             break;
         }
         default:

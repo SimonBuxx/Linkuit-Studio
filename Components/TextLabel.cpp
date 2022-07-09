@@ -2,7 +2,7 @@
 #include "Configuration.h"
 #include "CoreLogic.h"
 
-TextLabel::TextLabel(const CoreLogic* pCoreLogic, QString pText, bool pTakeFocus):
+TextLabel::TextLabel(const CoreLogic* pCoreLogic, const QString& pText, bool pTakeFocus):
     IBaseComponent(pCoreLogic, nullptr),
     mPlainTextEditProxy(this)
 {
@@ -13,7 +13,7 @@ TextLabel::TextLabel(const CoreLogic* pCoreLogic, QString pText, bool pTakeFocus
     ConnectToCoreLogic(pCoreLogic);
 }
 
-void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
+void TextLabel::InitProxyWidget(bool pTakeFocus, const QString& pText)
 {
     mPlainTextEdit = new PlainTextEdit();
 
@@ -56,7 +56,7 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, QString pText)
         setSelected(false);
     });
 
-    QObject::connect(mPlainTextEdit, &PlainTextEdit::ContentChangedSignal, this, [&](QString pPreviousText, QString pCurrentText)
+    QObject::connect(mPlainTextEdit, &PlainTextEdit::ContentChangedSignal, this, [&](const QString& pPreviousText, const QString& pCurrentText)
     {
         emit TextLabelContentChangedSignal(this, pPreviousText, pCurrentText);
     });
@@ -165,12 +165,12 @@ void TextLabel::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOptio
             QPen pen(pOption->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR, 1, Qt::SolidLine, Qt::RoundCap);
             pPainter->setPen(pen);
 
-            pPainter->drawPoint(4, mHeight / 2 - canvas::GRID_SIZE * 0.45f - 4);
-            pPainter->drawPoint(4, mHeight / 2 - canvas::GRID_SIZE * 0.45f - 1);
-            pPainter->drawPoint(4, mHeight / 2 - canvas::GRID_SIZE * 0.45f + 2);
-            pPainter->drawPoint(6, mHeight / 2 - canvas::GRID_SIZE * 0.45f - 4);
-            pPainter->drawPoint(6, mHeight / 2 - canvas::GRID_SIZE * 0.45f - 1);
-            pPainter->drawPoint(6, mHeight / 2 - canvas::GRID_SIZE * 0.45f + 2);
+            pPainter->drawPoint(4, mHeight / 2.0f - canvas::GRID_SIZE * 0.45f - 4);
+            pPainter->drawPoint(4, mHeight / 2.0f - canvas::GRID_SIZE * 0.45f - 1);
+            pPainter->drawPoint(4, mHeight / 2.0f - canvas::GRID_SIZE * 0.45f + 2);
+            pPainter->drawPoint(6, mHeight / 2.0f - canvas::GRID_SIZE * 0.45f - 4);
+            pPainter->drawPoint(6, mHeight / 2.0f - canvas::GRID_SIZE * 0.45f - 1);
+            pPainter->drawPoint(6, mHeight / 2.0f - canvas::GRID_SIZE * 0.45f + 2);
         }
     }
 
@@ -185,7 +185,7 @@ QRectF TextLabel::boundingRect() const
     return QRectF(0, canvas::GRID_SIZE * -0.5f, mWidth, mHeight);
 }
 
-void TextLabel::SetTextContent(QString pText)
+void TextLabel::SetTextContent(const QString& pText)
 {
     if (mPlainTextEdit != nullptr)
     {
@@ -195,7 +195,7 @@ void TextLabel::SetTextContent(QString pText)
     }
 }
 
-void PlainTextEdit::SetLastTextState(QString pText)
+void PlainTextEdit::SetLastTextState(const QString& pText)
 {
     mLastTextState = pText;
 }

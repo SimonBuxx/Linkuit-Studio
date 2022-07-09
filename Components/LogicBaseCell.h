@@ -42,10 +42,10 @@ public:
     virtual void InputReady(uint32_t pInput, LogicState pState);
 
     /// \brief Sets logic cell pCell's input number pInput to this cell's output number pOutput
-    /// \param pCell: The logic cell to connect to this cell's output
+    /// \param pLogicCell: The logic cell to connect to this cell's output
     /// \param pInput: The number of the input of the connected cell
     /// \param pOutput: The output number of this cell to connect
-    void ConnectOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput, uint32_t pOutput);
+    void ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput);
 
     /// \brief Getter for the curent input state number pInput of this cell
     /// \param pInput: The number of the input to retreive
@@ -65,7 +65,7 @@ public:
 
     /// \brief Sets the input inversion vector of this cell
     /// \param pInputInversions: The new input inversion vector
-    void SetInputInversions(std::vector<bool> pInputInversions);
+    void SetInputInversions(const std::vector<bool>& pInputInversions);
 
     /// \brief Checks if the given cell output is inverted
     /// \param pOutput: A number of a cell output
@@ -80,7 +80,7 @@ public:
 
     /// \brief Sets the output inversion vector of this cell
     /// \param pOutputInversions: The new output inversion vector
-    void SetOutputInversions(std::vector<bool> pOutputInversions);
+    void SetOutputInversions(const std::vector<bool>& pOutputInversions);
 
     /// \brief Getter for the curent output state number pOutput of this cell
     /// \param pOutput: The number of the output to retreive

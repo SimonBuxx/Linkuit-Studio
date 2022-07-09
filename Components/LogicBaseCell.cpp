@@ -12,9 +12,9 @@ LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mIsActive(false)
 {}
 
-void LogicBaseCell::ConnectOutput(std::shared_ptr<LogicBaseCell> pCell, uint32_t pInput, uint32_t pOutput)
+void LogicBaseCell::ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput)
 {
-    mOutputCells[pOutput] = std::make_pair(pCell, pInput);
+    mOutputCells[pOutput] = std::make_pair(pLogicCell, pInput);
 }
 
 LogicState LogicBaseCell::GetInputState(uint32_t pInput) const
@@ -28,7 +28,7 @@ std::vector<bool> LogicBaseCell::GetInputInversions() const
     return mInputInverted;
 }
 
-void LogicBaseCell::SetInputInversions(std::vector<bool> pInputInversions)
+void LogicBaseCell::SetInputInversions(const std::vector<bool>& pInputInversions)
 {
     mInputInverted = pInputInversions;
 }
@@ -50,7 +50,7 @@ std::vector<bool> LogicBaseCell::GetOutputInversions() const
     return mOutputInverted;
 }
 
-void LogicBaseCell::SetOutputInversions(std::vector<bool> pOutputInversions)
+void LogicBaseCell::SetOutputInversions(const std::vector<bool>& pOutputInversions)
 {
     mOutputInverted = pOutputInversions;
 }

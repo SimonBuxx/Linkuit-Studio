@@ -53,7 +53,8 @@ public:
     bool StartsOrEndsIn(QPointF pPoint) const;
 
     /// \brief Sets the logic wire cell of this wire and connects it to this wire via signals and slots
-    void SetLogicCell(std::shared_ptr<LogicWireCell>);
+    /// \param pLogicCell: The logic cell
+    void SetLogicCell(const std::shared_ptr<LogicWireCell>& pLogicCell);
 
 protected:
     /// \brief Paints the wire component

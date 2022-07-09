@@ -16,14 +16,14 @@ LogicClock::LogicClock(const CoreLogic* pCoreLogic, Direction pDirection):
     // Construct square wave symbol
     constexpr uint8_t amplitude = 10;
 
-    mSquareWave.moveTo(8, mHeight / 2 + amplitude);
-    mSquareWave.lineTo(14, mHeight / 2 + amplitude);
-    mSquareWave.lineTo(14, mHeight / 2 - amplitude);
-    mSquareWave.lineTo(20, mHeight / 2 - amplitude);
-    mSquareWave.lineTo(20, mHeight / 2 + amplitude);
-    mSquareWave.lineTo(26, mHeight / 2 + amplitude);
-    mSquareWave.lineTo(26, mHeight / 2 - amplitude);
-    mSquareWave.lineTo(32, mHeight / 2 - amplitude);
+    mSquareWave.moveTo(8,  mHeight / 2.0f + amplitude);
+    mSquareWave.lineTo(14, mHeight / 2.0f + amplitude);
+    mSquareWave.lineTo(14, mHeight / 2.0f - amplitude);
+    mSquareWave.lineTo(20, mHeight / 2.0f - amplitude);
+    mSquareWave.lineTo(20, mHeight / 2.0f + amplitude);
+    mSquareWave.lineTo(26, mHeight / 2.0f + amplitude);
+    mSquareWave.lineTo(26, mHeight / 2.0f - amplitude);
+    mSquareWave.lineTo(32, mHeight / 2.0f - amplitude);
 
     SetLogicConnectors();
 
@@ -50,22 +50,22 @@ void LogicClock::SetLogicConnectors()
     {
         case Direction::RIGHT:
         {
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2), 0, QPointF(4, 0))); // Clock output
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth, mHeight / 2.0f), 0, QPointF(4, 0))); // Clock output
             break;
         }
         case Direction::DOWN:
         {
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, mHeight), 0, QPointF(0, 4))); // Clock output
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2.0f, mHeight), 0, QPointF(0, 4))); // Clock output
             break;
         }
         case Direction::LEFT:
         {
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2), 0, QPointF(-4, 0))); // Clock output
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(0, mHeight / 2.0f), 0, QPointF(-4, 0))); // Clock output
             break;
         }
         case Direction::UP:
         {
-            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2, 0), 0, QPointF(0, -4))); // Clock output
+            mOutConnectors.push_back(LogicConnector(ConnectorType::OUT, QPointF(mWidth / 2.0f, 0), 0, QPointF(0, -4))); // Clock output
             break;
         }
         default:

@@ -13,10 +13,7 @@ SOURCES += \
    $${PWD}/main.cpp
 
 RESOURCES += \
-    resources.qrc
+    Gui/resources.qrc
 
 include(Common.pri)
 include(QtAwesome/QtAwesome.pri)
-
-FORMS += \
-    MainWindow.ui

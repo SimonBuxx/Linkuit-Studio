@@ -1,7 +1,7 @@
 #ifndef CORELOGIC_H
 #define CORELOGIC_H
 
-#include "View/View.h"
+#include "View.h"
 #include "Undo/UndoBaseType.h"
 #include "Components/LogicWire.h"
 #include "Components/ConPoint.h"
@@ -208,7 +208,7 @@ public slots:
     /// \param pTextLabel: Pointer to the affected TextLabel
     /// \param pPreviousText: The previous text content
     /// \param pCurrentText: The new text content
-    void OnTextLabelContentChanged(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText);
+    void OnTextLabelContentChanged(TextLabel* pTextLabel, const QString& pPreviousText, const QString& pCurrentText);
 
     // ///////////////////////////////
 

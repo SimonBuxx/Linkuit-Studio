@@ -15,7 +15,7 @@ public:
     /// \param pLogicCell: Pointer to the associated logic cell
     /// \param pInputCount: The number of inputs of the gate
     /// \param pDirection: The direction of the gate
-    AbstractGate(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell, uint8_t pInputCount, Direction pDirection);
+    AbstractGate(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell, uint8_t pInputCount, Direction pDirection);
 
     /// \brief Clone function for the gate
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots

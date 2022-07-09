@@ -31,7 +31,7 @@ class IBaseComponent : public QObject, public QGraphicsItem
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    IBaseComponent(const CoreLogic* pCoreLogic, std::shared_ptr<LogicBaseCell> pLogicCell);
+    IBaseComponent(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell);
 
     virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const = 0;
 
