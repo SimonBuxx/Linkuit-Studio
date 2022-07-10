@@ -45,6 +45,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 {
     QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabelAndSlider);
 
+    // Connect to core logic signals
+
     QObject::connect(&mCoreLogic, &CoreLogic::ShowClockConfiguratorSignal, this, &MainWindow::ShowClockConfigurator);
     QObject::connect(&mCoreLogic, &CoreLogic::HideClockConfiguratorSignal, mUi->uClockConfigurator, &QWidget::hide);
     QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
@@ -63,6 +65,18 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(&mCoreLogic, &CoreLogic::UpdateUndoRedoEnabledSignal, this, [this]()
     {
         UpdateUndoRedoEnabled(true);
+    });
+
+    QObject::connect(&mCoreLogic, &CoreLogic::CircuitModifiedSignal, this, [&]()
+    {
+        if (mCoreLogic.IsFileOpen())
+        {
+            setWindowTitle(QString("Linkuit Studio - %0%1").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName()).arg("*"));
+        }
+        else
+        {
+            setWindowTitle(QString("Linkuit Studio - Unnamed Circuit*"));
+        }
     });
 
     QObject::connect(mUi->uZoomSlider, &QSlider::valueChanged, &mView, &View::SetZoom);
@@ -134,17 +148,37 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
     {
-        mCoreLogic.LoadJson("circuits/test.json");
+        QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
+        const auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
+        if (mCoreLogic.LoadJson(fileName))
+        {
+            setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(fileName).fileName()));
+        }
     });
 
     QObject::connect(mUi->uActionSave, &QAction::triggered, this, [&]()
     {
-        mCoreLogic.SaveJson("circuits/test.json");
+        if (mCoreLogic.IsFileOpen())
+        {
+            if (mCoreLogic.SaveJson())
+            {
+                setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName()));
+            }
+        }
+        else
+        {
+            mUi->uActionSaveAs->trigger();
+        }
     });
 
     QObject::connect(mUi->uActionSaveAs, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+        QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
+        const auto fileName = QFileDialog::getSaveFileName(this, tr("Save File"), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
+        if (mCoreLogic.SaveJsonAs(fileName))
+        {
+            setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(fileName).fileName()));
+        }
     });
 
     QObject::connect(mUi->uActionUndo, &QAction::triggered, this, &MainWindow::Undo);
@@ -616,6 +650,50 @@ void MainWindow::ForceUncheck(IconToolButton *pButton)
     else
     {
         pButton->setChecked(false);
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *pEvent)
+{
+    if (mCoreLogic.IsCircuitModified())
+    {
+        QMessageBox saveChangesBox;
+        saveChangesBox.setIcon(QMessageBox::Icon::Question);
+        saveChangesBox.setWindowTitle("Linkuit Studio");
+        saveChangesBox.setWindowIcon(QIcon(":/images/linkuit_icon6.png"));
+        saveChangesBox.setText(tr("There are unsaved changes to this ciruit."));
+        saveChangesBox.setInformativeText(tr("Would you like to save these changes?"));
+        saveChangesBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        saveChangesBox.setDefaultButton(QMessageBox::Save);
+        int ret = saveChangesBox.exec();
+
+        switch (ret) {
+            case QMessageBox::Save:
+            {
+                mUi->uActionSave->trigger();
+                pEvent->accept();
+                break;
+            }
+            case QMessageBox::Discard:
+            {
+                pEvent->accept();
+                break;
+            }
+            case QMessageBox::Cancel:
+            {
+                pEvent->ignore();
+                break;
+            }
+            default:
+            {
+                pEvent->accept();
+                break;
+            }
+        }
+    }
+    else
+    {
+        pEvent->accept();
     }
 }
 

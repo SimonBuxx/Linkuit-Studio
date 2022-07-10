@@ -32,7 +32,8 @@ CoreLogic::CoreLogic(View &pView):
     mHorizontalPreviewWire(this, WireDirection::HORIZONTAL, 0),
     mVerticalPreviewWire(this, WireDirection::VERTICAL, 0),
     mPropagationTimer(this),
-    mProcessingTimer(this)
+    mProcessingTimer(this),
+    mFilePath(std::nullopt)
 {
     mView.Init();
 
@@ -156,6 +157,7 @@ void CoreLogic::OnToggleValueChanged(uint32_t pValue)
         if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
         {
             std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetToggleTicks(pValue);
+            CircuitModified();
         }
     }
 }
@@ -167,6 +169,7 @@ void CoreLogic::OnPulseValueChanged(uint32_t pValue)
         if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
         {
             std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetPulseTicks(pValue);
+            CircuitModified();
         }
     }
 }
@@ -178,6 +181,7 @@ void CoreLogic::OnClockModeChanged(ClockMode pMode)
         if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
         {
             std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetClockMode(pMode);
+            CircuitModified();
         }
     }
 }
@@ -339,6 +343,7 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
     auto addedComponents = std::vector<IBaseComponent*>{static_cast<IBaseComponent*>(item.value())};
     AppendUndo(new UndoAddType(addedComponents));
+
     return true;
 }
 
@@ -1556,7 +1561,7 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             }
             default:
             {
-                // ignore if component unknown by this SW version
+                // component unknown by this SW version
                 return false;
                 break;
             }
@@ -1573,7 +1578,56 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
     return false;
 }
 
-bool CoreLogic::SaveJson(const QString& pPath) const
+void CoreLogic::CircuitModified()
+{
+    if (!mCircuitModified)
+    {
+        mCircuitModified = true;
+        emit CircuitModifiedSignal();
+    }
+}
+
+bool CoreLogic::IsFileOpen() const
+{
+    return mFilePath.has_value();
+}
+
+bool CoreLogic::IsCircuitModified() const
+{
+    return mCircuitModified;
+}
+
+std::optional<QString> CoreLogic::GetFilePath() const
+{
+    return mFilePath;
+}
+
+bool CoreLogic::SaveJson()
+{
+    if (!mFilePath.has_value())
+    {
+        return false;
+    }
+
+    QFile saveFile(mFilePath.value());
+
+    if (!saveFile.open(QIODevice::WriteOnly))
+    {
+        return false;
+    }
+
+    auto jsonObject = GetJson();
+
+    saveFile.write(file::SAVE_FORMAT == file::SaveFormat::JSON
+                   ? QJsonDocument(jsonObject).toJson()
+                   : QCborValue::fromJsonValue(jsonObject).toCbor());
+
+    mCircuitModified = false;
+
+    return true;
+}
+
+bool CoreLogic::SaveJsonAs(const QString& pPath)
 {
     QFile saveFile(pPath);
 
@@ -1588,6 +1642,9 @@ bool CoreLogic::SaveJson(const QString& pPath) const
                    ? QJsonDocument(jsonObject).toJson()
                    : QCborValue::fromJsonValue(jsonObject).toCbor());
 
+    mFilePath = pPath;
+    mCircuitModified = false;
+
     return true;
 }
 
@@ -1597,6 +1654,7 @@ bool CoreLogic::LoadJson(const QString& pPath)
 
     if (!loadFile.open(QIODevice::ReadOnly))
     {
+        mFilePath = std::nullopt;
         return false;
     }
 
@@ -1608,6 +1666,8 @@ bool CoreLogic::LoadJson(const QString& pPath)
 
     ReadJson(jsonDoc.object());
 
+    mFilePath = pPath;
+
     return true;
 }
 
@@ -1615,6 +1675,7 @@ void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
 {
     Q_ASSERT(pUndoObject);
 
+    CircuitModified();
     AppendToUndoQueue(pUndoObject, mUndoQueue);
     mRedoQueue.clear();
 
@@ -1727,6 +1788,7 @@ void CoreLogic::Undo()
                 break;
             }
         }
+        CircuitModified();
     }
     ClearSelection();
 }
@@ -1825,6 +1887,7 @@ void CoreLogic::Redo()
                 break;
             }
         }
+        CircuitModified();
     }
     ClearSelection();
 }

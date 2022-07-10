@@ -13,13 +13,11 @@ static constexpr const char* SW_VERSION_STRING = "0.7.0alpha";
 
 namespace file
 {
-static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::JSON;
+static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::BINARY;
 } // namespace
 
 namespace gui
 {
-static constexpr const char* WINDOW_TITLE = "Linkuit Studio - Unnamed Circuit";
-
 static constexpr std::chrono::milliseconds PROCESSING_OVERLAY_TIMEOUT(100);
 } // namespace
 

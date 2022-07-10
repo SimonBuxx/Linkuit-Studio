@@ -9,8 +9,9 @@
 #include <QMainWindow>
 #include <QShortcut>
 #include <QStandardItemModel>
-#include <QGraphicsDropShadowEffect>
 #include <QPushButton>
+#include <QFileDialog>
+#include <QMessageBox>
 
 class View;
 
@@ -171,6 +172,8 @@ protected:
     /// \brief Helper function to uncheck a button inside an exclusive button group
     /// \param pButton: Pointer to the button to uncheck
     void ForceUncheck(IconToolButton *pButton);
+
+    void closeEvent(QCloseEvent *pEvent);
 
 protected:
     Ui::MainWindow *mUi;
