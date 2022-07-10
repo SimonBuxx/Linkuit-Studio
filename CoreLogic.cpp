@@ -1427,6 +1427,28 @@ QJsonObject CoreLogic::GetJson() const
     return json;
 }
 
+void CoreLogic::NewCircuit()
+{
+    EnterControlMode(ControlMode::EDIT); // Always start in edit mode after loading
+
+    // Delete all components
+    for (const auto& item : mView.Scene()->items())
+    {
+        mView.Scene()->removeItem(item);
+    }
+
+    mView.ResetViewport();
+
+    // Clear undo and redo stacks
+    mUndoQueue.clear();
+    mRedoQueue.clear();
+
+    emit UpdateUndoRedoEnabledSignal();
+
+    mCircuitModified = false;
+    mFilePath = std::nullopt;
+}
+
 void CoreLogic::ReadJson(const QJsonObject& pJson)
 {
     EnterControlMode(ControlMode::EDIT); // Always start in edit mode after loading

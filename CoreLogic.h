@@ -173,6 +173,9 @@ public:
     /// \return True, if loading was successful
     bool LoadJson(const QString& pPath);
 
+    /// \brief Resets the canvas
+    void NewCircuit(void);
+
     // ////////////////////////////
 
 signals:

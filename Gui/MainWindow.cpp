@@ -71,11 +71,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         if (mCoreLogic.IsFileOpen())
         {
-            setWindowTitle(QString("Linkuit Studio - %0%1").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName()).arg("*"));
+            setWindowTitle(QString("Linkuit Studio - %0%1").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName(), "*"));
         }
         else
         {
-            setWindowTitle(QString("Linkuit Studio - Unnamed Circuit*"));
+            setWindowTitle(QString("Linkuit Studio - Untitled*"));
         }
     });
 
@@ -143,7 +143,48 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionNew, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+        if (mCoreLogic.IsCircuitModified())
+        {
+            QMessageBox saveChangesBox;
+            saveChangesBox.setIcon(QMessageBox::Icon::Question);
+            saveChangesBox.setWindowTitle("Linkuit Studio");
+            saveChangesBox.setWindowIcon(QIcon(":/images/linkuit_icon6.png"));
+            saveChangesBox.setText(tr("There are unsaved changes to this ciruit."));
+            saveChangesBox.setInformativeText(tr("Would you like to save these changes?"));
+            saveChangesBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+            saveChangesBox.setDefaultButton(QMessageBox::Save);
+            int ret = saveChangesBox.exec();
+
+            switch (ret) {
+                case QMessageBox::Save:
+                {
+                    mUi->uActionSave->trigger();
+                    mCoreLogic.NewCircuit();
+                    setWindowTitle(QString("Linkuit Studio - Untitled"));
+                    break;
+                }
+                case QMessageBox::Discard:
+                {
+                    mCoreLogic.NewCircuit();
+                    setWindowTitle(QString("Linkuit Studio - Untitled"));
+                    break;
+                }
+                case QMessageBox::Cancel:
+                {
+                    break;
+                }
+                default:
+                {
+                    mCoreLogic.NewCircuit();
+                    break;
+                }
+            }
+        }
+        else
+        {
+            mCoreLogic.NewCircuit();
+            setWindowTitle(QString("Linkuit Studio - Untitled"));
+        }
     });
 
     QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
@@ -465,6 +506,7 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             UpdateUndoRedoEnabled(true);
 
+            mUi->uActionNew->setEnabled(true);
             mUi->uActionOpen->setEnabled(true);
 
             mUi->uActionCut->setEnabled(true);
@@ -503,6 +545,7 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             UpdateUndoRedoEnabled(true);
 
+            mUi->uActionNew->setEnabled(true);
             mUi->uActionOpen->setEnabled(true);
 
             mUi->uActionCut->setEnabled(true);
@@ -540,6 +583,7 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             UpdateUndoRedoEnabled(true);
 
+            mUi->uActionNew->setEnabled(true);
             mUi->uActionOpen->setEnabled(true);
 
             mUi->uActionCut->setEnabled(true);
@@ -578,6 +622,7 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             UpdateUndoRedoEnabled(false);
 
+            mUi->uActionNew->setEnabled(false);
             mUi->uActionOpen->setEnabled(false);
 
             mUi->uActionCut->setEnabled(false);

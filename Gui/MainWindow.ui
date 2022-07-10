@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Linkuit Studio - Unnamed Circuit</string>
+   <string>Linkuit Studio - Untitled</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
@@ -2642,9 +2642,9 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
+  <buttongroup name="uSimulationButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>
