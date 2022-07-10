@@ -7,13 +7,7 @@
 ![Selected components](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/Linkuit_Selection.PNG?raw=true)
 *Selecting components to drag, delete or copy*
 
-![Simple processor](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/Linkuit_Adder.PNG?raw=true)
-*Simple processing unit with ADD and LOAD command support*
-
-![New GUI demo](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/Linkuit_new_gui.PNG?raw=true)
-*First draft of a new GUI featuring a ribbon-style menu*
-
-**All images are work in progress, the look and feel will change significantly.**
+**All images are work in progress.**
 
 ## How to compile
 
