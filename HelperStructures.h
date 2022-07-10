@@ -8,11 +8,36 @@ namespace helpers
 static const QString SUPERSCRIPTS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 } // namespace
 
-enum class SaveFormat
+namespace file
 {
-    JSON = 0,
-    BINARY
-};
+    enum class SaveFormat
+    {
+        JSON = 0,
+        BINARY
+    };
+
+    enum ComponentId
+    {
+        WIRE = 0,
+        CONPOINT,
+        AND_GATE,
+        OR_GATE,
+        XOR_GATE,
+        NOT_GATE,
+        BUFFER_GATE,
+        INPUT,
+        BUTTON,
+        CLOCK,
+        OUTPUT,
+        TEXT_LABEL,
+        HALF_ADDER,
+        FULL_ADDER,
+        RS_FLIPFLOP,
+        D_FLIPFLOP,
+        MULTIPLEXER,
+        DEMULTIPLEXER
+    };
+}
 
 enum class ComponentType
 {

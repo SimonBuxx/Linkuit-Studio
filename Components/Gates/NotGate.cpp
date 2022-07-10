@@ -36,8 +36,7 @@ QJsonObject NotGate::GetJson() const
 {
     QJsonObject json;
 
-#warning use type string lookup table
-    json["type"] = "NOT_GATE";
+    json["type"] = file::ComponentId::NOT_GATE;
     json["x"] = x();
     json["y"] = y();
     json["dir"] = static_cast<int32_t>(mDirection);

@@ -110,8 +110,7 @@ QJsonObject LogicButton::GetJson() const
 {
     QJsonObject json;
 
-#warning use type string lookup table
-    json["type"] = "BUTTON";
+    json["type"] = file::ComponentId::BUTTON;
     json["x"] = x();
     json["y"] = y();
 

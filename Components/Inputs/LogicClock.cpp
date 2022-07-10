@@ -265,8 +265,7 @@ QJsonObject LogicClock::GetJson() const
 {
     QJsonObject json;
 
-#warning use type string lookup table
-    json["type"] = "CLOCK";
+    json["type"] = file::ComponentId::CLOCK;
     json["x"] = x();
     json["y"] = y();
 

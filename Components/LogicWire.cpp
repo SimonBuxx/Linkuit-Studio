@@ -139,8 +139,7 @@ QJsonObject LogicWire::GetJson() const
 {
     QJsonObject json;
 
-#warning use type string lookup table
-    json["type"] = "WIRE";
+    json["type"] = file::ComponentId::WIRE;
     json["x"] = x();
     json["y"] = y();
     if (mDirection == WireDirection::HORIZONTAL)

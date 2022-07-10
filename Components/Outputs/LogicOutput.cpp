@@ -70,8 +70,7 @@ QJsonObject LogicOutput::GetJson() const
 {
     QJsonObject json;
 
-#warning use type string lookup table
-    json["type"] = "OUTPUT";
+    json["type"] = file::ComponentId::OUTPUT;
     json["x"] = x();
     json["y"] = y();
 

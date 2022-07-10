@@ -1443,7 +1443,10 @@ void CoreLogic::ReadJson(const QJsonObject& pJson)
         {
             auto component = components[compIndex].toObject();
 
-            CreateComponent(component);
+            if (!CreateComponent(component))
+            {
+                qDebug() << "Component unknown";
+            }
         }
     }
 
@@ -1454,65 +1457,120 @@ void CoreLogic::ReadJson(const QJsonObject& pJson)
     emit UpdateUndoRedoEnabledSignal();
 }
 
-void CoreLogic::CreateComponent(const QJsonObject &pJson)
+bool CoreLogic::CreateComponent(const QJsonObject &pJson)
 {
-    if (pJson.contains("type") && pJson["type"].isString())
+    if (pJson.contains("type") && pJson["type"].isDouble())
     {
         IBaseComponent* item = nullptr;
-        if (pJson["type"].toString() == "AND_GATE")
+        switch (pJson["type"].toInt())
         {
-            item = new AndGate(this, pJson);
-        }
-        else if (pJson["type"].toString() == "OR_GATE")
-        {
-            item = new OrGate(this, pJson);
-        }
-        else if (pJson["type"].toString() == "XOR_GATE")
-        {
-            item = new XorGate(this, pJson);
-        }
-        else if (pJson["type"].toString() == "NOT_GATE")
-        {
-            item = new NotGate(this, pJson);
-        }
-        else if (pJson["type"].toString() == "BUFFER_GATE")
-        {
-            item = new BufferGate(this, pJson);
-        }
-        else if (pJson["type"].toString() == "WIRE")
-        {
-            item = new LogicWire(this, pJson);
-        }
-        else if (pJson["type"].toString() == "CONPOINT")
-        {
-            item = new ConPoint(this, pJson);
-        }
-        else if (pJson["type"].toString() == "LABEL")
-        {
-            item = new TextLabel(this, pJson);
-        }
-        else if (pJson["type"].toString() == "INPUT")
-        {
-            item = new LogicInput(this, pJson);
-        }
-        else if (pJson["type"].toString() == "OUTPUT")
-        {
-            item = new LogicOutput(this, pJson);
-        }
-        else if (pJson["type"].toString() == "BUTTON")
-        {
-            item = new LogicButton(this, pJson);
-        }
-        else if (pJson["type"].toString() == "CLOCK")
-        {
-            item = new LogicClock(this, pJson);
+            case file::ComponentId::AND_GATE:
+            {
+                item = new AndGate(this, pJson);
+                break;
+            }
+            case file::ComponentId::OR_GATE:
+            {
+                item = new OrGate(this, pJson);
+                break;
+            }
+            case file::ComponentId::XOR_GATE:
+            {
+                item = new XorGate(this, pJson);
+                break;
+            }
+            case file::ComponentId::NOT_GATE:
+            {
+                item = new NotGate(this, pJson);
+                break;
+            }
+            case file::ComponentId::BUFFER_GATE:
+            {
+                item = new BufferGate(this, pJson);
+                break;
+            }
+            case file::ComponentId::WIRE:
+            {
+                item = new LogicWire(this, pJson);
+                break;
+            }
+            case file::ComponentId::CONPOINT:
+            {
+                item = new ConPoint(this, pJson);
+                break;
+            }
+            case file::ComponentId::TEXT_LABEL:
+            {
+                item = new TextLabel(this, pJson);
+                break;
+            }
+            case file::ComponentId::INPUT:
+            {
+                item = new LogicInput(this, pJson);
+                break;
+            }
+            case file::ComponentId::BUTTON:
+            {
+                item = new LogicButton(this, pJson);
+                break;
+            }
+            case file::ComponentId::CLOCK:
+            {
+                item = new LogicClock(this, pJson);
+                break;
+            }
+            case file::ComponentId::OUTPUT:
+            {
+                item = new LogicOutput(this, pJson);
+                break;
+            }
+            case file::ComponentId::HALF_ADDER:
+            {
+                item = new HalfAdder(this, pJson);
+                break;
+            }
+            case file::ComponentId::FULL_ADDER:
+            {
+                item = new FullAdder(this, pJson);
+                break;
+            }
+            case file::ComponentId::RS_FLIPFLOP:
+            {
+                item = new RsFlipFlop(this, pJson);
+                break;
+            }
+            case file::ComponentId::D_FLIPFLOP:
+            {
+                item = new DFlipFlop(this, pJson);
+                break;
+            }
+            case file::ComponentId::MULTIPLEXER:
+            {
+                item = new Multiplexer(this, pJson);
+                break;
+            }
+            case file::ComponentId::DEMULTIPLEXER:
+            {
+                item = new Demultiplexer(this, pJson);
+                break;
+            }
+            default:
+            {
+                // ignore if component unknown by this SW version
+                return false;
+                break;
+            }
         }
 
         if (nullptr != item)
         {
             mView.Scene()->addItem(item);
+            return true;
         }
     }
+
+    // JSON array does not contain a type
+    return false;
 }
 
 bool CoreLogic::SaveJson(const QString& pPath) const
@@ -1526,7 +1584,7 @@ bool CoreLogic::SaveJson(const QString& pPath) const
 
     auto jsonObject = GetJson();
 
-    saveFile.write(file::SAVE_FORMAT == SaveFormat::JSON
+    saveFile.write(file::SAVE_FORMAT == file::SaveFormat::JSON
                    ? QJsonDocument(jsonObject).toJson()
                    : QCborValue::fromJsonValue(jsonObject).toCbor());
 
@@ -1544,7 +1602,7 @@ bool CoreLogic::LoadJson(const QString& pPath)
 
     QByteArray rawData = loadFile.readAll();
 
-    QJsonDocument jsonDoc(file::SAVE_FORMAT == SaveFormat::JSON
+    QJsonDocument jsonDoc(file::SAVE_FORMAT == file::SaveFormat::JSON
                     ? QJsonDocument::fromJson(rawData)
                     : QJsonDocument(QCborValue::fromCbor(rawData).toMap().toJsonObject()));
 

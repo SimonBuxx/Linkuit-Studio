@@ -248,8 +248,7 @@ QJsonObject ConPoint::GetJson() const
         json["dir"] = static_cast<int32_t>(DiodeDirection::VERTICAL);
     }
 
-#warning use type string lookup table
-    json["type"] = "CONPOINT";
+    json["type"] = file::ComponentId::CONPOINT;
     json["x"] = x();
     json["y"] = y();
 

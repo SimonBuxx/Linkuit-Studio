@@ -36,8 +36,7 @@ QJsonObject BufferGate::GetJson() const
 {
     QJsonObject json;
 
-#warning use type string lookup table
-    json["type"] = "BUFFER_GATE";
+    json["type"] = file::ComponentId::BUFFER_GATE;
     json["x"] = x();
     json["y"] = y();
     json["dir"] = static_cast<int32_t>(mDirection);

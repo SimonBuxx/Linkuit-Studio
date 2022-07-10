@@ -390,12 +390,18 @@ protected:
     void ClearSelection(void);
 
     // Functions for loading and saving
-#warning missing documentation
+    /// \brief Returns a JSON representation of the current circuit
+    /// \return A JSON object containing the circuit information
     QJsonObject GetJson(void) const;
 
+    /// \brief Loads a circuit from the given JSON object
+    /// \param pJson: The JSON data of the circuit to load
     void ReadJson(const QJsonObject& pJson);
 
-    void CreateComponent(const QJsonObject& pJson);
+    /// \brief Creates a circuit component using the provided JSON data
+    /// \param pJson: The JSON data of the circuit component
+    /// \return True, if the component has been added
+    bool CreateComponent(const QJsonObject& pJson);
 
 protected:
     View &mView;

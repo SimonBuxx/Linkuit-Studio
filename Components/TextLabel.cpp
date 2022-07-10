@@ -205,8 +205,7 @@ QJsonObject TextLabel::GetJson() const
 {
     QJsonObject json;
 
-#warning use type string lookup table
-    json["type"] = "LABEL";
+    json["type"] = file::ComponentId::TEXT_LABEL;
     json["x"] = x();
     json["y"] = y();
 

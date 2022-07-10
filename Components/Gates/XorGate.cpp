@@ -25,7 +25,7 @@ XorGate::XorGate(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
 
     std::vector<bool> ininv;
     auto ininvArray = pJson["ininv"].toArray();
-    foreach (auto inv, ininvArray)
+    for (const auto& inv : ininvArray)
     {
         ininv.push_back(inv.toBool());
     }
@@ -43,8 +43,7 @@ QJsonObject XorGate::GetJson() const
 {
     QJsonObject json;
 
-#warning use type string lookup table
-    json["type"] = "XOR_GATE";
+    json["type"] = file::ComponentId::XOR_GATE;
     json["x"] = x();
     json["y"] = y();
     json["dir"] = static_cast<int32_t>(mDirection);
@@ -53,7 +52,7 @@ QJsonObject XorGate::GetJson() const
     {
         QJsonArray ininv;
 
-        foreach(const auto inv, mLogicCell->GetInputInversions())
+        for(const bool& inv : mLogicCell->GetInputInversions())
         {
             ininv.append(inv);
         }
