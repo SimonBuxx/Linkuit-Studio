@@ -26,6 +26,19 @@
   <property name="styleSheet">
    <string notr="true">QMainWindow {
         background: rgb(242, 242, 242);
+}
+
+QMenu {
+    background-color:  rgb(255, 255, 255);
+}
+
+QMenu::item {
+    background-color: transparent;
+}
+
+QMenu::item:selected {
+    background-color: rgb(230, 230, 230);
+	color: rgb(0, 0, 0);
 }</string>
   </property>
   <property name="locale">
@@ -163,6 +176,7 @@ QWidget:hover {
     font: 12pt &quot;Source Sans Pro&quot;;
     padding: 5px 0 15px 15px;
     margin: 0;
+    selection-background-color: transparent;
 }
 
 QTreeView::branch {
@@ -2287,8 +2301,28 @@ QFrame {
      <x>0</x>
      <y>0</y>
      <width>1425</width>
-     <height>20</height>
+     <height>37</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QMenuBar {
+    background-color: rgb(255, 255, 255);
+    font: 10pt &quot;Source Sans Pro&quot;;
+	padding: 5px 0;
+}
+
+QMenuBar::item {
+	padding: 5px;
+	border-radius: 3px;
+}
+
+QMenuBar::item:selected {
+    background: rgb(230, 230, 230);
+}
+
+QMenuBar::item:pressed {
+    background: rgb(220, 220, 220);
+}</string>
    </property>
    <widget class="QMenu" name="uMenuFile">
     <property name="title">
@@ -2433,7 +2467,7 @@ QFrame {
   </action>
   <action name="uActionScreenshot">
    <property name="text">
-    <string>Save screenshot...</string>
+    <string>Save Screenshot...</string>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -2570,7 +2604,7 @@ QFrame {
   </action>
   <action name="uActionReportBugs">
    <property name="text">
-    <string>Report bugs...</string>
+    <string>Report Bugs...</string>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -2586,7 +2620,7 @@ QFrame {
   </action>
   <action name="uActionStartTutorial">
    <property name="text">
-    <string>Start tutorial...</string>
+    <string>Start Tutorial...</string>
    </property>
    <property name="iconText">
     <string>Start tutorial...</string>
@@ -2608,9 +2642,9 @@ QFrame {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uTogglePulseButtonGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>

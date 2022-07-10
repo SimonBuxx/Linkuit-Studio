@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QFile>
 #include <QFontDatabase>
+#include <QCommandLineParser>
 
 std::optional<QString> LoadStylesheet(const QString &pPath)
 {
@@ -22,7 +23,17 @@ std::optional<QString> LoadStylesheet(const QString &pPath)
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    QCoreApplication::setApplicationName("Linkuit Studio");
+    QCoreApplication::setApplicationVersion(SW_VERSION_STRING);
     app.setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Linkuit Studio");
+    parser.addPositionalArgument("file", QCoreApplication::translate("file", "Circuit file to open."));
+
+    parser.process(app);
+
+    QApplication::setStyle("fusion");
 
     QFontDatabase::addApplicationFont(":/fonts/Quicksand-Medium.ttf");
 
@@ -40,6 +51,18 @@ int main(int argc, char *argv[])
 
     MainWindow window;
     window.showMaximized();
+
+    if (parser.positionalArguments().size() > 0)
+    {
+        if (window.GetCoreLogic().LoadJson(parser.positionalArguments().at(0).mid(1, parser.positionalArguments().at(0).size() - 2)))
+        {
+            window.setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(window.GetCoreLogic().GetFilePath().value()).fileName()));
+        }
+        else
+        {
+            qDebug() << "Could not open file";
+        }
+    }
 
     return app.exec();
 }

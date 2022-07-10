@@ -256,7 +256,6 @@ void View::SetZoom(int32_t pZoomLevel)
 
 void View::ResetViewport()
 {
-#warning fix reset viewport
     SetZoom(canvas::DEFAULT_ZOOM_LEVEL);
 }
 
