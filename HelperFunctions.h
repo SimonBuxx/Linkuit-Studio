@@ -21,6 +21,7 @@ static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{Co
                                                                              {ComponentType::RS_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::D_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::T_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::JK_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::MULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS},
                                                                              {ComponentType::DEMULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS}};
 
@@ -33,6 +34,10 @@ inline QPointF SnapToGrid(QPointF pPoint)
                    std::floor(pPoint.y() / canvas::GRID_SIZE + 0.5f) * canvas::GRID_SIZE);
 }
 
+/// \brief Calculates the Euclidian distance between pA and pB
+/// \param pA: Point A
+/// \param pB: Point B
+/// \return The distance between point A and point B
 inline uint32_t EuclidianDistance(QPointF pA, QPointF pB)
 {
     return std::sqrt(std::pow(pA.x() - pB.x(), 2) + std::pow(pA.y() - pB.y(), 2));
@@ -61,6 +66,9 @@ inline LogicState InvertState(LogicState pState)
     return LogicState::LOW;
 }
 
+/// \brief Returns the configurator mode for the given component type
+/// \param pType: A component type
+/// \return A configurator mode
 inline ConfiguratorMode GetConfiguratorModeForComponentType(ComponentType pType)
 {
     if (CONFIGURATOR_MODE_MAP.find(pType) != CONFIGURATOR_MODE_MAP.end())

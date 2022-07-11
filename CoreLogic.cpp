@@ -15,6 +15,7 @@
 #include "Components/ComplexLogic/RsFlipFlop.h"
 #include "Components/ComplexLogic/DFlipFlop.h"
 #include "Components/ComplexLogic/TFlipFlop.h"
+#include "Components/ComplexLogic/JKFlipFlop.h"
 #include "Components/ComplexLogic/Multiplexer.h"
 #include "Components/ComplexLogic/Demultiplexer.h"
 
@@ -304,6 +305,11 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         case ComponentType::T_FLIPFLOP:
         {
             item = new TFlipFlop(this, mComponentDirection);
+            break;
+        }
+        case ComponentType::JK_FLIPFLOP:
+        {
+            item = new JKFlipFlop(this, mComponentDirection);
             break;
         }
         case ComponentType::MULTIPLEXER:
@@ -1577,9 +1583,9 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
                 item = new DFlipFlop(this, pJson);
                 break;
             }
-            case file::ComponentId::T_FLIPFLOP:
+            case file::ComponentId::JK_FLIPFLOP:
             {
-                item = new TFlipFlop(this, pJson);
+                item = new JKFlipFlop(this, pJson);
                 break;
             }
             case file::ComponentId::MULTIPLEXER:

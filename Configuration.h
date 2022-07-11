@@ -143,6 +143,7 @@ static constexpr const char* FULL_ADDER_TEXT = "FA";
 static constexpr const char* RS_FLIPFLOP_TEXT = "RS";
 static constexpr const char* D_FLIPFLOP_TEXT = "FF";
 static constexpr const char* T_FLIPFLOP_TEXT = "TF";
+static constexpr const char* JK_FLIPFLOP_TEXT = "JK";
 static constexpr const char* MULTIPLEXER_TEXT = "MUX";
 static constexpr const char* DEMULTIPLEXER_TEXT = "DEMUX";
 
