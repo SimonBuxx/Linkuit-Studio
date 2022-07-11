@@ -24,5 +24,6 @@
         <file>../images/icons/play_icon.png</file>
         <file>../images/icons/stop_icon.png</file>
         <file>../images/hor_line.png</file>
+        <file>../images/linkuit_icon6.ico</file>
     </qresource>
 </RCC>

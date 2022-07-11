@@ -34,6 +34,7 @@ namespace file
         FULL_ADDER,
         RS_FLIPFLOP,
         D_FLIPFLOP,
+        T_FLIPFLOP,
         MULTIPLEXER,
         DEMULTIPLEXER
     };
@@ -57,7 +58,8 @@ enum class ComponentType
     RS_FLIPFLOP,
     D_FLIPFLOP,
     MULTIPLEXER,
-    DEMULTIPLEXER
+    DEMULTIPLEXER,
+    T_FLIPFLOP // only append!
 };
 
 enum class Direction

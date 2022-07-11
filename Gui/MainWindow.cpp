@@ -825,6 +825,7 @@ void MainWindow::InitializeToolboxTree()
 
     mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "RS flip-flop"));
     mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "D flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "T flip-flop"));
 
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer"));
@@ -1195,6 +1196,11 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     case 1: // D flip flop
                     {
                         mCoreLogic.EnterAddControlMode(ComponentType::D_FLIPFLOP);
+                        break;
+                    }
+                    case 2: // T flip flop
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::T_FLIPFLOP);
                         break;
                     }
                     default:

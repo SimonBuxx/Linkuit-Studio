@@ -6,7 +6,9 @@ HEADERS += \
     $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicMultiplexerCell.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicTFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/Multiplexer.h \
+    $$PWD/Components/ComplexLogic/TFlipFlop.h \
     $$PWD/Components/Gates/BufferGate.h \
     $$PWD/Components/Gates/LogicCells/LogicBufferGateCell.h \
     $$PWD/Components/Inputs/LogicCells/LogicClockCell.h \
@@ -60,7 +62,9 @@ SOURCES += \
     $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicMultiplexerCell.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicTFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/Multiplexer.cpp \
+    $$PWD/Components/ComplexLogic/TFlipFlop.cpp \
     $$PWD/Components/Gates/BufferGate.cpp \
     $$PWD/Components/Gates/LogicCells/LogicBufferGateCell.cpp \
     $$PWD/Components/Inputs/LogicCells/LogicClockCell.cpp \
