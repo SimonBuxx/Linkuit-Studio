@@ -318,10 +318,12 @@ void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32
 
     if (pMode == ClockMode::TOGGLE)
     {
+        mUi->uPulseFrame->hide();
         mUi->uButtonToggle->setChecked(true);
     }
     else
     {
+        mUi->uPulseFrame->show();
         mUi->uButtonPulse->setChecked(true);
     }
 
