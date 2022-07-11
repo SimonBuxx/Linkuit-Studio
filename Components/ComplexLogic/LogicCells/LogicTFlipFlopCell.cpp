@@ -9,7 +9,7 @@ LogicTFlipFlopCell::LogicTFlipFlopCell():
 
 void LogicTFlipFlopCell::LogicFunction()
 {
-    if (mPrevInputStates[1] == LogicState::LOW && mInputStates[1] == LogicState::HIGH && mInputStates[0] == LogicState::HIGH)
+    if (mPrevInputStates[1] == LogicState::LOW && mInputStates[1] == LogicState::HIGH && mPrevInputStates[0] == LogicState::HIGH)
     {
         if (mOutputStates[0] == LogicState::LOW)
         {

@@ -1588,6 +1588,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
                 item = new DFlipFlop(this, pJson);
                 break;
             }
+            case file::ComponentId::T_FLIPFLOP:
+            {
+                item = new TFlipFlop(this, pJson);
+                break;
+            }
             case file::ComponentId::JK_FLIPFLOP:
             {
                 item = new JKFlipFlop(this, pJson);
