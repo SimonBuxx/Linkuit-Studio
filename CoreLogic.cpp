@@ -339,6 +339,11 @@ ControlMode CoreLogic::GetControlMode() const
 
 bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 {
+    if (mView.Scene()->selectedItems().size() > 0)
+    {
+        return false;
+    }
+
     auto item = GetItem();
     Q_ASSERT(item.has_value());
 
