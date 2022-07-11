@@ -11,7 +11,7 @@ void LogicJKFlipFlopCell::LogicFunction()
 {
     if (mPrevInputStates[1] == LogicState::LOW && mInputStates[1] == LogicState::HIGH) // rising edge
     {
-        if (mInputStates[0] == LogicState::HIGH && mInputStates[2] == LogicState::HIGH) // both => toggle
+        if (mPrevInputStates[0] == LogicState::HIGH && mPrevInputStates[2] == LogicState::HIGH) // both => toggle
         {
             if (mOutputStates[0] == LogicState::LOW)
             {
@@ -22,11 +22,11 @@ void LogicJKFlipFlopCell::LogicFunction()
                 mOutputStates[0] = LogicState::LOW;
             }
         }
-        else if (mInputStates[0] == LogicState::HIGH && mInputStates[2] == LogicState::LOW) // J => pull up
+        else if (mPrevInputStates[0] == LogicState::HIGH && mPrevInputStates[2] == LogicState::LOW) // J => pull up
         {
             mOutputStates[0] = LogicState::HIGH;
         }
-        else if (mInputStates[0] == LogicState::LOW && mInputStates[2] == LogicState::HIGH) // K => pull down
+        else if (mPrevInputStates[0] == LogicState::LOW && mPrevInputStates[2] == LogicState::HIGH) // K => pull down
         {
             mOutputStates[0] = LogicState::LOW;
         }
