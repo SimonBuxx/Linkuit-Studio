@@ -34,3 +34,4 @@
 *.out
 *.app
 /.vscode/c_cpp_properties.json
+/setup

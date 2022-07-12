@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/images/linkuit_icon6.png</normaloff>:/images/linkuit_icon6.png</iconset>
+    <normaloff>:/images/linkuit_icon6.ico</normaloff>:/images/linkuit_icon6.ico</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
@@ -2642,9 +2642,9 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uItemDirectionButtonGroup"/>
  </buttongroups>
 </ui>

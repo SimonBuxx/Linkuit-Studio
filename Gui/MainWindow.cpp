@@ -48,12 +48,15 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     // Connect to core logic signals
 
     QObject::connect(&mCoreLogic, &CoreLogic::ShowClockConfiguratorSignal, this, &MainWindow::ShowClockConfigurator);
-    QObject::connect(&mCoreLogic, &CoreLogic::HideClockConfiguratorSignal, mUi->uClockConfigurator, &QWidget::hide);
+    QObject::connect(&mCoreLogic, &CoreLogic::HideClockConfiguratorSignal, this, [&]()
+    {
+        FadeOutWidget(mUi->uClockConfigurator);
+    });
     QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
     {
         if (pNewMode != ControlMode::ADD)
         {
-            mUi->uItemConfigurator->hide();
+            FadeOutWidget(mUi->uItemConfigurator);
         }
     });
 
@@ -314,7 +317,7 @@ void MainWindow::OnPulseSliderValueChanged(int32_t pValue)
 
 void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
 {
-    mUi->uClockConfigurator->show();
+    FadeInWidget(mUi->uClockConfigurator);
 
     if (pMode == ClockMode::TOGGLE)
     {
@@ -337,7 +340,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
     {
         case ConfiguratorMode::NO_CONFIGURATION:
         {
-            mUi->uItemConfigurator->hide();
+            FadeOutWidget(mUi->uItemConfigurator);
             return;
         }
         case ConfiguratorMode::DIRECTION_ONLY:
@@ -367,7 +370,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         }
     }
 
-    mUi->uItemConfigurator->show();
+    FadeInWidget(mUi->uItemConfigurator);
 
     /*auto mousePos = QWidget::mapFromGlobal(QCursor::pos());
     mUi->uItemConfigContainer->move(mUi->uItemConfigContainer->x(), mousePos.y() - mUi->menuBar->height() - mUi->uItemConfigContainer->height() / 2);*/
@@ -424,7 +427,7 @@ void MainWindow::EnterSimulation()
     if (!mCoreLogic.IsSimulationRunning())
     {
         mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
-        mUi->uToolboxContainer->hide();
+        FadeOutWidget(mUi->uToolboxContainer);
     }
 }
 
@@ -453,7 +456,7 @@ void MainWindow::StopSimulation()
     if (mCoreLogic.IsSimulationRunning())
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
-        mUi->uToolboxContainer->show();
+        FadeInWidget(mUi->uToolboxContainer);
     }
 }
 
@@ -494,7 +497,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
         case ControlMode::EDIT:
         {
             mUi->uToolboxTree->clearSelection();
-            mUi->uToolboxTree->setEnabled(true);
 
             mUi->uEditButton->setEnabled(true);
             mUi->uWiringButton->setEnabled(true);
@@ -533,7 +535,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
         case ControlMode::WIRE:
         {
             mUi->uToolboxTree->clearSelection();
-            mUi->uToolboxTree->setEnabled(true);
 
             mUi->uEditButton->setEnabled(true);
             mUi->uWiringButton->setEnabled(true);
@@ -571,8 +572,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
         }
         case ControlMode::ADD:
         {
-            mUi->uToolboxTree->setEnabled(true);
-
             mUi->uEditButton->setEnabled(true);
             mUi->uWiringButton->setEnabled(true);
             mUi->uCopyButton->setEnabled(true);
@@ -609,8 +608,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
         }
         case ControlMode::SIMULATION:
         {
+            // Note: Toolbox is never disabled, only hidden
             mUi->uToolboxTree->clearSelection();
-            mUi->uToolboxTree->setEnabled(false);
 
             mUi->uEditButton->setEnabled(false);
             mUi->uWiringButton->setEnabled(false);
@@ -836,6 +835,7 @@ void MainWindow::InitializeToolboxTree()
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
     mUi->uToolboxTree->setExpanded(mCategoryInputsItem->index(), true);
+    mUi->uToolboxTree->setExpanded(mCategoryAddersItem->index(), true);
 }
 
 void MainWindow::InitializeGuiIcons()
@@ -1019,7 +1019,7 @@ void MainWindow::InitializeGlobalShortcuts()
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
         mScene.clearSelection();
         mUi->uToolboxTree->clearSelection();
-        mUi->uToolboxContainer->show();
+        FadeInWidget(mUi->uToolboxContainer);
     });
 }
 
@@ -1246,6 +1246,54 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
     else
     {
         qDebug() << "Unknown higher level item";
+    }
+}
+
+template <typename T>
+void MainWindow::FadeInWidget(T& pWidget)
+{
+    if (!pWidget->isVisible())
+    {
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
+        pWidget->setGraphicsEffect(effect);
+        pWidget->show();
+
+        QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
+        anim->setDuration(200);
+        anim->setStartValue(0.0f);
+        anim->setEndValue(1.0f);
+        anim->setEasingCurve(QEasingCurve::OutQuad);
+
+        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
+        {
+            delete pWidget->graphicsEffect();
+        });
+
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+}
+
+template <typename T>
+void MainWindow::FadeOutWidget(T& pWidget)
+{
+    if (pWidget->isVisible())
+    {
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
+        pWidget->setGraphicsEffect(effect);
+
+        QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
+        anim->setDuration(200);
+        anim->setStartValue(1.0f);
+        anim->setEndValue(0.0f);
+        anim->setEasingCurve(QEasingCurve::OutQuad);
+
+        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
+        {
+            delete pWidget->graphicsEffect();
+            pWidget->hide();
+        });
+
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }
 

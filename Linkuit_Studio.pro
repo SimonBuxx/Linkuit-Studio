@@ -15,7 +15,8 @@ SOURCES += \
 RESOURCES += \
     Gui/resources.qrc
 
-RC_ICONS = images/linkuit_icon6.ico
+RC_ICONS = images/linkuit_icon6.ico \
+           images/icons/linkuit-studio-file.ico
 
 include(Common.pri)
 include(QtAwesome/QtAwesome.pri)

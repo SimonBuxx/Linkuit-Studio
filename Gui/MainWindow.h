@@ -12,6 +12,8 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QPropertyAnimation>
+#include <QtWidgets>
 
 class View;
 
@@ -174,6 +176,14 @@ protected:
     void ForceUncheck(IconToolButton *pButton);
 
     void closeEvent(QCloseEvent *pEvent);
+
+    // Animation
+
+    template <typename T>
+    void FadeInWidget(T& pWidget);
+
+    template <typename T>
+    void FadeOutWidget(T& pWidget);
 
 protected:
     Ui::MainWindow *mUi;
