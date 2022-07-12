@@ -240,6 +240,7 @@ protected:
     bool mIsToolboxVisible = true;
 
     QTimer mFadeOutOnCtrlTimer;
+    bool mIsGuiHidden = false;
 };
 
 #endif // MAINWINDOW_H

@@ -14,14 +14,23 @@ static constexpr const char* SW_VERSION_STRING = "0.7.0alpha";
 namespace file
 {
 static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::BINARY;
+
+static constexpr const char* JSON_COMPONENTS_IDENTIFIER = "components";
+static constexpr const char* JSON_TYPE_IDENTIFIER = "type";
 } // namespace
 
 namespace gui
 {
+static constexpr const char* DEFAULT_WINDOW_TITLE = "Linkuit Studio - Untitled";
+static constexpr const char* OPEN_FILE_DIALOG_TITLE = "Open Circuit File";
+static constexpr const char* SAVE_FILE_DIALOG_TITLE = "Save Circuit File";
+
 static constexpr std::chrono::milliseconds PROCESSING_OVERLAY_TIMEOUT(100);
 
 static constexpr bool FADE_OUT_GUI_ON_CTRL = true;
 static constexpr std::chrono::milliseconds FADE_OUT_GUI_TIMEOUT(1000);
+
+static constexpr int32_t FADE_ANIMATION_DURATION = 200;
 } // namespace
 
 namespace canvas
@@ -135,6 +144,7 @@ static constexpr uint32_t DEFAULT_CLOCK_TOGGLE_TICKS = 100;
 
 namespace multiplexer
 {
+static constexpr uint8_t MIN_BIT_WIDTH = 1;
 static constexpr uint8_t MAX_BIT_WIDTH = 5;
 static constexpr uint8_t DEFAULT_BIT_WIDTH = 2;
 } // namespace

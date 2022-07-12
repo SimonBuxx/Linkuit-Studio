@@ -59,6 +59,12 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         if (pNewMode != ControlMode::ADD)
         {
             FadeOutWidget(mUi->uItemConfigurator);
+            mIsItemConfiguratorVisible = false;
+        }
+        if (pNewMode == ControlMode::SIMULATION)
+        {
+            mIsToolboxVisible = false;
+            mIsClockConfiguratorVisible = false;
         }
     });
 
@@ -76,11 +82,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         if (mCoreLogic.IsFileOpen())
         {
-            setWindowTitle(QString("Linkuit Studio - %0%1").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName(), "*"));
+            setWindowTitle(tr("Linkuit Studio - %0%1").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName(), "*"));
         }
         else
         {
-            setWindowTitle(QString("Linkuit Studio - Untitled*"));
+            setWindowTitle(tr("Linkuit Studio - Untitled*"));
         }
     });
 
@@ -93,6 +99,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         FadeOutWidget(mUi->uToolboxContainer);
         FadeOutWidget(mUi->uClockConfigurator);
         FadeOutWidget(mUi->uItemConfigurator);
+        mIsGuiHidden = true;
     });
 
     QObject::connect(mUi->uZoomSlider, &QSlider::valueChanged, &mView, &View::SetZoom);
@@ -176,13 +183,13 @@ void MainWindow::ConnectGuiSignalsAndSlots()
                 {
                     mUi->uActionSave->trigger();
                     mCoreLogic.NewCircuit();
-                    setWindowTitle(QString("Linkuit Studio - Untitled"));
+                    setWindowTitle(tr(gui::DEFAULT_WINDOW_TITLE));
                     break;
                 }
                 case QMessageBox::Discard:
                 {
                     mCoreLogic.NewCircuit();
-                    setWindowTitle(QString("Linkuit Studio - Untitled"));
+                    setWindowTitle(tr(gui::DEFAULT_WINDOW_TITLE));
                     break;
                 }
                 case QMessageBox::Cancel:
@@ -199,17 +206,17 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         else
         {
             mCoreLogic.NewCircuit();
-            setWindowTitle(QString("Linkuit Studio - Untitled"));
+            setWindowTitle(tr(gui::DEFAULT_WINDOW_TITLE));
         }
     });
 
     QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
     {
         QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
-        const auto fileName = QFileDialog::getOpenFileName(this, tr("Open File"), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
+        const auto fileName = QFileDialog::getOpenFileName(this, tr(gui::OPEN_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
         if (mCoreLogic.LoadJson(fileName))
         {
-            setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(fileName).fileName()));
+            setWindowTitle(tr("Linkuit Studio - %0").arg(QFileInfo(fileName).fileName()));
         }
     });
 
@@ -219,7 +226,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         {
             if (mCoreLogic.SaveJson())
             {
-                setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName()));
+                setWindowTitle(tr("Linkuit Studio - %0").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName()));
             }
         }
         else
@@ -231,10 +238,10 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uActionSaveAs, &QAction::triggered, this, [&]()
     {
         QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
-        const auto fileName = QFileDialog::getSaveFileName(this, tr("Save File"), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
+        const auto fileName = QFileDialog::getSaveFileName(this, tr(gui::SAVE_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
         if (mCoreLogic.SaveJsonAs(fileName))
         {
-            setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(fileName).fileName()));
+            setWindowTitle(tr("Linkuit Studio - %0").arg(QFileInfo(fileName).fileName()));
         }
     });
 
@@ -313,7 +320,7 @@ void MainWindow::OnToggleButtonToggled(bool pChecked)
 
 void MainWindow::OnToggleSliderValueChanged(int32_t pValue)
 {
-    mUi->uLabelToggle->setText(QString(pValue > 1 ? "%0 Ticks / Toggle" : "%0 Tick / Toggle").arg(pValue));
+    mUi->uLabelToggle->setText(tr(pValue > 1 ? "%0 Ticks / Toggle" : "%0 Tick / Toggle").arg(pValue));
 
     mUi->uPulseSlider->setMaximum(pValue);
 
@@ -323,14 +330,21 @@ void MainWindow::OnToggleSliderValueChanged(int32_t pValue)
 
 void MainWindow::OnPulseSliderValueChanged(int32_t pValue)
 {
-    mUi->uLabelPulse->setText(QString(pValue > 1 ? "%0 Ticks / Pulse" : "%0 Tick / Pulse").arg(pValue));
+    mUi->uLabelPulse->setText(tr(pValue > 1 ? "%0 Ticks / Pulse" : "%0 Tick / Pulse").arg(pValue));
 
     mCoreLogic.OnPulseValueChanged(pValue);
 }
 
 void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
 {
-    FadeInWidget(mUi->uClockConfigurator);
+    if (!mIsGuiHidden)
+    {
+        FadeInWidget(mUi->uClockConfigurator);
+    }
+    else
+    {
+        mIsClockConfiguratorVisible = true;
+    }
 
     if (pMode == ClockMode::TOGGLE)
     {
@@ -383,7 +397,14 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         }
     }
 
-    FadeInWidget(mUi->uItemConfigurator);
+    if (!mIsGuiHidden)
+    {
+        FadeInWidget(mUi->uItemConfigurator);
+    }
+    else
+    {
+        mIsItemConfiguratorVisible = true;
+    }
 
     /*auto mousePos = QWidget::mapFromGlobal(QCursor::pos());
     mUi->uItemConfigContainer->move(mUi->uItemConfigContainer->x(), mousePos.y() - mUi->menuBar->height() - mUi->uItemConfigContainer->height() / 2);*/
@@ -469,7 +490,14 @@ void MainWindow::StopSimulation()
     if (mCoreLogic.IsSimulationRunning())
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
-        FadeInWidget(mUi->uToolboxContainer);
+        if (!mIsGuiHidden)
+        {
+            FadeInWidget(mUi->uToolboxContainer);
+        }
+        else
+        {
+            mIsToolboxVisible = true;
+        }
     }
 }
 
@@ -785,6 +813,8 @@ void MainWindow::keyReleaseEvent(QKeyEvent *pEvent)
         {
             FadeInWidget(mUi->uItemConfigurator);
         }
+
+        mIsGuiHidden = false;
     }
 
     QMainWindow::keyReleaseEvent(pEvent);
@@ -1066,7 +1096,14 @@ void MainWindow::InitializeGlobalShortcuts()
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
         mScene.clearSelection();
         mUi->uToolboxTree->clearSelection();
-        FadeInWidget(mUi->uToolboxContainer);
+        if (!mIsGuiHidden)
+        {
+            FadeInWidget(mUi->uToolboxContainer);
+        }
+        else
+        {
+            mIsToolboxVisible = true;
+        }
     });
 }
 
@@ -1077,7 +1114,7 @@ void MainWindow::SetGateInputCountIfAllowed(uint8_t pCount)
     if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE)
     {
         mCoreLogic.SetComponentInputCount(pCount);
-        mUi->uLabelItemInputCount->setText(QString(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
+        mUi->uLabelItemInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
         mUi->uItemInputCountSlider->setValue(pCount);
     }
 }
@@ -1090,7 +1127,7 @@ void MainWindow::SetMultiplexerBitWidthIfAllowed(uint8_t pBitWidth)
                                                             || mCoreLogic.GetSelectedComponentType() == ComponentType::DEMULTIPLEXER))
     {
         mCoreLogic.SetMultiplexerBitWidth(pBitWidth);
-        mUi->uLabelBitWidth->setText(QString(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
+        mUi->uLabelBitWidth->setText(tr(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
         mUi->uBitWidthSlider->setValue(pBitWidth);
     }
 }
@@ -1306,7 +1343,7 @@ void MainWindow::FadeInWidget(T& pWidget)
         pWidget->show();
 
         QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
-        anim->setDuration(200);
+        anim->setDuration(gui::FADE_ANIMATION_DURATION);
         anim->setStartValue(0.0f);
         anim->setEndValue(1.0f);
         anim->setEasingCurve(QEasingCurve::OutCirc);
@@ -1329,7 +1366,7 @@ void MainWindow::FadeOutWidget(T& pWidget)
         pWidget->setGraphicsEffect(effect);
 
         QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
-        anim->setDuration(200);
+        anim->setDuration(gui::FADE_ANIMATION_DURATION);
         anim->setStartValue(1.0f);
         anim->setEndValue(0.0f);
         anim->setEasingCurve(QEasingCurve::OutCirc);

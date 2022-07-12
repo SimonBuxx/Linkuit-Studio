@@ -366,7 +366,7 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 
 void CoreLogic::SetComponentInputCount(uint8_t pCount)
 {
-    Q_ASSERT(pCount > 0 && pCount < 10);
+    Q_ASSERT(pCount >= components::gates::MIN_INPUT_COUNT && pCount <= components::gates::MAX_INPUT_COUNT);
     mComponentInputCount = pCount;
 }
 
@@ -377,7 +377,7 @@ void CoreLogic::SetComponentDirection(Direction pDirection)
 
 void CoreLogic::SetMultiplexerBitWidth(uint8_t pBitWidth)
 {
-    Q_ASSERT(pBitWidth > 0 && pBitWidth <= components::multiplexer::MAX_BIT_WIDTH);
+    Q_ASSERT(pBitWidth >= components::multiplexer::MIN_BIT_WIDTH && pBitWidth <= components::multiplexer::MAX_BIT_WIDTH);
     mMultiplexerBitWidth = pBitWidth;
 }
 
@@ -1091,21 +1091,13 @@ void CoreLogic::ClearSelection()
     emit HideClockConfiguratorSignal();
 }
 
-#warning temporary performance counter
-int steps = 0;
-int collideCheck = 0;
 void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 {   
-    //mView.SetGuiEnabled(false);
     StartProcessing();
-
-    QElapsedTimer total;
-    total.start();
 
     if (pOffset.manhattanLength() <= 0) // No effective movement
     {
         EndProcessing();
-        //mView.PrepareGuiForEditing();
         return;
     }
 
@@ -1164,7 +1156,6 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
         ClearSelection();
         EndProcessing();
-        //mView.PrepareGuiForEditing();
         return;
     }
 
@@ -1174,22 +1165,13 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
     {
         AppendUndo(new UndoMoveType(movedComponents, addedComponents, deletedComponents, pOffset));
     }
-    qDebug() << "Moving took " << total.elapsed() << "ms total";
 
     EndProcessing();
-    //mView.PrepareGuiForEditing();
-    //mView.SetGuiEnabled(true);
-    qDebug() << "Steps: " << steps;
-    qDebug() << "CollideCheck: " << collideCheck;
-    steps = 0;
-    collideCheck = 0;
 }
 
 bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
                                        std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents)
 {
-    steps++;
-
     if (IsCollidingComponent(pComponent) && !GetCollidingComponents(pComponent, true).empty()) // Abort if collision with unselected component
     {
         return false;
@@ -1237,7 +1219,6 @@ void CoreLogic::AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComp
     {
         ProcessingHeartbeat();
 
-        collideCheck++;
         if (dynamic_cast<LogicWire*>(collidingComp) == nullptr)
         {
             continue;
@@ -1439,7 +1420,7 @@ QJsonObject CoreLogic::GetJson() const
         }
     }
 
-    json["components"] = components;
+    json[file::JSON_COMPONENTS_IDENTIFIER] = components;
 
     return json;
 }
@@ -1479,9 +1460,9 @@ void CoreLogic::ReadJson(const QJsonObject& pJson)
     mView.ResetViewport();
 
     // Create components
-    if (pJson.contains("components") && pJson["components"].isArray())
+    if (pJson.contains(file::JSON_COMPONENTS_IDENTIFIER) && pJson[file::JSON_COMPONENTS_IDENTIFIER].isArray())
     {
-        auto components = pJson["components"].toArray();
+        auto components = pJson[file::JSON_COMPONENTS_IDENTIFIER].toArray();
 
         for (uint32_t compIndex = 0; compIndex < components.size(); compIndex++)
         {
@@ -1503,10 +1484,10 @@ void CoreLogic::ReadJson(const QJsonObject& pJson)
 
 bool CoreLogic::CreateComponent(const QJsonObject &pJson)
 {
-    if (pJson.contains("type") && pJson["type"].isDouble())
+    if (pJson.contains(file::JSON_TYPE_IDENTIFIER) && pJson[file::JSON_TYPE_IDENTIFIER].isDouble())
     {
         IBaseComponent* item = nullptr;
-        switch (pJson["type"].toInt())
+        switch (pJson[file::JSON_TYPE_IDENTIFIER].toInt())
         {
             case file::ComponentId::AND_GATE:
             {
