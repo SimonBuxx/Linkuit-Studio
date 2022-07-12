@@ -19,6 +19,9 @@ static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::BINARY;
 namespace gui
 {
 static constexpr std::chrono::milliseconds PROCESSING_OVERLAY_TIMEOUT(100);
+
+static constexpr bool FADE_OUT_GUI_ON_CTRL = true;
+static constexpr std::chrono::milliseconds FADE_OUT_GUI_TIMEOUT(1000);
 } // namespace
 
 namespace canvas

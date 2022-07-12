@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *pParent) :
     mUi->uItemConfigurator->hide();
     mUi->uClockConfigurator->hide();
 
+    mFadeOutOnCtrlTimer.setSingleShot(true);
+
     mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
 }
 
@@ -80,6 +82,17 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         {
             setWindowTitle(QString("Linkuit Studio - Untitled*"));
         }
+    });
+
+    QObject::connect(&mFadeOutOnCtrlTimer, &QTimer::timeout, this, [&]()
+    {
+        mIsToolboxVisible = mUi->uToolboxContainer->isVisible();
+        mIsClockConfiguratorVisible = mUi->uClockConfigurator->isVisible();
+        mIsItemConfiguratorVisible = mUi->uItemConfigurator->isVisible();
+        FadeOutWidget(mUi->uTopBar);
+        FadeOutWidget(mUi->uToolboxContainer);
+        FadeOutWidget(mUi->uClockConfigurator);
+        FadeOutWidget(mUi->uItemConfigurator);
     });
 
     QObject::connect(mUi->uZoomSlider, &QSlider::valueChanged, &mView, &View::SetZoom);
@@ -743,6 +756,40 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     }
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *pEvent)
+{
+    if (pEvent->key() == Qt::Key_Control && gui::FADE_OUT_GUI_ON_CTRL)
+    {
+        mFadeOutOnCtrlTimer.start(gui::FADE_OUT_GUI_TIMEOUT);
+    }
+
+    QMainWindow::keyPressEvent(pEvent);
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *pEvent)
+{
+    if (pEvent->key() == Qt::Key_Control && gui::FADE_OUT_GUI_ON_CTRL)
+    {
+        mFadeOutOnCtrlTimer.stop();
+
+        FadeInWidget(mUi->uTopBar);
+        if (mIsToolboxVisible)
+        {
+            FadeInWidget(mUi->uToolboxContainer);
+        }
+        if (mIsClockConfiguratorVisible)
+        {
+            FadeInWidget(mUi->uClockConfigurator);
+        }
+        if (mIsItemConfiguratorVisible)
+        {
+            FadeInWidget(mUi->uItemConfigurator);
+        }
+    }
+
+    QMainWindow::keyReleaseEvent(pEvent);
+}
+
 void MainWindow::InitializeToolboxTree()
 {
     mChevronIconVariant.insert("color", QColor(0, 45, 50));
@@ -1262,7 +1309,7 @@ void MainWindow::FadeInWidget(T& pWidget)
         anim->setDuration(200);
         anim->setStartValue(0.0f);
         anim->setEndValue(1.0f);
-        anim->setEasingCurve(QEasingCurve::OutQuad);
+        anim->setEasingCurve(QEasingCurve::OutCirc);
 
         QObject::connect(anim, &QPropertyAnimation::finished, [&]()
         {
@@ -1285,7 +1332,7 @@ void MainWindow::FadeOutWidget(T& pWidget)
         anim->setDuration(200);
         anim->setStartValue(1.0f);
         anim->setEndValue(0.0f);
-        anim->setEasingCurve(QEasingCurve::OutQuad);
+        anim->setEasingCurve(QEasingCurve::OutCirc);
 
         QObject::connect(anim, &QPropertyAnimation::finished, [&]()
         {

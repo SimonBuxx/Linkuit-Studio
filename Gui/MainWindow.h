@@ -177,6 +177,10 @@ protected:
 
     void closeEvent(QCloseEvent *pEvent);
 
+    void keyPressEvent(QKeyEvent *pEvent);
+
+    void keyReleaseEvent(QKeyEvent *pEvent);
+
     // Animation
 
     template <typename T>
@@ -228,6 +232,14 @@ protected:
     QVariantMap mPlusMinusIconVariant;
     QVariantMap mConfigButtonIconVariant;
     QVariantMap mWhiteIconVariant;
+
+    // Visibility states
+
+    bool mIsClockConfiguratorVisible = false;
+    bool mIsItemConfiguratorVisible = false;
+    bool mIsToolboxVisible = true;
+
+    QTimer mFadeOutOnCtrlTimer;
 };
 
 #endif // MAINWINDOW_H

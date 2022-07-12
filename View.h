@@ -78,7 +78,7 @@ protected:
 };
 
 ///
-/// \brief The View class contains all GUI components
+/// \brief The View class contains the main canvas
 ///
 class View : public QFrame
 {
@@ -88,7 +88,7 @@ public:
     /// \param pCoreLogic: Reference to the core logic
     View(CoreLogic &pCoreLogic);
 
-    /// \brief Initializes the GUI and the GraphicsView and sets up all signal/slot connections
+    /// \brief Initializes the GraphicsView and sets up all signal/slot connections
     void Init(void);
 
     /// \brief Sets the displayed scene to the given scene
@@ -142,12 +142,6 @@ protected slots:
     void SetupMatrix(void);
 
 protected:
-    /// \brief Creates all GUI widgets of the main window
-    void CreateGui(void);
-
-    /// \brief Invokes connectors for all GUI components
-    void ConnectGuiSignalsAndSlots(void);
-
     /// \brief Creates a grid pattern for the canvas background
     /// \param pZoomLevel: The zoom level decides whether to draw the grid or not
     /// \return A pixel map containing a background grid tile

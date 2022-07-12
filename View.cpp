@@ -158,9 +158,8 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
 
 void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
 {
-    // Prevent interaction while not in edit mode
     Q_UNUSED(pEvent);
-    return;
+    return; // Prevent interaction while not in edit mode
 }
 
 View::View(CoreLogic &pCoreLogic):
@@ -182,7 +181,23 @@ void View::Init()
     mGraphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setFrameStyle(QGraphicsView::NoFrame);
 
-    CreateGui();
+    QMovie *procImage = new QMovie(QString(":/images/loading.gif"));
+    mProcessingOverlay = new QLabel();
+    mProcessingOverlay->setMovie(procImage);
+    mProcessingOverlay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    procImage->start();
+    mProcessingOverlay->hide();
+
+    mMainLayout = new QGridLayout();
+    mMainLayout->setContentsMargins(0, 0, 0, 0);
+    mMainLayout->setSpacing(0);
+
+    mMainLayout->addWidget(&mGraphicsView, 1, 0);
+    mMainLayout->addWidget(mProcessingOverlay, 1, 0, Qt::AlignHCenter | Qt::AlignVCenter);
+
+    setLayout(mMainLayout);
+
+    mGraphicsView.stackUnder(mProcessingOverlay);
 
     QObject::connect(&mGraphicsView, &GraphicsView::LeftMouseButtonPressedWithoutCtrlEvent, &mCoreLogic, &CoreLogic::OnLeftMouseButtonPressedWithoutCtrl);
     QObject::connect(&mCoreLogic, &CoreLogic::MousePressedEventDefaultSignal, &mGraphicsView, &GraphicsView::OnMousePressedEventDefault);
@@ -306,27 +321,6 @@ QPixmap View::DrawGridPattern(int32_t pZoomLevel)
     painter.drawLine(0, 0, 0, canvas::GRID_SIZE - 1);
 
     return pixmap;
-}
-
-void View::CreateGui()
-{
-    QMovie *procImage = new QMovie(QString(":/images/loading.gif"));
-    mProcessingOverlay = new QLabel();
-    mProcessingOverlay->setMovie(procImage);
-    mProcessingOverlay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    procImage->start();
-    mProcessingOverlay->hide();
-
-    mMainLayout = new QGridLayout();
-    mMainLayout->setContentsMargins(0, 0, 0, 0);
-    mMainLayout->setSpacing(0);
-
-    mMainLayout->addWidget(&mGraphicsView, 1, 0);
-    mMainLayout->addWidget(mProcessingOverlay, 1, 0, Qt::AlignHCenter | Qt::AlignVCenter);
-
-    setLayout(mMainLayout);
-
-    mGraphicsView.stackUnder(mProcessingOverlay);
 }
 
 void View::FadeInProcessingOverlay()
