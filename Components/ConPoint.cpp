@@ -97,6 +97,26 @@ ConnectionType ConPoint::GetConnectionType() const
 void ConPoint::SetConnectionType(ConnectionType pNewType)
 {
     mConnectionType = pNewType;
+
+    switch (mConnectionType)
+    {
+        case ConnectionType::FULL:
+        {
+            mLogicCell = nullptr;
+            break;
+        }
+        case ConnectionType::DIODE_Y:
+        case ConnectionType::DIODE_X:
+        {
+            mLogicCell = mLogicDiodeCell;
+            break;
+        }
+        default:
+        {
+            throw std::logic_error("Connection type invalid");
+        }
+    }
+
     update();
 }
 
