@@ -109,7 +109,8 @@ enum class ControlMode
     EDIT = 0,
     ADD,
     WIRE,
-    SIMULATION
+    SIMULATION,
+    COPY // Active mode after pasting, left after accepting or aborting the pasting process
 };
 
 enum class SimulationMode

@@ -45,14 +45,16 @@ CoreLogic::CoreLogic(View &pView):
 
 void CoreLogic::SelectAll()
 {
-    if (mControlMode == ControlMode::EDIT || mControlMode == ControlMode::WIRE || mControlMode == ControlMode::ADD)
+    if (mControlMode == ControlMode::COPY || mControlMode == ControlMode::SIMULATION)
     {
-        EnterControlMode(ControlMode::EDIT);
-
-        QPainterPath path;
-        path.addRect(mView.Scene()->sceneRect());
-        mView.Scene()->setSelectionArea(path);
+        return;
     }
+
+    EnterControlMode(ControlMode::EDIT);
+
+    QPainterPath path;
+    path.addRect(mView.Scene()->sceneRect());
+    mView.Scene()->setSelectionArea(path);
 }
 
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
@@ -1310,6 +1312,12 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
     if (mControlMode == ControlMode::WIRE) // Start the preview wire at the current position
     {
         SetPreviewWireStart(snappedPos);
+        return;
+    }
+
+    if (mControlMode == ControlMode::COPY)
+    {
+        // TODO: Delete selection if press was not on selected item
         return;
     }
 

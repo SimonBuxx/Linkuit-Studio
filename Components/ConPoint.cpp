@@ -129,6 +129,7 @@ ConnectionType ConPoint::AdvanceConnectionType()
             throw std::logic_error("Connection type invalid");
         }
     }
+
     return previous;
 }
 
@@ -194,28 +195,30 @@ void ConPoint::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 {
     Q_ASSERT(pEvent);
 
-    if (!mWasMoved && isSelected() && scene()->selectedItems().size() == 1)
-    {
-        auto prevType = AdvanceConnectionType();
-        emit ConnectionTypeChangedSignal(this, prevType, mConnectionType);
-    }
-
     IBaseComponent::mousePressEvent(pEvent);
+
+    if (scene()->selectedItems().size() == 1)
+    {
+        setSelected(false);
+    }
 }
 
 void ConPoint::mouseMoveEvent(QGraphicsSceneMouseEvent *pEvent)
 {
     Q_ASSERT(pEvent);
 
-    if (isSelected() && !mWasMoved && scene()->selectedItems().size() == 1)
+    if (scene()->selectedItems().size() == 0)
     {
-        // If selected and moved, pull underlying wires with it
+        // If moved, pull underlying wires with it
         for (auto& item : collidingItems())
         {
             item->setSelected(true);
         }
-        mWasMoved = true;
+        setSelected(true);
     }
+
+    mWasMoved = true;
+
 
     IBaseComponent::mouseMoveEvent(pEvent);
 }
@@ -225,6 +228,14 @@ void ConPoint::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
     Q_ASSERT(pEvent);
 
     IBaseComponent::mouseReleaseEvent(pEvent);
+
+    if (!mWasMoved)
+    {
+        auto prevType = AdvanceConnectionType();
+        emit ConnectionTypeChangedSignal(this, prevType, mConnectionType);
+        setSelected(false);
+    }
+
     mWasMoved = false;
 }
 
