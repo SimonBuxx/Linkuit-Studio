@@ -33,7 +33,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/images/linkuit_icon6.png</normaloff>:/images/linkuit_icon6.png</iconset>
+    <normaloff>:/images/icons/icon_default.ico</normaloff>:/images/icons/icon_default.ico</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>

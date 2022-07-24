@@ -171,7 +171,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             QMessageBox saveChangesBox;
             saveChangesBox.setIcon(QMessageBox::Icon::Question);
             saveChangesBox.setWindowTitle("Linkuit Studio");
-            saveChangesBox.setWindowIcon(QIcon(":/images/linkuit_icon6.png"));
+            saveChangesBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
             saveChangesBox.setText(tr("There are unsaved changes to this ciruit."));
             saveChangesBox.setInformativeText(tr("Would you like to save these changes?"));
             saveChangesBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
@@ -747,7 +747,7 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
         QMessageBox saveChangesBox;
         saveChangesBox.setIcon(QMessageBox::Icon::Question);
         saveChangesBox.setWindowTitle("Linkuit Studio");
-        saveChangesBox.setWindowIcon(QIcon(":/images/linkuit_icon6.png"));
+        saveChangesBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
         saveChangesBox.setText(tr("There are unsaved changes to this ciruit."));
         saveChangesBox.setInformativeText(tr("Would you like to save these changes?"));
         saveChangesBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);

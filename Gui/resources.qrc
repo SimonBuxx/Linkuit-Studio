@@ -1,11 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>../images/loading.gif</file>
-        <file>../images/icons/wire.png</file>
         <file>../fonts/Quicksand-Medium.ttf</file>
         <file>../styles/style.css</file>
-        <file>../images/icons/wire_disabled.png</file>
-        <file>../images/linkuit_icon6.png</file>
         <file>../fonts/Quicksand-Bold.ttf</file>
         <file>../fonts/Quicksand-SemiBold.ttf</file>
         <file>../fonts/Quicksand-Light.ttf</file>
@@ -24,6 +21,7 @@
         <file>../images/icons/play_icon.png</file>
         <file>../images/icons/stop_icon.png</file>
         <file>../images/hor_line.png</file>
-        <file>../images/linkuit_icon6.ico</file>
+        <file>../images/icons/icon_default.ico</file>
+        <file>../images/icons/icon_default.png</file>
     </qresource>
 </RCC>
