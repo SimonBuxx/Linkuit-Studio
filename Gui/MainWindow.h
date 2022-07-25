@@ -222,6 +222,8 @@ protected:
 
     AboutDialog mAboutDialog;
 
+    QMessageBox mSaveChangesBox;
+
     // Icon color variants
 
     QVariantMap mMenuBarIconVariant;

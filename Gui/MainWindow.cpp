@@ -28,7 +28,17 @@ MainWindow::MainWindow(QWidget *pParent) :
     InitializeGuiIcons();
     InitializeGlobalShortcuts();
 
-    mUi->uItemRightButton->setChecked(true);
+    // Initialize prompt to save the circuit on file closing
+
+    mSaveChangesBox.setIcon(QMessageBox::Icon::Question);
+    mSaveChangesBox.setWindowTitle("Linkuit Studio");
+    mSaveChangesBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
+    mSaveChangesBox.setText(tr("There are unsaved changes to this ciruit."));
+    mSaveChangesBox.setInformativeText(tr("Would you like to save these changes?"));
+    mSaveChangesBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    mSaveChangesBox.setDefaultButton(QMessageBox::Save);
+
+    mUi->uItemRightButton->setChecked(true); // Button for component direction RIGHT
 
     mUi->uItemConfigurator->hide();
     mUi->uClockConfigurator->hide();
@@ -168,15 +178,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         if (mCoreLogic.IsCircuitModified())
         {
-            QMessageBox saveChangesBox;
-            saveChangesBox.setIcon(QMessageBox::Icon::Question);
-            saveChangesBox.setWindowTitle("Linkuit Studio");
-            saveChangesBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
-            saveChangesBox.setText(tr("There are unsaved changes to this ciruit."));
-            saveChangesBox.setInformativeText(tr("Would you like to save these changes?"));
-            saveChangesBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-            saveChangesBox.setDefaultButton(QMessageBox::Save);
-            int ret = saveChangesBox.exec();
+            int ret = mSaveChangesBox.exec();
 
             switch (ret) {
                 case QMessageBox::Save:
@@ -744,15 +746,7 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
     if (mCoreLogic.IsCircuitModified())
     {
-        QMessageBox saveChangesBox;
-        saveChangesBox.setIcon(QMessageBox::Icon::Question);
-        saveChangesBox.setWindowTitle("Linkuit Studio");
-        saveChangesBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
-        saveChangesBox.setText(tr("There are unsaved changes to this ciruit."));
-        saveChangesBox.setInformativeText(tr("Would you like to save these changes?"));
-        saveChangesBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-        saveChangesBox.setDefaultButton(QMessageBox::Save);
-        int ret = saveChangesBox.exec();
+        int ret = mSaveChangesBox.exec();
 
         switch (ret) {
             case QMessageBox::Save:
