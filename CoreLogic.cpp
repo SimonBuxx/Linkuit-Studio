@@ -596,6 +596,19 @@ bool CoreLogic::IsComponentAtPosition(QPointF pPos)
     return false;
 }
 
+bool CoreLogic::TwoConPointsAtPosition(QPointF pPos)
+{
+    uint8_t conPoints = 0;
+    for (const auto& comp : mView.Scene()->items(pPos, Qt::IntersectsItemShape))
+    {
+        if (dynamic_cast<ConPoint*>(comp) != nullptr)
+        {
+            conPoints++;
+        }
+    }
+    return (conPoints == 2);
+}
+
 void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents)
 {
     for (const auto& w : pWires)
@@ -1245,8 +1258,8 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
         ProcessingHeartbeat();
     }
 
-    // Delete all ConPoints of the moved components that are not valid anymore
-    if ((nullptr != dynamic_cast<ConPoint*>(pComponent)) && IsNoCrossingPoint(static_cast<ConPoint*>(pComponent)))
+    // Delete all ConPoints of the moved components that are not valid anymore (plus ConPoints that already exist the position; needed when copying)
+    if ((nullptr != dynamic_cast<ConPoint*>(pComponent)) && (IsNoCrossingPoint(static_cast<ConPoint*>(pComponent)) || TwoConPointsAtPosition(pComponent->pos())))
     {
         Q_ASSERT(pComponent->scene() == mView.Scene());
         mView.Scene()->removeItem(pComponent);

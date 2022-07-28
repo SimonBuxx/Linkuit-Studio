@@ -371,6 +371,9 @@ protected:
     template<typename T>
     bool IsComponentAtPosition(QPointF pPos);
 
+#warning missing documentation
+    bool TwoConPointsAtPosition(QPointF pPos);
+
     /// \brief Returns all components that are "colliding" (may not be before or behind others) with the given component
     /// \param pComponent: The component to check for colliding components
     /// \param pOnlyUnselected: If true, selected colliding components are ignored
