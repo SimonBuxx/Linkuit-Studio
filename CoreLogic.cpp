@@ -1184,6 +1184,11 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
             mView.Scene()->addItem(comp);
         }
 
+        if (mControlMode == ControlMode::COPY)
+        {
+            AbortPasting();
+        }
+
         ClearSelection();
         EndProcessing();
         return;
@@ -1363,6 +1368,16 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
     emit MousePressedEventDefaultSignal(pEvent);
 }
 
+void CoreLogic::AbortPasting()
+{
+    RemoveCurrentPaste();
+    if (mCurrentCopyUndoType.has_value())
+    {
+        delete mCurrentCopyUndoType.value();
+        mCurrentCopyUndoType.reset();
+    }
+}
+
 void CoreLogic::FinishPaste()
 {
     for (auto& comp : mCurrentPaste)
@@ -1371,12 +1386,7 @@ void CoreLogic::FinishPaste()
                 && IsCollidingComponent(static_cast<IBaseComponent*>(comp))
                 && !GetCollidingComponents(static_cast<IBaseComponent*>(comp), false).empty())
         {
-            RemoveCurrentPaste();
-            if (mCurrentCopyUndoType.has_value()) // Delete undo action if aborted
-            {
-                delete mCurrentCopyUndoType.value();
-                mCurrentCopyUndoType.reset();
-            }
+            AbortPasting();
             return;
         }
     }

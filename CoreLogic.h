@@ -104,6 +104,8 @@ public:
 #warning missing documentation
     void FinishPaste(void);
 
+    void AbortPasting(void);
+
     void RemoveCurrentPaste(void);
 
     /// \brief Returns true, if the core logic is in simulation mode
