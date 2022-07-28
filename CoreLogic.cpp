@@ -73,6 +73,11 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
         LeaveSimulation();
     }
 
+    if (mControlMode == ControlMode::COPY)
+    {
+        FinishPaste(); // Finish copy because copy mode is left (either accept or abort the copy)
+    }
+
     mControlMode = pNewMode;
     emit ControlModeChangedSignal(pNewMode);
 
@@ -105,7 +110,6 @@ void CoreLogic::EnterSimulation()
     ParseWireGroups();
     CreateWireLogicCells();
     ConnectLogicCells();
-    //qDebug() << "Found " << mWireGroups.size() << " groups";
     EndProcessing();
     SetSimulationMode(SimulationMode::STOPPED);
     emit SimulationStartSignal();
@@ -1093,11 +1097,18 @@ void CoreLogic::ClearSelection()
     emit HideClockConfiguratorSignal();
 }
 
-void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
+void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
 {   
     StartProcessing();
 
-    if (pOffset.manhattanLength() <= 0) // No effective movement
+    if (pOffset.manhattanLength() <= 0 && mControlMode != ControlMode::COPY) // No effective movement
+    {
+        EndProcessing();
+        return;
+    }
+
+    if (mControlMode == ControlMode::COPY && mCurrentCopyUndoType.has_value() && mCurrentCopyUndoType.value()->IsCompleted()) // Ignore calls when copy action is already completed
+    // OnSelectedComponentsMovedOrPasted is invoked once when pasting and deselecting immediately and twice if moving the pasted components
     {
         EndProcessing();
         return;
@@ -1163,16 +1174,33 @@ void CoreLogic::OnSelectedComponentsMoved(QPointF pOffset)
 
     ClearSelection();
 
-    if (movedComponents.size() > 0)
+
+    if (movedComponents.size() > 0 || mControlMode == ControlMode::COPY) // Create undo copy actions also when no components were moved
     {
-        AppendUndo(new UndoMoveType(movedComponents, addedComponents, deletedComponents, pOffset));
+        if (mControlMode != ControlMode::COPY)
+        {
+            AppendUndo(new UndoMoveType(movedComponents, addedComponents, deletedComponents, pOffset));
+        }
+        else
+        {
+            if (mCurrentCopyUndoType.has_value())
+            {
+                mCurrentCopyUndoType.value()->AppendAddedComponents(addedComponents);
+                mCurrentCopyUndoType.value()->AppendDeletedComponents(deletedComponents);
+                mCurrentCopyUndoType.value()->AppendMovedComponents(movedComponents);
+                mCurrentCopyUndoType.value()->SetOffset(pOffset);
+                // Mark as completed so that the pointer will not be deleted during the next copy action
+                mCurrentCopyUndoType.value()->SetCompleted(true);
+                AppendUndo(mCurrentCopyUndoType.value());
+            }
+        }
     }
 
     EndProcessing();
 }
 
-bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
-                                       std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents)
+bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& pMovedComponents,
+                                       std::vector<IBaseComponent*>& pAddedComponents, std::vector<IBaseComponent*>& pDeletedComponents)
 {
     if (IsCollidingComponent(pComponent) && !GetCollidingComponents(pComponent, true).empty()) // Abort if collision with unselected component
     {
@@ -1190,7 +1218,7 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
         {
             Q_ASSERT(collidingComp->scene() == mView.Scene());
             mView.Scene()->removeItem(collidingComp);
-            deletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
+            pDeletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
         }
         ProcessingHeartbeat();
     }
@@ -1200,16 +1228,16 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
     {
         Q_ASSERT(pComponent->scene() == mView.Scene());
         mView.Scene()->removeItem(pComponent);
-        deletedComponents.push_back(pComponent);
+        pDeletedComponents.push_back(pComponent);
     }
 
     // Add ConPoints to all T Crossings
     if (nullptr != dynamic_cast<LogicWire*>(pComponent))
     {
-        AddConPointsToTCrossings(static_cast<LogicWire*>(pComponent), addedComponents);
+        AddConPointsToTCrossings(static_cast<LogicWire*>(pComponent), pAddedComponents);
     }
 
-    movedComponents.push_back(pComponent);
+    pMovedComponents.push_back(pComponent);
     return true;
 }
 
@@ -1315,13 +1343,44 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
         return;
     }
 
-    if (mControlMode == ControlMode::COPY)
+    emit MousePressedEventDefaultSignal(pEvent);
+}
+
+void CoreLogic::FinishPaste()
+{
+    for (auto& comp : mCurrentPaste)
     {
-        // TODO: Delete selection if press was not on selected item
-        return;
+        if ((nullptr != dynamic_cast<IBaseComponent*>(comp))
+                && IsCollidingComponent(static_cast<IBaseComponent*>(comp))
+                && !GetCollidingComponents(static_cast<IBaseComponent*>(comp), true).empty())
+        {
+            RemoveCurrentPaste();
+            if (mCurrentCopyUndoType.has_value()) // Delete undo action if aborted
+            {
+                delete mCurrentCopyUndoType.value();
+                mCurrentCopyUndoType.reset();
+            }
+            return;
+        }
     }
 
-    emit MousePressedEventDefaultSignal(pEvent);
+    if (!mCurrentCopyUndoType.has_value() || !mCurrentCopyUndoType.value()->IsCompleted())
+    {
+        OnSelectedComponentsMovedOrPasted(QPointF(0, 0));
+    }
+
+    mCurrentPaste.clear();
+}
+
+void CoreLogic::RemoveCurrentPaste()
+{
+    for (auto& comp : mCurrentPaste)
+    {
+        mView.Scene()->removeItem(comp);
+        delete comp;
+    }
+
+    mCurrentPaste.clear();
 }
 
 void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPreviousType, ConnectionType pCurrentType)
@@ -1355,29 +1414,71 @@ void CoreLogic::OnTextLabelContentChanged(TextLabel* pTextLabel, const QString& 
 void CoreLogic::CopySelectedComponents()
 {
     QList<QGraphicsItem*> componentsToCopy = mView.Scene()->selectedItems();
-    std::vector<IBaseComponent*> addedComponents{};
 
-    ClearSelection();
+    if (componentsToCopy.empty())
+    {
+        return;
+    }
 
-    for (auto& orig : componentsToCopy)
+    // Remove previous copy components
+    for (auto& comp : mCopiedComponents)
+    {
+        delete comp;
+    }
+
+    mCopiedComponents.clear();
+
+    for (const auto& orig : componentsToCopy)
     {
         // Create a copy of the original component
         IBaseComponent* copy = static_cast<IBaseComponent*>(orig)->CloneBaseComponent(this);
         Q_ASSERT(copy);
 
-        // Paste the copied component one grid cell below and to the right
         copy->setPos(SnapToGrid(orig->pos() + QPointF(canvas::GRID_SIZE, canvas::GRID_SIZE)));
+
+        mCopiedComponents.push_back(copy);
+    }
+}
+
+void CoreLogic::CutSelectedComponents()
+{
+    CopySelectedComponents();
+    DeleteSelectedComponents();
+}
+
+void CoreLogic::PasteCopiedComponents()
+{
+    if (mCopiedComponents.empty())
+    {
+        return;
+    }
+
+    EnterControlMode(ControlMode::COPY);
+
+    ClearSelection();
+
+    mCurrentPaste.clear();
+
+    for (const auto& comp : mCopiedComponents)
+    {
+        // Create a copy of the copy component
+        IBaseComponent* copy = static_cast<IBaseComponent*>(comp)->CloneBaseComponent(this);
+        Q_ASSERT(copy);
+
+        copy->setPos(comp->pos());
         copy->setSelected(true);
         copy->ResetZValue();
         copy->setZValue(copy->zValue() + 100); // Bring copied components to front
         mView.Scene()->addItem(copy);
-        addedComponents.push_back(copy);
+        mCurrentPaste.push_back(copy);
     }
 
-    if (addedComponents.size() > 0)
+    // Delete previous copy action if aborted to prevent memory leak
+    if (mCurrentCopyUndoType.has_value() && !mCurrentCopyUndoType.value()->IsCompleted())
     {
-        AppendUndo(new UndoAddType(addedComponents));
+        delete mCurrentCopyUndoType.value();
     }
+    mCurrentCopyUndoType = new UndoCopyType(mCurrentPaste);
 }
 
 void CoreLogic::DeleteSelectedComponents()
@@ -1734,6 +1835,12 @@ void CoreLogic::AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBase
 
 void CoreLogic::Undo()
 {
+    if (mControlMode == ControlMode::COPY)
+    {
+        RemoveCurrentPaste();
+        EnterControlMode(ControlMode::EDIT);
+    }
+
     if (mUndoQueue.size() > 0)
     {
         UndoBaseType* undoObject = mUndoQueue.back();
@@ -1821,6 +1928,27 @@ void CoreLogic::Undo()
                 }
                 break;
             }
+            case undo::Type::COPY:
+            {
+                const auto undoCopyObject = static_cast<UndoCopyType*>(undoObject);
+                for (const auto& comp : static_cast<UndoCopyType*>(undoObject)->DeletedComponents())
+                {
+                    Q_ASSERT(comp);
+                    mView.Scene()->addItem(comp);
+                }
+                for (const auto& comp : static_cast<UndoCopyType*>(undoObject)->AddedComponents())
+                {
+                    Q_ASSERT(comp);
+                    mView.Scene()->removeItem(comp);
+                }
+                for (const auto& comp : undoCopyObject->MovedComponents())
+                {
+                    Q_ASSERT(comp);
+                    comp->moveBy(-undoCopyObject->Offset().x(), -undoCopyObject->Offset().y());
+                }
+                AppendToUndoQueue(undoObject, mRedoQueue);
+                break;
+            }
             default:
             {
                 break;
@@ -1833,6 +1961,12 @@ void CoreLogic::Undo()
 
 void CoreLogic::Redo()
 {
+    if (mControlMode == ControlMode::COPY)
+    {
+        RemoveCurrentPaste();
+        EnterControlMode(ControlMode::EDIT);
+    }
+
     if (mRedoQueue.size() > 0)
     {
         UndoBaseType* redoObject = mRedoQueue.back();
@@ -1918,6 +2052,27 @@ void CoreLogic::Redo()
                         break;
                     }
                 }
+                break;
+            }
+            case undo::Type::COPY:
+            {
+                const auto redoCopyObject = static_cast<UndoCopyType*>(redoObject);
+                for (const auto& comp : redoCopyObject->MovedComponents())
+                {
+                    Q_ASSERT(comp);
+                    comp->moveBy(redoCopyObject->Offset().x(), redoCopyObject->Offset().y());
+                }
+                for (const auto& comp : static_cast<UndoCopyType*>(redoObject)->AddedComponents())
+                {
+                    Q_ASSERT(comp);
+                    mView.Scene()->addItem(comp);
+                }
+                for (const auto& comp : static_cast<UndoCopyType*>(redoObject)->DeletedComponents())
+                {
+                    Q_ASSERT(comp);
+                    mView.Scene()->removeItem(comp);
+                }
+                AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
             }
             default:

@@ -3,6 +3,7 @@
 
 #include "View.h"
 #include "Undo/UndoBaseType.h"
+#include "Undo/UndoCopyType.h"
 #include "Components/LogicWire.h"
 #include "Components/ConPoint.h"
 #include "Components/TextLabel.h"
@@ -88,11 +89,22 @@ public:
     /// \param pEndPoint: The end point the last drawn wire should reach
     void AddWires(QPointF pEndPoint);
 
-    /// \brief Creates a copy of the currently selected components and pastes it in a shifted position
+    /// \brief Copies the currently selected components
     void CopySelectedComponents(void);
+
+    /// \brief Pastes the currently copied components
+    void PasteCopiedComponents(void);
+
+    /// \brief Cuts the currently selected components
+    void CutSelectedComponents(void);
 
     /// \brief Deletes the currently selected components
     void DeleteSelectedComponents(void);
+
+#warning missing documentation
+    void FinishPaste(void);
+
+    void RemoveCurrentPaste(void);
 
     /// \brief Returns true, if the core logic is in simulation mode
     /// \return True, if in simulation mode
@@ -220,9 +232,9 @@ signals:
     void CircuitModifiedSignal(void);
 
 public slots:
-    /// \brief Checks for collisions, merges moved wires and brings the ConPoints in a valid state
+    /// \brief Checks for collisions, merges moved or copied wires and brings the ConPoints in a valid state
     /// \param pOffset: The relative offset by which the selected components have been moved
-    void OnSelectedComponentsMoved(QPointF pOffset);
+    void OnSelectedComponentsMovedOrPasted(QPointF pOffset);
 
     /// \brief Performs operations such as adding ConPoints, inversion circles and components on click
     /// May emit MousePressedEventDefaultSignal to pass the press event back to the GraphicsView
@@ -298,15 +310,15 @@ protected:
     /// \param pDeletedComponents: Vector to add deleted wires to
     void MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents);
 
-    /// \brief One step of the algorithm to create a valid ConPoint state in OnSelectedComponentsMoved
+    /// \brief One step of the algorithm to create a valid ConPoint state in OnSelectedComponentsMovedOrPasted
     /// \param pComponent: The component that currently processed
     /// \param pOffset: The offset by that the component has been moved
-    /// \param movedComponents: Vector to add moved components to
-    /// \param addedComponents: Vector to add newly added components to
-    /// \param deletedComponents: Vector to add deleted components to
+    /// \param pMovedComponents: Vector to add moved components to
+    /// \param pAddedComponents: Vector to add newly added components to
+    /// \param pDeletedComponents: Vector to add deleted components to
     /// \return False, if the move operation has to be aborted
-    bool ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& movedComponents,
-                                           std::vector<IBaseComponent*>& addedComponents, std::vector<IBaseComponent*>& deletedComponents);
+    bool ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOffset, std::vector<IBaseComponent*>& pMovedComponents,
+                                           std::vector<IBaseComponent*>& pAddedComponents, std::vector<IBaseComponent*>& pDeletedComponents);
 
     /// \brief Adds ConPoints on T-crossings that include the given wire
     /// \param pWire: The wire to add ConPoints to
@@ -463,6 +475,10 @@ protected:
 
     std::optional<QString> mFilePath;
     bool mCircuitModified = false;
+
+    std::vector<IBaseComponent*> mCopiedComponents;
+    std::vector<IBaseComponent*> mCurrentPaste;
+    std::optional<UndoCopyType*> mCurrentCopyUndoType;
 };
 
 #endif // CORELOGIC_H

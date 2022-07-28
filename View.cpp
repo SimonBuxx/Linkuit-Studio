@@ -67,6 +67,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
             {
                 mIsAddingWire = true;
             }
+
             emit LeftMouseButtonPressedWithoutCtrlEvent(mapToScene(pEvent->pos()), *pEvent);
         }
     }
@@ -116,6 +117,15 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
     }
 
     QGraphicsView::mouseReleaseEvent(pEvent);
+
+    if (pEvent->button() == Qt::LeftButton)
+    {
+        if (mCoreLogic.GetControlMode() == ControlMode::COPY)
+        {
+            mCoreLogic.FinishPaste();
+            mCoreLogic.EnterControlMode(ControlMode::EDIT);
+        }
+    }
 }
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)

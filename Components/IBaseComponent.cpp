@@ -10,7 +10,6 @@ IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, const std::shared_pt
     mSimulationRunning(false),
     mLogicCell(pLogicCell)
 {
-    Q_UNUSED(pCoreLogic);
     setPos(0, 0);
     setCursor(Qt::PointingHandCursor);
     setFlags(ItemIsSelectable | ItemIsMovable);
@@ -45,7 +44,7 @@ IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, const std::shared_pt
         }
     });
 
-    QObject::connect(this, &IBaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMoved);
+    QObject::connect(this, &IBaseComponent::SelectedComponentMovedSignal, pCoreLogic, &CoreLogic::OnSelectedComponentsMovedOrPasted);
 
     if (mLogicCell != nullptr)
     {

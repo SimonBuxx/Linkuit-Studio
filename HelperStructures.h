@@ -141,7 +141,8 @@ enum class Type
     MOVE = 0,
     ADD,
     DEL,
-    CONFIGURE
+    CONFIGURE,
+    COPY
 };
 
 enum class ConfigType

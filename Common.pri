@@ -16,6 +16,7 @@ HEADERS += \
     $$PWD/Components/Inputs/LogicCells/LogicClockCell.h \
     $$PWD/Components/Inputs/LogicClock.h \
     $$PWD/Components/LogicDiodeCell.h \
+    $$PWD/Undo/UndoCopyType.h \
     $${PWD}/Components/ComplexLogic/DFlipFlop.h \
     $${PWD}/Components/ComplexLogic/LogicCells/LogicDFlipFlopCell.h \
     $${PWD}/Components/ConPoint.h \
@@ -74,6 +75,7 @@ SOURCES += \
     $$PWD/Components/Inputs/LogicCells/LogicClockCell.cpp \
     $$PWD/Components/Inputs/LogicClock.cpp \
     $$PWD/Components/LogicDiodeCell.cpp \
+    $$PWD/Undo/UndoCopyType.cpp \
     $${PWD}/Components/ComplexLogic/DFlipFlop.cpp \
     $${PWD}/Components/ComplexLogic/LogicCells/LogicDFlipFlopCell.cpp \
     $${PWD}/Components/ConPoint.cpp \

@@ -66,6 +66,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     });
     QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
     {
+        mUi->uLabelStatus->setText(tr("Ready."));
+
         if (pNewMode != ControlMode::ADD)
         {
             FadeOutWidget(mUi->uItemConfigurator);
@@ -75,6 +77,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         {
             mIsToolboxVisible = false;
             mIsClockConfiguratorVisible = false;
+            mUi->uLabelStatus->setText(tr("Simulation running..."));
         }
     });
 
@@ -141,7 +144,6 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uPulseSlider, &QSlider::valueChanged, this, &MainWindow::OnPulseSliderValueChanged);
 
     QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, mUi->uActionDelete, &QAction::trigger);
-    QObject::connect(mUi->uCopyButton, &QAbstractButton::clicked, mUi->uActionCopy, &QAction::trigger);
     QObject::connect(mUi->uUndoButton, &QAbstractButton::clicked, mUi->uActionUndo, &QAction::trigger);
     QObject::connect(mUi->uRedoButton, &QAbstractButton::clicked, mUi->uActionRedo, &QAction::trigger);
     QObject::connect(mUi->uStartButton, &QAbstractButton::clicked, mUi->uActionStart, &QAction::trigger);
@@ -250,23 +252,35 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uActionUndo, &QAction::triggered, this, &MainWindow::Undo);
     QObject::connect(mUi->uActionRedo, &QAction::triggered, this, &MainWindow::Redo);
 
+    QObject::connect(mUi->uActionCopy, &QAction::triggered, &mCoreLogic, &CoreLogic::CopySelectedComponents);
+    QObject::connect(mUi->uActionPaste, &QAction::triggered, &mCoreLogic, &CoreLogic::PasteCopiedComponents);
     QObject::connect(mUi->uActionCut, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
-    });
-
-    QObject::connect(mUi->uActionCopy, &QAction::triggered, &mCoreLogic, &CoreLogic::CopySelectedComponents);
-
-    QObject::connect(mUi->uActionPaste, &QAction::triggered, this, [&]()
-    {
-        qDebug() << "Not implemented";
+        if (!mCoreLogic.IsSimulationRunning() && !(QApplication::mouseButtons() & Qt::MouseButton::LeftButton))
+        {
+            if (mCoreLogic.GetControlMode() != ControlMode::COPY)
+            {
+                mCoreLogic.CutSelectedComponents();
+            }
+            else
+            {
+                mCoreLogic.RemoveCurrentPaste();
+            }
+        }
     });
 
     QObject::connect(mUi->uActionDelete, &QAction::triggered, this, [&]()
     {
-        if (!mCoreLogic.IsSimulationRunning())
+        if (!mCoreLogic.IsSimulationRunning() && !(QApplication::mouseButtons() & Qt::MouseButton::LeftButton))
         {
-            mCoreLogic.DeleteSelectedComponents();
+            if (mCoreLogic.GetControlMode() != ControlMode::COPY)
+            {
+                mCoreLogic.DeleteSelectedComponents();
+            }
+            else
+            {
+                mCoreLogic.RemoveCurrentPaste();
+            }
         }
     });
 
@@ -538,12 +552,12 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
     switch (pNewMode)
     {
         case ControlMode::EDIT:
+        case ControlMode::COPY:
         {
             mUi->uToolboxTree->clearSelection();
 
             mUi->uEditButton->setEnabled(true);
             mUi->uWiringButton->setEnabled(true);
-            mUi->uCopyButton->setEnabled(true);
             mUi->uDeleteButton->setEnabled(true);
             mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(false);
@@ -581,7 +595,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             mUi->uEditButton->setEnabled(true);
             mUi->uWiringButton->setEnabled(true);
-            mUi->uCopyButton->setEnabled(true);
             mUi->uDeleteButton->setEnabled(true);
             mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(false);
@@ -617,7 +630,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
         {
             mUi->uEditButton->setEnabled(true);
             mUi->uWiringButton->setEnabled(true);
-            mUi->uCopyButton->setEnabled(true);
             mUi->uDeleteButton->setEnabled(true);
             mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(false);
@@ -656,7 +668,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             mUi->uEditButton->setEnabled(false);
             mUi->uWiringButton->setEnabled(false);
-            mUi->uCopyButton->setEnabled(false);
             mUi->uDeleteButton->setEnabled(false);
             mUi->uStartButton->setEnabled(true);
             mUi->uRunButton->setEnabled(true);
@@ -709,6 +720,8 @@ void MainWindow::OnSimulationModeChanged(SimulationMode pNewMode)
             mUi->uActionRun->setEnabled(true);
             mUi->uActionPause->setEnabled(false);
             mUi->uActionStep->setEnabled(true);
+
+            mUi->uLabelStatus->setText(tr("Simulation paused."));
             break;
         }
         case SimulationMode::RUNNING:
@@ -719,6 +732,7 @@ void MainWindow::OnSimulationModeChanged(SimulationMode pNewMode)
             mUi->uActionRun->setEnabled(false);
             mUi->uActionPause->setEnabled(true);
             mUi->uActionStep->setEnabled(false);
+            mUi->uLabelStatus->setText(tr("Simulation running..."));
             break;
         }
         default:
@@ -954,7 +968,6 @@ void MainWindow::InitializeGuiIcons()
     mUi->uWiringButton->SetCheckedIcon(mAwesome->icon(fa::exchange, mCheckedButtonVariant));
     mUi->uWiringButton->SetUncheckedIcon(mAwesome->icon(fa::exchange, mUncheckedButtonVariant));
 
-    mUi->uCopyButton->SetIcon(mAwesome->icon(fa::copy, mUncheckedButtonVariant));
     mUi->uDeleteButton->SetIcon(mAwesome->icon(fa::trasho, mUncheckedButtonVariant));
     mUi->uUndoButton->SetIcon(mAwesome->icon(fa::undo, mUncheckedButtonVariant));
     mUi->uRedoButton->SetIcon(mAwesome->icon(fa::repeat, mUncheckedButtonVariant));
