@@ -1117,21 +1117,38 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
     std::vector<LogicWire*> affectedWires;
     std::vector<IBaseComponent*> affectedComponents;
 
-    for (const auto& comp : mView.Scene()->selectedItems())
+    if (mControlMode == ControlMode::COPY && mCurrentCopyUndoType.has_value())
     {
-        if (nullptr == dynamic_cast<IBaseComponent*>(comp))
+        for (const auto& comp : mCurrentPaste)
         {
-            continue;
+            affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
+
+            if (nullptr != dynamic_cast<LogicWire*>(comp))
+            {
+                affectedWires.push_back(static_cast<LogicWire*>(comp));
+            }
+
+            ProcessingHeartbeat();
         }
-
-        affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
-
-        if (nullptr != dynamic_cast<LogicWire*>(comp))
+    }
+    else
+    {
+        for (const auto& comp : mView.Scene()->selectedItems())
         {
-            affectedWires.push_back(static_cast<LogicWire*>(comp));
-        }
+            if (nullptr == dynamic_cast<IBaseComponent*>(comp))
+            {
+                continue;
+            }
 
-        ProcessingHeartbeat();
+            affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
+
+            if (nullptr != dynamic_cast<LogicWire*>(comp))
+            {
+                affectedWires.push_back(static_cast<LogicWire*>(comp));
+            }
+
+            ProcessingHeartbeat();
+        }
     }
 
     std::vector<IBaseComponent*> movedComponents;
@@ -1352,7 +1369,7 @@ void CoreLogic::FinishPaste()
     {
         if ((nullptr != dynamic_cast<IBaseComponent*>(comp))
                 && IsCollidingComponent(static_cast<IBaseComponent*>(comp))
-                && !GetCollidingComponents(static_cast<IBaseComponent*>(comp), true).empty())
+                && !GetCollidingComponents(static_cast<IBaseComponent*>(comp), false).empty())
         {
             RemoveCurrentPaste();
             if (mCurrentCopyUndoType.has_value()) // Delete undo action if aborted
@@ -1415,7 +1432,7 @@ void CoreLogic::CopySelectedComponents()
 {
     QList<QGraphicsItem*> componentsToCopy = mView.Scene()->selectedItems();
 
-    if (componentsToCopy.empty())
+    if (componentsToCopy.empty() || mControlMode == ControlMode::COPY)
     {
         return;
     }
@@ -1442,13 +1459,16 @@ void CoreLogic::CopySelectedComponents()
 
 void CoreLogic::CutSelectedComponents()
 {
-    CopySelectedComponents();
-    DeleteSelectedComponents();
+    if (mControlMode == ControlMode::EDIT)
+    {
+        CopySelectedComponents();
+        DeleteSelectedComponents();
+    }
 }
 
 void CoreLogic::PasteCopiedComponents()
 {
-    if (mCopiedComponents.empty())
+    if (mCopiedComponents.empty() || mControlMode == ControlMode::COPY)
     {
         return;
     }
