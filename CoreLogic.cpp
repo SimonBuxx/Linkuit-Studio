@@ -897,6 +897,25 @@ void CoreLogic::ParseWireGroups(void)
         }
         ProcessingHeartbeat();
     }
+
+    // Push ConPoints into groups of the wires below; done here because ExploreGroup doesn't catch all ConPoints
+    for (auto& comp : mView.Scene()->items())
+    {
+        if (nullptr != dynamic_cast<ConPoint*>(comp) && static_cast<ConPoint*>(comp)->GetConnectionType() == ConnectionType::FULL)
+        {
+            auto collidingItems = mView.Scene()->collidingItems(comp, Qt::IntersectsItemShape);
+            if (collidingItems.size() > 0) // Sanity check that ConPoint is above wires
+            {
+                auto wireBelow = dynamic_cast<LogicWire*>(collidingItems[0]);
+                if (nullptr != wireBelow)
+                {
+                    // We trust that all wires have been inserted into mWireMap because checking would be costly
+                    mWireGroups[mWireMap.at(wireBelow)].push_back(static_cast<IBaseComponent*>(comp));
+                }
+            }
+        }
+        ProcessingHeartbeat();
+    }
 }
 
 void CoreLogic::ExploreGroup(LogicWire* pWire, int32_t pGroupIndex)
@@ -914,14 +933,11 @@ void CoreLogic::ExploreGroup(LogicWire* pWire, int32_t pGroupIndex)
             auto collisionPoint = GetWireCollisionPoint(pWire, static_cast<LogicWire*>(coll));
             if (collisionPoint.has_value())
             {
+                // Get ConPoints to recognize connected wires and traverse them recursively
                 auto conPoint = GetConPointAtPosition(collisionPoint.value(), ConnectionType::FULL);
-                if (conPoint.has_value())
-                {
-                    mWireGroups[pGroupIndex].push_back(conPoint.value());
-                }
                 if (conPoint.has_value() || IsLCrossing(pWire, static_cast<LogicWire*>(coll)))
                 {
-                    ExploreGroup(static_cast<LogicWire*>(coll), pGroupIndex); // Recursive call
+                    ExploreGroup(static_cast<LogicWire*>(coll), pGroupIndex);
                 }
             }
         }

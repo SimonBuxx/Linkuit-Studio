@@ -191,11 +191,14 @@ void View::Init()
     mGraphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setFrameStyle(QGraphicsView::NoFrame);
 
-    QMovie *procImage = new QMovie(QString(":/images/loading.gif"));
+    //auto procImage = new QMovie(":/images/loading.gif");
     mProcessingOverlay = new QLabel();
-    mProcessingOverlay->setMovie(procImage);
+    //mProcessingOverlay->setMovie(procImage);
+#warning artifact in logo icon
+#warning wrong conPoints are deleted when removing duplicates
+    mProcessingOverlay->setPixmap(QPixmap(":/images/icons/icon_smaller.png").scaled(150, 150, Qt::KeepAspectRatio));
     mProcessingOverlay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    procImage->start();
+    //procImage->start();
     mProcessingOverlay->hide();
 
     mMainLayout = new QGridLayout();
