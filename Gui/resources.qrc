@@ -24,5 +24,6 @@
         <file>../images/icons/icon_default.ico</file>
         <file>../images/icons/icon_default.png</file>
         <file>../images/icons/icon_smaller.png</file>
+        <file>../images/icons/icon_file.png</file>
     </qresource>
 </RCC>

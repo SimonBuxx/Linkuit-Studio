@@ -45,19 +45,6 @@
 
 QLabel {
 	font-family: &quot;Source Sans Pro&quot;;
-}
-
-QMenu {
-    background-color:  rgb(255, 255, 255);
-}
-
-QMenu::item {
-    background-color: transparent;
-}
-
-QMenu::item:selected {
-    background-color: rgb(230, 230, 230);
-	color: rgb(0, 0, 0);
 }</string>
   </property>
   <property name="locale">

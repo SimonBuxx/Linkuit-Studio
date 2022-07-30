@@ -45,7 +45,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mFadeOutOnCtrlTimer.setSingleShot(true);
 
-    mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make about dialog close when main window closes
+    mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false);   // Make about dialog close when main window closes
+    mWelcomeDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make welcome dialog close when main window closes
 }
 
 MainWindow::~MainWindow()
@@ -151,6 +152,28 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uStepButton, &QAbstractButton::clicked, mUi->uActionStep, &QAction::trigger);
     QObject::connect(mUi->uResetButton, &QAbstractButton::clicked, mUi->uActionReset, &QAction::trigger);
     QObject::connect(mUi->uPauseButton, &QAbstractButton::clicked, mUi->uActionPause, &QAction::trigger);
+
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::NewCircuitClickedSignal, this, [&]()
+    {
+        mUi->uActionNew->trigger();
+        mWelcomeDialog.close();
+    });
+
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenCircuitClickedSignal, this, [&]()
+    {
+        mUi->uActionOpen->trigger();
+        mWelcomeDialog.close();
+    });
+
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::StartTutorialClickedSignal, this, [&]()
+    {
+        mUi->uActionStartTutorial->trigger();
+        mWelcomeDialog.close();
+    });
+
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenWebsiteClickedSignal, mUi->uActionOpenWebsite, &QAction::trigger);
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenGithubClickedSignal, mUi->uActionOpenGithub, &QAction::trigger);
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::CheckForUpdateClickedSignal, mUi->uActionCheckUpdate, &QAction::trigger);
 
     QObject::connect(mUi->uActionStart, &QAction::triggered, this, [&]()
     {
@@ -296,6 +319,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         qDebug() << "Not implemented";
     });
 
+    QObject::connect(mUi->uActionWelcomePage, &QAction::triggered, this, [&]()
+    {
+        mWelcomeDialog.show();
+    });
+
     QObject::connect(mUi->uActionReportBugs, &QAction::triggered, this, [&]()
     {
         qDebug() << "Not implemented";
@@ -306,10 +334,20 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         qDebug() << "Not implemented";
     });
 
-    QObject::connect(mUi->uActionCheckUpdates, &QAction::triggered, this, [&]()
+    QObject::connect(mUi->uActionOpenGithub, &QAction::triggered, this, [&]()
     {
         qDebug() << "Not implemented";
     });
+
+    QObject::connect(mUi->uActionCheckUpdate, &QAction::triggered, this, [&]()
+    {
+        qDebug() << "Not implemented";
+    });
+}
+
+void MainWindow::ShowWelcomeDialog(std::chrono::milliseconds pDelay)
+{
+    QTimer::singleShot(pDelay, &mWelcomeDialog, &WelcomeDialog::show);
 }
 
 void MainWindow::UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue)
@@ -677,8 +715,8 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
 
             UpdateUndoRedoEnabled(false);
 
-            mUi->uActionNew->setEnabled(false);
-            mUi->uActionOpen->setEnabled(false);
+            mUi->uActionNew->setEnabled(true);
+            mUi->uActionOpen->setEnabled(true);
 
             mUi->uActionCut->setEnabled(false);
             mUi->uActionCopy->setEnabled(false);
@@ -1031,6 +1069,7 @@ void MainWindow::InitializeGuiIcons()
     mUi->uActionStartTutorial->setIcon(mAwesome->icon(fa::graduationcap, mMenuBarIconVariant));
     mUi->uActionReportBugs->setIcon(mAwesome->icon(fa::bug, mMenuBarIconVariant));
     mUi->uActionOpenWebsite->setIcon(mAwesome->icon(fa::externallink, mMenuBarIconVariant));
+    mUi->uActionOpenGithub->setIcon(mAwesome->icon(fa::github, mMenuBarIconVariant));
     mUi->uActionAbout->setIcon(mAwesome->icon(fa::info, mMenuBarIconVariant));
 }
 

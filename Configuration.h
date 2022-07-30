@@ -25,6 +25,10 @@ static constexpr const char* DEFAULT_WINDOW_TITLE = "Linkuit Studio - Untitled";
 static constexpr const char* OPEN_FILE_DIALOG_TITLE = "Open Circuit File";
 static constexpr const char* SAVE_FILE_DIALOG_TITLE = "Save Circuit File";
 
+static constexpr bool SHOW_WELCOME_DIALOG_ON_STARTUP = true;
+static constexpr std::chrono::milliseconds SHOW_WELCOME_DIALOG_DELAY{300};
+
+
 static constexpr std::chrono::milliseconds PROCESSING_OVERLAY_TIMEOUT(100);
 
 static constexpr bool FADE_OUT_GUI_ON_CTRL = true;

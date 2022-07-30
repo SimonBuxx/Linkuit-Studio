@@ -4,6 +4,7 @@
 #include "View.h"
 #include "QtAwesome.h"
 #include "Gui/AboutDialog.h"
+#include "Gui/WelcomeDialog.h"
 #include "Gui/IconToolButton.h"
 
 #include <QMainWindow>
@@ -40,6 +41,10 @@ public:
     /// \brief Getter for the core logic
     /// \return Reference to the core logic
     CoreLogic& GetCoreLogic(void);
+
+    /// \brief Shows the welcome dialog after a specified delay
+    /// \param pDelay: The delay after which the dialog is shown
+    void ShowWelcomeDialog(std::chrono::milliseconds pDelay);
 
 protected slots:
     /// \brief Enters the ADD control mode with the selected item
@@ -221,6 +226,7 @@ protected:
     // ////////////////////////////
 
     AboutDialog mAboutDialog;
+    WelcomeDialog mWelcomeDialog;
 
     QMessageBox mSaveChangesBox;
 

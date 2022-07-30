@@ -55,6 +55,7 @@ HEADERS += \
     $${PWD}/View.h \
     $${PWD}/Configuration.h \
     $${PWD}/Gui/AboutDialog.h \
+    $${PWD}/Gui/WelcomeDialog.h \
     $${PWD}/Gui/IconToolButton.h
 
 SOURCES += \
@@ -111,11 +112,13 @@ SOURCES += \
     $${PWD}/Gui/MainWindow.cpp \
     $${PWD}/View.cpp \
     $${PWD}/Gui/AboutDialog.cpp \
+    $${PWD}/Gui/WelcomeDialog.cpp \
     $${PWD}/Gui/IconToolButton.cpp
 
 INCLUDEPATH += $${PWD}
 
 FORMS += \
     $$PWD/Gui/MainWindow.ui \
-    $$PWD/Gui/AboutDialog.ui
+    $$PWD/Gui/AboutDialog.ui \
+    $${PWD}/Gui/WelcomeDialog.ui
 

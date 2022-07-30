@@ -2303,11 +2303,13 @@ QMenuBar::item:pressed {
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="uActionWelcomePage"/>
     <addaction name="uActionStartTutorial"/>
-    <addaction name="uActionReportBugs"/>
     <addaction name="separator"/>
     <addaction name="uActionOpenWebsite"/>
-    <addaction name="uActionCheckUpdates"/>
+    <addaction name="uActionOpenGithub"/>
+    <addaction name="uActionReportBugs"/>
+    <addaction name="uActionCheckUpdate"/>
     <addaction name="separator"/>
     <addaction name="uActionAbout"/>
    </widget>
@@ -2420,9 +2422,9 @@ QMenuBar::item:pressed {
     <bool>false</bool>
    </property>
   </action>
-  <action name="uActionCheckUpdates">
+  <action name="uActionCheckUpdate">
    <property name="text">
-    <string>Check for Updates</string>
+    <string>Check for Update</string>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -2575,7 +2577,7 @@ QMenuBar::item:pressed {
   </action>
   <action name="uActionOpenWebsite">
    <property name="text">
-    <string>Open linkuit.com...</string>
+    <string>Visit linkuit.com...</string>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -2592,6 +2594,16 @@ QMenuBar::item:pressed {
     <string>Start tutorial...</string>
    </property>
   </action>
+  <action name="uActionWelcomePage">
+   <property name="text">
+    <string>Welcome Page...</string>
+   </property>
+  </action>
+  <action name="uActionOpenGithub">
+   <property name="text">
+    <string>Find us on GitHub...</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -2605,9 +2617,9 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uItemDirectionButtonGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>

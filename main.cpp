@@ -65,11 +65,19 @@ int main(int argc, char *argv[])
     {
         if (window.GetCoreLogic().LoadJson(path.mid(1, path.size() - 3)))
         {
+
             window.setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(window.GetCoreLogic().GetFilePath().value()).fileName()));
         }
         else
         {
             qDebug() << "Could not open file";
+        }
+    }
+    else
+    {
+        if (gui::SHOW_WELCOME_DIALOG_ON_STARTUP)
+        {
+            window.ShowWelcomeDialog(gui::SHOW_WELCOME_DIALOG_DELAY);
         }
     }
 
