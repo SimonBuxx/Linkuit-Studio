@@ -41,7 +41,7 @@ public:
     /// \param pState: The new state of the input
     virtual void InputReady(uint32_t pInput, LogicState pState);
 
-    /// \brief Sets logic cell pCell's input number pInput to this cell's output number pOutput
+    /// \brief Sets logic cell pLogicCell's input number pInput to this cell's output number pOutput
     /// \param pLogicCell: The logic cell to connect to this cell's output
     /// \param pInput: The number of the input of the connected cell
     /// \param pOutput: The output number of this cell to connect

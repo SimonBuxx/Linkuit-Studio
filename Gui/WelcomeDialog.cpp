@@ -1,5 +1,6 @@
 #include "WelcomeDialog.h"
 #include "ui_WelcomeDialog.h"
+#include "Configuration.h"
 
 WelcomeDialog::WelcomeDialog(QWidget *pParent):
     QDialog(pParent),
@@ -28,6 +29,8 @@ WelcomeDialog::WelcomeDialog(QWidget *pParent):
     QObject::connect(mUi->uWebsiteButton, &QPushButton::clicked, this, &WelcomeDialog::OpenWebsiteClickedSignal);
     QObject::connect(mUi->uGithubButton, &QPushButton::clicked, this, &WelcomeDialog::OpenGithubClickedSignal);
     QObject::connect(mUi->uCheckForUpdateButton, &QPushButton::clicked, this, &WelcomeDialog::CheckForUpdateClickedSignal);
+
+    mUi->uVersionLabel->setText(tr("Version %0").arg(SW_VERSION_STRING));
 }
 
 WelcomeDialog::~WelcomeDialog()

@@ -9,7 +9,7 @@
 
 static constexpr uint8_t MAX_UNDO_STACK_SIZE = 100;
 
-static constexpr const char* SW_VERSION_STRING = "0.7.0alpha";
+static constexpr const char* SW_VERSION_STRING = "0.8.0alpha";
 
 namespace file
 {

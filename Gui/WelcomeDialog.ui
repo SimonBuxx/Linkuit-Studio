@@ -46,7 +46,7 @@ QLabel {
 
 QPushButton
 {
-    padding: 5px 10px;
+    padding: 8px 10px;
     border-radius: 3px;
     background: rgb(230, 230, 230);
     font: 11pt &quot;Source Sans Pro&quot;;
@@ -61,11 +61,6 @@ QPushButton:hover
 QPushButton:pressed
 {
     background: rgb(200, 200, 200);
-}
-
-QPushButton:checked
-{
-    background: rgb(0, 204, 143);
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -83,21 +78,38 @@ QPushButton:checked
    </property>
    <item>
     <widget class="QWidget" name="widget_3" native="true">
+     <property name="styleSheet">
+      <string notr="true">QPushButton
+{
+    padding: 8px 10px;
+    background: rgb(230, 230, 230);
+}
+
+QPushButton:hover
+{
+    background: rgb(220, 220, 220);
+}
+
+QPushButton:pressed
+{
+    background: rgb(200, 200, 200);
+}</string>
+     </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <property name="leftMargin">
-       <number>100</number>
+       <number>80</number>
       </property>
       <property name="topMargin">
        <number>20</number>
       </property>
       <property name="rightMargin">
-       <number>100</number>
+       <number>80</number>
       </property>
       <property name="bottomMargin">
        <number>40</number>
       </property>
       <item row="2" column="0">
-       <widget class="QWidget" name="widget" native="true">
+       <widget class="QWidget" name="leftTile" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -106,24 +118,35 @@ QPushButton:checked
         </property>
         <property name="minimumSize">
          <size>
-          <width>750</width>
+          <width>800</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>750</width>
+          <width>800</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton
 {
-    padding: 8px 10px;
-	text-align:  left;
+	text-align: left;
 }</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item row="8" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <property name="leftMargin">
@@ -570,36 +593,98 @@ margin-left: 10px;
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QWidget" name="widget_4" native="true">
+       <widget class="QWidget" name="rightTile" native="true">
         <property name="styleSheet">
-         <string notr="true">QPushButton
-{
-    padding: 8px 10px;
-}</string>
+         <string notr="true"/>
         </property>
         <layout class="QGridLayout" name="gridLayout_4">
-         <item row="4" column="0">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="6" column="0">
+          <widget class="QPushButton" name="uGithubButton">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	margin-left: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Find us on GitHub...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
           <widget class="QPushButton" name="uWebsiteButton">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	margin-left: 10px;
+}</string>
+           </property>
            <property name="text">
             <string>Visit linkuit.com...</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0" alignment="Qt::AlignTop">
+         <item row="2" column="0" alignment="Qt::AlignTop">
           <widget class="QLabel" name="label_12">
            <property name="styleSheet">
             <string notr="true">QLabel {
 	font-size: 11pt;
 	color: rgb(0, 45, 50);
+	margin-left: 10px;
+	margin-top: 5px;
 }</string>
            </property>
            <property name="text">
-            <string>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-
-At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+            <string>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_14">
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+	font-size: 11pt;
+	color: rgb(0, 45, 50);
+	margin-left: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resources.qrc">:/images/hor_line.png</pixmap>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
@@ -616,7 +701,7 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="5" column="0">
           <spacer name="verticalSpacer">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -628,13 +713,6 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
             </size>
            </property>
           </spacer>
-         </item>
-         <item row="3" column="0">
-          <widget class="QPushButton" name="uGithubButton">
-           <property name="text">
-            <string>Find us on GitHub...</string>
-           </property>
-          </widget>
          </item>
         </layout>
        </widget>
@@ -772,7 +850,7 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
 }</string>
              </property>
              <property name="text">
-              <string>Version 0.7.0</string>
+              <string>Version </string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -839,8 +917,17 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="leftMargin">
+      <number>10</number>
+     </property>
      <property name="topMargin">
       <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <property name="bottomMargin">
+      <number>10</number>
      </property>
      <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
       <widget class="QCheckBox" name="checkBox">
@@ -876,7 +963,9 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true"/>
+        <string notr="true">QPushButton {
+	min-width: 100px;
+}</string>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
