@@ -33,6 +33,15 @@ int main(int argc, char *argv[])
 
     parser.process(app);
 
+    QString path = "";
+
+    // Reassemble path from possibly multiple parts, split at the spaces
+    for (const auto& arg : parser.positionalArguments())
+    {
+        path.push_back(arg);
+        path.push_back(' ');
+    }
+
     QApplication::setStyle("fusion");
 
     QFontDatabase::addApplicationFont(":/fonts/Quicksand-Medium.ttf");
@@ -54,7 +63,7 @@ int main(int argc, char *argv[])
 
     if (parser.positionalArguments().size() > 0)
     {
-        if (window.GetCoreLogic().LoadJson(parser.positionalArguments().at(0).mid(1, parser.positionalArguments().at(0).size() - 2)))
+        if (window.GetCoreLogic().LoadJson(path.mid(1, path.size() - 3)))
         {
             window.setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(window.GetCoreLogic().GetFilePath().value()).fileName()));
         }
