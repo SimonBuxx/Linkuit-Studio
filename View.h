@@ -156,7 +156,9 @@ protected:
 
     // Over-canvas elements
 
-    QLabel *mProcessingOverlay;
+    QWidget *mProcessingOverlay;
+    QLabel *mProcessingImage;
+    QGridLayout *mProcessingLayout;
 
     int32_t mZoomLevel = canvas::DEFAULT_ZOOM_LEVEL;
 };

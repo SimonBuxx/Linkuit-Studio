@@ -172,6 +172,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionStart, &QAction::triggered, this, [&]()
     {
+        if (mCoreLogic.IsProcessing())
+        {
+            return;
+        }
+
         if (!mCoreLogic.IsSimulationRunning())
         {
             EnterSimulation();
@@ -196,6 +201,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionNew, &QAction::triggered, this, [&]()
     {
+        if (mCoreLogic.IsProcessing())
+        {
+            return;
+        }
+
         if (mCoreLogic.IsCircuitModified())
         {
             int ret = mSaveChangesBox.exec();
@@ -234,6 +244,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
     {
+        if (mCoreLogic.IsProcessing())
+        {
+            return;
+        }
+
         QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
         const auto fileName = QFileDialog::getOpenFileName(this, tr(gui::OPEN_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
         if (mCoreLogic.LoadJson(fileName))
@@ -244,6 +259,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionSave, &QAction::triggered, this, [&]()
     {
+        if (mCoreLogic.IsProcessing())
+        {
+            return;
+        }
+
         if (mCoreLogic.IsFileOpen())
         {
             if (mCoreLogic.SaveJson())
@@ -259,6 +279,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionSaveAs, &QAction::triggered, this, [&]()
     {
+        if (mCoreLogic.IsProcessing())
+        {
+            return;
+        }
+
         QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
         const auto fileName = QFileDialog::getSaveFileName(this, tr(gui::SAVE_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
         if (mCoreLogic.SaveJsonAs(fileName))
@@ -790,6 +815,11 @@ void MainWindow::FadeOutGui()
 
 void MainWindow::FadeInGui()
 {
+    if (mCoreLogic.IsProcessing())
+    {
+        return;
+    }
+
     FadeInWidget(mUi->uTopBar);
     if (mIsToolboxVisible && mCoreLogic.GetControlMode() != ControlMode::SIMULATION) // Keep GUI hidden if simulation started
     {

@@ -136,7 +136,7 @@ void CoreLogic::StepSimulation()
 
 void CoreLogic::ResetSimulation()
 {
-    if (mControlMode == ControlMode::SIMULATION)
+    if (mControlMode == ControlMode::SIMULATION && ! IsProcessing())
     {
         LeaveSimulation();
         EnterSimulation();

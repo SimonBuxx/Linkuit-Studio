@@ -299,7 +299,7 @@ Build time:</string>
     selection-color: rgb(255, 255, 255);
     selection-background-color: rgb(0, 204, 143);
 	border-radius:3px; 
-	background-color: palette(base); /*Workaround to show border radius */
+	background-color: white;
 	padding: 10px;
 }</string>
      </property>

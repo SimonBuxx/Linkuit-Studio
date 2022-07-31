@@ -191,14 +191,21 @@ void View::Init()
     mGraphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setFrameStyle(QGraphicsView::NoFrame);
 
-    //auto procImage = new QMovie(":/images/loading.gif");
-    mProcessingOverlay = new QLabel();
-    //mProcessingOverlay->setMovie(procImage);
 #warning artifact in logo icon
-#warning wrong conPoints are deleted when removing duplicates
-    mProcessingOverlay->setPixmap(QPixmap(":/images/icons/icon_smaller.png").scaled(150, 150, Qt::KeepAspectRatio));
+
+    mProcessingOverlay = new QWidget(&mGraphicsView);
+    mProcessingOverlay->setObjectName("mProcessingOverlay");
+    mProcessingOverlay->setStyleSheet("#mProcessingOverlay {background: rgba(0, 0, 0, 70);}");
     mProcessingOverlay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    //procImage->start();
+
+    mProcessingImage = new QLabel();
+    mProcessingImage->setPixmap(QPixmap(":/images/logo_processing.png").scaled(518, 200, Qt::KeepAspectRatio));
+
+    mProcessingLayout = new QGridLayout();
+    mProcessingLayout->addWidget(mProcessingImage, 0, 0, Qt::AlignHCenter | Qt::AlignVCenter);
+
+    mProcessingOverlay->setLayout(mProcessingLayout);
+
     mProcessingOverlay->hide();
 
     mMainLayout = new QGridLayout();
@@ -206,7 +213,7 @@ void View::Init()
     mMainLayout->setSpacing(0);
 
     mMainLayout->addWidget(&mGraphicsView, 1, 0);
-    mMainLayout->addWidget(mProcessingOverlay, 1, 0, Qt::AlignHCenter | Qt::AlignVCenter);
+    mMainLayout->addWidget(mProcessingOverlay, 1, 0);
 
     setLayout(mMainLayout);
 
@@ -353,7 +360,7 @@ void View::FadeInProcessingOverlay()
         mProcessingOverlay->show();
 
         QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
-        anim->setDuration(500);
+        anim->setDuration(200);
         anim->setStartValue(0.0f);
         anim->setEndValue(1.0f);
         anim->setEasingCurve(QEasingCurve::OutQuad);
@@ -382,7 +389,7 @@ void View::FadeOutProcessingOverlay()
         mProcessingOverlay->setGraphicsEffect(effect);
 
         QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
-        anim->setDuration(500);
+        anim->setDuration(200);
         anim->setStartValue(1.0f);
         anim->setEndValue(0.0f);
         anim->setEasingCurve(QEasingCurve::OutQuad);
