@@ -104,8 +104,17 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         }
     });
 
-    QObject::connect(&mCoreLogic, &CoreLogic::ProcessingStartedSignal, this, &MainWindow::FadeOutGui);
-    QObject::connect(&mCoreLogic, &CoreLogic::ProcessingEndedSignal, this, &MainWindow::FadeInGui);
+    QObject::connect(&mCoreLogic, &CoreLogic::ProcessingStartedSignal, this, [&]()
+    {
+        mUi->menuBar->setEnabled(false);
+        FadeOutGui();
+    });
+
+    QObject::connect(&mCoreLogic, &CoreLogic::ProcessingEndedSignal, this, [&]()
+    {
+        mUi->menuBar->setEnabled(true);
+        FadeInGui();
+    });
 
     QObject::connect(&mFadeOutOnCtrlTimer, &QTimer::timeout, this, &MainWindow::FadeOutGui);
 
@@ -201,10 +210,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionNew, &QAction::triggered, this, [&]()
     {
-        if (mCoreLogic.IsProcessing())
-        {
-            return;
-        }
+        mFadeOutOnCtrlTimer.stop();
+        FadeInGui();
 
         if (mCoreLogic.IsCircuitModified())
         {
@@ -244,10 +251,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
     {
-        if (mCoreLogic.IsProcessing())
-        {
-            return;
-        }
+        mFadeOutOnCtrlTimer.stop();
+        FadeInGui();
 
         QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
         const auto fileName = QFileDialog::getOpenFileName(this, tr(gui::OPEN_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
@@ -259,11 +264,6 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionSave, &QAction::triggered, this, [&]()
     {
-        if (mCoreLogic.IsProcessing())
-        {
-            return;
-        }
-
         if (mCoreLogic.IsFileOpen())
         {
             if (mCoreLogic.SaveJson())
@@ -279,10 +279,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionSaveAs, &QAction::triggered, this, [&]()
     {
-        if (mCoreLogic.IsProcessing())
-        {
-            return;
-        }
+        mFadeOutOnCtrlTimer.stop();
+        FadeInGui();
 
         QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
         const auto fileName = QFileDialog::getSaveFileName(this, tr(gui::SAVE_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)"));
