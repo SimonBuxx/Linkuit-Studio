@@ -200,6 +200,7 @@ protected:
     View mView;
     CoreLogic mCoreLogic;
 
+#warning use global QtAwesome instance
     QtAwesome *mAwesome; // Contains Fontawesome logos
 
     QStandardItemModel mToolboxTreeModel;

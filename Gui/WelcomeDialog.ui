@@ -234,7 +234,7 @@ margin-left: 10px;
 }</string>
            </property>
            <property name="text">
-            <string>Start Tutorial</string>
+            <string>Start Tutorial...</string>
            </property>
           </widget>
          </item>
@@ -533,6 +533,9 @@ margin-left: 10px;
            <property name="text">
             <string>Open Circuit...</string>
            </property>
+           <property name="shortcut">
+            <string>Ctrl+O</string>
+           </property>
           </widget>
          </item>
          <item row="4" column="0">
@@ -586,6 +589,9 @@ margin-left: 10px;
            </property>
            <property name="text">
             <string>New Circuit</string>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+N</string>
            </property>
           </widget>
          </item>
@@ -879,6 +885,9 @@ margin-left: 10px;
              </property>
              <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
+             </property>
+             <property name="toolTip">
+              <string>Check for Update</string>
              </property>
              <property name="styleSheet">
               <string notr="true">QPushButton {

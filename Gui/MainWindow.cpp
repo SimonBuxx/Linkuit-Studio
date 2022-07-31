@@ -175,6 +175,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenGithubClickedSignal, mUi->uActionOpenGithub, &QAction::trigger);
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::CheckForUpdateClickedSignal, mUi->uActionCheckUpdate, &QAction::trigger);
 
+    QObject::connect(&mAboutDialog, &AboutDialog::CheckForUpdateClickedSignal, mUi->uActionCheckUpdate, &QAction::trigger);
+
     QObject::connect(mUi->uActionStart, &QAction::triggered, this, [&]()
     {
         if (!mCoreLogic.IsSimulationRunning())
