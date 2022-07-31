@@ -338,9 +338,17 @@ QPixmap View::DrawGridPattern(int32_t pZoomLevel)
 
 void View::FadeInProcessingOverlay()
 {
-    if (!mProcessingOverlay->isVisible())
+    bool stoppedCurrentAnimation = false;
+    if (mProcessingOverlay->graphicsEffect() != nullptr)
+    {
+        delete mProcessingOverlay->graphicsEffect();
+        stoppedCurrentAnimation = true;
+    }
+
+    if (stoppedCurrentAnimation || !mProcessingOverlay->isVisible())
     {
         QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
+
         mProcessingOverlay->setGraphicsEffect(effect);
         mProcessingOverlay->show();
 
@@ -361,7 +369,14 @@ void View::FadeInProcessingOverlay()
 
 void View::FadeOutProcessingOverlay()
 {
-    if (mProcessingOverlay->isVisible())
+    bool stoppedCurrentAnimation = false;
+    if (mProcessingOverlay->graphicsEffect() != nullptr)
+    {
+        delete mProcessingOverlay->graphicsEffect();
+        stoppedCurrentAnimation = true;
+    }
+
+    if (stoppedCurrentAnimation || mProcessingOverlay->isVisible())
     {
         QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
         mProcessingOverlay->setGraphicsEffect(effect);

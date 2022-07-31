@@ -104,17 +104,10 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         }
     });
 
-    QObject::connect(&mFadeOutOnCtrlTimer, &QTimer::timeout, this, [&]()
-    {
-        mIsToolboxVisible = mUi->uToolboxContainer->isVisible();
-        mIsClockConfiguratorVisible = mUi->uClockConfigurator->isVisible();
-        mIsItemConfiguratorVisible = mUi->uItemConfigurator->isVisible();
-        FadeOutWidget(mUi->uTopBar);
-        FadeOutWidget(mUi->uToolboxContainer);
-        FadeOutWidget(mUi->uClockConfigurator);
-        FadeOutWidget(mUi->uItemConfigurator);
-        mIsGuiHidden = true;
-    });
+    QObject::connect(&mCoreLogic, &CoreLogic::ProcessingStartedSignal, this, &MainWindow::FadeOutGui);
+    QObject::connect(&mCoreLogic, &CoreLogic::ProcessingEndedSignal, this, &MainWindow::FadeInGui);
+
+    QObject::connect(&mFadeOutOnCtrlTimer, &QTimer::timeout, this, &MainWindow::FadeOutGui);
 
     QObject::connect(mUi->uZoomSlider, &QSlider::valueChanged, &mView, &View::SetZoom);
 
@@ -782,6 +775,38 @@ void MainWindow::OnSimulationModeChanged(SimulationMode pNewMode)
     }
 }
 
+void MainWindow::FadeOutGui()
+{
+    mIsToolboxVisible = mUi->uToolboxContainer->isVisible();
+    mIsClockConfiguratorVisible = mUi->uClockConfigurator->isVisible();
+    mIsItemConfiguratorVisible = mUi->uItemConfigurator->isVisible();
+
+    FadeOutWidget(mUi->uTopBar);
+    FadeOutWidget(mUi->uToolboxContainer);
+    FadeOutWidget(mUi->uClockConfigurator);
+    FadeOutWidget(mUi->uItemConfigurator);
+    mIsGuiHidden = true;
+}
+
+void MainWindow::FadeInGui()
+{
+    FadeInWidget(mUi->uTopBar);
+    if (mIsToolboxVisible && mCoreLogic.GetControlMode() != ControlMode::SIMULATION) // Keep GUI hidden if simulation started
+    {
+        FadeInWidget(mUi->uToolboxContainer);
+    }
+    if (mIsClockConfiguratorVisible && mCoreLogic.GetControlMode() != ControlMode::SIMULATION)
+    {
+        FadeInWidget(mUi->uClockConfigurator);
+    }
+    if (mIsItemConfiguratorVisible && mCoreLogic.GetControlMode() != ControlMode::SIMULATION)
+    {
+        FadeInWidget(mUi->uItemConfigurator);
+    }
+
+    mIsGuiHidden = false;
+}
+
 void MainWindow::ForceUncheck(IconToolButton *pButton)
 {
     if (nullptr != pButton->group() && pButton->group()->exclusive())
@@ -848,21 +873,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *pEvent)
     {
         mFadeOutOnCtrlTimer.stop();
 
-        FadeInWidget(mUi->uTopBar);
-        if (mIsToolboxVisible)
-        {
-            FadeInWidget(mUi->uToolboxContainer);
-        }
-        if (mIsClockConfiguratorVisible)
-        {
-            FadeInWidget(mUi->uClockConfigurator);
-        }
-        if (mIsItemConfiguratorVisible)
-        {
-            FadeInWidget(mUi->uItemConfigurator);
-        }
-
-        mIsGuiHidden = false;
+        FadeInGui();
     }
 
     QMainWindow::keyReleaseEvent(pEvent);
@@ -1384,7 +1395,14 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
 template <typename T>
 void MainWindow::FadeInWidget(T& pWidget)
 {
-    if (!pWidget->isVisible())
+    bool stoppedCurrentAnimation = false;
+    if (pWidget->graphicsEffect() != nullptr)
+    {
+        delete pWidget->graphicsEffect();
+        stoppedCurrentAnimation = true;
+    }
+
+    if (stoppedCurrentAnimation || !pWidget->isVisible())
     {
         QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
         pWidget->setGraphicsEffect(effect);
@@ -1408,7 +1426,14 @@ void MainWindow::FadeInWidget(T& pWidget)
 template <typename T>
 void MainWindow::FadeOutWidget(T& pWidget)
 {
-    if (pWidget->isVisible())
+    bool stoppedCurrentAnimation = false;
+    if (pWidget->graphicsEffect() != nullptr)
+    {
+        delete pWidget->graphicsEffect();
+        stoppedCurrentAnimation = true;
+    }
+
+    if (stoppedCurrentAnimation || pWidget->isVisible())
     {
         QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
         pWidget->setGraphicsEffect(effect);

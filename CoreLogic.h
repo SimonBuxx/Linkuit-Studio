@@ -205,6 +205,10 @@ signals:
     /// \param pNewType: The newly selected component type
     void ComponentTypeChangedSignal(ComponentType pNewType);
 
+#warning missing documentation
+    void ProcessingStartedSignal(void);
+    void ProcessingEndedSignal(void);
+
     /// \brief Emitted to finish the given QMouseEvent in the GraphicsView
     /// \param pEvent: The mouse press event to finish
     void MousePressedEventDefaultSignal(QMouseEvent &pEvent);

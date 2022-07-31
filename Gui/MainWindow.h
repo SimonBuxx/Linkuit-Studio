@@ -63,6 +63,10 @@ protected slots:
     /// \param pPercentage: The new zoom value to display
     void UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue);
 
+#warning missing documentation
+    void FadeOutGui(void);
+    void FadeInGui(void);
+
     // Clock Configuration
 
     /// \brief Displays the clock configurator with the given settings

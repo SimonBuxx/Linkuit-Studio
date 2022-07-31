@@ -26,7 +26,6 @@
 
 #include "HelperFunctions.h"
 
-#include <QElapsedTimer>
 #include <QCoreApplication>
 
 CoreLogic::CoreLogic(View &pView):
@@ -38,6 +37,8 @@ CoreLogic::CoreLogic(View &pView):
     mFilePath(std::nullopt)
 {
     mView.Init();
+
+    mProcessingTimer.setSingleShot(true);
 
     QObject::connect(&mPropagationTimer, &QTimer::timeout, this, &CoreLogic::OnPropagationTimeout);
     QObject::connect(&mProcessingTimer, &QTimer::timeout, this, &CoreLogic::OnProcessingTimeout);
@@ -613,6 +614,8 @@ void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::
 {
     for (const auto& w : pWires)
     {
+        ProcessingHeartbeat();
+
         const auto&& containedWires = DeleteContainedWires(w);
         pDeletedComponents.insert(pDeletedComponents.end(), containedWires.begin(), containedWires.end());
 
@@ -1029,6 +1032,8 @@ void CoreLogic::ConnectLogicCells()
 {
     for (auto& comp : mView.Scene()->items())
     {
+        ProcessingHeartbeat();
+
         if (nullptr == dynamic_cast<IBaseComponent*>(comp) || nullptr != dynamic_cast<LogicWire*>(comp))
         {
             continue; //  Skip if no non-wire component
@@ -1038,6 +1043,8 @@ void CoreLogic::ConnectLogicCells()
 
         for (auto& coll : mView.Scene()->collidingItems(comp, Qt::IntersectsItemBoundingRect))
         {
+            ProcessingHeartbeat();
+
             if (nullptr == dynamic_cast<LogicWire*>(coll))
             {
                 continue; // Skip if no wire
@@ -1087,7 +1094,6 @@ void CoreLogic::ConnectLogicCells()
                     }
                 }
             }
-            ProcessingHeartbeat();
         }
     }
 }
@@ -1106,6 +1112,7 @@ void CoreLogic::ProcessingHeartbeat()
 void CoreLogic::OnProcessingTimeout()
 {
     mView.FadeInProcessingOverlay();
+    emit ProcessingStartedSignal();
 }
 
 void CoreLogic::EndProcessing()
@@ -1113,6 +1120,7 @@ void CoreLogic::EndProcessing()
     mProcessingTimer.stop();
     mView.FadeOutProcessingOverlay();
     mIsProcessing = false;
+    emit ProcessingEndedSignal();
 }
 
 bool CoreLogic::IsProcessing() const
@@ -1164,6 +1172,8 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
     {
         for (const auto& comp : mView.Scene()->selectedItems())
         {
+            ProcessingHeartbeat();
+
             if (nullptr == dynamic_cast<IBaseComponent*>(comp))
             {
                 continue;
@@ -1175,8 +1185,6 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
             {
                 affectedWires.push_back(static_cast<LogicWire*>(comp));
             }
-
-            ProcessingHeartbeat();
         }
     }
 
@@ -1192,10 +1200,11 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
     // should not make any difference because old wires behind the merged ones cannot generate new ConPoints
 
     for (const auto& comp : affectedComponents) // Ca. 75% of total cost
-    {                   
+    {
+        ProcessingHeartbeat();
+
         if (ManageConPointsOneStep(comp, pOffset, movedComponents, addedComponents, deletedComponents))
         {
-            ProcessingHeartbeat();
             continue;
         }
 
