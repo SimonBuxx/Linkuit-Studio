@@ -618,6 +618,9 @@ margin-left: 10px;
          </property>
          <item row="6" column="0">
           <widget class="QPushButton" name="uGithubButton">
+           <property name="toolTip">
+            <string>https://github.com/SimonBuxx/Linkuit-Studio/</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
 	margin-left: 10px;
@@ -693,6 +696,9 @@ margin-left: 10px;
          </item>
          <item row="7" column="0">
           <widget class="QPushButton" name="uWebsiteButton">
+           <property name="toolTip">
+            <string>https://linkuit.com/</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
 	margin-left: 10px;

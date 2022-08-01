@@ -121,7 +121,14 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         mUi->uZoomSlider->setEnabled(true);
         if (mCoreLogic.GetControlMode() == ControlMode::SIMULATION)
         {
-            mUi->uLabelStatus->setText(tr("Simulation running..."));
+            if (mCoreLogic.GetSimulationMode() == SimulationMode::RUNNING)
+            {
+                mUi->uLabelStatus->setText(tr("Simulation running..."));
+            }
+            else
+            {
+                mUi->uLabelStatus->setText(tr("Simulation paused."));
+            }
         }
         else
         {
@@ -369,7 +376,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionOpenGithub, &QAction::triggered, this, [&]()
     {
-        QDesktopServices::openUrl(QUrl("https://github.com/SimonBuxx/Linkuit-Studio"));
+        QDesktopServices::openUrl(QUrl("https://github.com/SimonBuxx/Linkuit-Studio/"));
     });
 
     QObject::connect(mUi->uActionCheckUpdate, &QAction::triggered, this, [&]()

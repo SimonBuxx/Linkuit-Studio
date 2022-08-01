@@ -2422,6 +2422,12 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionCheckUpdate">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Check for Update</string>
    </property>
@@ -2430,6 +2436,9 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionScreenshot">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save Screenshot...</string>
    </property>
@@ -2567,6 +2576,12 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionReportBugs">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Report Bugs...</string>
    </property>
@@ -2583,6 +2598,9 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionStartTutorial">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Start Tutorial...</string>
    </property>

@@ -49,3 +49,32 @@ QPlainTextEdit
     selection-color: rgb(0, 204, 143);
     selection-background-color: transparent;
 }
+
+QMessageBox {
+    margin: 10px;
+}
+
+QMessageBox QLabel {
+    font: 11pt "Source Sans Pro";
+    color: rgb(0, 45, 50);
+}
+
+QMessageBox QPushButton
+{
+    padding: 8px 10px;
+    min-width: 100px;
+    border-radius: 3px;
+    background: rgb(230, 230, 230);
+    font: 11pt "Source Sans Pro";
+    color: rgb(0, 45, 50);
+}
+
+QMessageBox QPushButton:hover
+{
+    background: rgb(220, 220, 220);
+}
+
+QMessageBox QPushButton:pressed
+{
+    background: rgb(200, 200, 200);
+}

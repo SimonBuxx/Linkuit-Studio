@@ -344,6 +344,11 @@ ControlMode CoreLogic::GetControlMode() const
     return mControlMode;
 }
 
+SimulationMode CoreLogic::GetSimulationMode() const
+{
+    return mSimulationMode;
+}
+
 bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
 {
     if (mView.Scene()->selectedItems().size() > 0)

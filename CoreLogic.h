@@ -46,6 +46,10 @@ public:
     /// \return the current control mode
     ControlMode GetControlMode(void) const;
 
+    /// \brief Getter for the current simulation mode (RUNNING or STOPPED)
+    /// \return the current simulation mode
+    SimulationMode GetSimulationMode(void) const;
+
     /// \brief Changes the type of component to add to the given type
     /// \param pComponentType: The component type of which to add new instances
     void SelectComponentType(ComponentType pComponentType);
