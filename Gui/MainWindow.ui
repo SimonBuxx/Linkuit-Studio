@@ -456,24 +456,29 @@ QTreeView::item:selected {
              <height>20</height>
             </size>
            </property>
-           <property name="autoFillBackground">
-            <bool>false</bool>
-           </property>
            <property name="styleSheet">
             <string notr="true">QSlider {
-        background: none;
+    background: none;
 }
 
 QSlider::groove:horizontal {
+    background: rgb(0, 204, 143);
     height: 1px;
     margin: 2px 0;
-        background: rgb(0, 204, 143);
 }
 
 QSlider::handle:horizontal {
     background: rgb(0, 204, 143);
     width: 6px;
     margin: -8px 0;
+}
+
+QSlider::groove:disabled {
+    background: rgb(100, 100, 100);
+}
+
+QSlider::handle:disabled {
+    background: rgb(100, 100, 100);
 }</string>
            </property>
            <property name="minimum">
@@ -488,23 +493,8 @@ QSlider::handle:horizontal {
            <property name="sliderPosition">
             <number>250</number>
            </property>
-           <property name="tracking">
-            <bool>true</bool>
-           </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="invertedAppearance">
-            <bool>false</bool>
-           </property>
-           <property name="invertedControls">
-            <bool>false</bool>
-           </property>
-           <property name="tickPosition">
-            <enum>QSlider::NoTicks</enum>
-           </property>
-           <property name="tickInterval">
-            <number>10</number>
            </property>
           </widget>
          </item>
@@ -1656,6 +1646,15 @@ QSlider::handle:horizontal {
             </item>
             <item>
              <widget class="QLabel" name="uLabelToggle">
+              <property name="font">
+               <font>
+                <family>Source Sans Pro</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <italic>false</italic>
+                <bold>false</bold>
+               </font>
+              </property>
               <property name="styleSheet">
                <string notr="true">QLabel {
     color: rgb(0, 45, 50);
@@ -2617,9 +2616,9 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
  </buttongroups>
 </ui>

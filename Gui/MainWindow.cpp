@@ -78,7 +78,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         {
             mIsToolboxVisible = false;
             mIsClockConfiguratorVisible = false;
-            mUi->uLabelStatus->setText(tr("Simulation running..."));
+            mUi->uLabelStatus->setText(tr("Loading..."));
         }
     });
 
@@ -107,12 +107,23 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(&mCoreLogic, &CoreLogic::ProcessingStartedSignal, this, [&]()
     {
         mUi->menuBar->setEnabled(false);
+        mUi->uZoomSlider->setEnabled(false);
+        mUi->uLabelStatus->setText("Loading...");
         FadeOutGui();
     });
 
     QObject::connect(&mCoreLogic, &CoreLogic::ProcessingEndedSignal, this, [&]()
     {
         mUi->menuBar->setEnabled(true);
+        mUi->uZoomSlider->setEnabled(true);
+        if (mCoreLogic.GetControlMode() == ControlMode::SIMULATION)
+        {
+            mUi->uLabelStatus->setText(tr("Simulation running..."));
+        }
+        else
+        {
+            mUi->uLabelStatus->setText(tr("Ready."));
+        }
         FadeInGui();
     });
 
