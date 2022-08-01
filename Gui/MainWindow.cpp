@@ -1,6 +1,9 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include <QDesktopServices>
+#include <QUrl>
+
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
@@ -360,12 +363,13 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionOpenWebsite, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+        QDesktopServices::openUrl(QUrl("https://linkuit.com/"));
+
     });
 
     QObject::connect(mUi->uActionOpenGithub, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+        QDesktopServices::openUrl(QUrl("https://github.com/SimonBuxx/Linkuit-Studio"));
     });
 
     QObject::connect(mUi->uActionCheckUpdate, &QAction::triggered, this, [&]()
