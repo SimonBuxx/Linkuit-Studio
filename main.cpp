@@ -1,5 +1,6 @@
 #include "Gui/MainWindow.h"
 #include "Configuration.h"
+#include "RuntimeConfigParser.h"
 
 #include <QApplication>
 #include <QGraphicsScene>
@@ -59,7 +60,6 @@ int main(int argc, char *argv[])
     }
 
     MainWindow window;
-    window.showMaximized();
 
     if (parser.positionalArguments().size() > 0)
     {
@@ -70,16 +70,18 @@ int main(int argc, char *argv[])
         }
         else
         {
-            qDebug() << "Could not open file";
+            qDebug() << "Could not open circuit file";
         }
     }
     else
     {
-        if (gui::SHOW_WELCOME_DIALOG_ON_STARTUP)
+        if (window.GetCoreLogic().GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup())
         {
             window.ShowWelcomeDialog(gui::SHOW_WELCOME_DIALOG_DELAY);
         }
     }
+
+    window.showMaximized();
 
     return app.exec();
 }

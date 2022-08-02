@@ -9,6 +9,7 @@
 #include "Components/TextLabel.h"
 #include "Components/LogicWireCell.h"
 #include "Configuration.h"
+#include "RuntimeConfigParser.h"
 
 #include <QGraphicsItem>
 #include <QTimer>
@@ -29,6 +30,10 @@ public:
     /// \brief Constructor for CoreLogic
     /// \param pView: The view that contains the main scene
     CoreLogic(View &pView);
+
+    const RuntimeConfigParser& GetRuntimeConfigParser(void) const;
+
+    void SetShowWelcomeDialogOnStartup(bool pShowOnStartup);
 
     /// \brief Selects all items in the scene
     void SelectAll(void);
@@ -492,6 +497,8 @@ protected:
     std::vector<IBaseComponent*> mCopiedComponents;
     std::vector<IBaseComponent*> mCurrentPaste;
     std::optional<UndoCopyType*> mCurrentCopyUndoType;
+
+    RuntimeConfigParser mRuntimeConfigParser;
 };
 
 #endif // CORELOGIC_H

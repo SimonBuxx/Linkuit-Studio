@@ -29,6 +29,47 @@ WelcomeDialog::WelcomeDialog(QWidget *pParent):
     QObject::connect(mUi->uWebsiteButton, &QPushButton::clicked, this, &WelcomeDialog::OpenWebsiteClickedSignal);
     QObject::connect(mUi->uGithubButton, &QPushButton::clicked, this, &WelcomeDialog::OpenGithubClickedSignal);
     QObject::connect(mUi->uCheckForUpdateButton, &QPushButton::clicked, this, &WelcomeDialog::CheckForUpdateClickedSignal);
+    QObject::connect(mUi->uShowOnStartupCheckbox, &QCheckBox::toggled, this, &WelcomeDialog::ShowOnStartupToggledSignal);
+
+    QObject::connect(mUi->uRecentFileButton_1, &QPushButton::clicked, this, [&]()
+    {
+        if (mRecentFilePaths.size() > 0)
+        {
+            emit OpenRecentClickedSignal(mRecentFilePaths[0]);
+        }
+    });
+
+    QObject::connect(mUi->uRecentFileButton_2, &QPushButton::clicked, this, [&]()
+    {
+        if (mRecentFilePaths.size() > 1)
+        {
+            emit OpenRecentClickedSignal(mRecentFilePaths[1]);
+        }
+    });
+
+    QObject::connect(mUi->uRecentFileButton_3, &QPushButton::clicked, this, [&]()
+    {
+        if (mRecentFilePaths.size() > 2)
+        {
+            emit OpenRecentClickedSignal(mRecentFilePaths[2]);
+        }
+    });
+
+    QObject::connect(mUi->uRecentFileButton_4, &QPushButton::clicked, this, [&]()
+    {
+        if (mRecentFilePaths.size() > 3)
+        {
+            emit OpenRecentClickedSignal(mRecentFilePaths[3]);
+        }
+    });
+
+    QObject::connect(mUi->uRecentFileButton_5, &QPushButton::clicked, this, [&]()
+    {
+        if (mRecentFilePaths.size() > 4)
+        {
+            emit OpenRecentClickedSignal(mRecentFilePaths[4]);
+        }
+    });
 
     mUi->uVersionLabel->setText(tr("Version %0").arg(SW_VERSION_STRING));
 }
@@ -36,4 +77,47 @@ WelcomeDialog::WelcomeDialog(QWidget *pParent):
 WelcomeDialog::~WelcomeDialog()
 {
     delete mUi;
+}
+
+void WelcomeDialog::SetShowOnStartup(bool pShowOnStartup)
+{
+    mUi->uShowOnStartupCheckbox->setChecked(pShowOnStartup);
+}
+
+void WelcomeDialog::SetRecentFilePaths(const std::vector<QFileInfo>& pRecentFilePaths)
+{
+    mRecentFilePaths = pRecentFilePaths;
+
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        auto pathLabel = mUi->leftTile->findChild<QLabel*>(QString("uRecentFileLabel_%0").arg(i + 1));
+
+        if (nullptr != pathLabel)
+        {
+            if (mRecentFilePaths.size() > i)
+            {
+                pathLabel->setText(mRecentFilePaths[i].absolutePath());
+                pathLabel->show();
+            }
+            else
+            {
+                pathLabel->hide();
+            }
+        }
+
+        auto fileButton = mUi->leftTile->findChild<QPushButton*>(QString("uRecentFileButton_%0").arg(i + 1));
+
+        if (nullptr != fileButton)
+        {
+            if (mRecentFilePaths.size() > i)
+            {
+                fileButton->setText(mRecentFilePaths[i].baseName());
+                fileButton->show();
+            }
+            else
+            {
+                fileButton->hide();
+            }
+        }
+    }
 }

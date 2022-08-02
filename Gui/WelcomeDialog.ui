@@ -156,7 +156,7 @@ QPushButton:pressed
             <number>0</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="uRecentFileButton_2">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -194,7 +194,7 @@ QPushButton:pressed {
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_9">
+            <widget class="QLabel" name="uRecentFileLabel_2">
              <property name="maximumSize">
               <size>
                <width>500</width>
@@ -244,7 +244,7 @@ margin-left: 10px;
             <number>10</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="uRecentFileButton_3">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -282,7 +282,7 @@ QPushButton:pressed {
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_6">
+            <widget class="QLabel" name="uRecentFileLabel_3">
              <property name="styleSheet">
               <string notr="true">QLabel {
 	font-size: 12pt;
@@ -321,7 +321,7 @@ QPushButton:pressed {
             <number>10</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton_4">
+            <widget class="QPushButton" name="uRecentFileButton_4">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -359,7 +359,7 @@ QPushButton:pressed {
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_8">
+            <widget class="QLabel" name="uRecentFileLabel_4">
              <property name="styleSheet">
               <string notr="true">QLabel {
 	font-size: 12pt;
@@ -379,7 +379,7 @@ QPushButton:pressed {
             <number>10</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton_5">
+            <widget class="QPushButton" name="uRecentFileButton_5">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -417,7 +417,7 @@ QPushButton:pressed {
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_10">
+            <widget class="QLabel" name="uRecentFileLabel_5">
              <property name="styleSheet">
               <string notr="true">QLabel {
 	font-size: 12pt;
@@ -440,7 +440,7 @@ QPushButton:pressed {
             <number>5</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="uRecentFileButton_1">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -478,7 +478,7 @@ QPushButton:pressed {
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_7">
+            <widget class="QLabel" name="uRecentFileLabel_1">
              <property name="maximumSize">
               <size>
                <width>500</width>
@@ -945,7 +945,7 @@ margin-left: 10px;
       <number>10</number>
      </property>
      <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="uShowOnStartupCheckbox">
        <property name="styleSheet">
         <string notr="true">QCheckBox {
 	font-size: 11pt;

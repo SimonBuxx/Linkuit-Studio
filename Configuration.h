@@ -17,6 +17,14 @@ static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::BINARY;
 
 static constexpr const char* JSON_COMPONENTS_IDENTIFIER = "components";
 static constexpr const char* JSON_TYPE_IDENTIFIER = "type";
+
+namespace runtime_config
+{
+static constexpr const char* RUNTIME_CONFIG_PATH = "./runtime_config.json";
+
+static constexpr const char* JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER = "show_welcome_dialog_on_startup";
+static constexpr const char* JSON_RECENT_FILES_IDENTIFIER = "recent_files";
+} // namespace runtime_config
 } // namespace
 
 namespace gui
@@ -57,7 +65,7 @@ static constexpr QRectF DIMENSIONS(-32000, -32000, 64000, 64000);
 
 namespace simulation
 {
-static constexpr std::chrono::milliseconds PROPAGATION_DELAY(10);
+static constexpr std::chrono::milliseconds PROPAGATION_DELAY(0);
 } // namespace
 
 namespace components

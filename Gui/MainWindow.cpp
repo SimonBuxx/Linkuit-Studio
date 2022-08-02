@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false);   // Make about dialog close when main window closes
     mWelcomeDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make welcome dialog close when main window closes
+
+    ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
 }
 
 MainWindow::~MainWindow()
@@ -188,6 +190,27 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         mWelcomeDialog.close();
     });
 
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenRecentClickedSignal, this, [&](const QFileInfo& pPath)
+    {
+        if (GetCoreLogic().LoadJson(pPath.filePath()))
+        {
+            setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(GetCoreLogic().GetFilePath().value()).fileName()));
+            mWelcomeDialog.close();
+        }
+        else
+        {
+            QMessageBox errorBox;
+            errorBox.setIcon(QMessageBox::Icon::Critical);
+            errorBox.setWindowTitle("Linkuit Studio");
+            errorBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
+            errorBox.setText(tr("The file %0 could not be found.").arg(pPath.fileName()));
+            errorBox.setStandardButtons(QMessageBox::Ok);
+            errorBox.setDefaultButton(QMessageBox::Ok);
+
+            errorBox.exec();
+        }
+    });
+
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::StartTutorialClickedSignal, this, [&]()
     {
         mUi->uActionStartTutorial->trigger();
@@ -197,6 +220,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenWebsiteClickedSignal, mUi->uActionOpenWebsite, &QAction::trigger);
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenGithubClickedSignal, mUi->uActionOpenGithub, &QAction::trigger);
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::CheckForUpdateClickedSignal, mUi->uActionCheckUpdate, &QAction::trigger);
+
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::ShowOnStartupToggledSignal, this, [&](bool pChecked)
+    {
+        mCoreLogic.SetShowWelcomeDialogOnStartup(pChecked);
+    });
 
     QObject::connect(&mAboutDialog, &AboutDialog::CheckForUpdateClickedSignal, mUi->uActionCheckUpdate, &QAction::trigger);
 
@@ -280,6 +308,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         if (mCoreLogic.LoadJson(fileName))
         {
             setWindowTitle(tr("Linkuit Studio - %0").arg(QFileInfo(fileName).fileName()));
+            ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
         }
     });
 
@@ -290,6 +319,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             if (mCoreLogic.SaveJson())
             {
                 setWindowTitle(tr("Linkuit Studio - %0").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName()));
+                ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
             }
         }
         else
@@ -308,6 +338,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         if (mCoreLogic.SaveJsonAs(fileName))
         {
             setWindowTitle(tr("Linkuit Studio - %0").arg(QFileInfo(fileName).fileName()));
+            ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
         }
     });
 
@@ -360,6 +391,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionWelcomePage, &QAction::triggered, this, [&]()
     {
+        ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
         mWelcomeDialog.show();
     });
 
@@ -383,6 +415,12 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         qDebug() << "Not implemented";
     });
+}
+
+void MainWindow::ConfigureWelcomeDialog(bool pShowOnStartup, const std::vector<QFileInfo>& pRecentFilePaths)
+{
+    mWelcomeDialog.SetShowOnStartup(pShowOnStartup);
+    mWelcomeDialog.SetRecentFilePaths(pRecentFilePaths);
 }
 
 void MainWindow::ShowWelcomeDialog(std::chrono::milliseconds pDelay)

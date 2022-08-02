@@ -39,7 +39,7 @@ namespace file
         T_FLIPFLOP,
         JK_FLIPFLOP // only append!
     };
-}
+} // namespace file
 
 enum class ComponentType
 {

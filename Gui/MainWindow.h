@@ -46,6 +46,11 @@ public:
     /// \param pDelay: The delay after which the dialog is shown
     void ShowWelcomeDialog(std::chrono::milliseconds pDelay);
 
+    /// \brief Configures the welcome dialog
+    /// \param pShowOnStartup: Whether the dialog should be displayed on startup (checkbox state)
+    /// \param pRecentFilePaths: List of recently opened file paths
+    void ConfigureWelcomeDialog(bool pShowOnStartup, const std::vector<QFileInfo>& pRecentFilePaths);
+
 protected slots:
     /// \brief Enters the ADD control mode with the selected item
     /// \param pIndex: The index of the item that has been clicked

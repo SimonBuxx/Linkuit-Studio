@@ -42,6 +42,21 @@ CoreLogic::CoreLogic(View &pView):
 
     QObject::connect(&mPropagationTimer, &QTimer::timeout, this, &CoreLogic::OnPropagationTimeout);
     QObject::connect(&mProcessingTimer, &QTimer::timeout, this, &CoreLogic::OnProcessingTimeout);
+
+    if (!mRuntimeConfigParser.LoadRuntimeConfig(file::runtime_config::RUNTIME_CONFIG_PATH))
+    {
+        qDebug() << "Could not open runtime config file, using defaults";
+    }
+}
+
+const RuntimeConfigParser& CoreLogic::GetRuntimeConfigParser() const
+{
+    return mRuntimeConfigParser;
+}
+
+void CoreLogic::SetShowWelcomeDialogOnStartup(bool pShowOnStartup)
+{
+    mRuntimeConfigParser.IsWelcomeDialogEnabledOnStartup(pShowOnStartup);
 }
 
 void CoreLogic::SelectAll()
@@ -1836,6 +1851,8 @@ bool CoreLogic::SaveJson()
 
     mCircuitModified = false;
 
+    mRuntimeConfigParser.AddRecentFilePath(QFileInfo(mFilePath.value()));
+
     return true;
 }
 
@@ -1856,6 +1873,8 @@ bool CoreLogic::SaveJsonAs(const QString& pPath)
 
     mFilePath = pPath;
     mCircuitModified = false;
+
+    mRuntimeConfigParser.AddRecentFilePath(QFileInfo(mFilePath.value()));
 
     return true;
 }
@@ -1879,6 +1898,8 @@ bool CoreLogic::LoadJson(const QString& pPath)
     ReadJson(jsonDoc.object());
 
     mFilePath = pPath;
+
+    mRuntimeConfigParser.AddRecentFilePath(QFileInfo(mFilePath.value()));
 
     return true;
 }
