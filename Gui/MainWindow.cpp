@@ -41,6 +41,21 @@ MainWindow::MainWindow(QWidget *pParent) :
     mSaveChangesBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     mSaveChangesBox.setDefaultButton(QMessageBox::Save);
 
+    mErrorOpenFileBox.setIcon(QMessageBox::Icon::Critical);
+    mErrorOpenFileBox.setWindowTitle("Linkuit Studio");
+    mErrorOpenFileBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
+    mErrorOpenFileBox.setText(tr("The file could not be opened."));
+    mErrorOpenFileBox.setInformativeText("Please make sure that the file exists.");
+    mErrorOpenFileBox.setStandardButtons(QMessageBox::Ok);
+    mErrorOpenFileBox.setDefaultButton(QMessageBox::Ok);
+
+    mErrorSaveFileBox.setIcon(QMessageBox::Icon::Critical);
+    mErrorSaveFileBox.setWindowTitle("Linkuit Studio");
+    mErrorSaveFileBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
+    mErrorSaveFileBox.setText(tr("The circuit could not be saved."));
+    mErrorSaveFileBox.setStandardButtons(QMessageBox::Ok);
+    mErrorSaveFileBox.setDefaultButton(QMessageBox::Ok);
+
     mUi->uItemRightButton->setChecked(true); // Button for component direction RIGHT
 
     mUi->uItemConfigurator->hide();
@@ -52,6 +67,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     mWelcomeDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make welcome dialog close when main window closes
 
     ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+    SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
 }
 
 MainWindow::~MainWindow()
@@ -190,27 +206,45 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         mWelcomeDialog.close();
     });
 
-    QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenRecentClickedSignal, this, [&](const QFileInfo& pFileInfo)
-    {
-        if (!IsSaveChangesIfModifiedCanceled())
-        {
-            if (GetCoreLogic().LoadJson(pFileInfo.filePath()))
-            {
-                setWindowTitle(QString("Linkuit Studio - %0").arg(pFileInfo.fileName()));
-                mWelcomeDialog.close();
-            }
-            else
-            {
-                QMessageBox errorBox;
-                errorBox.setIcon(QMessageBox::Icon::Critical);
-                errorBox.setWindowTitle("Linkuit Studio");
-                errorBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
-                errorBox.setText(tr("The file %0 could not be found.").arg(pFileInfo.fileName()));
-                errorBox.setStandardButtons(QMessageBox::Ok);
-                errorBox.setDefaultButton(QMessageBox::Ok);
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenRecentClickedSignal, this, &MainWindow::OpenRecentFile);
 
-                errorBox.exec();
-            }
+    QObject::connect(mUi->uActionRecentFile1, &QAction::triggered, this, [&]()
+    {
+        if (mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths().size() > 0)
+        {
+            OpenRecentFile(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths()[0]);
+        }
+    });
+
+    QObject::connect(mUi->uActionRecentFile2, &QAction::triggered, this, [&]()
+    {
+        if (mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths().size() > 1)
+        {
+            OpenRecentFile(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths()[1]);
+        }
+    });
+
+    QObject::connect(mUi->uActionRecentFile3, &QAction::triggered, this, [&]()
+    {
+        if (mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths().size() > 2)
+        {
+            OpenRecentFile(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths()[2]);
+        }
+    });
+
+    QObject::connect(mUi->uActionRecentFile4, &QAction::triggered, this, [&]()
+    {
+        if (mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths().size() > 3)
+        {
+            OpenRecentFile(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths()[3]);
+        }
+    });
+
+    QObject::connect(mUi->uActionRecentFile5, &QAction::triggered, this, [&]()
+    {
+        if (mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths().size() > 4)
+        {
+            OpenRecentFile(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths()[4]);
         }
     });
 
@@ -285,6 +319,12 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             {
                 setWindowTitle(tr("Linkuit Studio - %0").arg(fileInfo.fileName()));
                 ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+                SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+            }
+            else if (fileInfo.absolutePath() != "")
+            {
+                mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(fileInfo.fileName()));
+                mErrorOpenFileBox.exec();
             }
         }
     });
@@ -297,6 +337,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             {
                 setWindowTitle(tr("Linkuit Studio - %0").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName()));
                 ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+                SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+            }
+            else
+            {
+                mErrorSaveFileBox.exec();
             }
         }
         else
@@ -316,6 +361,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         {
             setWindowTitle(tr("Linkuit Studio - %0").arg(fileInfo.fileName()));
             ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+            SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+        }
+        else if (fileInfo.absolutePath() != "")
+        {
+            mErrorSaveFileBox.exec();
         }
     });
 
@@ -369,6 +419,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uActionWelcomePage, &QAction::triggered, this, [&]()
     {
         ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+        SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
         mWelcomeDialog.show();
     });
 
@@ -424,10 +475,65 @@ bool MainWindow::IsSaveChangesIfModifiedCanceled()
     return false;
 }
 
+void MainWindow::OpenRecentFile(const QFileInfo& pFileInfo)
+{
+    if (!IsSaveChangesIfModifiedCanceled())
+    {
+        if (GetCoreLogic().LoadJson(pFileInfo.filePath()))
+        {
+            ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+            SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+            setWindowTitle(QString("Linkuit Studio - %0").arg(pFileInfo.fileName()));
+            mWelcomeDialog.close();
+        }
+        else if (pFileInfo.absolutePath() != "")
+        {
+            mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(pFileInfo.fileName()));
+            mErrorOpenFileBox.exec();
+        }
+    }
+}
+
 void MainWindow::ConfigureWelcomeDialog(bool pShowOnStartup, const std::vector<QFileInfo>& pRecentFilePaths)
 {
     mWelcomeDialog.SetShowOnStartup(pShowOnStartup);
     mWelcomeDialog.SetRecentFilePaths(pRecentFilePaths);
+}
+
+void MainWindow::SetRecentFileMenuActions(const std::vector<QFileInfo>& pRecentFilePaths)
+{
+    // Workaround because findChild<QAction*>() does not work for some reason
+    mUi->uActionRecentFile1->setVisible(false);
+    mUi->uActionRecentFile2->setVisible(false);
+    mUi->uActionRecentFile3->setVisible(false);
+    mUi->uActionRecentFile4->setVisible(false);
+    mUi->uActionRecentFile5->setVisible(false);
+
+    if (pRecentFilePaths.size() > 0)
+    {
+        mUi->uActionRecentFile1->setText(pRecentFilePaths[0].absoluteFilePath());
+        mUi->uActionRecentFile1->setVisible(true);
+    }
+    if (pRecentFilePaths.size() > 1)
+    {
+        mUi->uActionRecentFile2->setText(pRecentFilePaths[1].absoluteFilePath());
+        mUi->uActionRecentFile2->setVisible(true);
+    }
+    if (pRecentFilePaths.size() > 2)
+    {
+        mUi->uActionRecentFile3->setText(pRecentFilePaths[2].absoluteFilePath());
+        mUi->uActionRecentFile3->setVisible(true);
+    }
+    if (pRecentFilePaths.size() > 3)
+    {
+        mUi->uActionRecentFile4->setText(pRecentFilePaths[3].absoluteFilePath());
+        mUi->uActionRecentFile4->setVisible(true);
+    }
+    if (pRecentFilePaths.size() > 4)
+    {
+        mUi->uActionRecentFile5->setText(pRecentFilePaths[4].absoluteFilePath());
+        mUi->uActionRecentFile5->setVisible(true);
+    }
 }
 
 void MainWindow::ShowWelcomeDialog(std::chrono::milliseconds pDelay)

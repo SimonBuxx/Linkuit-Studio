@@ -2296,6 +2296,12 @@ QMenuBar::item:pressed {
     <addaction name="uActionSave"/>
     <addaction name="uActionSaveAs"/>
     <addaction name="separator"/>
+    <addaction name="uActionRecentFile1"/>
+    <addaction name="uActionRecentFile2"/>
+    <addaction name="uActionRecentFile3"/>
+    <addaction name="uActionRecentFile4"/>
+    <addaction name="uActionRecentFile5"/>
+    <addaction name="separator"/>
     <addaction name="uActionClose"/>
    </widget>
    <widget class="QMenu" name="uMenuHelp">
@@ -2621,6 +2627,31 @@ QMenuBar::item:pressed {
     <string>Find us on GitHub...</string>
    </property>
   </action>
+  <action name="uActionRecentFile1">
+   <property name="text">
+    <string>Recent_File_1</string>
+   </property>
+  </action>
+  <action name="uActionRecentFile2">
+   <property name="text">
+    <string>Recent_File_2</string>
+   </property>
+  </action>
+  <action name="uActionRecentFile3">
+   <property name="text">
+    <string>Recent_File_3</string>
+   </property>
+  </action>
+  <action name="uActionRecentFile4">
+   <property name="text">
+    <string>Recent_File_4</string>
+   </property>
+  </action>
+  <action name="uActionRecentFile5">
+   <property name="text">
+    <string>Recent_File_5</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -2635,8 +2666,8 @@ QMenuBar::item:pressed {
  <connections/>
  <buttongroups>
   <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
  </buttongroups>
 </ui>

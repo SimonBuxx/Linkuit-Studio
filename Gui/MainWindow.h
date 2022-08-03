@@ -51,6 +51,10 @@ public:
     /// \param pRecentFilePaths: List of recently opened file paths
     void ConfigureWelcomeDialog(bool pShowOnStartup, const std::vector<QFileInfo>& pRecentFilePaths);
 
+    /// \brief Configures the menu actions for recent files
+    /// \param pRecentFilePaths: List of recently opened file paths
+    void SetRecentFileMenuActions(const std::vector<QFileInfo>& pRecentFilePaths);
+
 protected slots:
     /// \brief Enters the ADD control mode with the selected item
     /// \param pIndex: The index of the item that has been clicked
@@ -71,6 +75,8 @@ protected slots:
 #warning missing documentation
     void FadeOutGui(void);
     void FadeInGui(void);
+
+    void OpenRecentFile(const QFileInfo& pFileInfo);
 
     // Clock Configuration
 
@@ -244,6 +250,8 @@ protected:
     WelcomeDialog mWelcomeDialog;
 
     QMessageBox mSaveChangesBox;
+    QMessageBox mErrorOpenFileBox;
+    QMessageBox mErrorSaveFileBox;
 
     // Icon color variants
 
