@@ -56,6 +56,12 @@ public:
     void SetRecentFileMenuActions(const std::vector<QFileInfo>& pRecentFilePaths);
 
 protected slots:
+    void OnCircuitFileOpenedSuccessfully(const QFileInfo& pFileInfo);
+    void OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo);
+
+    void OnCircuitFileSavedSuccessfully(const QFileInfo& pFileInfo);
+    void OnCircuitFileSavingFailed(void);
+
     /// \brief Enters the ADD control mode with the selected item
     /// \param pIndex: The index of the item that has been clicked
     void OnToolboxTreeClicked(const QModelIndex &pIndex);
@@ -138,6 +144,8 @@ protected:
 
     /// \brief Creates global shortcuts
     void InitializeGlobalShortcuts(void);
+
+    void InitializeMessageBoxes(void);
 
     // Item configuration
 

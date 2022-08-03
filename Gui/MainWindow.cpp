@@ -30,9 +30,29 @@ MainWindow::MainWindow(QWidget *pParent) :
     InitializeToolboxTree();
     InitializeGuiIcons();
     InitializeGlobalShortcuts();
+    InitializeMessageBoxes();
 
-    // Initialize prompt to save the circuit on file closing
+    mUi->uItemRightButton->setChecked(true); // Button for component direction RIGHT
 
+    mUi->uItemConfigurator->hide();
+    mUi->uClockConfigurator->hide();
+
+    mFadeOutOnCtrlTimer.setSingleShot(true);
+
+    mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false);   // Make about dialog close when main window closes
+    mWelcomeDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make welcome dialog close when main window closes
+
+    ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+    SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+}
+
+MainWindow::~MainWindow()
+{
+    delete mUi;
+}
+
+void MainWindow::InitializeMessageBoxes()
+{
     mSaveChangesBox.setIcon(QMessageBox::Icon::Question);
     mSaveChangesBox.setWindowTitle("Linkuit Studio");
     mSaveChangesBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
@@ -55,29 +75,17 @@ MainWindow::MainWindow(QWidget *pParent) :
     mErrorSaveFileBox.setText(tr("The circuit could not be saved."));
     mErrorSaveFileBox.setStandardButtons(QMessageBox::Ok);
     mErrorSaveFileBox.setDefaultButton(QMessageBox::Ok);
-
-    mUi->uItemRightButton->setChecked(true); // Button for component direction RIGHT
-
-    mUi->uItemConfigurator->hide();
-    mUi->uClockConfigurator->hide();
-
-    mFadeOutOnCtrlTimer.setSingleShot(true);
-
-    mAboutDialog.setAttribute(Qt::WA_QuitOnClose, false);   // Make about dialog close when main window closes
-    mWelcomeDialog.setAttribute(Qt::WA_QuitOnClose, false); // Make welcome dialog close when main window closes
-
-    ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-    SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-}
-
-MainWindow::~MainWindow()
-{
-    delete mUi;
 }
 
 void MainWindow::ConnectGuiSignalsAndSlots()
 {
     QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabelAndSlider);
+
+    QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::LoadCircuitFileSuccessSignal, this, &MainWindow::OnCircuitFileOpenedSuccessfully);
+    QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::LoadCircuitFileFailedSignal, this, &MainWindow::OnCircuitFileOpeningFailed);
+
+    QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::SaveCircuitFileSuccessSignal, this, &MainWindow::OnCircuitFileSavedSuccessfully);
+    QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::SaveCircuitFileFailedSignal, this, &MainWindow::OnCircuitFileSavingFailed);
 
     // Connect to core logic signals
 
@@ -113,11 +121,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         UpdateUndoRedoEnabled(true);
     });
 
-    QObject::connect(&mCoreLogic, &CoreLogic::CircuitModifiedSignal, this, [&]()
+    QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::CircuitModifiedSignal, this, [&]()
     {
-        if (mCoreLogic.IsFileOpen())
+        if (mCoreLogic.GetCircuitFileParser().IsFileOpen())
         {
-            setWindowTitle(tr("Linkuit Studio - %0%1").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName(), "*"));
+            setWindowTitle(tr("Linkuit Studio - %0%1").arg(mCoreLogic.GetCircuitFileParser().GetFileInfo().value().fileName(), "*"));
         }
         else
         {
@@ -313,36 +321,21 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
         if (!IsSaveChangesIfModifiedCanceled())
         {
-            QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
+            QString path = mCoreLogic.GetCircuitFileParser().IsFileOpen() ? mCoreLogic.GetCircuitFileParser().GetFileInfo().value().absolutePath() : QDir::homePath();
             const auto fileInfo = QFileInfo(QFileDialog::getOpenFileName(this, tr(gui::OPEN_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)")));
-            if (mCoreLogic.LoadJson(fileInfo.filePath()))
+
+            if (!fileInfo.absoluteFilePath().isEmpty())
             {
-                setWindowTitle(tr("Linkuit Studio - %0").arg(fileInfo.fileName()));
-                ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-                SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-            }
-            else if (fileInfo.absolutePath() != "")
-            {
-                mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(fileInfo.fileName()));
-                mErrorOpenFileBox.exec();
+                mCoreLogic.GetCircuitFileParser().LoadJson(fileInfo);
             }
         }
     });
 
     QObject::connect(mUi->uActionSave, &QAction::triggered, this, [&]()
     {
-        if (mCoreLogic.IsFileOpen())
+        if (mCoreLogic.GetCircuitFileParser().IsFileOpen())
         {
-            if (mCoreLogic.SaveJson())
-            {
-                setWindowTitle(tr("Linkuit Studio - %0").arg(QFileInfo(mCoreLogic.GetFilePath().value()).fileName()));
-                ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-                SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-            }
-            else
-            {
-                mErrorSaveFileBox.exec();
-            }
+            mCoreLogic.GetCircuitFileParser().SaveJson(mCoreLogic.GetJson());
         }
         else
         {
@@ -355,17 +348,12 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         mFadeOutOnCtrlTimer.stop();
         FadeInGui();
 
-        QString path = mCoreLogic.IsFileOpen() ? mCoreLogic.GetFilePath().value() : QDir::homePath();
+        QString path = mCoreLogic.GetCircuitFileParser().IsFileOpen() ? mCoreLogic.GetCircuitFileParser().GetFileInfo().value().absolutePath() : QDir::homePath();
         const auto fileInfo = QFileInfo(QFileDialog::getSaveFileName(this, tr(gui::SAVE_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)")));
-        if (mCoreLogic.SaveJsonAs(fileInfo.filePath()))
+
+        if (fileInfo.absoluteFilePath() != "")
         {
-            setWindowTitle(tr("Linkuit Studio - %0").arg(fileInfo.fileName()));
-            ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-            SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-        }
-        else if (fileInfo.absolutePath() != "")
-        {
-            mErrorSaveFileBox.exec();
+            mCoreLogic.GetCircuitFileParser().SaveJsonAs(fileInfo, mCoreLogic.GetJson());
         }
     });
 
@@ -447,7 +435,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
 bool MainWindow::IsSaveChangesIfModifiedCanceled()
 {
-    if (mCoreLogic.IsCircuitModified())
+    if (mCoreLogic.GetCircuitFileParser().IsCircuitModified())
     {
         int ret = mSaveChangesBox.exec();
 
@@ -475,22 +463,37 @@ bool MainWindow::IsSaveChangesIfModifiedCanceled()
     return false;
 }
 
+void MainWindow::OnCircuitFileOpenedSuccessfully(const QFileInfo& pFileInfo)
+{
+    ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+    SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+    setWindowTitle(QString("Linkuit Studio - %0").arg(pFileInfo.fileName()));
+    mWelcomeDialog.close();
+}
+
+void MainWindow::OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo)
+{
+    mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(pFileInfo.fileName()));
+    mErrorOpenFileBox.exec();
+}
+
+void MainWindow::OnCircuitFileSavedSuccessfully(const QFileInfo& pFileInfo)
+{
+    setWindowTitle(tr("Linkuit Studio - %0").arg(pFileInfo.fileName()));
+    ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+    SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+}
+
+void MainWindow::OnCircuitFileSavingFailed()
+{
+    mErrorSaveFileBox.exec();
+}
+
 void MainWindow::OpenRecentFile(const QFileInfo& pFileInfo)
 {
     if (!IsSaveChangesIfModifiedCanceled())
     {
-        if (GetCoreLogic().LoadJson(pFileInfo.filePath()))
-        {
-            ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-            SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-            setWindowTitle(QString("Linkuit Studio - %0").arg(pFileInfo.fileName()));
-            mWelcomeDialog.close();
-        }
-        else if (pFileInfo.absolutePath() != "")
-        {
-            mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(pFileInfo.fileName()));
-            mErrorOpenFileBox.exec();
-        }
+        mCoreLogic.GetCircuitFileParser().LoadJson(pFileInfo);
     }
 }
 
@@ -1024,7 +1027,7 @@ void MainWindow::ForceUncheck(IconToolButton *pButton)
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
-    if (mCoreLogic.IsCircuitModified())
+    if (mCoreLogic.GetCircuitFileParser().IsCircuitModified())
     {
         int ret = mSaveChangesBox.exec();
 

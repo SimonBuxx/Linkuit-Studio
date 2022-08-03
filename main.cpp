@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QGraphicsScene>
 #include <QFile>
+#include <QFileInfo>
 #include <QFontDatabase>
 #include <QCommandLineParser>
 
@@ -63,15 +64,7 @@ int main(int argc, char *argv[])
 
     if (parser.positionalArguments().size() > 0)
     {
-        if (window.GetCoreLogic().LoadJson(path.mid(1, path.size() - 3)))
-        {
-
-            window.setWindowTitle(QString("Linkuit Studio - %0").arg(QFileInfo(window.GetCoreLogic().GetFilePath().value()).fileName()));
-        }
-        else
-        {
-            qDebug() << "Could not open circuit file";
-        }
+        window.GetCoreLogic().GetCircuitFileParser().LoadJson(QFileInfo(path.mid(1, path.size() - 3)));
     }
     else
     {

@@ -1,4 +1,5 @@
 HEADERS += \
+    $$PWD/CircuitFileParser.h \
     $$PWD/Components/ComplexLogic/Demultiplexer.h \
     $$PWD/Components/ComplexLogic/FullAdder.h \
     $$PWD/Components/ComplexLogic/HalfAdder.h \
@@ -60,6 +61,7 @@ HEADERS += \
     $${PWD}/Gui/IconToolButton.h
 
 SOURCES += \
+    $$PWD/CircuitFileParser.cpp \
     $$PWD/Components/ComplexLogic/Demultiplexer.cpp \
     $$PWD/Components/ComplexLogic/FullAdder.cpp \
     $$PWD/Components/ComplexLogic/HalfAdder.cpp \

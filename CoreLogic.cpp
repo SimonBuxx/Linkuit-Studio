@@ -34,7 +34,7 @@ CoreLogic::CoreLogic(View &pView):
     mVerticalPreviewWire(this, WireDirection::VERTICAL, 0),
     mPropagationTimer(this),
     mProcessingTimer(this),
-    mFilePath(std::nullopt)
+    mCircuitFileParser(mRuntimeConfigParser)
 {
     mView.Init();
 
@@ -42,6 +42,12 @@ CoreLogic::CoreLogic(View &pView):
 
     QObject::connect(&mPropagationTimer, &QTimer::timeout, this, &CoreLogic::OnPropagationTimeout);
     QObject::connect(&mProcessingTimer, &QTimer::timeout, this, &CoreLogic::OnProcessingTimeout);
+
+    QObject::connect(&mCircuitFileParser, &CircuitFileParser::LoadCircuitFileSuccessSignal, this, [&](const QFileInfo& pFileInfo, const QJsonObject& pJson)
+    {
+        Q_UNUSED(pFileInfo);
+        ReadJson(pJson);
+    });
 
     if (!mRuntimeConfigParser.LoadRuntimeConfig(GetRuntimeConfigAbsolutePath()))
     {
@@ -52,6 +58,11 @@ CoreLogic::CoreLogic(View &pView):
 const RuntimeConfigParser& CoreLogic::GetRuntimeConfigParser() const
 {
     return mRuntimeConfigParser;
+}
+
+CircuitFileParser& CoreLogic::GetCircuitFileParser()
+{
+    return mCircuitFileParser;
 }
 
 void CoreLogic::SetShowWelcomeDialogOnStartup(bool pShowOnStartup)
@@ -181,7 +192,7 @@ void CoreLogic::OnToggleValueChanged(uint32_t pValue)
         if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
         {
             std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetToggleTicks(pValue);
-            CircuitModified();
+            mCircuitFileParser.MarkAsModified();
         }
     }
 }
@@ -193,7 +204,7 @@ void CoreLogic::OnPulseValueChanged(uint32_t pValue)
         if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
         {
             std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetPulseTicks(pValue);
-            CircuitModified();
+            mCircuitFileParser.MarkAsModified();
         }
     }
 }
@@ -205,7 +216,7 @@ void CoreLogic::OnClockModeChanged(ClockMode pMode)
         if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
         {
             std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetClockMode(pMode);
-            CircuitModified();
+            mCircuitFileParser.MarkAsModified();
         }
     }
 }
@@ -1640,8 +1651,7 @@ void CoreLogic::NewCircuit()
 
     emit UpdateUndoRedoEnabledSignal();
 
-    mCircuitModified = false;
-    mFilePath = std::nullopt;
+    mCircuitFileParser.ResetCurrentFileInfo();
 }
 
 void CoreLogic::ReadJson(const QJsonObject& pJson)
@@ -1805,110 +1815,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
     return false;
 }
 
-void CoreLogic::CircuitModified()
-{
-    if (!mCircuitModified)
-    {
-        mCircuitModified = true;
-        emit CircuitModifiedSignal();
-    }
-}
-
-bool CoreLogic::IsFileOpen() const
-{
-    return mFilePath.has_value();
-}
-
-bool CoreLogic::IsCircuitModified() const
-{
-    return mCircuitModified;
-}
-
-std::optional<QString> CoreLogic::GetFilePath() const
-{
-    return mFilePath;
-}
-
-bool CoreLogic::SaveJson()
-{
-    if (!mFilePath.has_value())
-    {
-        return false;
-    }
-
-    QFile saveFile(mFilePath.value());
-
-    if (!saveFile.open(QIODevice::WriteOnly))
-    {
-        return false;
-    }
-
-    auto jsonObject = GetJson();
-
-    saveFile.write(file::SAVE_FORMAT == file::SaveFormat::JSON
-                   ? QJsonDocument(jsonObject).toJson()
-                   : QCborValue::fromJsonValue(jsonObject).toCbor());
-
-    mCircuitModified = false;
-
-    mRuntimeConfigParser.AddRecentFilePath(QFileInfo(mFilePath.value()));
-
-    return true;
-}
-
-bool CoreLogic::SaveJsonAs(const QString& pPath)
-{
-    QFile saveFile(pPath);
-
-    if (!saveFile.open(QIODevice::WriteOnly))
-    {
-        return false;
-    }
-
-    auto jsonObject = GetJson();
-
-    saveFile.write(file::SAVE_FORMAT == file::SaveFormat::JSON
-                   ? QJsonDocument(jsonObject).toJson()
-                   : QCborValue::fromJsonValue(jsonObject).toCbor());
-
-    mFilePath = pPath;
-    mCircuitModified = false;
-
-    mRuntimeConfigParser.AddRecentFilePath(QFileInfo(mFilePath.value()));
-
-    return true;
-}
-
-bool CoreLogic::LoadJson(const QString& pPath)
-{
-    QFile loadFile(pPath);
-
-    if (!loadFile.open(QIODevice::ReadOnly))
-    {
-        mFilePath = std::nullopt;
-        return false;
-    }
-
-    QByteArray rawData = loadFile.readAll();
-
-    QJsonDocument jsonDoc(file::SAVE_FORMAT == file::SaveFormat::JSON
-                    ? QJsonDocument::fromJson(rawData)
-                    : QJsonDocument(QCborValue::fromCbor(rawData).toMap().toJsonObject()));
-
-    ReadJson(jsonDoc.object());
-
-    mFilePath = pPath;
-
-    mRuntimeConfigParser.AddRecentFilePath(QFileInfo(mFilePath.value()));
-
-    return true;
-}
-
 void CoreLogic::AppendUndo(UndoBaseType* pUndoObject)
 {
     Q_ASSERT(pUndoObject);
 
-    CircuitModified();
+    mCircuitFileParser.MarkAsModified();
     AppendToUndoQueue(pUndoObject, mUndoQueue);
     mRedoQueue.clear();
 
@@ -2048,7 +1959,7 @@ void CoreLogic::Undo()
                 break;
             }
         }
-        CircuitModified();
+        mCircuitFileParser.MarkAsModified();
     }
     ClearSelection();
 }
@@ -2174,7 +2085,7 @@ void CoreLogic::Redo()
                 break;
             }
         }
-        CircuitModified();
+        mCircuitFileParser.MarkAsModified();
     }
     ClearSelection();
 }

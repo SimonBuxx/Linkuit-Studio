@@ -10,12 +10,10 @@
 #include "Components/LogicWireCell.h"
 #include "Configuration.h"
 #include "RuntimeConfigParser.h"
+#include "CircuitFileParser.h"
 
 #include <QGraphicsItem>
 #include <QTimer>
-#include <QFile>
-#include <QJsonDocument>
-#include <QCborMap>
 #include <deque>
 
 class View;
@@ -32,6 +30,7 @@ public:
     CoreLogic(View &pView);
 
     const RuntimeConfigParser& GetRuntimeConfigParser(void) const;
+    CircuitFileParser& GetCircuitFileParser(void);
 
     void SetShowWelcomeDialogOnStartup(bool pShowOnStartup);
 
@@ -170,31 +169,9 @@ public:
 
     // Functions for saving and loading
 
-    /// \brief Returns true, if there is a known file path to save the current circuit into
-    /// \return True, if there is a known file path to save the current circuit into
-    bool IsFileOpen(void) const;
-
-    /// \brief Returns true, if the circuit has been modified after the last save or load
-    /// \return True, if the circuit has been modified after the last save or load
-    bool IsCircuitModified(void) const;
-
-    /// \brief Getter for the current file path, if it exists
-    /// \return The current file path, if it exists
-    std::optional<QString> GetFilePath(void) const;
-
-    /// \brief Saves the current circuit into the currently used file
-    /// \return True, if saving was successful
-    bool SaveJson(void);
-
-    /// \brief Saves the current circuit into the given file path
-    /// \param pPath: The path and file name to save into
-    /// \return True, if saving was successful
-    bool SaveJsonAs(const QString& pPath);
-
-    /// \brief Load the circuit at the given file path
-    /// \param pPath: The path and file name to load
-    /// \return True, if loading was successful
-    bool LoadJson(const QString& pPath);
+    /// \brief Returns a JSON representation of the current circuit
+    /// \return A JSON object containing the circuit information
+    QJsonObject GetJson(void) const;
 
     /// \brief Resets the canvas
     void NewCircuit(void);
@@ -242,9 +219,6 @@ signals:
 
     /// \brief Emitted when the clock configurator should be hidden
     void HideClockConfiguratorSignal(void);
-
-    /// \brief Emitted when the circuit goes from an unmodified (saved or empty) to a modified (unsaved) state
-    void CircuitModifiedSignal(void);
 
 public slots:
     /// \brief Checks for collisions, merges moved or copied wires and brings the ConPoints in a valid state
@@ -442,10 +416,6 @@ protected:
     void ClearSelection(void);
 
     // Functions for loading and saving
-    /// \brief Returns a JSON representation of the current circuit
-    /// \return A JSON object containing the circuit information
-    QJsonObject GetJson(void) const;
-
     /// \brief Loads a circuit from the given JSON object
     /// \param pJson: The JSON data of the circuit to load
     void ReadJson(const QJsonObject& pJson);
@@ -454,9 +424,6 @@ protected:
     /// \param pJson: The JSON data of the circuit component
     /// \return True, if the component has been added
     bool CreateComponent(const QJsonObject& pJson);
-
-    /// \brief Emitts a signal if the circuit is newly modified
-    void CircuitModified(void);
 
 protected:
     View &mView;
@@ -491,13 +458,11 @@ protected:
 
     bool mIsProcessing = false;
 
-    std::optional<QString> mFilePath;
-    bool mCircuitModified = false;
-
     std::vector<IBaseComponent*> mCopiedComponents;
     std::vector<IBaseComponent*> mCurrentPaste;
     std::optional<UndoCopyType*> mCurrentCopyUndoType;
 
+    CircuitFileParser mCircuitFileParser;
     RuntimeConfigParser mRuntimeConfigParser;
 };
 
