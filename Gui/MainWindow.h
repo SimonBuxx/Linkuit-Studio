@@ -203,6 +203,11 @@ protected:
     template <typename T>
     void FadeOutWidget(T& pWidget);
 
+    /// \brief Asks if the changes should be saved if the current circuit is modified
+    /// \return True, when the user pressed "Cancel"; False, if the circuit was unchanged,
+    /// if the circuit has been saved or changes were discarded
+    bool IsSaveChangesIfModifiedCanceled(void);
+
 protected:
     Ui::MainWindow *mUi;
     QGraphicsScene mScene;

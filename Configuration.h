@@ -65,7 +65,7 @@ static constexpr QRectF DIMENSIONS(-32000, -32000, 64000, 64000);
 
 namespace simulation
 {
-static constexpr std::chrono::milliseconds PROPAGATION_DELAY(0);
+static constexpr std::chrono::milliseconds PROPAGATION_DELAY(10);
 } // namespace
 
 namespace components

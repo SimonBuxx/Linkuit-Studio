@@ -6,6 +6,7 @@ LogicButtonCell::LogicButtonCell():
     mState(LogicState::LOW),
     mButtonTimer(this)
 {
+#warning use amount of ticks instead of timer
     mButtonTimer.setInterval(components::inputs::BUTTON_TOGGLE_INTERVAL);
     mButtonTimer.setSingleShot(true);
 
