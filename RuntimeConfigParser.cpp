@@ -1,4 +1,5 @@
 #include "RuntimeConfigParser.h"
+#include "HelperFunctions.h"
 #include "Configuration.h"
 
 RuntimeConfigParser::RuntimeConfigParser() :
@@ -77,7 +78,7 @@ bool RuntimeConfigParser::IsWelcomeDialogEnabledOnStartup() const
 void RuntimeConfigParser::IsWelcomeDialogEnabledOnStartup(bool pShowOnStartup)
 {
     mIsWelcomeDialogEnabledOnStartup = pShowOnStartup;
-    SaveRuntimeConfig(file::runtime_config::RUNTIME_CONFIG_PATH);
+    SaveRuntimeConfig(GetRuntimeConfigAbsolutePath());
 }
 
 const std::vector<QFileInfo>& RuntimeConfigParser::GetRecentFilePaths() const
@@ -99,5 +100,5 @@ void RuntimeConfigParser::AddRecentFilePath(const QFileInfo &pFilePath)
         mRecentFiles.resize(5);
     }
 
-    SaveRuntimeConfig(file::runtime_config::RUNTIME_CONFIG_PATH);
+    SaveRuntimeConfig(GetRuntimeConfigAbsolutePath());
 }

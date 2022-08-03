@@ -20,7 +20,7 @@ static constexpr const char* JSON_TYPE_IDENTIFIER = "type";
 
 namespace runtime_config
 {
-static constexpr const char* RUNTIME_CONFIG_PATH = "./runtime_config.json";
+static constexpr const char* RUNTIME_CONFIG_RELATIVE_PATH = "/runtime_config.json";
 
 static constexpr const char* JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER = "show_welcome_dialog_on_startup";
 static constexpr const char* JSON_RECENT_FILES_IDENTIFIER = "recent_files";

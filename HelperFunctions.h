@@ -3,6 +3,7 @@
 
 #include "Configuration.h"
 
+#include <QCoreApplication>
 #include <QGraphicsItem>
 #include <QPoint>
 
@@ -77,6 +78,14 @@ inline ConfiguratorMode GetConfiguratorModeForComponentType(ComponentType pType)
     }
 
     return ConfiguratorMode::NO_CONFIGURATION;
+}
+
+/// \brief Returns the absolute path to the runtime config JSON file
+/// \return The absolute path as a QString
+inline QString GetRuntimeConfigAbsolutePath(void)
+{
+    // QCoreApplication::applicationDirPath() gets the path to the executable instead of the path from where it is executed
+    return QCoreApplication::applicationDirPath() + file::runtime_config::RUNTIME_CONFIG_RELATIVE_PATH;
 }
 
 #endif // HELPERFUNCTIONS_H

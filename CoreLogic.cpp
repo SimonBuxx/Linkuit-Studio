@@ -43,7 +43,7 @@ CoreLogic::CoreLogic(View &pView):
     QObject::connect(&mPropagationTimer, &QTimer::timeout, this, &CoreLogic::OnPropagationTimeout);
     QObject::connect(&mProcessingTimer, &QTimer::timeout, this, &CoreLogic::OnProcessingTimeout);
 
-    if (!mRuntimeConfigParser.LoadRuntimeConfig(file::runtime_config::RUNTIME_CONFIG_PATH))
+    if (!mRuntimeConfigParser.LoadRuntimeConfig(GetRuntimeConfigAbsolutePath()))
     {
         qDebug() << "Could not open runtime config file, using defaults";
     }
