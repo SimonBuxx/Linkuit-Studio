@@ -18,6 +18,7 @@
 #include "Components/ComplexLogic/JKFlipFlop.h"
 #include "Components/ComplexLogic/Multiplexer.h"
 #include "Components/ComplexLogic/Demultiplexer.h"
+#include "Components/ComplexLogic/Decoder.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -353,6 +354,11 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         case ComponentType::DEMULTIPLEXER:
         {
             item = new Demultiplexer(this, mComponentDirection, mMultiplexerBitWidth);
+            break;
+        }
+        case ComponentType::DECODER:
+        {
+            item = new Decoder(this, mComponentDirection, mComponentInputCount);
             break;
         }
         default:
@@ -1794,6 +1800,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::DEMULTIPLEXER:
             {
                 item = new Demultiplexer(this, pJson);
+                break;
+            }
+            case file::ComponentId::DECODER:
+            {
+                item = new Decoder(this, pJson);
                 break;
             }
             default:

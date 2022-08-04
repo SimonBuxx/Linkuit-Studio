@@ -161,6 +161,13 @@ static constexpr uint8_t MAX_BIT_WIDTH = 5;
 static constexpr uint8_t DEFAULT_BIT_WIDTH = 2;
 } // namespace
 
+namespace encoder_decoder
+{
+static constexpr uint8_t MIN_INPUT_COUNT = 3;
+static constexpr uint8_t MAX_INPUT_COUNT = 5;
+static constexpr uint8_t DEFAULT_INPUT_COUNT = 3;
+} // namespace
+
 namespace complex_logic
 {
 static constexpr const char* HALF_ADDER_TEXT = "HA";
@@ -171,6 +178,7 @@ static constexpr const char* T_FLIPFLOP_TEXT = "TF";
 static constexpr const char* JK_FLIPFLOP_TEXT = "JK";
 static constexpr const char* MULTIPLEXER_TEXT = "MUX";
 static constexpr const char* DEMULTIPLEXER_TEXT = "DEMUX";
+static constexpr const char* DECODER_TEXT = "";
 
 static const QFont FONT("Source Sans Pro", 20);
 static const QFont CONNECTOR_FONT("Calibri Light", 10);

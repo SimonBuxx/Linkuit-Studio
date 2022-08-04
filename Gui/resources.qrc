@@ -26,5 +26,6 @@
         <file>../images/icons/icon_smaller.png</file>
         <file>../images/icons/icon_file.png</file>
         <file>../images/logo_processing.png</file>
+        <file>../images/icons/decoder.png</file>
     </qresource>
 </RCC>

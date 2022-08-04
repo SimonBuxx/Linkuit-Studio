@@ -1,17 +1,18 @@
-#ifndef LOGICNOTGATECELL_H
-#define LOGICNOTGATECELL_H
+#ifndef LOGICDECODERCELL_H
+#define LOGICDECODERCELL_H
 
 #include "Components/LogicBaseCell.h"
 
 ///
-/// \brief Logic cell class for the NOT gate
+/// \brief Logic Cell class for the decoder
 ///
-class LogicNotGateCell : public LogicBaseCell
+class LogicDecoderCell : public LogicBaseCell
 {
     Q_OBJECT
 public:
-    /// \brief Constructor for LogicNotGateCell
-    LogicNotGateCell(void);
+    /// \brief Constructor for the decoder cell
+    /// \param pInputCount: The amount of inputs for this decoder
+    LogicDecoderCell(uint8_t pInputCount);
 
     /// \brief The logic function that determines the output states based on the inputs
     void LogicFunction(void) override;
@@ -32,9 +33,12 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-    LogicState mPreviousState;
-    LogicState mCurrentState;
+    std::vector<LogicState> mOutputStates;
+
     bool mStateChanged;
+
+    uint8_t mInputCount;
+    uint8_t mPreviousValue;
 };
 
-#endif // LOGICNOTGATECELL_H
+#endif // LOGICDECODERCELL_H

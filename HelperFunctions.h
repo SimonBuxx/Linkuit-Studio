@@ -24,7 +24,8 @@ static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{Co
                                                                              {ComponentType::T_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::JK_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::MULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS},
-                                                                             {ComponentType::DEMULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS}};
+                                                                             {ComponentType::DEMULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS},
+                                                                             {ComponentType::DECODER, ConfiguratorMode::ENCODER_DECODER}};
 
 /// \brief Rounds the given point to the nearest grid point
 /// \param pPoint: The point to round

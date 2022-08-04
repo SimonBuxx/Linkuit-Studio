@@ -47,7 +47,7 @@ public:
     /// \param pOutput: The output number of this cell to connect
     void ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput);
 
-    /// \brief Getter for the curent input state number pInput of this cell
+    /// \brief Getter for the current input state number pInput of this cell
     /// \param pInput: The number of the input to retreive
     /// \return The logic state of this cell's input number pInput
     LogicState GetInputState(uint32_t pInput) const;
@@ -82,7 +82,7 @@ public:
     /// \param pOutputInversions: The new output inversion vector
     void SetOutputInversions(const std::vector<bool>& pOutputInversions);
 
-    /// \brief Getter for the curent output state number pOutput of this cell
+    /// \brief Getter for the current output state number pOutput of this cell
     /// \param pOutput: The number of the output to retreive
     /// \return The logic state of this cell's output number pOutput
     virtual LogicState GetOutputState(uint32_t pOutput = 0) const = 0;

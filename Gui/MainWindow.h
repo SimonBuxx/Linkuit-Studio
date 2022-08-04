@@ -157,6 +157,10 @@ protected:
     /// \param pCount: The input count value to set to
     void SetGateInputCountIfAllowed(uint8_t pCount);
 
+    /// \brief Sets the current en-/decoder input count to the given value if SW is in ControlMode::ADD and either ENCODER or DECODER
+    /// \param pCount: The input count value to set to
+    void SetEncoderDecoderInputCountIfAllowed(uint8_t pCount);
+
     /// \brief Sets the current (de-)multiplexer bit width to the given value if SW is in ControlMode::ADD
     /// \param pBitWidth: The bit width to set to
     void SetMultiplexerBitWidthIfAllowed(uint8_t pBitWidth);

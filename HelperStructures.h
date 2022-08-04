@@ -37,7 +37,8 @@ namespace file
         MULTIPLEXER,
         DEMULTIPLEXER,
         T_FLIPFLOP,
-        JK_FLIPFLOP // only append!
+        JK_FLIPFLOP,
+        DECODER // only append!
     };
 } // namespace file
 
@@ -61,7 +62,8 @@ enum class ComponentType
     MULTIPLEXER,
     DEMULTIPLEXER,
     T_FLIPFLOP,
-    JK_FLIPFLOP
+    JK_FLIPFLOP,
+    DECODER
 };
 
 enum class Direction
@@ -127,11 +129,11 @@ enum class ClockMode
 
 enum class ConfiguratorMode
 {
-    NO_CONFIGURATION,
+    NO_CONFIGURATION = 0,
     DIRECTION_AND_INPUT_COUNT,
     DIRECTION_ONLY,
-    OUTPUT_COLOR,
-    MULTIPLEXER_BITS
+    MULTIPLEXER_BITS,
+    ENCODER_DECODER
 };
 
 namespace undo

@@ -628,6 +628,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
         {
             mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemInputCountSlider->setMinimum(components::gates::MIN_INPUT_COUNT);
+            mUi->uItemInputCountSlider->setMaximum(components::gates::MAX_INPUT_COUNT);
             mUi->uInputCountFrame->show();
             mUi->uBitWidthFrame->hide();
             break;
@@ -637,6 +639,15 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uItemDirectionButtonsFrame->show();
             mUi->uInputCountFrame->hide();
             mUi->uBitWidthFrame->show();
+            break;
+        }
+        case ConfiguratorMode::ENCODER_DECODER:
+        {
+            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemInputCountSlider->setMinimum(components::encoder_decoder::MIN_INPUT_COUNT);
+            mUi->uItemInputCountSlider->setMaximum(components::encoder_decoder::MAX_INPUT_COUNT);
+            mUi->uInputCountFrame->show();
+            mUi->uBitWidthFrame->hide();
             break;
         }
         default:
@@ -697,6 +708,7 @@ void MainWindow::OnItemUpButtonToggled(bool pChecked)
 void MainWindow::OnItemInputCountSliderValueChanged(int32_t pValue)
 {
     SetGateInputCountIfAllowed(pValue);
+    SetEncoderDecoderInputCountIfAllowed(pValue);
 }
 
 void MainWindow::OnBitWidthSliderValueChanged(int32_t pValue)
@@ -1171,6 +1183,7 @@ void MainWindow::InitializeToolboxTree()
 
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/decoder.png"), "Decoder"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
@@ -1316,38 +1329,56 @@ void MainWindow::InitializeGlobalShortcuts()
     QObject::connect(mOneGateInputShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(1);
+       SetEncoderDecoderInputCountIfAllowed(1);
+       SetMultiplexerBitWidthIfAllowed(1);
     });
     QObject::connect(mTwoGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(2);
+       SetEncoderDecoderInputCountIfAllowed(2);
+       SetMultiplexerBitWidthIfAllowed(2);
     });
     QObject::connect(mThreeGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(3);
+       SetEncoderDecoderInputCountIfAllowed(3);
+       SetMultiplexerBitWidthIfAllowed(3);
     });
     QObject::connect(mFourGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(4);
+       SetEncoderDecoderInputCountIfAllowed(4);
+       SetMultiplexerBitWidthIfAllowed(4);
     });
     QObject::connect(mFiveGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(5);
+       SetEncoderDecoderInputCountIfAllowed(5);
+       SetMultiplexerBitWidthIfAllowed(5);
     });
     QObject::connect(mSixGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(6);
+       SetEncoderDecoderInputCountIfAllowed(6);
+       SetMultiplexerBitWidthIfAllowed(6);
     });
     QObject::connect(mSevenGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(7);
+       SetEncoderDecoderInputCountIfAllowed(7);
+       SetMultiplexerBitWidthIfAllowed(7);
     });
     QObject::connect(mEightGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(8);
+       SetEncoderDecoderInputCountIfAllowed(8);
+       SetMultiplexerBitWidthIfAllowed(8);
     });
     QObject::connect(mNineGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(9);
+       SetEncoderDecoderInputCountIfAllowed(9);
+       SetMultiplexerBitWidthIfAllowed(9);
     });
 
     mEscapeShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
@@ -1372,26 +1403,41 @@ void MainWindow::InitializeGlobalShortcuts()
 
 void MainWindow::SetGateInputCountIfAllowed(uint8_t pCount)
 {
-    Q_ASSERT(pCount >= components::gates::MIN_INPUT_COUNT && pCount <= components::gates::MAX_INPUT_COUNT);
-
-    if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE)
+    if (pCount >= components::gates::MIN_INPUT_COUNT && pCount <= components::gates::MAX_INPUT_COUNT)
     {
-        mCoreLogic.SetComponentInputCount(pCount);
-        mUi->uLabelItemInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
-        mUi->uItemInputCountSlider->setValue(pCount);
+        if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE)
+        {
+            mCoreLogic.SetComponentInputCount(pCount);
+            mUi->uLabelItemInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
+            mUi->uItemInputCountSlider->setValue(pCount);
+        }
+    }
+}
+
+void MainWindow::SetEncoderDecoderInputCountIfAllowed(uint8_t pCount)
+{
+    if (pCount >= components::encoder_decoder::MIN_INPUT_COUNT && pCount <= components::encoder_decoder::MAX_INPUT_COUNT)
+    {
+        if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() == ComponentType::DECODER)
+        {
+            mCoreLogic.SetComponentInputCount(pCount);
+            mUi->uLabelItemInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
+            mUi->uItemInputCountSlider->setValue(pCount);
+        }
     }
 }
 
 void MainWindow::SetMultiplexerBitWidthIfAllowed(uint8_t pBitWidth)
 {
-    Q_ASSERT(pBitWidth > 0 && pBitWidth <= components::multiplexer::MAX_BIT_WIDTH);
-
-    if (mCoreLogic.GetControlMode() == ControlMode::ADD && (mCoreLogic.GetSelectedComponentType() == ComponentType::MULTIPLEXER
-                                                            || mCoreLogic.GetSelectedComponentType() == ComponentType::DEMULTIPLEXER))
+    if (pBitWidth > 0 && pBitWidth <= components::multiplexer::MAX_BIT_WIDTH)
     {
-        mCoreLogic.SetMultiplexerBitWidth(pBitWidth);
-        mUi->uLabelBitWidth->setText(tr(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
-        mUi->uBitWidthSlider->setValue(pBitWidth);
+        if (mCoreLogic.GetControlMode() == ControlMode::ADD && (mCoreLogic.GetSelectedComponentType() == ComponentType::MULTIPLEXER
+                                                                || mCoreLogic.GetSelectedComponentType() == ComponentType::DEMULTIPLEXER))
+        {
+            mCoreLogic.SetMultiplexerBitWidth(pBitWidth);
+            mUi->uLabelBitWidth->setText(tr(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
+            mUi->uBitWidthSlider->setValue(pBitWidth);
+        }
     }
 }
 
@@ -1578,6 +1624,11 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     case 1: // Demultiplexer
                     {
                         mCoreLogic.EnterAddControlMode(ComponentType::DEMULTIPLEXER);
+                        break;
+                    }
+                    case 2: // Decoder
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::DECODER);
                         break;
                     }
                     default:
