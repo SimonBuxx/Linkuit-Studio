@@ -19,6 +19,7 @@
 #include "Components/ComplexLogic/Multiplexer.h"
 #include "Components/ComplexLogic/Demultiplexer.h"
 #include "Components/ComplexLogic/Decoder.h"
+#include "Components/ComplexLogic/Encoder.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -359,6 +360,11 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         case ComponentType::DECODER:
         {
             item = new Decoder(this, mComponentDirection, mEncoderDecoderInputCount);
+            break;
+        }
+        case ComponentType::ENCODER:
+        {
+            item = new Encoder(this, mComponentDirection, mEncoderDecoderInputCount);
             break;
         }
         default:
@@ -1811,6 +1817,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::DECODER:
             {
                 item = new Decoder(this, pJson);
+                break;
+            }
+            case file::ComponentId::ENCODER:
+            {
+                item = new Encoder(this, pJson);
                 break;
             }
             default:

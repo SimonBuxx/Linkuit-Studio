@@ -38,7 +38,8 @@ namespace file
         DEMULTIPLEXER,
         T_FLIPFLOP,
         JK_FLIPFLOP,
-        DECODER // only append!
+        DECODER,
+        ENCODER // only append!
     };
 } // namespace file
 
@@ -63,7 +64,8 @@ enum class ComponentType
     DEMULTIPLEXER,
     T_FLIPFLOP,
     JK_FLIPFLOP,
-    DECODER
+    DECODER,
+    ENCODER
 };
 
 enum class Direction

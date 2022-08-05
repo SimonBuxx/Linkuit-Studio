@@ -2,11 +2,13 @@ HEADERS += \
     $$PWD/CircuitFileParser.h \
     $$PWD/Components/ComplexLogic/Decoder.h \
     $$PWD/Components/ComplexLogic/Demultiplexer.h \
+    $$PWD/Components/ComplexLogic/Encoder.h \
     $$PWD/Components/ComplexLogic/FullAdder.h \
     $$PWD/Components/ComplexLogic/HalfAdder.h \
     $$PWD/Components/ComplexLogic/JKFlipFlop.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicEncoderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicJKFlipFlopCell.h \
@@ -66,11 +68,13 @@ SOURCES += \
     $$PWD/CircuitFileParser.cpp \
     $$PWD/Components/ComplexLogic/Decoder.cpp \
     $$PWD/Components/ComplexLogic/Demultiplexer.cpp \
+    $$PWD/Components/ComplexLogic/Encoder.cpp \
     $$PWD/Components/ComplexLogic/FullAdder.cpp \
     $$PWD/Components/ComplexLogic/HalfAdder.cpp \
     $$PWD/Components/ComplexLogic/JKFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicEncoderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicJKFlipFlopCell.cpp \

@@ -1189,6 +1189,7 @@ void MainWindow::InitializeToolboxTree()
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/decoder.png"), "Decoder"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/decoder.png"), "Encoder"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
@@ -1427,7 +1428,8 @@ void MainWindow::SetEncoderDecoderInputCountIfAllowed(uint8_t pCount)
 {
     if (pCount >= components::encoder_decoder::MIN_INPUT_COUNT && pCount <= components::encoder_decoder::MAX_INPUT_COUNT)
     {
-        if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() == ComponentType::DECODER)
+        if (mCoreLogic.GetControlMode() == ControlMode::ADD &&
+                (mCoreLogic.GetSelectedComponentType() == ComponentType::DECODER || mCoreLogic.GetSelectedComponentType() == ComponentType::ENCODER))
         {
             mCoreLogic.SetEncoderDecoderInputCount(pCount);
             mUi->uLabelEncoderDecoderInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
@@ -1638,6 +1640,11 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     case 2: // Decoder
                     {
                         mCoreLogic.EnterAddControlMode(ComponentType::DECODER);
+                        break;
+                    }
+                    case 3: // Encoder
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::ENCODER);
                         break;
                     }
                     default:

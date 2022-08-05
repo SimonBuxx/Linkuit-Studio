@@ -195,8 +195,10 @@ signals:
     /// \param pNewType: The newly selected component type
     void ComponentTypeChangedSignal(ComponentType pNewType);
 
-#warning missing documentation
+    /// \brief Emitted when a longer process has been started and the GUI needs to be disabled
     void ProcessingStartedSignal(void);
+
+    /// \brief Emitted when a longer process has been ended and the GUI needs to be re-enabled
     void ProcessingEndedSignal(void);
 
     /// \brief Emitted to finish the given QMouseEvent in the GraphicsView
@@ -362,7 +364,9 @@ protected:
     template<typename T>
     bool IsComponentAtPosition(QPointF pPos);
 
-#warning missing documentation
+    /// \brief Checks if there are two ConPoints at the given position pPos
+    /// \param pPos: The position to check
+    /// \return True, if there are exactly two ConPoints at pPos
     bool TwoConPointsAtPosition(QPointF pPos);
 
     /// \brief Returns all components that are "colliding" (may not be before or behind others) with the given component

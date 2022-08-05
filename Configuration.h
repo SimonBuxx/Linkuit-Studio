@@ -179,6 +179,7 @@ static constexpr const char* JK_FLIPFLOP_TEXT = "JK";
 static constexpr const char* MULTIPLEXER_TEXT = "MUX";
 static constexpr const char* DEMULTIPLEXER_TEXT = "DEMUX";
 static constexpr const char* DECODER_TEXT = "";
+static constexpr const char* ENCODER_TEXT = "";
 
 static const QFont FONT("Source Sans Pro", 20);
 static const QFont CONNECTOR_FONT("Calibri Light", 10);
