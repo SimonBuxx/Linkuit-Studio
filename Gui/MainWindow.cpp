@@ -306,19 +306,20 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uActionNew, &QAction::triggered, this, [&]()
     {
         mFadeOutOnCtrlTimer.stop();
-        FadeInGui();
 
         if (!IsSaveChangesIfModifiedCanceled())
         {
             mCoreLogic.NewCircuit();
             setWindowTitle(tr(gui::DEFAULT_WINDOW_TITLE));
+
+            mIsToolboxVisible = true;
+            FadeInGui();
         }
     });
 
     QObject::connect(mUi->uActionOpen, &QAction::triggered, this, [&]()
     {
         mFadeOutOnCtrlTimer.stop();
-        FadeInGui();
 
         if (!IsSaveChangesIfModifiedCanceled())
         {
@@ -470,6 +471,8 @@ void MainWindow::OnCircuitFileOpenedSuccessfully(const QFileInfo& pFileInfo)
     SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
     setWindowTitle(QString("Linkuit Studio - %0").arg(pFileInfo.fileName()));
     mWelcomeDialog.close();
+    mIsToolboxVisible = true;
+    FadeInGui();
 }
 
 void MainWindow::OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo)
@@ -1189,7 +1192,7 @@ void MainWindow::InitializeToolboxTree()
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/decoder.png"), "Decoder"));
-    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/decoder.png"), "Encoder"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/encoder.png"), "Encoder"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
