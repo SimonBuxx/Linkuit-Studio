@@ -122,9 +122,13 @@ protected slots:
     /// \param pChecked: True, if the button is checked
     void OnItemUpButtonToggled(bool pChecked);
 
-    /// \brief Sets the item input count to the given value, if allowed
-    /// \param pValue: The new item input count
-    void OnItemInputCountSliderValueChanged(int32_t pValue);
+    /// \brief Sets the gate input count to the given value, if allowed
+    /// \param pValue: The new gate input count
+    void OnGateInputCountSliderValueChanged(int32_t pValue);
+
+    /// \brief Sets the en-/decoder input count to the given value, if allowed
+    /// \param pValue: The new en-/decoder input count
+    void OnEncoderDecoderInputCountSliderValueChanged(int32_t pValue);
 
     /// \brief Sets the (de-)multiplexer bit width to the given value, if allowed
     /// \param pValue: The new multiplexer bit width

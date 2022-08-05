@@ -184,7 +184,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uItemLeftButton, &QPushButton::toggled, this, &MainWindow::OnItemLeftButtonToggled);
     QObject::connect(mUi->uItemUpButton, &QPushButton::toggled, this, &MainWindow::OnItemUpButtonToggled);
 
-    QObject::connect(mUi->uItemInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnItemInputCountSliderValueChanged);
+    QObject::connect(mUi->uGateInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnGateInputCountSliderValueChanged);
+    QObject::connect(mUi->uEncoderDecoderInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnEncoderDecoderInputCountSliderValueChanged);
     QObject::connect(mUi->uBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnBitWidthSliderValueChanged);
 
     // Connect widgets from clock configuration GUI
@@ -621,32 +622,32 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         case ConfiguratorMode::DIRECTION_ONLY:
         {
             mUi->uItemDirectionButtonsFrame->show();
-            mUi->uInputCountFrame->hide();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
         {
             mUi->uItemDirectionButtonsFrame->show();
-            mUi->uItemInputCountSlider->setMinimum(components::gates::MIN_INPUT_COUNT);
-            mUi->uItemInputCountSlider->setMaximum(components::gates::MAX_INPUT_COUNT);
-            mUi->uInputCountFrame->show();
+            mUi->uGateInputCountFrame->show();
+            mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::MULTIPLEXER_BITS:
         {
             mUi->uItemDirectionButtonsFrame->show();
-            mUi->uInputCountFrame->hide();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uBitWidthFrame->show();
             break;
         }
         case ConfiguratorMode::ENCODER_DECODER:
         {
             mUi->uItemDirectionButtonsFrame->show();
-            mUi->uItemInputCountSlider->setMinimum(components::encoder_decoder::MIN_INPUT_COUNT);
-            mUi->uItemInputCountSlider->setMaximum(components::encoder_decoder::MAX_INPUT_COUNT);
-            mUi->uInputCountFrame->show();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->show();
             mUi->uBitWidthFrame->hide();
             break;
         }
@@ -705,9 +706,13 @@ void MainWindow::OnItemUpButtonToggled(bool pChecked)
     }
 }
 
-void MainWindow::OnItemInputCountSliderValueChanged(int32_t pValue)
+void MainWindow::OnGateInputCountSliderValueChanged(int32_t pValue)
 {
     SetGateInputCountIfAllowed(pValue);
+}
+
+void MainWindow::OnEncoderDecoderInputCountSliderValueChanged(int32_t pValue)
+{
     SetEncoderDecoderInputCountIfAllowed(pValue);
 }
 
@@ -1263,9 +1268,13 @@ void MainWindow::InitializeGuiIcons()
     mUi->uItemLeftButton->setIcon(mAwesome->icon(fa::arrowleft, mConfigButtonIconVariant));
     mUi->uItemUpButton->setIcon(mAwesome->icon(fa::arrowup, mConfigButtonIconVariant));
 
-    mUi->uLabelItemInputCountIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelItemInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelItemInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelGateInputCountIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelGateInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelGateInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    mUi->uLabelEncoderDecoderInputCountIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelEncoderDecoderInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelEncoderDecoderInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     mUi->uLabelBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
     mUi->uLabelBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
@@ -1407,9 +1416,9 @@ void MainWindow::SetGateInputCountIfAllowed(uint8_t pCount)
     {
         if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() <= ComponentType::XOR_GATE)
         {
-            mCoreLogic.SetComponentInputCount(pCount);
-            mUi->uLabelItemInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
-            mUi->uItemInputCountSlider->setValue(pCount);
+            mCoreLogic.SetGateInputCount(pCount);
+            mUi->uLabelGateInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
+            mUi->uGateInputCountSlider->setValue(pCount);
         }
     }
 }
@@ -1420,9 +1429,9 @@ void MainWindow::SetEncoderDecoderInputCountIfAllowed(uint8_t pCount)
     {
         if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() == ComponentType::DECODER)
         {
-            mCoreLogic.SetComponentInputCount(pCount);
-            mUi->uLabelItemInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
-            mUi->uItemInputCountSlider->setValue(pCount);
+            mCoreLogic.SetEncoderDecoderInputCount(pCount);
+            mUi->uLabelEncoderDecoderInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
+            mUi->uEncoderDecoderInputCountSlider->setValue(pCount);
         }
     }
 }

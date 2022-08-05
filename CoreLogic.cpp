@@ -268,17 +268,17 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
     {
         case ComponentType::AND_GATE:
         {
-            item = new AndGate(this, mComponentInputCount, mComponentDirection);
+            item = new AndGate(this, mGateInputCount, mComponentDirection);
             break;
         }
         case ComponentType::OR_GATE:
         {
-            item = new OrGate(this, mComponentInputCount, mComponentDirection);
+            item = new OrGate(this, mGateInputCount, mComponentDirection);
             break;
         }
         case ComponentType::XOR_GATE:
         {
-            item = new XorGate(this, mComponentInputCount, mComponentDirection);
+            item = new XorGate(this, mGateInputCount, mComponentDirection);
             break;
         }
         case ComponentType::NOT_GATE:
@@ -358,7 +358,7 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         }
         case ComponentType::DECODER:
         {
-            item = new Decoder(this, mComponentDirection, mComponentInputCount);
+            item = new Decoder(this, mComponentDirection, mEncoderDecoderInputCount);
             break;
         }
         default:
@@ -408,10 +408,16 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
     return true;
 }
 
-void CoreLogic::SetComponentInputCount(uint8_t pCount)
+void CoreLogic::SetGateInputCount(uint8_t pCount)
 {
     Q_ASSERT(pCount >= components::gates::MIN_INPUT_COUNT && pCount <= components::gates::MAX_INPUT_COUNT);
-    mComponentInputCount = pCount;
+    mGateInputCount = pCount;
+}
+
+void CoreLogic::SetEncoderDecoderInputCount(uint8_t pCount)
+{
+    Q_ASSERT(pCount >= components::encoder_decoder::MIN_INPUT_COUNT && pCount <= components::encoder_decoder::MAX_INPUT_COUNT);
+    mEncoderDecoderInputCount = pCount;
 }
 
 void CoreLogic::SetComponentDirection(Direction pDirection)

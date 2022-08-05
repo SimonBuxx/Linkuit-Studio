@@ -72,9 +72,13 @@ public:
     /// \return False, if the action has been aborted
     bool AddCurrentTypeComponent(QPointF pPosition);
 
-    /// \brief Setter for the amount of inputs for components with variable input count (e.g. gates)
-    /// \param pCount: The amount of inputs to use for new components
-    void SetComponentInputCount(uint8_t pCount);
+    /// \brief Setter for the amount of inputs for gates with variable input count
+    /// \param pCount: The amount of inputs to use for new gates
+    void SetGateInputCount(uint8_t pCount);
+
+    /// \brief Setter for the amount of inputs for en-/decoders
+    /// \param pCount: The amount of inputs to use for new en-/decoders
+    void SetEncoderDecoderInputCount(uint8_t pCount);
 
     /// \brief Setter for the component direction for components with variable direction
     /// \param pDirection: The new component direction (output-side of the component)
@@ -433,7 +437,8 @@ protected:
     SimulationMode mSimulationMode = SimulationMode::STOPPED;
     ComponentType mComponentType = ComponentType::NONE;
     Direction mComponentDirection = components::DEFAULT_DIRECTION;
-    uint8_t mComponentInputCount = components::gates::DEFAULT_INPUT_COUNT;
+    uint8_t mGateInputCount = components::gates::DEFAULT_INPUT_COUNT;
+    uint8_t mEncoderDecoderInputCount = components::encoder_decoder::DEFAULT_INPUT_COUNT;
     uint8_t mMultiplexerBitWidth = components::multiplexer::DEFAULT_BIT_WIDTH;
 
     // Variables for wire insertion
