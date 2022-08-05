@@ -35,9 +35,6 @@
    <iconset resource="resources.qrc">
     <normaloff>:/images/icons/icon_default.ico</normaloff>:/images/icons/icon_default.ico</iconset>
   </property>
-  <property name="autoFillBackground">
-   <bool>false</bool>
-  </property>
   <property name="styleSheet">
    <string notr="true">QDialog {
 	background: rgb(242, 242, 242);
@@ -120,9 +117,6 @@ QPushButton:checked
       <string>Built with Qt 6.1.0 (MinGW 64-bit)
 Build time:</string>
      </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
     </widget>
    </item>
    <item row="8" column="1" alignment="Qt::AlignBottom">
@@ -152,9 +146,6 @@ Build time:</string>
 	min-width: 100px;
 }</string>
      </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Close</set>
      </property>
@@ -182,19 +173,13 @@ Build time:</string>
      <property name="text">
       <string>© 2022 Simon Buchholz</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
      <property name="margin">
       <number>5</number>
      </property>
     </widget>
    </item>
    <item row="0" column="0" colspan="2">
-    <layout class="QGridLayout" name="gridLayout_2">
+    <layout class="QGridLayout" name="uLogoGridLayout">
      <property name="topMargin">
       <number>0</number>
      </property>
@@ -271,20 +256,16 @@ Build time:</string>
          <height>10</height>
         </size>
        </property>
-       <property name="text">
-        <string/>
+       <property name="font">
+        <font>
+         <family>Source Sans Pro</family>
+        </font>
        </property>
        <property name="pixmap">
         <pixmap resource="resources.qrc">:/images/hor_line.png</pixmap>
        </property>
-       <property name="scaledContents">
-        <bool>false</bool>
-       </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
-       </property>
-       <property name="margin">
-        <number>0</number>
        </property>
       </widget>
      </item>
@@ -331,13 +312,7 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="spacing">
-      <number>6</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
+    <layout class="QHBoxLayout" name="uTitleLayout">
      <item>
       <widget class="QLabel" name="uSoftwareNameLabel">
        <property name="sizePolicy">
@@ -373,9 +348,6 @@ p, li { white-space: pre-wrap; }
        <property name="text">
         <string>Linkuit Studio v0.0.0</string>
        </property>
-       <property name="wordWrap">
-        <bool>false</bool>
-       </property>
       </widget>
      </item>
      <item>
@@ -398,6 +370,15 @@ p, li { white-space: pre-wrap; }
          <height>20</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>Source Sans Pro</family>
+         <pointsize>11</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="cursor">
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
@@ -408,9 +389,6 @@ p, li { white-space: pre-wrap; }
         <string notr="true">QPushButton {
 	background: none;
 }</string>
-       </property>
-       <property name="text">
-        <string/>
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
