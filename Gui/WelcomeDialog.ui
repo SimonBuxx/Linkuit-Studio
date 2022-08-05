@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>720</height>
+    <height>750</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>1280</width>
-    <height>720</height>
+    <height>750</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1280</width>
-    <height>720</height>
+    <height>750</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -108,6 +108,224 @@ QPushButton:pressed
       <property name="bottomMargin">
        <number>40</number>
       </property>
+      <item row="2" column="1">
+       <widget class="QWidget" name="rightTile" native="true">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_11">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+             <pointsize>20</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+	font-size: 20pt;
+	color: rgb(0, 45, 50);
+}</string>
+           </property>
+           <property name="text">
+            <string>Welcome!</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_12">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+	font-size: 11pt;
+	color: rgb(0, 45, 50);
+	margin-left: 10px;
+	margin-top: 5px;
+}</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is an early version of Linkuit Studio and as such may contain bugs or experience crashes. If you notice any problems, please &lt;a href=&quot;https://linkuit.com/bugreport&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;create a bug report&lt;/span&gt;&lt;/a&gt; on the website.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_14">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+	font-size: 11pt;
+	color: rgb(0, 45, 50);
+	margin-left: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Thank you for being one of the first people to use Linkuit Studio. Your Feedback is valuable to us and we hope you'll have a great experience.</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_13">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resources.qrc">:/images/hor_line.png</pixmap>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+             <pointsize>20</pointsize>
+             <underline>false</underline>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+	font-size: 20pt;
+	color: rgb(0, 45, 50);
+}</string>
+           </property>
+           <property name="text">
+            <string>New in this Version</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_7">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+	font-size: 11pt;
+	color: rgb(0, 45, 50);
+	margin-left: 10px;
+	margin-top: 5px;
+}</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:-30px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#00cc8f;&quot;&gt;NEW&lt;/span&gt; Priority Encoders&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:-30px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Improvements for the decoders&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:-30px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Various bug fixes&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Expanding</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="uGithubButton">
+           <property name="toolTip">
+            <string>https://github.com/SimonBuxx/Linkuit-Studio/</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	margin-left: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Find us on GitHub...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="uWebsiteButton">
+           <property name="toolTip">
+            <string>https://linkuit.com/</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	margin-left: 10px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Visit linkuit.com...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item row="2" column="0">
        <widget class="QWidget" name="leftTile" native="true">
         <property name="sizePolicy">
@@ -118,13 +336,13 @@ QPushButton:pressed
         </property>
         <property name="minimumSize">
          <size>
-          <width>800</width>
+          <width>700</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>800</width>
+          <width>700</width>
           <height>16777215</height>
          </size>
         </property>
@@ -597,153 +815,6 @@ margin-left: 10px;
          </item>
         </layout>
        </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QWidget" name="rightTile" native="true">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_4">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item row="6" column="0">
-          <widget class="QPushButton" name="uGithubButton">
-           <property name="toolTip">
-            <string>https://github.com/SimonBuxx/Linkuit-Studio/</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-	margin-left: 10px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Find us on GitHub...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="0" alignment="Qt::AlignTop">
-          <widget class="QLabel" name="label_12">
-           <property name="styleSheet">
-            <string notr="true">QLabel {
-	font-size: 11pt;
-	color: rgb(0, 45, 50);
-	margin-left: 10px;
-	margin-top: 5px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</string>
-           </property>
-           <property name="wordWrap">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_13">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="resources.qrc">:/images/hor_line.png</pixmap>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0" alignment="Qt::AlignTop">
-          <widget class="QLabel" name="label_11">
-           <property name="styleSheet">
-            <string notr="true">QLabel {
-	font-size: 20pt;
-	color: rgb(0, 45, 50);
-}</string>
-           </property>
-           <property name="text">
-            <string>First Steps</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QPushButton" name="uWebsiteButton">
-           <property name="toolTip">
-            <string>https://linkuit.com/</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-	margin-left: 10px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Visit linkuit.com...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_14">
-           <property name="styleSheet">
-            <string notr="true">QLabel {
-	font-size: 11pt;
-	color: rgb(0, 45, 50);
-	margin-left: 10px;
-}</string>
-           </property>
-           <property name="text">
-            <string>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
-           </property>
-           <property name="wordWrap">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item row="0" column="0" colspan="2">
        <widget class="QWidget" name="widget_2" native="true">
