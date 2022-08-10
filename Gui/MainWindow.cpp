@@ -652,6 +652,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->show();
             mUi->uBitWidthFrame->hide();
+            SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
             break;
         }
         default:
@@ -1435,7 +1436,14 @@ void MainWindow::SetEncoderDecoderInputCountIfAllowed(uint8_t pCount)
                 (mCoreLogic.GetSelectedComponentType() == ComponentType::DECODER || mCoreLogic.GetSelectedComponentType() == ComponentType::ENCODER))
         {
             mCoreLogic.SetEncoderDecoderInputCount(pCount);
-            mUi->uLabelEncoderDecoderInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
+            if (mCoreLogic.GetSelectedComponentType() == ComponentType::ENCODER)
+            {
+                mUi->uLabelEncoderDecoderInputCount->setText(tr(pCount > 1 ? "%0 Outputs" : "%0 Output").arg(pCount));
+            }
+            else
+            {
+                mUi->uLabelEncoderDecoderInputCount->setText(tr(pCount > 1 ? "%0 Inputs" : "%0 Input").arg(pCount));
+            }
             mUi->uEncoderDecoderInputCountSlider->setValue(pCount);
         }
     }

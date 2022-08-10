@@ -2307,13 +2307,13 @@ QFrame {
              <widget class="QSlider" name="uEncoderDecoderInputCountSlider">
               <property name="minimumSize">
                <size>
-                <width>64</width>
+                <width>50</width>
                 <height>0</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>64</width>
+                <width>50</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -2379,7 +2379,7 @@ QFrame {
       }</string>
               </property>
               <property name="text">
-               <string>3 Inputs</string>
+               <string>3 Outputs</string>
               </property>
              </widget>
             </item>
@@ -2814,9 +2814,9 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uTogglePulseButtonGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
   <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
  </buttongroups>
 </ui>
