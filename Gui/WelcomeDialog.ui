@@ -48,19 +48,19 @@ QPushButton
 {
     padding: 8px 10px;
     border-radius: 3px;
-    background: rgb(230, 230, 230);
+    background: rgb(242, 242, 242);
     font: 11pt &quot;Source Sans Pro&quot;;
     color: rgb(0, 45, 50);
 }
 
 QPushButton:hover
 {
-    background: rgb(220, 220, 220);
+    background: rgb(230, 230, 230);
 }
 
 QPushButton:pressed
 {
-    background: rgb(200, 200, 200);
+    background: rgb(220, 220, 220);
 }</string>
   </property>
   <widget class="QLabel" name="uBackgroundBottom">
