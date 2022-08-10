@@ -16,17 +16,20 @@ WelcomeDialog::WelcomeDialog(QWidget *pParent):
     mStandardIconVariant.insert("color-active", QColor(0, 45, 50));
     mStandardIconVariant.insert("color-selected", QColor(0, 45, 50));
 
+    mWhiteIconVariant.insert("color", QColor(255, 255, 255));
+    mWhiteIconVariant.insert("color-disabled", QColor(100, 100, 100));
+    mWhiteIconVariant.insert("color-active", QColor(255, 255, 255));
+    mWhiteIconVariant.insert("color-selected", QColor(255, 255, 255));
+
     mUi->uNewCircuitButton->setIcon(mAwesome->icon(fa::fileo, mStandardIconVariant));
     mUi->uOpenCircuitButton->setIcon(mAwesome->icon(fa::folderopeno, mStandardIconVariant));
-    mUi->uStartTutorialButton->setIcon(mAwesome->icon(fa::graduationcap, mStandardIconVariant));
-    mUi->uWebsiteButton->setIcon(mAwesome->icon(fa::externallink, mStandardIconVariant));
-    mUi->uGithubButton->setIcon(mAwesome->icon(fa::github, mStandardIconVariant));
+    mUi->uGithubButton->setIcon(mAwesome->icon(fa::github, mWhiteIconVariant));
+    mUi->uTwitterButton->setIcon(mAwesome->icon(fa::twitter, mWhiteIconVariant));
     mUi->uCheckForUpdateButton->setIcon(mAwesome->icon(fa::refresh, mStandardIconVariant));
 
     QObject::connect(mUi->uNewCircuitButton, &QPushButton::clicked, this, &WelcomeDialog::NewCircuitClickedSignal);
     QObject::connect(mUi->uOpenCircuitButton, &QPushButton::clicked, this, &WelcomeDialog::OpenCircuitClickedSignal);
-    QObject::connect(mUi->uStartTutorialButton, &QPushButton::clicked, this, &WelcomeDialog::StartTutorialClickedSignal);
-    QObject::connect(mUi->uWebsiteButton, &QPushButton::clicked, this, &WelcomeDialog::OpenWebsiteClickedSignal);
+    QObject::connect(mUi->uTwitterButton, &QPushButton::clicked, this, &WelcomeDialog::OpenTwitterClickedSignal);
     QObject::connect(mUi->uGithubButton, &QPushButton::clicked, this, &WelcomeDialog::OpenGithubClickedSignal);
     QObject::connect(mUi->uCheckForUpdateButton, &QPushButton::clicked, this, &WelcomeDialog::CheckForUpdateClickedSignal);
     QObject::connect(mUi->uShowOnStartupCheckbox, &QCheckBox::toggled, this, &WelcomeDialog::ShowOnStartupToggledSignal);
@@ -90,7 +93,7 @@ void WelcomeDialog::SetRecentFilePaths(const std::vector<QFileInfo>& pRecentFile
 
     for (uint8_t i = 0; i < 5; i++)
     {
-        auto pathLabel = mUi->leftTile->findChild<QLabel*>(QString("uRecentFileLabel_%0").arg(i + 1));
+        auto pathLabel = mUi->uRecentContainer->findChild<QLabel*>(QString("uRecentFileLabel_%0").arg(i + 1));
 
         if (nullptr != pathLabel)
         {
@@ -105,7 +108,7 @@ void WelcomeDialog::SetRecentFilePaths(const std::vector<QFileInfo>& pRecentFile
             }
         }
 
-        auto fileButton = mUi->leftTile->findChild<QPushButton*>(QString("uRecentFileButton_%0").arg(i + 1));
+        auto fileButton = mUi->uRecentContainer->findChild<QPushButton*>(QString("uRecentFileButton_%0").arg(i + 1));
 
         if (nullptr != fileButton)
         {

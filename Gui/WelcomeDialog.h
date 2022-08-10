@@ -24,9 +24,8 @@ public:
 signals:
     void NewCircuitClickedSignal(void);
     void OpenCircuitClickedSignal(void);
-    void StartTutorialClickedSignal(void);
-    void OpenWebsiteClickedSignal(void);
     void OpenGithubClickedSignal(void);
+    void OpenTwitterClickedSignal(void);
     void CheckForUpdateClickedSignal(void);
     void OpenRecentClickedSignal(const QFileInfo& pPath);
     void ShowOnStartupToggledSignal(bool pChecked);
@@ -37,6 +36,7 @@ protected:
     QtAwesome *mAwesome; // Contains Fontawesome logos
 
     QVariantMap mStandardIconVariant;
+    QVariantMap mWhiteIconVariant;
 
     std::vector<QFileInfo> mRecentFilePaths;
 };

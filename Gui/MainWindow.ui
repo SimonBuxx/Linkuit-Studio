@@ -2462,6 +2462,7 @@ QMenuBar::item:pressed {
     <addaction name="separator"/>
     <addaction name="uActionOpenWebsite"/>
     <addaction name="uActionOpenGithub"/>
+    <addaction name="uActionOpenTwitter"/>
     <addaction name="uActionReportBugs"/>
     <addaction name="separator"/>
     <addaction name="uActionCheckUpdate"/>
@@ -2577,11 +2578,8 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionCheckUpdate">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Check for Update</string>
@@ -2801,6 +2799,11 @@ QMenuBar::item:pressed {
     <string>Recent_File_5</string>
    </property>
   </action>
+  <action name="uActionOpenTwitter">
+   <property name="text">
+    <string>Find us on Twitter...</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -2814,9 +2817,9 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
  </buttongroups>
 </ui>

@@ -257,13 +257,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         }
     });
 
-    QObject::connect(&mWelcomeDialog, &WelcomeDialog::StartTutorialClickedSignal, this, [&]()
-    {
-        mUi->uActionStartTutorial->trigger();
-        mWelcomeDialog.close();
-    });
-
-    QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenWebsiteClickedSignal, mUi->uActionOpenWebsite, &QAction::trigger);
+    QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenTwitterClickedSignal, mUi->uActionOpenTwitter, &QAction::trigger);
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::OpenGithubClickedSignal, mUi->uActionOpenGithub, &QAction::trigger);
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::CheckForUpdateClickedSignal, mUi->uActionCheckUpdate, &QAction::trigger);
 
@@ -415,13 +409,18 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionReportBugs, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+#warning change to final bug report link
+        QDesktopServices::openUrl(QUrl("https://linkuit.com/report/"));
     });
 
     QObject::connect(mUi->uActionOpenWebsite, &QAction::triggered, this, [&]()
     {
         QDesktopServices::openUrl(QUrl("https://linkuit.com/"));
+    });
 
+    QObject::connect(mUi->uActionOpenTwitter, &QAction::triggered, this, [&]()
+    {
+        QDesktopServices::openUrl(QUrl("https://twitter.com/goLinkuit/"));
     });
 
     QObject::connect(mUi->uActionOpenGithub, &QAction::triggered, this, [&]()
@@ -431,7 +430,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionCheckUpdate, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+#warning change to final update link with version appended
+        QDesktopServices::openUrl(QUrl("https://linkuit.com/update/"));
     });
 }
 
@@ -1313,6 +1313,7 @@ void MainWindow::InitializeGuiIcons()
     mUi->uActionStartTutorial->setIcon(mAwesome->icon(fa::graduationcap, mMenuBarIconVariant));
     mUi->uActionReportBugs->setIcon(mAwesome->icon(fa::bug, mMenuBarIconVariant));
     mUi->uActionOpenWebsite->setIcon(mAwesome->icon(fa::externallink, mMenuBarIconVariant));
+    mUi->uActionOpenTwitter->setIcon(mAwesome->icon(fa::twitter, mMenuBarIconVariant));
     mUi->uActionOpenGithub->setIcon(mAwesome->icon(fa::github, mMenuBarIconVariant));
     mUi->uActionAbout->setIcon(mAwesome->icon(fa::info, mMenuBarIconVariant));
 }

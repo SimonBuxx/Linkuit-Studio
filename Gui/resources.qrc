@@ -28,5 +28,9 @@
         <file>../images/logo_processing.png</file>
         <file>../images/icons/decoder.png</file>
         <file>../images/icons/encoder.png</file>
+        <file>../images/background_bottom.png</file>
+        <file>../images/background_top.png</file>
+        <file>../images/welcome_img.png</file>
+        <file>../images/horizontal_marker.png</file>
     </qresource>
 </RCC>
