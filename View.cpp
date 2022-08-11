@@ -126,6 +126,8 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
             mCoreLogic.EnterControlMode(ControlMode::EDIT);
         }
     }
+
+    mView.ZoomIn(0); // To remove buggy line left by the selection rectangle
 }
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
