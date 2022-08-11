@@ -1144,6 +1144,39 @@ void MainWindow::InitializeToolboxTree()
         }
     });
 
+    QIcon gateIcon(":images/icons/gate.png");
+    gateIcon.addPixmap(QPixmap(":images/icons/gate.png"), QIcon::Mode::Selected);
+
+    QIcon inputIcon(":images/icons/input_icon.png");
+    inputIcon.addPixmap(QPixmap(":images/icons/input_icon.png"), QIcon::Mode::Selected);
+
+    QIcon buttonIcon(":images/icons/button_icon.png");
+    buttonIcon.addPixmap(QPixmap(":images/icons/button_icon.png"), QIcon::Mode::Selected);
+
+    QIcon clockIcon(":images/icons/clock_icon.png");
+    clockIcon.addPixmap(QPixmap(":images/icons/clock_icon.png"), QIcon::Mode::Selected);
+
+    QIcon outputIcon(":images/icons/output_icon.png");
+    outputIcon.addPixmap(QPixmap(":images/icons/output_icon.png"), QIcon::Mode::Selected);
+
+    QIcon flipflopIcon(":images/icons/flipflop_icon.png");
+    flipflopIcon.addPixmap(QPixmap(":images/icons/flipflop_icon.png"), QIcon::Mode::Selected);
+
+    QIcon fulladderIcon(":images/icons/full_adder_icon.png");
+    fulladderIcon.addPixmap(QPixmap(":images/icons/full_adder_icon.png"), QIcon::Mode::Selected);
+
+    QIcon demultiplexerIcon(":images/icons/demultiplexer.png");
+    demultiplexerIcon.addPixmap(QPixmap(":images/icons/demultiplexer.png"), QIcon::Mode::Selected);
+
+    QIcon encoderIcon(":images/icons/encoder.png");
+    encoderIcon.addPixmap(QPixmap(":images/icons/encoder.png"), QIcon::Mode::Selected);
+
+    QIcon decoderIcon(":images/icons/decoder.png");
+    decoderIcon.addPixmap(QPixmap(":images/icons/decoder.png"), QIcon::Mode::Selected);
+
+    QIcon labelIcon(":images/icons/label_icon.png");
+    labelIcon.addPixmap(QPixmap(":images/icons/label_icon.png"), QIcon::Mode::Selected);
+
     // Create category and root level items
     mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Gates");
     mCategoryGatesItem->setSelectable(false);
@@ -1153,7 +1186,7 @@ void MainWindow::InitializeToolboxTree()
     mCategoryInputsItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryInputsItem);
 
-    auto outputItem = new QStandardItem(QIcon(":images/icons/output_icon.png"), "Output");
+    auto outputItem = new QStandardItem(outputIcon, "Output");
     mToolboxTreeModel.appendRow(outputItem);
 
     mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Adders");
@@ -1168,32 +1201,32 @@ void MainWindow::InitializeToolboxTree()
     mCategoryConvertersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
-    auto textLabelItem = new QStandardItem(QIcon(":images/icons/label_icon.png"), "Text label");
+    auto textLabelItem = new QStandardItem(labelIcon, "Text label");
     mToolboxTreeModel.appendRow(textLabelItem);
 
     // Create component items
-    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "AND gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "OR gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "XOR gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "NOT gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Buffer gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "AND gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "OR gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "XOR gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "NOT gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "Buffer gate"));
 
-    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/input_icon.png"), "Switch"));
-    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/button_icon.png"), "Button"));
-    mCategoryInputsItem->appendRow(new QStandardItem(QIcon(":images/icons/clock_icon.png"), "Clock"));
+    mCategoryInputsItem->appendRow(new QStandardItem(inputIcon, "Switch"));
+    mCategoryInputsItem->appendRow(new QStandardItem(buttonIcon, "Button"));
+    mCategoryInputsItem->appendRow(new QStandardItem(clockIcon, "Clock"));
 
-    mCategoryAddersItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "Half adder"));
-    mCategoryAddersItem->appendRow(new QStandardItem(QIcon(":images/icons/full_adder_icon.png"), "Full adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(flipflopIcon, "Half adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(fulladderIcon, "Full adder"));
 
-    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "RS flip-flop"));
-    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "D flip-flop"));
-    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/flipflop_icon.png"), "T flip-flop"));
-    mCategoryMemoryItem->appendRow(new QStandardItem(QIcon(":images/icons/full_adder_icon.png"), "JK flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "RS flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "D flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "T flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(fulladderIcon, "JK flip-flop"));
 
-    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Multiplexer"));
-    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/gate.png"), "Demultiplexer"));
-    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/decoder.png"), "Decoder"));
-    mCategoryConvertersItem->appendRow(new QStandardItem(QIcon(":images/icons/encoder.png"), "Encoder"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(gateIcon, "Multiplexer"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(demultiplexerIcon, "Demultiplexer"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(decoderIcon, "Decoder"));
+    mCategoryConvertersItem->appendRow(new QStandardItem(encoderIcon, "Encoder"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
