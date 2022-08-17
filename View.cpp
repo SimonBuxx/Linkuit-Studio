@@ -294,6 +294,9 @@ void View::SetZoom(int32_t pZoomLevel)
 void View::ResetViewport()
 {
     SetZoom(canvas::DEFAULT_ZOOM_LEVEL);
+
+    mGraphicsView.horizontalScrollBar()->setValue((mGraphicsView.horizontalScrollBar()->maximum() + mGraphicsView.horizontalScrollBar()->minimum()) / 2);
+    mGraphicsView.verticalScrollBar()->setValue((mGraphicsView.verticalScrollBar()->maximum() + mGraphicsView.verticalScrollBar()->minimum()) / 2);
 }
 
 void View::ZoomIn(int32_t pAmount)

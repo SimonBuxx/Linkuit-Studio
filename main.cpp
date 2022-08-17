@@ -76,5 +76,8 @@ int main(int argc, char *argv[])
 
     window.showMaximized();
 
+    app.processEvents();
+    window.GetView().ResetViewport(); // Reset the viewport AFTER the scrollbars have their final size
+
     return app.exec();
 }
