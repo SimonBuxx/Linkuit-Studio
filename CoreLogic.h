@@ -29,9 +29,16 @@ public:
     /// \param pView: The view that contains the main scene
     CoreLogic(View &pView);
 
+    /// \brief Getter for the runtime config parser object
+    /// \return Reference to the runtime config parser
     const RuntimeConfigParser& GetRuntimeConfigParser(void) const;
+
+    /// \brief Getter for the circuit file parser object
+    /// \return Reference to the circuit file parser
     CircuitFileParser& GetCircuitFileParser(void);
 
+    /// \brief Updates whether the welcome dialog should be shown on software startup
+    /// \param pShowOnStartup: If true, the welcome dialog will be shown on next startup
     void SetShowWelcomeDialogOnStartup(bool pShowOnStartup);
 
     /// \brief Selects all items in the scene
@@ -113,11 +120,13 @@ public:
     /// \brief Deletes the currently selected components
     void DeleteSelectedComponents(void);
 
-#warning missing documentation
+    /// \brief Either aborts or completes the current copy/paste action, depending on collision
     void FinishPaste(void);
 
+    /// \brief Aborts the current copy/paste action
     void AbortPasting(void);
 
+    /// \brief Removes all components added in the current copy/paste action
     void RemoveCurrentPaste(void);
 
     /// \brief Returns true, if the core logic is in simulation mode
@@ -238,6 +247,10 @@ public slots:
     /// \param pEvent: The mouse press event to pass back to MousePressedEventDefaultSignal
     void OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEvent &pEvent);
 
+    /// \brief Forwards the request to show the clock configurator GUI overlay
+    /// \param pMode: The clock mode (either toggle or pulse)
+    /// \param pToggle: The toggle speed
+    /// \param pPulse: The pulse duration
     void OnShowClockConfiguratorRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
 
     // Slots for configuration events

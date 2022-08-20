@@ -8,6 +8,7 @@
 #include <QJsonArray>
 #include <vector>
 
+#warning missing documentation
 class RuntimeConfigParser
 {
 public:

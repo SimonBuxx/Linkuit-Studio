@@ -19,7 +19,10 @@ public:
     /// \param pAddedComponents: Components that have been added
     /// \param pDeletedComponents: Components that have been deleted
     /// \param pOffset: Offset from the original component positions
-    UndoCopyType(std::vector<IBaseComponent*> &pMovedComponents, std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents, QPointF pOffset);
+    UndoCopyType(std::vector<IBaseComponent*> &pMovedComponents,
+                 std::vector<IBaseComponent*> &pAddedComponents,
+                 std::vector<IBaseComponent*> &pDeletedComponents,
+                 QPointF pOffset);
 
     /// \brief Destructor for the UndoCopyType
     ~UndoCopyType(void);
@@ -44,21 +47,36 @@ public:
     /// \return The offset as a QPointF
     const QPointF Offset(void) const;
 
-#warning missing documentation
+    /// \brief Returns true, if this undo action is completed and has not been aborted
+    /// \return True, if the undo action has been completed
     bool IsCompleted(void) const;
 
+    /// \brief Appends the given components to the vector of added components
+    /// \param pComponents: The components to append
     void AppendAddedComponents(std::vector<IBaseComponent*>& pComponents);
+
+    /// \brief Appends the given components to the vector of moved components
+    /// \param pComponents: The components to append
     void AppendMovedComponents(std::vector<IBaseComponent*>& pComponents);
+
+    /// \brief Appends the given components to the vector of deleted components
+    /// \param pComponents: The components to append
     void AppendDeletedComponents(std::vector<IBaseComponent*>& pComponents);
-    void SetOffset(QPointF pOffset);
-    void SetCompleted(bool pIsCompleted);
+
+    /// \brief Setter for the offset by which the components have been moved after inserting
+    /// \param pOffset: The offset as a QPointF
+    void SetOffset(const QPointF& pOffset);
+
+    /// \brief Marks this undo action as completed, meaning it has not been aborted
+    /// An undo action that has been completed may not be set to incomplete again.
+    void MarkCompleted(void);
 
 protected:
     std::vector<IBaseComponent*> mMovedComponents;
     std::vector<IBaseComponent*> mAddedComponents;
     std::vector<IBaseComponent*> mDeletedComponents;
 
-    QPointF mOffset;
+    QPointF mOffset; // Offset between point of insertion and point of action completion
 
     bool mIsCompleted;
 };

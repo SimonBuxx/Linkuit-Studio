@@ -16,12 +16,16 @@
 #include <QPropertyAnimation>
 #include <QtWidgets>
 
+// forward declarations
 class View;
 
 namespace Ui {
 class MainWindow;
 }
 
+///
+/// \brief The MainWindow class represents the application's main window
+///
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -56,10 +60,19 @@ public:
     void SetRecentFileMenuActions(const std::vector<QFileInfo>& pRecentFilePaths);
 
 protected slots:
+    /// \brief Inserts the given file into the recent files and configures the GUI
+    /// \param pFileInfo: Info about the newly opened circuit file
     void OnCircuitFileOpenedSuccessfully(const QFileInfo& pFileInfo);
+
+    /// \brief Shows an error dialog box when opening the circuit file failed
+    /// \param pFileInfo: Info about the circuit file that could not be opened
     void OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo);
 
+    /// \brief Configures the GUI and inserts the newly saved file into the recent files
+    /// \param pFileInfo: Info about the newly saved circuit file
     void OnCircuitFileSavedSuccessfully(const QFileInfo& pFileInfo);
+
+    /// \brief Shows an error dialog box when saving the circuit failed
     void OnCircuitFileSavingFailed(void);
 
     /// \brief Enters the ADD control mode with the selected item
@@ -78,10 +91,14 @@ protected slots:
     /// \param pPercentage: The new zoom value to display
     void UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue);
 
-#warning missing documentation
+    /// \brief Fades out all GUI overlay widgets and saves if they were visible before
     void FadeOutGui(void);
+
+    /// \brief Fades in all GUI overlay widgets that have been visible before fading out
     void FadeInGui(void);
 
+    /// \brief Opens the given file if the user does not abort due to unsaved changes
+    /// \param pFileInfo: Info of the file to open
     void OpenRecentFile(const QFileInfo& pFileInfo);
 
     // Clock Configuration
@@ -149,6 +166,7 @@ protected:
     /// \brief Creates global shortcuts
     void InitializeGlobalShortcuts(void);
 
+    /// \brief Creates message dialog boxes that can be triggered in various places
     void InitializeMessageBoxes(void);
 
     // Item configuration
@@ -211,17 +229,27 @@ protected:
     /// \param pButton: Pointer to the button to uncheck
     void ForceUncheck(IconToolButton *pButton);
 
+    /// \brief Extends the closing event to display a message box when there are unsaved changes
+    /// \param pEvent: Pointer to the close event
     void closeEvent(QCloseEvent *pEvent);
 
+    /// \brief Extends the key press event to fade out the GUI overlay after a specified interval
+    /// \param pEvent: Pointer to the key event
     void keyPressEvent(QKeyEvent *pEvent);
 
+    /// \brief Extends the key release event to fade in the GUI overlay after a specified interval
+    /// \param pEvent: Pointer to the key event
     void keyReleaseEvent(QKeyEvent *pEvent);
 
     // Animation
 
+    /// \brief Fades in the given GUI widget of type T
+    /// \param pWidget: The GUI widget to fade in
     template <typename T>
     void FadeInWidget(T& pWidget);
 
+    /// \brief Fades out the given GUI widget of type T
+    /// \param pWidget: The GUI widget to fade out
     template <typename T>
     void FadeOutWidget(T& pWidget);
 
@@ -236,7 +264,7 @@ protected:
     View mView;
     CoreLogic mCoreLogic;
 
-#warning use global QtAwesome instance
+#warning [ENHANCEMENT] use global QtAwesome instance instead
     QtAwesome *mAwesome; // Contains Fontawesome logos
 
     QStandardItemModel mToolboxTreeModel;
@@ -260,7 +288,7 @@ protected:
     QShortcut* mNineGateInputsShortcut;
     QShortcut* mEscapeShortcut;
 
-    // ////////////////////////////
+    // Windows and dialog boxes
 
     AboutDialog mAboutDialog;
     WelcomeDialog mWelcomeDialog;

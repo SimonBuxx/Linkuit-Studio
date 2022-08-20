@@ -6,12 +6,12 @@ Encoder::Encoder(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pOut
     AbstractComplexLogic(pCoreLogic, std::make_shared<LogicEncoderCell>(pOutputCount + 1), std::pow(2, pOutputCount), pOutputCount + 1, pDirection, 0, false, true)
 {
     mComponentText = components::complex_logic::ENCODER_TEXT;
-    for (size_t i = 0; i < mInputCount; i++)
+    for (int32_t i = 0; i < mInputCount; i++)
     {
         mInputLabels.push_back(QString::number(i));
     }
 
-    for (size_t i = 0; i < mOutputCount - 1; i++)
+    for (int32_t i = 0; i < mOutputCount - 1; i++)
     {
         mOutputLabels.push_back(QString(QString::number(2) + helpers::SUPERSCRIPTS[i]));
     }

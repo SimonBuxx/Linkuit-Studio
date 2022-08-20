@@ -5,6 +5,7 @@
 
 #include "QtAwesome.h"
 
+#warning missing documentation
 class IconToolButton : public QPushButton
 {
     Q_OBJECT

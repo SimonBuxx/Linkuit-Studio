@@ -6,10 +6,12 @@
 #include <QDialog>
 #include <QFileInfo>
 
+// forward declarations
 namespace Ui {
 class WelcomeDialog;
 }
 
+#warning missing documentation
 class WelcomeDialog : public QDialog
 {
     Q_OBJECT

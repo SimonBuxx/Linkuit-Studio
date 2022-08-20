@@ -59,7 +59,7 @@ AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, const st
         mHeight = std::max(components::gates::GRID_WIDTH * canvas::GRID_SIZE, (components::gates::GRID_WIDTH - 2) * canvas::GRID_SIZE + mTopInputCount * canvas::GRID_SIZE);
     }
 
-#warning refactor
+#warning [ENHANCEMENT] refactor
     if (mTrapezoidShape)
     {
         switch (mDirection)
@@ -317,7 +317,6 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
                 }
                 for (size_t i = 0; i < mOutputCount; i++)
                 {
-#warning check if correct when implementing encoder
                     pPainter->drawText(QRect(mWidth - (mOutputsSpacing * canvas::GRID_SIZE * (mOutputCount - i - 1) + canvas::GRID_SIZE * (mOutputsTrapezoidOffset + 1)) - 20, 0, 40, mHeight), mOutputLabels[mOutputCount - i - 1], Qt::AlignHCenter | Qt::AlignBottom);
                 }
                 break;
@@ -334,7 +333,6 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
                 }
                 for (size_t i = 0; i < mOutputCount; i++)
                 {
-#warning correct?
                     pPainter->drawText(QRect(2, mHeight - (mOutputsSpacing * canvas::GRID_SIZE * (mOutputCount - i - 1) + canvas::GRID_SIZE * (mOutputsTrapezoidOffset + 1)) - 6, mWidth - 4, 10), mOutputLabels[mOutputCount - i - 1], Qt::AlignLeft | Qt::AlignVCenter);
                 }
                 break;

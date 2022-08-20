@@ -237,7 +237,7 @@ void LogicClock::SetInversionPen(QPainter *pPainter, LogicState pState, bool pSe
     }
 }
 
-#warning use reimplemented itemChange() instead with QGraphicsItem::ItemSelectedChange
+#warning [ENHANCEMENT] use reimplemented itemChange() instead with QGraphicsItem::ItemSelectedChange
 void LogicClock::mousePressEvent(QGraphicsSceneMouseEvent *pEvent)
 {
     IBaseComponent::mousePressEvent(pEvent);

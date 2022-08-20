@@ -28,6 +28,7 @@ struct LogicConnector
     QPointF pinCenterOffset;
 };
 
+#warning missing documentation
 class IBaseComponent : public QObject, public QGraphicsItem
 {
     Q_OBJECT

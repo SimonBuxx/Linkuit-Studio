@@ -1299,7 +1299,7 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
                 mCurrentCopyUndoType.value()->AppendMovedComponents(movedComponents);
                 mCurrentCopyUndoType.value()->SetOffset(pOffset);
                 // Mark as completed so that the pointer will not be deleted during the next copy action
-                mCurrentCopyUndoType.value()->SetCompleted(true);
+                mCurrentCopyUndoType.value()->MarkCompleted();
                 AppendUndo(mCurrentCopyUndoType.value());
             }
         }

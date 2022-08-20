@@ -10,10 +10,15 @@
 #include <QJsonArray>
 #include <QCborMap>
 
+///
+/// \brief The CircuitFileParser handles all circuit file loading and saving operations
+///
 class CircuitFileParser : public QObject
 {
     Q_OBJECT
 public:
+    /// \brief Constructor for the CircuitFileParser
+    /// \param pRuntimeConfigParser: Reference to the runtime config parser
     CircuitFileParser(RuntimeConfigParser& pRuntimeConfigParser);
 
     /// \brief Load the circuit in the given file
@@ -47,10 +52,21 @@ public:
     void MarkAsModified(void);
 
 signals:
+    /// \brief Emitted when a circuit file has been opened successfully
+    /// \param pFileInfo: Info about the opened file
+    /// \param pJson: The file content as a QJsonObject reference
     void LoadCircuitFileSuccessSignal(const QFileInfo& pFileInfo, const QJsonObject& pJson);
+
+    /// \brief Emitted when a circuit file could not be opened
+    /// \param pFileInfo: Info about the file
     void LoadCircuitFileFailedSignal(const QFileInfo& pFileInfo);
 
+    /// \brief Emitted when a circuit file has been saved successfully
+    /// \param pFileInfo: Info about the saved file
     void SaveCircuitFileSuccessSignal(const QFileInfo& pFileInfo);
+
+    /// \brief Emitted when a circuit file could not be saved
+    /// \param pFileInfo: Info about the file
     void SaveCircuitFileFailedSignal(const QFileInfo& pFileInfo);
 
     /// \brief Emitted when the circuit goes from an unmodified (saved or empty) to a modified (unsaved) state
@@ -58,7 +74,6 @@ signals:
 
 protected:
     std::optional<QFileInfo> mCurrentFile;
-
     bool mIsCircuitModified;
 
     RuntimeConfigParser& mRuntimeConfigParser;

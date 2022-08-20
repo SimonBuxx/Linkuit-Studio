@@ -57,6 +57,8 @@ public:
     /// \return True, if the input is inverted
     bool IsInputInverted(uint32_t pInput) const;
 
+    /// \brief Inverts the input with index pInput
+    /// \param pInput: The input index to invert
     void InvertInput(uint32_t pInput);
 
     /// \brief Getter for the current input inversion vector
@@ -72,6 +74,8 @@ public:
     /// \return True, if the output is inverted
     bool IsOutputInverted(uint32_t pOutput) const;
 
+    /// \brief Inverts the output with index pOutput
+    /// \param pOutput: The output index to invert
     void InvertOutput(uint32_t pOutput);
 
     /// \brief Getter for the current output inversion vector

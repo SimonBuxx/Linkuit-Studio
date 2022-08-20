@@ -34,11 +34,11 @@ void LogicFullAdderCell::LogicFunction()
     }
 }
 
-void LogicFullAdderCell::AssureState(LogicState &pOutput, LogicState pState)
+void LogicFullAdderCell::AssureState(LogicState &pSubject, LogicState pTargetState)
 {
-    if (pOutput != pState)
+    if (pSubject != pTargetState)
     {
-        pOutput = pState;
+        pSubject = pTargetState;
         mStateChanged = true;
     }
 }

@@ -5,7 +5,10 @@ UndoCopyType::UndoCopyType(std::vector<IBaseComponent*> &pAddedComponents):
     mIsCompleted(false)
 {}
 
-UndoCopyType::UndoCopyType(std::vector<IBaseComponent*> &pMovedComponents, std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents, QPointF pOffset):
+UndoCopyType::UndoCopyType(std::vector<IBaseComponent*> &pMovedComponents,
+                           std::vector<IBaseComponent*> &pAddedComponents,
+                           std::vector<IBaseComponent*> &pDeletedComponents,
+                           QPointF pOffset):
     mMovedComponents(pMovedComponents),
     mAddedComponents(pAddedComponents),
     mDeletedComponents(pDeletedComponents),
@@ -53,25 +56,30 @@ bool UndoCopyType::IsCompleted() const
 
 void UndoCopyType::AppendMovedComponents(std::vector<IBaseComponent*>& pComponents)
 {
+    Q_ASSERT(!mIsCompleted);
     mMovedComponents.insert(mMovedComponents.end(), pComponents.begin(), pComponents.end());
 }
 
 void UndoCopyType::AppendAddedComponents(std::vector<IBaseComponent*>& pComponents)
 {
+    Q_ASSERT(!mIsCompleted);
     mAddedComponents.insert(mAddedComponents.end(), pComponents.begin(), pComponents.end());
 }
 
 void UndoCopyType::AppendDeletedComponents(std::vector<IBaseComponent*>& pComponents)
 {
+    Q_ASSERT(!mIsCompleted);
     mDeletedComponents.insert(mDeletedComponents.end(), pComponents.begin(), pComponents.end());
 }
 
-void UndoCopyType::SetOffset(QPointF pOffset)
+void UndoCopyType::SetOffset(const QPointF& pOffset)
 {
+    Q_ASSERT(!mIsCompleted);
     mOffset = pOffset;
 }
 
-void UndoCopyType::SetCompleted(bool pIsCompleted)
+void UndoCopyType::MarkCompleted()
 {
-    mIsCompleted = pIsCompleted;
+    Q_ASSERT(!mIsCompleted);
+    mIsCompleted = true;
 }

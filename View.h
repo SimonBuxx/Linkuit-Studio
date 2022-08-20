@@ -15,6 +15,7 @@
 #include <QGroupBox>
 #include <QGridLayout>
 
+// forward declarations
 QT_BEGIN_NAMESPACE
 class QLabel;
 class QToolButton;

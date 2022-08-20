@@ -410,7 +410,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uActionReportBugs, &QAction::triggered, this, [&]()
     {
 #warning change to final bug report link
-        QDesktopServices::openUrl(QUrl("https://linkuit.com/report/"));
+        QDesktopServices::openUrl(QUrl("https://linkuit.com/bugreport/"));
     });
 
     QObject::connect(mUi->uActionOpenWebsite, &QAction::triggered, this, [&]()
@@ -430,8 +430,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionCheckUpdate, &QAction::triggered, this, [&]()
     {
-#warning change to final update link with version appended
-        QDesktopServices::openUrl(QUrl("https://linkuit.com/update/"));
+        QDesktopServices::openUrl(QUrl(QString("https://linkuit.com/update/%0").arg(SW_VERSION_STRING)));
     });
 }
 
@@ -477,6 +476,7 @@ void MainWindow::OnCircuitFileOpenedSuccessfully(const QFileInfo& pFileInfo)
 
 void MainWindow::OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo)
 {
+#warning [ENHANCEMENT] remove file from recent files list when opening failed
     mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(pFileInfo.fileName()));
     mErrorOpenFileBox.exec();
 }
