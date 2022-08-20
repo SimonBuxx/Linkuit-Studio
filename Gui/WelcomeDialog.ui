@@ -1172,8 +1172,8 @@ QPushButton:pressed {
   <widget class="QLabel" name="uWelcomeImage">
    <property name="geometry">
     <rect>
-     <x>660</x>
-     <y>70</y>
+     <x>640</x>
+     <y>50</y>
      <width>500</width>
      <height>330</height>
     </rect>
