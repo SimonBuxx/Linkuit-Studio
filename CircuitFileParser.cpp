@@ -18,15 +18,31 @@ void CircuitFileParser::LoadJson(const QFileInfo& pFileInfo)
 
     QByteArray rawData = loadFile.readAll();
 
-    QJsonDocument jsonDoc(file::SAVE_FORMAT == file::SaveFormat::JSON
-                    ? QJsonDocument::fromJson(rawData)
-                    : QJsonDocument(QCborValue::fromCbor(rawData).toMap().toJsonObject()));
+    if (file::SAVE_FORMAT == file::SaveFormat::BINARY)
+    {
+        rawData = qUncompress(rawData);
 
-    mCurrentFile = pFileInfo;
+        if (rawData.isEmpty())
+        {
+            // if the data could not be decompressed
+            emit LoadCircuitFileFailedSignal(pFileInfo);
+            return;
+        }
 
-    mRuntimeConfigParser.AddRecentFilePath(mCurrentFile.value());
+        auto jsonDoc = QJsonDocument(QCborValue::fromCbor(rawData).toMap().toJsonObject());
 
-    emit LoadCircuitFileSuccessSignal(mCurrentFile.value(), jsonDoc.object());
+        mCurrentFile = pFileInfo;
+        mRuntimeConfigParser.AddRecentFilePath(mCurrentFile.value());
+        emit LoadCircuitFileSuccessSignal(mCurrentFile.value(), jsonDoc.object());
+    }
+    else
+    {
+        auto jsonDoc = QJsonDocument::fromJson(rawData);
+
+        mCurrentFile = pFileInfo;
+        mRuntimeConfigParser.AddRecentFilePath(mCurrentFile.value());
+        emit LoadCircuitFileSuccessSignal(mCurrentFile.value(), jsonDoc.object());
+    }
 }
 
 void CircuitFileParser::SaveJson(const QJsonObject& pJson)
@@ -47,9 +63,16 @@ void CircuitFileParser::SaveJsonAs(const QFileInfo& pFileInfo, const QJsonObject
         return;
     }
 
-    saveFile.write(file::SAVE_FORMAT == file::SaveFormat::JSON
-                   ? QJsonDocument(pJson).toJson()
-                   : QCborValue::fromJsonValue(pJson).toCbor());
+    if (file::SAVE_FORMAT == file::SaveFormat::BINARY)
+    {
+        auto bin = QCborValue::fromJsonValue(pJson).toCbor();
+        saveFile.write(qCompress(bin, 9));
+    }
+    else
+    {
+        auto json = QJsonDocument(pJson).toJson(QJsonDocument::Compact);
+        saveFile.write(json);
+    }
 
     mCurrentFile = pFileInfo;
     mIsCircuitModified = false;
