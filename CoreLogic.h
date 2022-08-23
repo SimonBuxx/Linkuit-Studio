@@ -124,10 +124,7 @@ public:
     void FinishPaste(void);
 
     /// \brief Aborts the current copy/paste action
-    void AbortPasting(void);
-
-    /// \brief Removes all components added in the current copy/paste action
-    void RemoveCurrentPaste(void);
+    void AbortPastingIfInCopy(void);
 
     /// \brief Returns true, if the core logic is in simulation mode
     /// \return True, if in simulation mode
@@ -285,6 +282,9 @@ protected:
     /// \brief Sets the current simulation mode to the given mode and emits the change signal
     /// \param pNewMode: The new simulation mode to go into
     void SetSimulationMode(SimulationMode pNewMode);
+
+    /// \brief Removes all components added in the current copy/paste action
+    void RemoveCurrentPaste(void);
 
     // Functions for wire processing
 

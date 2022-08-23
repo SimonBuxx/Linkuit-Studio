@@ -368,7 +368,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             }
             else
             {
-                mCoreLogic.AbortPasting();
+                mCoreLogic.AbortPastingIfInCopy();
             }
         }
     });
@@ -383,7 +383,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             }
             else
             {
-                mCoreLogic.AbortPasting();
+                mCoreLogic.AbortPastingIfInCopy();
             }
         }
     });
@@ -790,22 +790,12 @@ void MainWindow::UpdateUndoRedoEnabled(bool pEnable)
 
 void MainWindow::Undo()
 {
-    if (mCoreLogic.GetControlMode() == ControlMode::COPY)
-    {
-        mCoreLogic.AbortPasting();
-    }
-
     mCoreLogic.Undo();
     UpdateUndoRedoEnabled(true);
 }
 
 void MainWindow::Redo()
 {
-    if (mCoreLogic.GetControlMode() == ControlMode::COPY)
-    {
-        mCoreLogic.AbortPasting();
-    }
-
     mCoreLogic.Redo();
     UpdateUndoRedoEnabled(true);
 }

@@ -1271,10 +1271,7 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
             mView.Scene()->addItem(comp);
         }
 
-        if (mControlMode == ControlMode::COPY)
-        {
-            AbortPasting();
-        }
+        AbortPastingIfInCopy();
 
         ClearSelection();
         EndProcessing();
@@ -1455,14 +1452,21 @@ void CoreLogic::OnLeftMouseButtonPressedWithoutCtrl(QPointF pMappedPos, QMouseEv
     emit MousePressedEventDefaultSignal(pEvent);
 }
 
-void CoreLogic::AbortPasting()
+void CoreLogic::AbortPastingIfInCopy()
 {
+    if (mControlMode != ControlMode::COPY)
+    {
+        return;
+    }
+
     RemoveCurrentPaste();
-    if (mCurrentCopyUndoType.has_value())
+
+    if (mCurrentCopyUndoType.has_value()) // delete current copy undo action if existing
     {
         delete mCurrentCopyUndoType.value();
         mCurrentCopyUndoType.reset();
     }
+
     EnterControlMode(ControlMode::EDIT);
 }
 
@@ -1474,7 +1478,7 @@ void CoreLogic::FinishPaste()
                 && IsCollidingComponent(static_cast<IBaseComponent*>(comp))
                 && !GetCollidingComponents(static_cast<IBaseComponent*>(comp), false).empty())
         {
-            AbortPasting();
+            AbortPastingIfInCopy();
             return;
         }
     }
@@ -1557,6 +1561,8 @@ void CoreLogic::CopySelectedComponents()
 
 void CoreLogic::CutSelectedComponents()
 {
+    AbortPastingIfInCopy();
+
     if (mControlMode == ControlMode::EDIT)
     {
         CopySelectedComponents();
@@ -1869,11 +1875,7 @@ void CoreLogic::AppendToUndoQueue(UndoBaseType* pUndoObject, std::deque<UndoBase
 
 void CoreLogic::Undo()
 {
-    if (mControlMode == ControlMode::COPY)
-    {
-        RemoveCurrentPaste();
-        EnterControlMode(ControlMode::EDIT);
-    }
+    AbortPastingIfInCopy();
 
     if (mUndoQueue.size() > 0)
     {
@@ -1995,11 +1997,7 @@ void CoreLogic::Undo()
 
 void CoreLogic::Redo()
 {
-    if (mControlMode == ControlMode::COPY)
-    {
-        RemoveCurrentPaste();
-        EnterControlMode(ControlMode::EDIT);
-    }
+    AbortPastingIfInCopy();
 
     if (mRedoQueue.size() > 0)
     {
