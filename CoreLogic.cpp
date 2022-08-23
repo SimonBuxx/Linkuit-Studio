@@ -1463,6 +1463,7 @@ void CoreLogic::AbortPasting()
         delete mCurrentCopyUndoType.value();
         mCurrentCopyUndoType.reset();
     }
+    EnterControlMode(ControlMode::EDIT);
 }
 
 void CoreLogic::FinishPaste()

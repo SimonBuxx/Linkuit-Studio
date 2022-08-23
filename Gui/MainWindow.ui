@@ -647,7 +647,7 @@ QToolTip
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/mouse-cursor_checked.png</normaloff>:/images/icons/mouse-cursor_checked.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -884,12 +884,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/delete.png</normaloff>:/images/icons/delete.png</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>16</width>
+             <height>16</height>
             </size>
            </property>
           </widget>
@@ -1075,12 +1075,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/wire_icon.png</normaloff>:/images/icons/wire_icon.png</iconset>
+             <normaloff>:/images/icons/wiring.png</normaloff>:/images/icons/wiring.png</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>20</width>
+             <height>20</height>
             </size>
            </property>
            <property name="checkable">
@@ -2817,9 +2817,9 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
   <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
  </buttongroups>
 </ui>

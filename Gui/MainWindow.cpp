@@ -368,7 +368,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             }
             else
             {
-                mCoreLogic.RemoveCurrentPaste();
+                mCoreLogic.AbortPasting();
             }
         }
     });
@@ -383,7 +383,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             }
             else
             {
-                mCoreLogic.RemoveCurrentPaste();
+                mCoreLogic.AbortPasting();
             }
         }
     });
@@ -790,12 +790,22 @@ void MainWindow::UpdateUndoRedoEnabled(bool pEnable)
 
 void MainWindow::Undo()
 {
+    if (mCoreLogic.GetControlMode() == ControlMode::COPY)
+    {
+        mCoreLogic.AbortPasting();
+    }
+
     mCoreLogic.Undo();
     UpdateUndoRedoEnabled(true);
 }
 
 void MainWindow::Redo()
 {
+    if (mCoreLogic.GetControlMode() == ControlMode::COPY)
+    {
+        mCoreLogic.AbortPasting();
+    }
+
     mCoreLogic.Redo();
     UpdateUndoRedoEnabled(true);
 }
@@ -1276,10 +1286,10 @@ void MainWindow::InitializeGuiIcons()
     mUi->uEditButton->SetCheckedIcon(mAwesome->icon(fa::mousepointer, mCheckedButtonVariant));
     mUi->uEditButton->SetUncheckedIcon(mAwesome->icon(fa::mousepointer, mUncheckedButtonVariant));
 
-    mUi->uWiringButton->SetCheckedIcon(mAwesome->icon(fa::exchange, mCheckedButtonVariant));
-    mUi->uWiringButton->SetUncheckedIcon(mAwesome->icon(fa::exchange, mUncheckedButtonVariant));
+    mUi->uWiringButton->SetCheckedIcon(QIcon(":/images/icons/wiring_checked.png"));
+    mUi->uWiringButton->SetUncheckedIcon(QIcon(":/images/icons/wiring.png"));
 
-    mUi->uDeleteButton->SetIcon(mAwesome->icon(fa::trasho, mUncheckedButtonVariant));
+    mUi->uDeleteButton->SetIcon(QIcon(":/images/icons/delete.png"));
     mUi->uUndoButton->SetIcon(mAwesome->icon(fa::undo, mUncheckedButtonVariant));
     mUi->uRedoButton->SetIcon(mAwesome->icon(fa::repeat, mUncheckedButtonVariant));
 
