@@ -537,7 +537,7 @@ QCheckBox::indicator:checked {
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>70</width>
+         <width>81</width>
          <height>44</height>
         </rect>
        </property>
@@ -560,7 +560,7 @@ QCheckBox::indicator:checked {
 }</string>
        </property>
        <property name="text">
-        <string>start</string>
+        <string>Start</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_2">
@@ -568,7 +568,7 @@ QCheckBox::indicator:checked {
         <rect>
          <x>0</x>
          <y>10</y>
-         <width>76</width>
+         <width>78</width>
          <height>31</height>
         </rect>
        </property>
@@ -666,7 +666,7 @@ text-align: left;
       </property>
       <property name="minimumSize">
        <size>
-        <width>100</width>
+        <width>105</width>
         <height>50</height>
        </size>
       </property>
@@ -675,7 +675,7 @@ text-align: left;
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>91</width>
+         <width>101</width>
          <height>44</height>
         </rect>
        </property>
@@ -698,7 +698,7 @@ text-align: left;
 }</string>
        </property>
        <property name="text">
-        <string>recent</string>
+        <string>Recent</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_4">
@@ -706,7 +706,7 @@ text-align: left;
         <rect>
          <x>0</x>
          <y>10</y>
-         <width>97</width>
+         <width>103</width>
          <height>31</height>
         </rect>
        </property>
@@ -766,7 +766,7 @@ text-align: left;
 }</string>
        </property>
        <property name="text">
-        <string>welcome!</string>
+        <string>Welcome!</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_5">
@@ -774,7 +774,7 @@ text-align: left;
         <rect>
          <x>0</x>
          <y>10</y>
-         <width>141</width>
+         <width>144</width>
          <height>31</height>
         </rect>
        </property>

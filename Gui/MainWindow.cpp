@@ -1178,7 +1178,7 @@ void MainWindow::InitializeToolboxTree()
     labelIcon.addPixmap(QPixmap(":images/icons/label_icon.png"), QIcon::Mode::Selected);
 
     // Create category and root level items
-    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Gates");
+    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Logic gates");
     mCategoryGatesItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
 
