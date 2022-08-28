@@ -11,6 +11,8 @@ TextLabel::TextLabel(const CoreLogic* pCoreLogic, const QString& pText, bool pTa
     InitProxyWidget(pTakeFocus, pText);
 
     ConnectToCoreLogic(pCoreLogic);
+
+    UpdatePlainTextEditSize();
 }
 
 void TextLabel::InitProxyWidget(bool pTakeFocus, const QString& pText)
@@ -198,7 +200,7 @@ void TextLabel::SetTextContent(const QString& pText)
 {
     if (mPlainTextEdit != nullptr)
     {
-        mPlainTextEdit->setPlainText(pText);
+        mPlainTextEdit->document()->setPlainText(pText);
         mPlainTextEdit->document()->setModified(false);
         UpdatePlainTextEditSize();
     }
