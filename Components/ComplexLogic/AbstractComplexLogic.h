@@ -66,7 +66,7 @@ protected:
     void DrawComponentDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
 
     /// \brief Creates logic connectors at all in- and output pin points
-    void SetLogicConnectors(void);
+    virtual void SetLogicConnectors(void);
 
     /// \brief Sets the current pen to the pen to use for connector pins
     /// \param pPainter: The painter to use

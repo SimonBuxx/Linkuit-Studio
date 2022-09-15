@@ -149,7 +149,11 @@ protected slots:
 
     /// \brief Sets the (de-)multiplexer bit width to the given value, if allowed
     /// \param pValue: The new multiplexer bit width
-    void OnBitWidthSliderValueChanged(int32_t pValue);
+    void OnMultiplexerBitWidthSliderValueChanged(int32_t pValue);
+
+    /// \brief Sets the shift register bit width to the given value, if allowed
+    /// \param pValue: The new shift register bit width
+    void OnShiftRegisterBitWidthSliderValueChanged(int32_t pValue);
 
 protected:
     // Initialization
@@ -186,6 +190,10 @@ protected:
     /// \brief Sets the current (de-)multiplexer bit width to the given value if SW is in ControlMode::ADD
     /// \param pBitWidth: The bit width to set to
     void SetMultiplexerBitWidthIfAllowed(uint8_t pBitWidth);
+
+    /// \brief Sets the current shift register bit width to the given value if SW is in ControlMode::ADD
+    /// \param pBitWidth: The bit width to set to
+    void SetShiftRegisterBitWidthIfAllowed(uint8_t pBitWidth);
 
     /// \brief Sets the current component direction to the given direction if SW is in ControlMode::ADD
     /// \param pDirection: The direction to set to

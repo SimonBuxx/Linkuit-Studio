@@ -186,7 +186,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uGateInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnGateInputCountSliderValueChanged);
     QObject::connect(mUi->uEncoderDecoderInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnEncoderDecoderInputCountSliderValueChanged);
-    QObject::connect(mUi->uBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnBitWidthSliderValueChanged);
+    QObject::connect(mUi->uMultiplexerBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnMultiplexerBitWidthSliderValueChanged);
+    QObject::connect(mUi->uShiftRegisterBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnShiftRegisterBitWidthSliderValueChanged);
 
     // Connect widgets from clock configuration GUI
 
@@ -627,7 +628,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uItemDirectionButtonsFrame->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
-            mUi->uBitWidthFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
@@ -635,7 +637,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uItemDirectionButtonsFrame->show();
             mUi->uGateInputCountFrame->show();
             mUi->uEncoderDecoderInputCountFrame->hide();
-            mUi->uBitWidthFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::MULTIPLEXER_BITS:
@@ -643,7 +646,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uItemDirectionButtonsFrame->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
-            mUi->uBitWidthFrame->show();
+            mUi->uMultiplexerBitWidthFrame->show();
+            mUi->uShiftRegisterBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::ENCODER_DECODER:
@@ -651,8 +655,18 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uItemDirectionButtonsFrame->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->show();
-            mUi->uBitWidthFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->hide();
             SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
+            break;
+        }
+        case ConfiguratorMode::SHIFTREGISTER_BITS:
+        {
+            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->show();
             break;
         }
         default:
@@ -720,9 +734,14 @@ void MainWindow::OnEncoderDecoderInputCountSliderValueChanged(int32_t pValue)
     SetEncoderDecoderInputCountIfAllowed(pValue);
 }
 
-void MainWindow::OnBitWidthSliderValueChanged(int32_t pValue)
+void MainWindow::OnMultiplexerBitWidthSliderValueChanged(int32_t pValue)
 {
     SetMultiplexerBitWidthIfAllowed(pValue);
+}
+
+void MainWindow::OnShiftRegisterBitWidthSliderValueChanged(int32_t pValue)
+{
+    SetShiftRegisterBitWidthIfAllowed(pValue);
 }
 
 void MainWindow::EnterSimulation()
@@ -1178,7 +1197,7 @@ void MainWindow::InitializeToolboxTree()
     labelIcon.addPixmap(QPixmap(":images/icons/label_icon.png"), QIcon::Mode::Selected);
 
     // Create category and root level items
-    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Logic gates");
+    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Logic Gates");
     mCategoryGatesItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
 
@@ -1201,27 +1220,28 @@ void MainWindow::InitializeToolboxTree()
     mCategoryConvertersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
-    auto textLabelItem = new QStandardItem(labelIcon, "Text label");
+    auto textLabelItem = new QStandardItem(labelIcon, "Text Label");
     mToolboxTreeModel.appendRow(textLabelItem);
 
     // Create component items
-    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "AND gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "OR gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "XOR gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "NOT gate"));
-    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "Buffer gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "AND Gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "OR Gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "XOR Gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "NOT Gate"));
+    mCategoryGatesItem->appendRow(new QStandardItem(gateIcon, "Buffer Gate"));
 
     mCategoryInputsItem->appendRow(new QStandardItem(inputIcon, "Switch"));
     mCategoryInputsItem->appendRow(new QStandardItem(buttonIcon, "Button"));
     mCategoryInputsItem->appendRow(new QStandardItem(clockIcon, "Clock"));
 
-    mCategoryAddersItem->appendRow(new QStandardItem(flipflopIcon, "Half adder"));
-    mCategoryAddersItem->appendRow(new QStandardItem(fulladderIcon, "Full adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(flipflopIcon, "Half Adder"));
+    mCategoryAddersItem->appendRow(new QStandardItem(fulladderIcon, "Full Adder"));
 
-    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "RS flip-flop"));
-    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "D flip-flop"));
-    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "T flip-flop"));
-    mCategoryMemoryItem->appendRow(new QStandardItem(fulladderIcon, "JK flip-flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "RS Flip-Flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "D Flip-Flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "T Flip-Flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(fulladderIcon, "JK Flip-Flop"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(fulladderIcon, "Shift Register"));
 
     mCategoryConvertersItem->appendRow(new QStandardItem(gateIcon, "Multiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(demultiplexerIcon, "Demultiplexer"));
@@ -1314,9 +1334,13 @@ void MainWindow::InitializeGuiIcons()
     mUi->uLabelEncoderDecoderInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
     mUi->uLabelEncoderDecoderInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
-    mUi->uLabelBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelMultiplexerBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelMultiplexerBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelMultiplexerBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    mUi->uLabelShiftRegisterBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelShiftRegisterBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelShiftRegisterBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     // Icons for status bar elements
     mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
@@ -1379,54 +1403,63 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(1);
        SetEncoderDecoderInputCountIfAllowed(1);
        SetMultiplexerBitWidthIfAllowed(1);
+       SetShiftRegisterBitWidthIfAllowed(1);
     });
     QObject::connect(mTwoGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(2);
        SetEncoderDecoderInputCountIfAllowed(2);
        SetMultiplexerBitWidthIfAllowed(2);
+       SetShiftRegisterBitWidthIfAllowed(2);
     });
     QObject::connect(mThreeGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(3);
        SetEncoderDecoderInputCountIfAllowed(3);
        SetMultiplexerBitWidthIfAllowed(3);
+       SetShiftRegisterBitWidthIfAllowed(3);
     });
     QObject::connect(mFourGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(4);
        SetEncoderDecoderInputCountIfAllowed(4);
        SetMultiplexerBitWidthIfAllowed(4);
+       SetShiftRegisterBitWidthIfAllowed(4);
     });
     QObject::connect(mFiveGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(5);
        SetEncoderDecoderInputCountIfAllowed(5);
        SetMultiplexerBitWidthIfAllowed(5);
+       SetShiftRegisterBitWidthIfAllowed(5);
     });
     QObject::connect(mSixGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(6);
        SetEncoderDecoderInputCountIfAllowed(6);
        SetMultiplexerBitWidthIfAllowed(6);
+       SetShiftRegisterBitWidthIfAllowed(6);
     });
     QObject::connect(mSevenGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(7);
        SetEncoderDecoderInputCountIfAllowed(7);
        SetMultiplexerBitWidthIfAllowed(7);
+       SetShiftRegisterBitWidthIfAllowed(7);
     });
     QObject::connect(mEightGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(8);
        SetEncoderDecoderInputCountIfAllowed(8);
        SetMultiplexerBitWidthIfAllowed(8);
+       SetShiftRegisterBitWidthIfAllowed(8);
     });
     QObject::connect(mNineGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
        SetGateInputCountIfAllowed(9);
        SetEncoderDecoderInputCountIfAllowed(9);
        SetMultiplexerBitWidthIfAllowed(9);
+       SetShiftRegisterBitWidthIfAllowed(9);
     });
 
     mEscapeShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
@@ -1491,8 +1524,21 @@ void MainWindow::SetMultiplexerBitWidthIfAllowed(uint8_t pBitWidth)
                                                                 || mCoreLogic.GetSelectedComponentType() == ComponentType::DEMULTIPLEXER))
         {
             mCoreLogic.SetMultiplexerBitWidth(pBitWidth);
-            mUi->uLabelBitWidth->setText(tr(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
-            mUi->uBitWidthSlider->setValue(pBitWidth);
+            mUi->uLabelMultiplexerBitWidth->setText(tr(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
+            mUi->uMultiplexerBitWidthSlider->setValue(pBitWidth);
+        }
+    }
+}
+
+void MainWindow::SetShiftRegisterBitWidthIfAllowed(uint8_t pBitWidth)
+{
+    if (pBitWidth > 0 && pBitWidth <= components::shift_register::MAX_BIT_WIDTH)
+    {
+        if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() == ComponentType::SHIFTREGISTER)
+        {
+            mCoreLogic.SetShiftRegisterBitWidth(pBitWidth);
+            mUi->uLabelShiftRegisterBitWidth->setText(tr(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
+            mUi->uShiftRegisterBitWidthSlider->setValue(pBitWidth);
         }
     }
 }
@@ -1658,6 +1704,11 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     case 3: // JK flip flop
                     {
                         mCoreLogic.EnterAddControlMode(ComponentType::JK_FLIPFLOP);
+                        break;
+                    }
+                    case 4: // Shift Register
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::SHIFTREGISTER);
                         break;
                     }
                     default:

@@ -20,6 +20,7 @@
 #include "Components/ComplexLogic/Demultiplexer.h"
 #include "Components/ComplexLogic/Decoder.h"
 #include "Components/ComplexLogic/Encoder.h"
+#include "Components/ComplexLogic/ShiftRegister.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -367,6 +368,11 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
             item = new Encoder(this, mComponentDirection, mEncoderDecoderInputCount);
             break;
         }
+        case ComponentType::SHIFTREGISTER:
+        {
+            item = new ShiftRegister(this, mComponentDirection, mShiftRegisterBitWidth);
+            break;
+        }
         default:
         {
             return std::nullopt;
@@ -435,6 +441,12 @@ void CoreLogic::SetMultiplexerBitWidth(uint8_t pBitWidth)
 {
     Q_ASSERT(pBitWidth >= components::multiplexer::MIN_BIT_WIDTH && pBitWidth <= components::multiplexer::MAX_BIT_WIDTH);
     mMultiplexerBitWidth = pBitWidth;
+}
+
+void CoreLogic::SetShiftRegisterBitWidth(uint8_t pBitWidth)
+{
+    Q_ASSERT(pBitWidth >= components::shift_register::MIN_BIT_WIDTH && pBitWidth <= components::shift_register::MAX_BIT_WIDTH);
+    mShiftRegisterBitWidth = pBitWidth;
 }
 
 void CoreLogic::SetPreviewWireStart(QPointF pPoint)
@@ -1829,6 +1841,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::ENCODER:
             {
                 item = new Encoder(this, pJson);
+                break;
+            }
+            case file::ComponentId::SHIFTREGISTER:
+            {
+                item = new ShiftRegister(this, pJson);
                 break;
             }
             default:

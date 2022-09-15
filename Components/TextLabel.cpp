@@ -47,7 +47,6 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, const QString& pText)
         scene()->clearSelection(); // Prevent editing when multiple components are selected
         if (hasFocus())
         {
-            qDebug() << "select";
             setSelected(true);
         }
     });
@@ -128,9 +127,6 @@ void TextLabel::ResetZValue()
 
 void TextLabel::UpdatePlainTextEditSize()
 {
-    qDebug() << mPlainTextEdit->document()->size().width();
-    qDebug() << mPlainTextEdit->document()->toPlainText();
-
     Q_ASSERT(mPlainTextEdit);
     QFontMetrics metrics(mPlainTextEdit->font());
 

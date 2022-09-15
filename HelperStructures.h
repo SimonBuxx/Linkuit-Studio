@@ -39,7 +39,8 @@ namespace file
         T_FLIPFLOP,
         JK_FLIPFLOP,
         DECODER,
-        ENCODER // only append!
+        ENCODER,
+        SHIFTREGISTER // only append!
     };
 } // namespace file
 
@@ -65,7 +66,8 @@ enum class ComponentType
     T_FLIPFLOP,
     JK_FLIPFLOP,
     DECODER,
-    ENCODER
+    ENCODER,
+    SHIFTREGISTER
 };
 
 enum class Direction
@@ -135,7 +137,8 @@ enum class ConfiguratorMode
     DIRECTION_AND_INPUT_COUNT,
     DIRECTION_ONLY,
     MULTIPLEXER_BITS,
-    ENCODER_DECODER
+    ENCODER_DECODER,
+    SHIFTREGISTER_BITS
 };
 
 namespace undo

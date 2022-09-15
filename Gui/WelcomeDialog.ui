@@ -163,7 +163,7 @@ QCheckBox::indicator:checked {
 }</string>
         </property>
         <property name="text">
-         <string>Show welcome page on startup</string>
+         <string>Display this Window on Startup</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

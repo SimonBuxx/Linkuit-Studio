@@ -13,8 +13,10 @@ HEADERS += \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicJKFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicMultiplexerCell.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicShiftRegisterCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicTFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/Multiplexer.h \
+    $$PWD/Components/ComplexLogic/ShiftRegister.h \
     $$PWD/Components/ComplexLogic/TFlipFlop.h \
     $$PWD/Components/Gates/BufferGate.h \
     $$PWD/Components/Gates/LogicCells/LogicBufferGateCell.h \
@@ -79,8 +81,10 @@ SOURCES += \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicJKFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicMultiplexerCell.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicShiftRegisterCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicTFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/Multiplexer.cpp \
+    $$PWD/Components/ComplexLogic/ShiftRegister.cpp \
     $$PWD/Components/ComplexLogic/TFlipFlop.cpp \
     $$PWD/Components/Gates/BufferGate.cpp \
     $$PWD/Components/Gates/LogicCells/LogicBufferGateCell.cpp \

@@ -9,7 +9,7 @@
 
 static constexpr uint8_t MAX_UNDO_STACK_SIZE = 100;
 
-static constexpr const char* SW_VERSION_STRING = "0.9.0alpha";
+static constexpr const char* SW_VERSION_STRING = "0.9.7";
 
 namespace file
 {
@@ -166,6 +166,13 @@ namespace encoder_decoder
 static constexpr uint8_t MIN_INPUT_COUNT = 3;
 static constexpr uint8_t MAX_INPUT_COUNT = 5;
 static constexpr uint8_t DEFAULT_INPUT_COUNT = 3;
+} // namespace
+
+namespace shift_register
+{
+static constexpr uint8_t MIN_BIT_WIDTH = 2;
+static constexpr uint8_t MAX_BIT_WIDTH = 32;
+static constexpr uint8_t DEFAULT_BIT_WIDTH = 4;
 } // namespace
 
 namespace complex_logic
