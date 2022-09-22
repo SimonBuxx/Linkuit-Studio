@@ -187,7 +187,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uGateInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnGateInputCountSliderValueChanged);
     QObject::connect(mUi->uEncoderDecoderInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnEncoderDecoderInputCountSliderValueChanged);
     QObject::connect(mUi->uMultiplexerBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnMultiplexerBitWidthSliderValueChanged);
-    QObject::connect(mUi->uShiftRegisterBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnShiftRegisterBitWidthSliderValueChanged);
+    QObject::connect(mUi->uShiftRegisterWidthBox, &QComboBox::currentIndexChanged, this, &MainWindow::OnShiftRegisterWidthBoxIndexChanged);
 
     // Connect widgets from clock configuration GUI
 
@@ -739,9 +739,12 @@ void MainWindow::OnMultiplexerBitWidthSliderValueChanged(int32_t pValue)
     SetMultiplexerBitWidthIfAllowed(pValue);
 }
 
-void MainWindow::OnShiftRegisterBitWidthSliderValueChanged(int32_t pValue)
+void MainWindow::OnShiftRegisterWidthBoxIndexChanged(int32_t pIndex)
 {
-    SetShiftRegisterBitWidthIfAllowed(pValue);
+    static const std::vector<uint8_t> values{2, 4, 8, 16, 32};
+    Q_ASSERT(pIndex < static_cast<int32_t>(values.size()));
+
+    SetShiftRegisterBitWidthIfAllowed(values[pIndex]);
 }
 
 void MainWindow::EnterSimulation()
@@ -1339,8 +1342,6 @@ void MainWindow::InitializeGuiIcons()
     mUi->uLabelMultiplexerBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     mUi->uLabelShiftRegisterBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelShiftRegisterBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelShiftRegisterBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     // Icons for status bar elements
     mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
@@ -1537,8 +1538,7 @@ void MainWindow::SetShiftRegisterBitWidthIfAllowed(uint8_t pBitWidth)
         if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() == ComponentType::SHIFTREGISTER)
         {
             mCoreLogic.SetShiftRegisterBitWidth(pBitWidth);
-            mUi->uLabelShiftRegisterBitWidth->setText(tr(pBitWidth > 1 ? "%0 Bits" : "%0 Bit").arg(pBitWidth));
-            mUi->uShiftRegisterBitWidthSlider->setValue(pBitWidth);
+            mUi->uShiftRegisterWidthBox->setCurrentText(tr("%0 Bits").arg(pBitWidth));
         }
     }
 }

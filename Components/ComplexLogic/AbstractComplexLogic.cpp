@@ -609,6 +609,23 @@ void AbstractComplexLogic::SetInversionPen(QPainter *pPainter, LogicState pState
     }
 }
 
+void AbstractComplexLogic::SetClockInputPen(QPainter *pPainter, LogicState pState, bool pSelected)
+{
+    Q_ASSERT(pPainter);
+
+    if (pState == LogicState::HIGH)
+    {
+        pPainter->setPen(QPen(components::HIGH_COLOR, components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
+        pPainter->setBrush(components::HIGH_COLOR);
+    }
+    else
+    {
+        pPainter->setPen(QPen(pSelected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR,
+                              components::wires::WIRE_WIDTH, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
+        pPainter->setBrush(pSelected ? components::SELECTED_BORDER_COLOR : components::wires::WIRE_LOW_COLOR);
+    }
+}
+
 QRectF AbstractComplexLogic::boundingRect() const
 {
     if (mDirection == Direction::RIGHT || mDirection == Direction::LEFT)

@@ -22,6 +22,16 @@ public:
     /// \return The logic state of this cell's output number pOutput
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
+    /// \brief Getter for the current output state number pOutput of this cell (ignoring inversion)
+    /// \param pOutput: The number of the output to retreive
+    /// \return The logic state of this cell's output number pOutput (ignoring inversion)
+    LogicState GetOutputStateUninverted(uint32_t pOutput = 0) const;
+
+    /// \brief Sets input number pInput to the new state pState
+    /// \param pInput: The number of the changed input
+    /// \param pState: The new state of the input
+    virtual void InputReady(uint32_t pInput, LogicState pState) override;
+
 public slots:
     /// \brief Advances the simulation of this cell by one logic tick
     void OnSimulationAdvance(void) override;

@@ -151,9 +151,9 @@ protected slots:
     /// \param pValue: The new multiplexer bit width
     void OnMultiplexerBitWidthSliderValueChanged(int32_t pValue);
 
-    /// \brief Sets the shift register bit width to the given value, if allowed
-    /// \param pValue: The new shift register bit width
-    void OnShiftRegisterBitWidthSliderValueChanged(int32_t pValue);
+    /// \brief Sets the shift register bit width to the value of the new index, if allowed
+    /// \param pIndex: The new shift register box index
+    void OnShiftRegisterWidthBoxIndexChanged(int32_t pIndex);
 
 protected:
     // Initialization

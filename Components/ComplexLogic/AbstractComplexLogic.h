@@ -80,6 +80,12 @@ protected:
     /// \param pSelected: Whether the component is selected or not
     void SetInversionPen(QPainter *pPainter, LogicState pState, bool pSelected);
 
+    /// \brief Sets the current pen and brush to the pen to use for clock input triangles
+    /// \param pPainter: The painter to use
+    /// \param pState: The logic state of the clock input
+    /// \param pSelected: Whether the component is selected or not
+    void SetClockInputPen(QPainter *pPainter, LogicState pState, bool pSelected);
+
 protected:
     QString mComponentText;
 

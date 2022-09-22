@@ -1,20 +1,23 @@
 #include "LogicShiftRegisterCell.h"
 
 LogicShiftRegisterCell::LogicShiftRegisterCell(uint8_t pBitWidth):
-    LogicBaseCell(2, pBitWidth + 1),
-    mOutputStates(pBitWidth + 1, LogicState::LOW),
-    mPrevInputStates(pBitWidth + 1, LogicState::LOW),
+    LogicBaseCell(2, pBitWidth),
+    mOutputStates(pBitWidth, LogicState::LOW),
+    mPrevInputStates(pBitWidth, LogicState::LOW),
     mStateChanged(true),
     mBitWidth(pBitWidth)
 {}
 
 void LogicShiftRegisterCell::LogicFunction()
 {
-    if (mPrevInputStates[0] == LogicState::LOW && mInputStates[0] == LogicState::HIGH)
+    if (mPrevInputStates[1] == LogicState::LOW && mInputStates[1] == LogicState::HIGH)
     {
-        mOutputStates.insert(mOutputStates.begin(), mInputStates[1]);
+        mOutputStates.insert(mOutputStates.begin(), mInputStates[0]);
         mOutputStates.pop_back();
+    }
 
+    if (mPrevInputStates[1] != mInputStates[1]) // Trigger repaint on every clock change
+    {
         mStateChanged = true;
     }
 
@@ -34,6 +37,12 @@ LogicState LogicShiftRegisterCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
+LogicState LogicShiftRegisterCell::GetOutputStateUninverted(uint32_t pOutput) const
+{
+    Q_ASSERT(pOutput <= mBitWidth);
+    return mOutputStates[pOutput];
+}
+
 void LogicShiftRegisterCell::OnSimulationAdvance()
 {
     AdvanceUpdateTime();
@@ -48,6 +57,12 @@ void LogicShiftRegisterCell::OnSimulationAdvance()
 
         emit StateChangedSignal();
     }
+}
+
+void LogicShiftRegisterCell::InputReady(uint32_t pInput, LogicState pState)
+{
+    LogicBaseCell::InputReady(pInput, pState);
+    emit StateChangedSignal(); // to trigger immediate update of the clock input triangle
 }
 
 void LogicShiftRegisterCell::OnWakeUp()
