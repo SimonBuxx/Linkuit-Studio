@@ -2,6 +2,8 @@
 #include "CoreLogic.h"
 #include "LogicCells/LogicShiftRegisterCell.h"
 
+static constexpr QPointF UNUSED_CONNECTORS_POS{2147483647, 2147483647};
+
 ShiftRegister::ShiftRegister(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pBitWidth):
     AbstractComplexLogic(pCoreLogic, std::make_shared<LogicShiftRegisterCell>(pBitWidth), 2, pBitWidth, pDirection, 0, false),
     mBitWidth(pBitWidth)
@@ -10,8 +12,8 @@ ShiftRegister::ShiftRegister(const CoreLogic* pCoreLogic, Direction pDirection, 
     mComponentText = "";
 
 
-    mInputLabels.push_back(">");
-    mInputLabels.push_back("D");
+    mInputLabels.push_back("");
+    mInputLabels.push_back("");
 
     for (int i = 0; i < pBitWidth; i++)
     {
@@ -112,7 +114,7 @@ void ShiftRegister::SetLogicConnectors()
             }
             for (uint8_t i = 0; i < mOutputCount; i++)
             {
-                mOutConnectors[i].pos = QPoint(2147483647, 2147483647);
+                mOutConnectors[i].pos = UNUSED_CONNECTORS_POS;
             }
             mOutConnectors[mOutputCount - 1] = LogicConnector(ConnectorType::OUT, QPointF(mWidth, canvas::GRID_SIZE), mBitWidth - 1, QPointF(4, 0));
             break;
@@ -125,7 +127,7 @@ void ShiftRegister::SetLogicConnectors()
             }
             for (uint8_t i = 0; i < mOutputCount; i++)
             {
-                mOutConnectors[i].pos = QPoint(2147483647, 2147483647);
+                mOutConnectors[i].pos = UNUSED_CONNECTORS_POS;
             }
             mOutConnectors[mOutputCount - 1] = LogicConnector(ConnectorType::OUT, QPointF(mWidth - canvas::GRID_SIZE, mHeight), mBitWidth - 1, QPointF(0, 4));
             break;
@@ -138,7 +140,7 @@ void ShiftRegister::SetLogicConnectors()
             }
             for (uint8_t i = 0; i < mOutputCount; i++)
             {
-                mOutConnectors[i].pos = QPoint(2147483647, 2147483647);
+                mOutConnectors[i].pos = UNUSED_CONNECTORS_POS;
             }
             mOutConnectors[mOutputCount - 1] = LogicConnector(ConnectorType::OUT, QPointF(0, mHeight - canvas::GRID_SIZE), mBitWidth - 1, QPointF(-4, 0));
             break;
@@ -151,7 +153,7 @@ void ShiftRegister::SetLogicConnectors()
             }
             for (uint8_t i = 0; i < mOutputCount; i++)
             {
-                mOutConnectors[i].pos = QPoint(2147483647, 2147483647);
+                mOutConnectors[i].pos = UNUSED_CONNECTORS_POS;
             }
             mOutConnectors[mOutputCount - 1] = LogicConnector(ConnectorType::OUT, QPointF(canvas::GRID_SIZE, 0), mBitWidth - 1, QPointF(0, -4));
             break;
@@ -204,25 +206,29 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
     }
 
     // Draw gate body
-    QPen pen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::FILL_COLOR,
+    const QPen bodyPen(pItem->state & QStyle::State_Selected ? components::SELECTED_BORDER_COLOR : components::FILL_COLOR,
              components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-    pPainter->setPen(pen);
+    pPainter->setPen(bodyPen);
     pPainter->setBrush(QBrush(components::FILL_COLOR));
     pPainter->drawRect(0, 0, mWidth, mHeight);
+
+
+    // Draw bit cells
+    const auto bitStretch = canvas::GRID_SIZE - components::BORDER_WIDTH - 2; // Width or height of one bit cell
 
     switch (mDirection)
     {
         case Direction::RIGHT:
         {
+
             for (size_t i = 0; i < mBitWidth; i++)
             {
                 pPainter->setBrush(QBrush(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(i) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR));
-                pPainter->setPen(QPen(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(i) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                pPainter->setPen(QPen(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(i) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR,
+                                      components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
                 const auto x = (i + 1) * canvas::GRID_SIZE - components::BORDER_WIDTH + 1;
-                const auto w = canvas::GRID_SIZE - components::BORDER_WIDTH - 2;
-
-                pPainter->drawRect(x, 2 * components::BORDER_WIDTH, w, 3 * canvas::GRID_SIZE - 4 * components::BORDER_WIDTH);
+                pPainter->drawRect(x, 2 * components::BORDER_WIDTH, bitStretch, 3 * canvas::GRID_SIZE - 4 * components::BORDER_WIDTH);
             }
             break;
         }
@@ -231,12 +237,11 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
             for (size_t i = 0; i < mBitWidth; i++)
             {
                 pPainter->setBrush(QBrush(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(i) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR));
-                pPainter->setPen(QPen(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(i) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                pPainter->setPen(QPen(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(i) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR,
+                                      components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
                 const auto y = (i + 1) * canvas::GRID_SIZE - components::BORDER_WIDTH + 1;
-                const auto h = canvas::GRID_SIZE - components::BORDER_WIDTH - 2;
-
-                pPainter->drawRect(2 * components::BORDER_WIDTH, y, 3 * canvas::GRID_SIZE - 4 * components::BORDER_WIDTH, h);
+                pPainter->drawRect(2 * components::BORDER_WIDTH, y, 3 * canvas::GRID_SIZE - 4 * components::BORDER_WIDTH, bitStretch);
             }
             break;
         }
@@ -245,12 +250,11 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
             for (size_t i = 0; i < mBitWidth; i++)
             {
                 pPainter->setBrush(QBrush(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(mBitWidth - i - 1) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR));
-                pPainter->setPen(QPen(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(mBitWidth - i - 1) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                pPainter->setPen(QPen(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(mBitWidth - i - 1) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR,
+                                      components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
                 const auto x = i * canvas::GRID_SIZE + 2 * components::BORDER_WIDTH + 1;
-                const auto w = canvas::GRID_SIZE - components::BORDER_WIDTH - 2;
-
-                pPainter->drawRect(x, 2 * components::BORDER_WIDTH, w, 3 * canvas::GRID_SIZE - 4 * components::BORDER_WIDTH);
+                pPainter->drawRect(x, 2 * components::BORDER_WIDTH, bitStretch, 3 * canvas::GRID_SIZE - 4 * components::BORDER_WIDTH);
             }
             break;
         }
@@ -259,27 +263,18 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
             for (size_t i = 0; i < mBitWidth; i++)
             {
                 pPainter->setBrush(QBrush(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(mBitWidth - i - 1) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR));
-                pPainter->setPen(QPen(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(mBitWidth - i - 1) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                pPainter->setPen(QPen(std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(mBitWidth - i - 1) == LogicState::HIGH ? components::HIGH_COLOR : components::wires::WIRE_LOW_COLOR,
+                                      components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
                 const auto y = i * canvas::GRID_SIZE + 2 * components::BORDER_WIDTH + 1;
-                const auto h = canvas::GRID_SIZE - components::BORDER_WIDTH - 2;
-
-                pPainter->drawRect(2 * components::BORDER_WIDTH, y, 3 * canvas::GRID_SIZE - 4 * components::BORDER_WIDTH, h);
+                pPainter->drawRect(2 * components::BORDER_WIDTH, y, 3 * canvas::GRID_SIZE - 4 * components::BORDER_WIDTH, bitStretch);
             }
             break;
         }
         default:
         {
-            break;
+            throw std::logic_error("Direction invalid");
         }
-    }
-
-    if (pItem->state & QStyle::State_Selected)
-    {
-        QPen pen3(components::SELECTED_BORDER_COLOR, components::BORDER_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-        pPainter->setPen(pen3);
-        pPainter->setBrush(Qt::NoBrush);
-        pPainter->drawRect(0, 0, mWidth, mHeight);
     }
 
     // Draw clock input triangle
@@ -287,55 +282,35 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
     {
         SetClockInputPen(pPainter, mLogicCell->GetInputState(1), pItem->state & QStyle::State_Selected);
 
-        const QPointF trianglePointsRight[3] = {
-            QPointF(0, 2 * canvas::GRID_SIZE - 5),
-            QPointF(0, 2 * canvas::GRID_SIZE + 5),
-            QPointF(8, 2 * canvas::GRID_SIZE)
-        };
-
-        const QPointF trianglePointsDown[3] = {
-            QPointF(2 * canvas::GRID_SIZE - 5, 0),
-            QPointF(2 * canvas::GRID_SIZE + 5, 0),
-            QPointF(2 * canvas::GRID_SIZE, 8)
-        };
-
-        const QPointF trianglePointsLeft[3] = {
-            QPointF(mWidth, canvas::GRID_SIZE - 5),
-            QPointF(mWidth, canvas::GRID_SIZE + 5),
-            QPointF(mWidth - 8, canvas::GRID_SIZE)
-        };
-
-        const QPointF trianglePointsUp[3] = {
-            QPointF(2 * canvas::GRID_SIZE - 5, mHeight),
-            QPointF(2 * canvas::GRID_SIZE + 5, mHeight),
-            QPointF(2 * canvas::GRID_SIZE, mHeight - 8)
-        };
-
         switch (mDirection)
         {
             case Direction::RIGHT:
             {
-                pPainter->drawConvexPolygon(trianglePointsRight, 3);
+                static const QList<QPoint> trianglePointsRight = {QPoint(0, 2 * canvas::GRID_SIZE - 5), QPoint(0, 2 * canvas::GRID_SIZE + 5), QPoint(8, 2 * canvas::GRID_SIZE)};
+                pPainter->drawConvexPolygon(QPolygon(trianglePointsRight));
                 break;
             }
             case Direction::DOWN:
             {
-                pPainter->drawConvexPolygon(trianglePointsDown, 3);
+                static const QList<QPoint> trianglePointsDown = {QPoint(2 * canvas::GRID_SIZE - 5, 0), QPoint(2 * canvas::GRID_SIZE + 5, 0), QPoint(2 * canvas::GRID_SIZE, 8)};
+                pPainter->drawConvexPolygon(QPolygon(trianglePointsDown));
                 break;
             }
             case Direction::LEFT:
             {
-                pPainter->drawConvexPolygon(trianglePointsLeft, 3);
+                const QList<QPoint> trianglePointsLeft = {QPoint(mWidth, canvas::GRID_SIZE - 5), QPoint(mWidth, canvas::GRID_SIZE + 5), QPoint(mWidth - 8, canvas::GRID_SIZE)};
+                pPainter->drawConvexPolygon(QPolygon(trianglePointsLeft));
                 break;
             }
             case Direction::UP:
             {
-                pPainter->drawConvexPolygon(trianglePointsUp, 3);
+                const QList<QPoint> trianglePointsUp = {QPoint(2 * canvas::GRID_SIZE - 5, mHeight), QPoint(2 * canvas::GRID_SIZE + 5, mHeight), QPoint(2 * canvas::GRID_SIZE, mHeight - 8)};
+                pPainter->drawConvexPolygon(QPolygon(trianglePointsUp));
                 break;
             }
             default:
             {
-                break;
+                throw std::logic_error("Direction invalid");
             }
         }
 
@@ -349,12 +324,10 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
                 {
                     const auto state = std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(i);
                     const auto text = (state == LogicState::HIGH) ? "1" : "0";
-                    const auto x = (i + 1) * canvas::GRID_SIZE - components::BORDER_WIDTH;
-                    const auto w = canvas::GRID_SIZE - components::BORDER_WIDTH;
+                    const auto x = (i + 1) * canvas::GRID_SIZE - components::BORDER_WIDTH + 1;
 
                     pPainter->setPen((state == LogicState::HIGH) ? components::wires::WIRE_LOW_COLOR: components::complex_logic::SMALL_TEXT_FONT_COLOR);
-                    pPainter->drawText(QRect(x, 2 * components::BORDER_WIDTH,
-                                             w, mHeight - 4 * components::BORDER_WIDTH), text, Qt::AlignHCenter | Qt::AlignBottom);
+                    pPainter->drawText(QRect(x, 2 * components::BORDER_WIDTH, bitStretch, mHeight - 4 * components::BORDER_WIDTH), text, Qt::AlignHCenter | Qt::AlignBottom);
                 }
                 break;
             }
@@ -364,12 +337,10 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
                 {
                     const auto state = std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(i);
                     const auto text = (state == LogicState::HIGH) ? "1" : "0";
-                    const auto y = (i + 1) * canvas::GRID_SIZE - components::BORDER_WIDTH;
-                    const auto h = canvas::GRID_SIZE - components::BORDER_WIDTH;
+                    const auto y = (i + 1) * canvas::GRID_SIZE - components::BORDER_WIDTH + 1;
 
                     pPainter->setPen((state == LogicState::HIGH) ? components::wires::WIRE_LOW_COLOR: components::complex_logic::SMALL_TEXT_FONT_COLOR);
-                    pPainter->drawText(QRect(4 * components::BORDER_WIDTH, y,
-                                             mWidth - 8 * components::BORDER_WIDTH, h), text, Qt::AlignLeft | Qt::AlignVCenter);
+                    pPainter->drawText(QRect(4 * components::BORDER_WIDTH, y, mWidth - 8 * components::BORDER_WIDTH, bitStretch), text, Qt::AlignLeft | Qt::AlignVCenter);
                 }
                 break;
             }
@@ -379,12 +350,10 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
                 {
                     const auto state = std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(mOutputCount - i - 1);
                     const auto text = (state == LogicState::HIGH) ? "1" : "0";
-                    const auto x = i * canvas::GRID_SIZE + 2 * components::BORDER_WIDTH;
-                    const auto w = canvas::GRID_SIZE - components::BORDER_WIDTH;
+                    const auto x = i * canvas::GRID_SIZE + 2 * components::BORDER_WIDTH + 1;
 
                     pPainter->setPen((state == LogicState::HIGH) ? components::wires::WIRE_LOW_COLOR: components::complex_logic::SMALL_TEXT_FONT_COLOR);
-                    pPainter->drawText(QRect(x, 2 * components::BORDER_WIDTH,
-                                             w, mHeight - 4 * components::BORDER_WIDTH), text, Qt::AlignHCenter | Qt::AlignTop);
+                    pPainter->drawText(QRect(x, 2 * components::BORDER_WIDTH, bitStretch, mHeight - 4 * components::BORDER_WIDTH), text, Qt::AlignHCenter | Qt::AlignTop);
                 }
                 break;
             }
@@ -394,18 +363,16 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
                 {
                     const auto state = std::static_pointer_cast<LogicShiftRegisterCell>(mLogicCell)->GetOutputStateUninverted(mOutputCount - i - 1);
                     const auto text = (state == LogicState::HIGH) ? "1" : "0";
-                    const auto y = i * canvas::GRID_SIZE + 2 * components::BORDER_WIDTH;
-                    const auto h = canvas::GRID_SIZE - components::BORDER_WIDTH;
+                    const auto y = i * canvas::GRID_SIZE + 2 * components::BORDER_WIDTH + 1;
 
                     pPainter->setPen((state == LogicState::HIGH) ? components::wires::WIRE_LOW_COLOR: components::complex_logic::SMALL_TEXT_FONT_COLOR);
-                    pPainter->drawText(QRect(4 * components::BORDER_WIDTH, y,
-                                             mWidth - 8 * components::BORDER_WIDTH, h), text, Qt::AlignRight | Qt::AlignVCenter);
+                    pPainter->drawText(QRect(4 * components::BORDER_WIDTH, y, mWidth - 8 * components::BORDER_WIDTH, bitStretch), text, Qt::AlignRight | Qt::AlignVCenter);
                 }
                 break;
             }
             default:
             {
-                break;
+                throw std::logic_error("Direction invalid");
             }
         }
     }
