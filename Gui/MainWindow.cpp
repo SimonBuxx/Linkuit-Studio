@@ -331,6 +331,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionSave, &QAction::triggered, this, [&]()
     {
+        mCoreLogic.AbortPastingIfInCopy();
         if (mCoreLogic.GetCircuitFileParser().IsFileOpen())
         {
             mCoreLogic.GetCircuitFileParser().SaveJson(mCoreLogic.GetJson());
@@ -346,6 +347,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         mFadeOutOnCtrlTimer.stop();
         FadeInGui();
 
+        mCoreLogic.AbortPastingIfInCopy();
         QString path = mCoreLogic.GetCircuitFileParser().IsFileOpen() ? mCoreLogic.GetCircuitFileParser().GetFileInfo().value().absolutePath() : QDir::homePath();
         const auto fileInfo = QFileInfo(QFileDialog::getSaveFileName(this, tr(gui::SAVE_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)")));
 
@@ -849,7 +851,6 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
     switch (pNewMode)
     {
         case ControlMode::EDIT:
-        case ControlMode::COPY:
         {
             mUi->uToolboxTree->clearSelection();
 
@@ -872,6 +873,43 @@ void MainWindow::OnControlModeChanged(ControlMode pNewMode)
             mUi->uActionPaste->setEnabled(true);
             mUi->uActionDelete->setEnabled(true);
             mUi->uActionSelectAll->setEnabled(true);
+
+            mUi->uActionStart->setEnabled(true);
+            mUi->uActionRun->setEnabled(false);
+            mUi->uActionReset->setEnabled(false);
+            mUi->uActionStep->setEnabled(false);
+            mUi->uActionPause->setEnabled(false);
+
+            mUi->uEditButton->setChecked(true);
+            ForceUncheck(mUi->uRunButton);
+            ForceUncheck(mUi->uWiringButton);
+            ForceUncheck(mUi->uPauseButton);
+            mUi->uStartButton->setChecked(false);
+            break;
+        }
+        case ControlMode::COPY:
+        {
+            mUi->uToolboxTree->clearSelection();
+
+            mUi->uEditButton->setEnabled(true);
+            mUi->uWiringButton->setEnabled(true);
+            mUi->uDeleteButton->setEnabled(true);
+            mUi->uStartButton->setEnabled(true);
+            mUi->uRunButton->setEnabled(false);
+            mUi->uStepButton->setEnabled(false);
+            mUi->uResetButton->setEnabled(false);
+            mUi->uPauseButton->setEnabled(false);
+
+            UpdateUndoRedoEnabled(true);
+
+            mUi->uActionNew->setEnabled(true);
+            mUi->uActionOpen->setEnabled(true);
+
+            mUi->uActionCut->setEnabled(false);
+            mUi->uActionCopy->setEnabled(false);
+            mUi->uActionPaste->setEnabled(false);
+            mUi->uActionDelete->setEnabled(true);
+            mUi->uActionSelectAll->setEnabled(false);
 
             mUi->uActionStart->setEnabled(true);
             mUi->uActionRun->setEnabled(false);
