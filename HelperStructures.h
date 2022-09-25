@@ -41,7 +41,8 @@ namespace file
         DECODER,
         ENCODER,
         SHIFTREGISTER,
-        CONSTANT // only append!
+        CONSTANT,
+        COUNTER // only append!
     };
 } // namespace file
 
@@ -69,7 +70,8 @@ enum class ComponentType
     JK_FLIPFLOP,
     DECODER,
     ENCODER,
-    SHIFTREGISTER
+    SHIFTREGISTER,
+    COUNTER
 };
 
 enum class Direction
@@ -141,7 +143,8 @@ enum class ConfiguratorMode
     MULTIPLEXER_BITS,
     ENCODER_DECODER,
     SHIFTREGISTER_BITS,
-    CONSTANT_STATE
+    CONSTANT_STATE,
+    COUNTER_BITS
 };
 
 namespace undo

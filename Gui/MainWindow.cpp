@@ -189,6 +189,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uMultiplexerBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnMultiplexerBitWidthSliderValueChanged);
     QObject::connect(mUi->uShiftRegisterWidthBox, &QComboBox::currentIndexChanged, this, &MainWindow::OnShiftRegisterWidthBoxIndexChanged);
     QObject::connect(mUi->uConstantHighButton, &QPushButton::toggled, this, &MainWindow::OnConstantHighButtonToggled);
+    QObject::connect(mUi->uCounterBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnCounterBitWidthSliderValueChanged);
 
     // Connect widgets from clock configuration GUI
 
@@ -634,6 +635,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
+            mUi->uLCounterBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
@@ -644,6 +646,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
+            mUi->uLCounterBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::MULTIPLEXER_BITS:
@@ -654,6 +657,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->show();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
+            mUi->uLCounterBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::ENCODER_DECODER:
@@ -664,6 +668,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
+            mUi->uLCounterBitWidthFrame->hide();
+#warning useless?
             SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
             break;
         }
@@ -675,6 +681,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->show();
             mUi->uConstantButtonsFrame->hide();
+            mUi->uLCounterBitWidthFrame->hide();
             break;
         }
         case ConfiguratorMode::CONSTANT_STATE:
@@ -685,6 +692,18 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->show();
+            mUi->uLCounterBitWidthFrame->hide();
+            break;
+        }
+        case ConfiguratorMode::COUNTER_BITS:
+        {
+            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->hide();
+            mUi->uLCounterBitWidthFrame->show();
             break;
         }
         default:
@@ -763,6 +782,11 @@ void MainWindow::OnShiftRegisterWidthBoxIndexChanged(int32_t pIndex)
     Q_ASSERT(pIndex < static_cast<int32_t>(values.size()));
 
     SetShiftRegisterBitWidthIfAllowed(values[pIndex]);
+}
+
+void MainWindow::OnCounterBitWidthSliderValueChanged(int32_t pValue)
+{
+    SetCounterBitWidthIfAllowed(pValue);
 }
 
 void MainWindow::OnConstantHighButtonToggled(bool pChecked)
@@ -1238,6 +1262,9 @@ void MainWindow::InitializeToolboxTree()
     QIcon clockIcon(":images/icons/clock_icon.png");
     clockIcon.addPixmap(QPixmap(":images/icons/clock_icon.png"), QIcon::Mode::Selected);
 
+    QIcon constantIcon(":images/icons/constant_icon.png");
+    constantIcon.addPixmap(QPixmap(":images/icons/constant_icon.png"), QIcon::Mode::Selected);
+
     QIcon outputIcon(":images/icons/output_icon.png");
     outputIcon.addPixmap(QPixmap(":images/icons/output_icon.png"), QIcon::Mode::Selected);
 
@@ -1296,7 +1323,7 @@ void MainWindow::InitializeToolboxTree()
     mCategoryInputsItem->appendRow(new QStandardItem(inputIcon, "Switch"));
     mCategoryInputsItem->appendRow(new QStandardItem(buttonIcon, "Button"));
     mCategoryInputsItem->appendRow(new QStandardItem(clockIcon, "Clock"));
-    mCategoryInputsItem->appendRow(new QStandardItem(inputIcon, "Constant"));
+    mCategoryInputsItem->appendRow(new QStandardItem(constantIcon, "Constant"));
 
     mCategoryAddersItem->appendRow(new QStandardItem(flipflopIcon, "Half Adder"));
     mCategoryAddersItem->appendRow(new QStandardItem(fulladderIcon, "Full Adder"));
@@ -1306,6 +1333,7 @@ void MainWindow::InitializeToolboxTree()
     mCategoryMemoryItem->appendRow(new QStandardItem(flipflopIcon, "T Flip-Flop"));
     mCategoryMemoryItem->appendRow(new QStandardItem(fulladderIcon, "JK Flip-Flop"));
     mCategoryMemoryItem->appendRow(new QStandardItem(fulladderIcon, "Shift Register"));
+    mCategoryMemoryItem->appendRow(new QStandardItem(demultiplexerIcon, "Counter"));
 
     mCategoryConvertersItem->appendRow(new QStandardItem(gateIcon, "Multiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(demultiplexerIcon, "Demultiplexer"));
@@ -1404,6 +1432,10 @@ void MainWindow::InitializeGuiIcons()
 
     mUi->uLabelShiftRegisterBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
 
+    mUi->uLabelCounterBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelCounterBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelCounterBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
     // Icons for status bar elements
     mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
     mUi->uLabelPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
@@ -1466,6 +1498,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(1);
        SetMultiplexerBitWidthIfAllowed(1);
        SetShiftRegisterBitWidthIfAllowed(1);
+       SetCounterBitWidthIfAllowed(1);
     });
     QObject::connect(mTwoGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
@@ -1473,6 +1506,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(2);
        SetMultiplexerBitWidthIfAllowed(2);
        SetShiftRegisterBitWidthIfAllowed(2);
+       SetCounterBitWidthIfAllowed(2);
     });
     QObject::connect(mThreeGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
@@ -1480,6 +1514,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(3);
        SetMultiplexerBitWidthIfAllowed(3);
        SetShiftRegisterBitWidthIfAllowed(3);
+       SetCounterBitWidthIfAllowed(3);
     });
     QObject::connect(mFourGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
@@ -1487,6 +1522,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(4);
        SetMultiplexerBitWidthIfAllowed(4);
        SetShiftRegisterBitWidthIfAllowed(4);
+       SetCounterBitWidthIfAllowed(4);
     });
     QObject::connect(mFiveGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
@@ -1494,6 +1530,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(5);
        SetMultiplexerBitWidthIfAllowed(5);
        SetShiftRegisterBitWidthIfAllowed(5);
+       SetCounterBitWidthIfAllowed(5);
     });
     QObject::connect(mSixGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
@@ -1501,6 +1538,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(6);
        SetMultiplexerBitWidthIfAllowed(6);
        SetShiftRegisterBitWidthIfAllowed(6);
+       SetCounterBitWidthIfAllowed(6);
     });
     QObject::connect(mSevenGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
@@ -1508,6 +1546,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(7);
        SetMultiplexerBitWidthIfAllowed(7);
        SetShiftRegisterBitWidthIfAllowed(7);
+       SetCounterBitWidthIfAllowed(7);
     });
     QObject::connect(mEightGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
@@ -1515,6 +1554,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(8);
        SetMultiplexerBitWidthIfAllowed(8);
        SetShiftRegisterBitWidthIfAllowed(8);
+       SetCounterBitWidthIfAllowed(8);
     });
     QObject::connect(mNineGateInputsShortcut, &QShortcut::activated, this, [&]()
     {
@@ -1522,6 +1562,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetEncoderDecoderInputCountIfAllowed(9);
        SetMultiplexerBitWidthIfAllowed(9);
        SetShiftRegisterBitWidthIfAllowed(9);
+       SetCounterBitWidthIfAllowed(9);
     });
 
     mEscapeShortcut = new QShortcut(QKeySequence(Qt::Key_Escape), this);
@@ -1617,6 +1658,19 @@ void MainWindow::SetConstantStateIfAllowed(LogicState pState)
     if (mCoreLogic.GetControlMode() == ControlMode::ADD)
     {
         mCoreLogic.SetConstantState(pState);
+    }
+}
+
+void MainWindow::SetCounterBitWidthIfAllowed(uint8_t pBitWidth)
+{
+    if (pBitWidth >= components::counter::MIN_BIT_WIDTH && pBitWidth <= components::counter::MAX_BIT_WIDTH)
+    {
+        if (mCoreLogic.GetControlMode() == ControlMode::ADD && (mCoreLogic.GetSelectedComponentType() == ComponentType::COUNTER))
+        {
+            mCoreLogic.SetCounterBitWidth(pBitWidth);
+            mUi->uLabelCounterBitWidth->setText(tr("%0 Bits").arg(pBitWidth));
+            mUi->uCounterBitWidthSlider->setValue(pBitWidth);
+        }
     }
 }
 
@@ -1783,6 +1837,11 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     case 4: // Shift Register
                     {
                         mCoreLogic.EnterAddControlMode(ComponentType::SHIFTREGISTER);
+                        break;
+                    }
+                    case 5: // Synchronous counter
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::COUNTER);
                         break;
                     }
                     default:

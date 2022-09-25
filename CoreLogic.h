@@ -103,6 +103,10 @@ public:
     /// \param pState: The new constant input state
     void SetConstantState(LogicState pState);
 
+    /// \brief Setter for the counter bit width
+    /// \param pBitWidth: The new counter bit width
+    void SetCounterBitWidth(uint8_t pBitWidth);
+
     /// \brief Sets the starting point of the preview wires to the given point and adds them to the scene
     /// \param pStartPoint: The point where the new wire drawing action started
     void SetPreviewWireStart(QPointF pStartPoint);
@@ -467,6 +471,7 @@ protected:
     uint8_t mMultiplexerBitWidth = components::multiplexer::DEFAULT_BIT_WIDTH;
     uint8_t mShiftRegisterBitWidth = components::shift_register::DEFAULT_BIT_WIDTH;
     LogicState mConstantState = components::inputs::constant::DEFAULT_STATE;
+    uint8_t mCounterBitWidth = components::counter::DEFAULT_BIT_WIDTH;
 
     // Variables for wire insertion
     QPointF mPreviewWireStart;

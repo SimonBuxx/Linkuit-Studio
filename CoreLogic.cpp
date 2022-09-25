@@ -22,6 +22,7 @@
 #include "Components/ComplexLogic/Decoder.h"
 #include "Components/ComplexLogic/Encoder.h"
 #include "Components/ComplexLogic/ShiftRegister.h"
+#include "Components/ComplexLogic/Counter.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -379,6 +380,11 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
             item = new ShiftRegister(this, mComponentDirection, mShiftRegisterBitWidth);
             break;
         }
+        case ComponentType::COUNTER:
+        {
+            item = new Counter(this, mComponentDirection, mCounterBitWidth);
+            break;
+        }
         default:
         {
             return std::nullopt;
@@ -453,6 +459,12 @@ void CoreLogic::SetShiftRegisterBitWidth(uint8_t pBitWidth)
 {
     Q_ASSERT(pBitWidth >= components::shift_register::MIN_BIT_WIDTH && pBitWidth <= components::shift_register::MAX_BIT_WIDTH);
     mShiftRegisterBitWidth = pBitWidth;
+}
+
+void CoreLogic::SetCounterBitWidth(uint8_t pBitWidth)
+{
+    Q_ASSERT(pBitWidth >= components::counter::MIN_BIT_WIDTH && pBitWidth <= components::counter::MAX_BIT_WIDTH);
+    mCounterBitWidth = pBitWidth;
 }
 
 void CoreLogic::SetConstantState(LogicState pState)
@@ -1862,6 +1874,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::SHIFTREGISTER:
             {
                 item = new ShiftRegister(this, pJson);
+                break;
+            }
+            case file::ComponentId::COUNTER:
+            {
+                item = new Counter(this, pJson);
                 break;
             }
             default:

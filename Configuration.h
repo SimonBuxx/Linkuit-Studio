@@ -186,6 +186,13 @@ static constexpr QColor LOW_FONT_COLOR(255, 255, 255);
 static constexpr QColor HIGH_FONT_COLOR(255, 255, 255);
 } // namespace
 
+namespace counter
+{
+static constexpr uint8_t MIN_BIT_WIDTH = 2;
+static constexpr uint8_t MAX_BIT_WIDTH = 32;
+static constexpr uint8_t DEFAULT_BIT_WIDTH = 4;
+} // namespace
+
 namespace complex_logic
 {
 static constexpr const char* HALF_ADDER_TEXT = "HA";
@@ -198,6 +205,7 @@ static constexpr const char* MULTIPLEXER_TEXT = "MUX";
 static constexpr const char* DEMULTIPLEXER_TEXT = "DEMUX";
 static constexpr const char* DECODER_TEXT = "";
 static constexpr const char* ENCODER_TEXT = "";
+static constexpr const char* COUNTER_TEXT = "COUNT";
 
 static const QFont FONT("Source Sans Pro", 20);
 static const QFont CONNECTOR_FONT("Calibri Light", 10);

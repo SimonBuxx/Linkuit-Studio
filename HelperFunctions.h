@@ -28,7 +28,8 @@ static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{Co
                                                                              {ComponentType::DEMULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS},
                                                                              {ComponentType::DECODER, ConfiguratorMode::ENCODER_DECODER},
                                                                              {ComponentType::ENCODER, ConfiguratorMode::ENCODER_DECODER},
-                                                                             {ComponentType::SHIFTREGISTER, ConfiguratorMode::SHIFTREGISTER_BITS}};
+                                                                             {ComponentType::SHIFTREGISTER, ConfiguratorMode::SHIFTREGISTER_BITS},
+                                                                             {ComponentType::COUNTER, ConfiguratorMode::COUNTER_BITS}};
 
 /// \brief Rounds the given point to the nearest grid point
 /// \param pPoint: The point to round
@@ -46,6 +47,28 @@ inline QPointF SnapToGrid(QPointF pPoint)
 inline uint32_t EuclidianDistance(QPointF pA, QPointF pB)
 {
     return std::sqrt(std::pow(pA.x() - pB.x(), 2) + std::pow(pA.y() - pB.y(), 2));
+}
+
+/// \brief Creates a superscript string for the given number
+/// \param pNumber: The number to write as superscript
+/// \return A string containing the number as superscript
+inline QString BuildSuperscriptString(uint32_t pNumber)
+{
+    auto rest = pNumber;
+    QString result{""};
+
+    if (rest == 0)
+    {
+        return helpers::SUPERSCRIPTS[0];
+    }
+
+    while (rest != 0)
+    {
+        result = helpers::SUPERSCRIPTS[rest % 10] + result;
+        rest /= 10;
+    }
+
+    return result;
 }
 
 /// \brief Inverts the given logic state

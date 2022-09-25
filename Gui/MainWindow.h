@@ -139,6 +139,7 @@ protected slots:
     /// \param pChecked: True, if the button is checked
     void OnItemUpButtonToggled(bool pChecked);
 
+#warning remove and directly call protected functions as slots
     /// \brief Sets the gate input count to the given value, if allowed
     /// \param pValue: The new gate input count
     void OnGateInputCountSliderValueChanged(int32_t pValue);
@@ -148,12 +149,16 @@ protected slots:
     void OnEncoderDecoderInputCountSliderValueChanged(int32_t pValue);
 
     /// \brief Sets the (de-)multiplexer bit width to the given value, if allowed
-    /// \param pValue: The new multiplexer bit width
+    /// \param pValue: The new (de-)multiplexer bit width
     void OnMultiplexerBitWidthSliderValueChanged(int32_t pValue);
 
     /// \brief Sets the shift register bit width to the value of the new index, if allowed
     /// \param pIndex: The new shift register box index
     void OnShiftRegisterWidthBoxIndexChanged(int32_t pIndex);
+
+    /// \brief Sets the counter bit width to the given value, if allowed
+    /// \param pValue: The new counter bit width
+    void OnCounterBitWidthSliderValueChanged(int32_t pValue);
 
     /// \brief Sets the constant state for new constant inputs to HIGH if the button is checked
     /// \param pChecked: True, if the button is checked
@@ -187,7 +192,7 @@ protected:
     /// \param pCount: The input count value to set to
     void SetGateInputCountIfAllowed(uint8_t pCount);
 
-    /// \brief Sets the current en-/decoder input count to the given value if SW is in ControlMode::ADD and either ENCODER or DECODER
+    /// \brief Sets the current en-/decoder input count to the given value if SW is in ControlMode::ADD and either ENCODER or DECODER is selected
     /// \param pCount: The input count value to set to
     void SetEncoderDecoderInputCountIfAllowed(uint8_t pCount);
 
@@ -206,6 +211,10 @@ protected:
     /// \brief Sets the current constant state to the given state if SW is in ControlMode::ADD
     /// \param pState: The logic state to set to
     void SetConstantStateIfAllowed(LogicState pState);
+
+    /// \brief Sets the current en-/decoder input count to the given value if SW is in ControlMode::ADD and COUNTER is selected
+    /// \param pCount: The counter bit width value to set to
+    void SetCounterBitWidthIfAllowed(uint8_t pBitWidth);
 
     // Simulation
 

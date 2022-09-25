@@ -38,5 +38,6 @@
         <file>../images/icons/delete.png</file>
         <file>../images/icons/mouse-cursor.png</file>
         <file>../images/icons/mouse-cursor_checked.png</file>
+        <file>../images/icons/constant_icon.png</file>
     </qresource>
 </RCC>
