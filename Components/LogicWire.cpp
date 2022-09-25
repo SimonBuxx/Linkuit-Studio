@@ -8,7 +8,7 @@ LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint
 {
     Q_ASSERT(pCoreLogic);
 
-    if (pCoreLogic->GetControlMode() == ControlMode::EDIT)
+    if (pCoreLogic->GetControlMode() == ControlMode::EDIT || pCoreLogic->GetControlMode() == ControlMode::COPY)
     {
         setCursor(Qt::PointingHandCursor);
     }
