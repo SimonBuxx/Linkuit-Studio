@@ -188,6 +188,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uEncoderDecoderInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnEncoderDecoderInputCountSliderValueChanged);
     QObject::connect(mUi->uMultiplexerBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnMultiplexerBitWidthSliderValueChanged);
     QObject::connect(mUi->uShiftRegisterWidthBox, &QComboBox::currentIndexChanged, this, &MainWindow::OnShiftRegisterWidthBoxIndexChanged);
+    QObject::connect(mUi->uConstantHighButton, &QPushButton::toggled, this, &MainWindow::OnConstantHighButtonToggled);
 
     // Connect widgets from clock configuration GUI
 
@@ -630,6 +631,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
@@ -639,6 +641,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::MULTIPLEXER_BITS:
@@ -648,6 +651,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->show();
             mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::ENCODER_DECODER:
@@ -657,6 +661,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uEncoderDecoderInputCountFrame->show();
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->hide();
             SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
             break;
         }
@@ -667,6 +672,17 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->show();
+            mUi->uConstantButtonsFrame->hide();
+            break;
+        }
+        case ConfiguratorMode::CONSTANT_STATE:
+        {
+            mUi->uItemDirectionButtonsFrame->hide();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->show();
             break;
         }
         default:
@@ -745,6 +761,12 @@ void MainWindow::OnShiftRegisterWidthBoxIndexChanged(int32_t pIndex)
     Q_ASSERT(pIndex < static_cast<int32_t>(values.size()));
 
     SetShiftRegisterBitWidthIfAllowed(values[pIndex]);
+}
+
+void MainWindow::OnConstantHighButtonToggled(bool pChecked)
+{
+    const auto state = pChecked ? LogicState::HIGH : LogicState::LOW;
+    SetConstantStateIfAllowed(state);
 }
 
 void MainWindow::EnterSimulation()
@@ -1236,6 +1258,7 @@ void MainWindow::InitializeToolboxTree()
     mCategoryInputsItem->appendRow(new QStandardItem(inputIcon, "Switch"));
     mCategoryInputsItem->appendRow(new QStandardItem(buttonIcon, "Button"));
     mCategoryInputsItem->appendRow(new QStandardItem(clockIcon, "Clock"));
+    mCategoryInputsItem->appendRow(new QStandardItem(inputIcon, "Constant"));
 
     mCategoryAddersItem->appendRow(new QStandardItem(flipflopIcon, "Half Adder"));
     mCategoryAddersItem->appendRow(new QStandardItem(fulladderIcon, "Full Adder"));
@@ -1551,6 +1574,14 @@ void MainWindow::SetComponentDirectionIfInAddMode(Direction pDirection)
     }
 }
 
+void MainWindow::SetConstantStateIfAllowed(LogicState pState)
+{
+    if (mCoreLogic.GetControlMode() == ControlMode::ADD)
+    {
+        mCoreLogic.SetConstantState(pState);
+    }
+}
+
 View& MainWindow::GetView()
 {
     return mView;
@@ -1650,6 +1681,11 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     case 2: // Clock
                     {
                         mCoreLogic.EnterAddControlMode(ComponentType::CLOCK);
+                        break;
+                    }
+                    case 3: // Constant
+                    {
+                        mCoreLogic.EnterAddControlMode(ComponentType::CONSTANT);
                         break;
                     }
                     default:

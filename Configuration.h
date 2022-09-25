@@ -152,6 +152,14 @@ static constexpr uint32_t DEFAULT_CLOCK_PULSE_TICKS = 10;
 
 // The default amount of ticks to pass before the clock timeouts
 static constexpr uint32_t DEFAULT_CLOCK_TOGGLE_TICKS = 100;
+
+namespace constant
+{
+static constexpr LogicState DEFAULT_STATE = LogicState::HIGH;
+static const QFont FONT("Quicksand Medium", 10);
+static constexpr QColor LOW_FONT_COLOR(255, 255, 255);
+static constexpr QColor HIGH_FONT_COLOR(255, 255, 255);
+}
 } // namespace
 
 namespace multiplexer
@@ -173,6 +181,9 @@ namespace shift_register
 static constexpr uint8_t MIN_BIT_WIDTH = 2;
 static constexpr uint8_t MAX_BIT_WIDTH = 32;
 static constexpr uint8_t DEFAULT_BIT_WIDTH = 4;
+static const QFont FONT("Quicksand Medium", 10);
+static constexpr QColor LOW_FONT_COLOR(255, 255, 255);
+static constexpr QColor HIGH_FONT_COLOR(255, 255, 255);
 } // namespace
 
 namespace complex_logic

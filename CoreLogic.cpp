@@ -6,6 +6,7 @@
 #include "Components/Gates/NotGate.h"
 #include "Components/Gates/BufferGate.h"
 #include "Components/Inputs/LogicInput.h"
+#include "Components/Inputs/LogicConstant.h"
 #include "Components/Inputs/LogicButton.h"
 #include "Components/Inputs/LogicClock.h"
 #include "Components/Outputs/LogicOutput.h"
@@ -298,6 +299,11 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
             item = new LogicInput(this);
             break;
         }
+        case ComponentType::CONSTANT:
+        {
+            item = new LogicConstant(this, mConstantState);
+            break;
+        }
         case ComponentType::BUTTON:
         {
             item = new LogicButton(this);
@@ -447,6 +453,11 @@ void CoreLogic::SetShiftRegisterBitWidth(uint8_t pBitWidth)
 {
     Q_ASSERT(pBitWidth >= components::shift_register::MIN_BIT_WIDTH && pBitWidth <= components::shift_register::MAX_BIT_WIDTH);
     mShiftRegisterBitWidth = pBitWidth;
+}
+
+void CoreLogic::SetConstantState(LogicState pState)
+{
+    mConstantState = pState;
 }
 
 void CoreLogic::SetPreviewWireStart(QPointF pPoint)
@@ -1776,6 +1787,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::INPUT:
             {
                 item = new LogicInput(this, pJson);
+                break;
+            }
+            case file::ComponentId::CONSTANT:
+            {
+                item = new LogicConstant(this, pJson);
                 break;
             }
             case file::ComponentId::BUTTON:

@@ -21,7 +21,9 @@ HEADERS += \
     $$PWD/Components/Gates/BufferGate.h \
     $$PWD/Components/Gates/LogicCells/LogicBufferGateCell.h \
     $$PWD/Components/Inputs/LogicCells/LogicClockCell.h \
+    $$PWD/Components/Inputs/LogicCells/LogicConstantCell.h \
     $$PWD/Components/Inputs/LogicClock.h \
+    $$PWD/Components/Inputs/LogicConstant.h \
     $$PWD/Components/LogicDiodeCell.h \
     $$PWD/RuntimeConfigParser.h \
     $$PWD/Undo/UndoCopyType.h \
@@ -89,7 +91,9 @@ SOURCES += \
     $$PWD/Components/Gates/BufferGate.cpp \
     $$PWD/Components/Gates/LogicCells/LogicBufferGateCell.cpp \
     $$PWD/Components/Inputs/LogicCells/LogicClockCell.cpp \
+    $$PWD/Components/Inputs/LogicCells/LogicConstantCell.cpp \
     $$PWD/Components/Inputs/LogicClock.cpp \
+    $$PWD/Components/Inputs/LogicConstant.cpp \
     $$PWD/Components/LogicDiodeCell.cpp \
     $$PWD/RuntimeConfigParser.cpp \
     $$PWD/Undo/UndoCopyType.cpp \

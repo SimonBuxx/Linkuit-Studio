@@ -40,7 +40,8 @@ namespace file
         JK_FLIPFLOP,
         DECODER,
         ENCODER,
-        SHIFTREGISTER // only append!
+        SHIFTREGISTER,
+        CONSTANT // only append!
     };
 } // namespace file
 
@@ -53,6 +54,7 @@ enum class ComponentType
     NOT_GATE,
     BUFFER_GATE,
     INPUT,
+    CONSTANT,
     BUTTON,
     CLOCK,
     OUTPUT,
@@ -138,7 +140,8 @@ enum class ConfiguratorMode
     DIRECTION_ONLY,
     MULTIPLEXER_BITS,
     ENCODER_DECODER,
-    SHIFTREGISTER_BITS
+    SHIFTREGISTER_BITS,
+    CONSTANT_STATE
 };
 
 namespace undo

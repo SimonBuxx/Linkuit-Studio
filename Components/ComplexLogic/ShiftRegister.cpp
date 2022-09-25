@@ -315,7 +315,7 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
         }
 
         // Draw state text
-        pPainter->setFont(components::complex_logic::CONNECTOR_FONT);
+        pPainter->setFont(components::shift_register::FONT);
         switch (mDirection)
         {
             case Direction::RIGHT:
@@ -326,7 +326,7 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
                     const auto text = (state == LogicState::HIGH) ? "1" : "0";
                     const auto x = (i + 1) * canvas::GRID_SIZE - components::BORDER_WIDTH + 1;
 
-                    pPainter->setPen((state == LogicState::HIGH) ? components::wires::WIRE_LOW_COLOR: components::complex_logic::SMALL_TEXT_FONT_COLOR);
+                    pPainter->setPen((state == LogicState::HIGH) ? components::shift_register::HIGH_FONT_COLOR: components::shift_register::LOW_FONT_COLOR);
                     pPainter->drawText(QRect(x, 2 * components::BORDER_WIDTH, bitStretch, mHeight - 4 * components::BORDER_WIDTH), text, Qt::AlignHCenter | Qt::AlignBottom);
                 }
                 break;
@@ -339,7 +339,7 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
                     const auto text = (state == LogicState::HIGH) ? "1" : "0";
                     const auto y = (i + 1) * canvas::GRID_SIZE - components::BORDER_WIDTH + 1;
 
-                    pPainter->setPen((state == LogicState::HIGH) ? components::wires::WIRE_LOW_COLOR: components::complex_logic::SMALL_TEXT_FONT_COLOR);
+                    pPainter->setPen((state == LogicState::HIGH) ? components::shift_register::HIGH_FONT_COLOR: components::shift_register::LOW_FONT_COLOR);
                     pPainter->drawText(QRect(4 * components::BORDER_WIDTH, y, mWidth - 8 * components::BORDER_WIDTH, bitStretch), text, Qt::AlignLeft | Qt::AlignVCenter);
                 }
                 break;
@@ -352,7 +352,7 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
                     const auto text = (state == LogicState::HIGH) ? "1" : "0";
                     const auto x = i * canvas::GRID_SIZE + 2 * components::BORDER_WIDTH + 1;
 
-                    pPainter->setPen((state == LogicState::HIGH) ? components::wires::WIRE_LOW_COLOR: components::complex_logic::SMALL_TEXT_FONT_COLOR);
+                    pPainter->setPen((state == LogicState::HIGH) ? components::shift_register::HIGH_FONT_COLOR: components::shift_register::LOW_FONT_COLOR);
                     pPainter->drawText(QRect(x, 2 * components::BORDER_WIDTH, bitStretch, mHeight - 4 * components::BORDER_WIDTH), text, Qt::AlignHCenter | Qt::AlignTop);
                 }
                 break;
@@ -365,7 +365,7 @@ void ShiftRegister::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pI
                     const auto text = (state == LogicState::HIGH) ? "1" : "0";
                     const auto y = i * canvas::GRID_SIZE + 2 * components::BORDER_WIDTH + 1;
 
-                    pPainter->setPen((state == LogicState::HIGH) ? components::wires::WIRE_LOW_COLOR: components::complex_logic::SMALL_TEXT_FONT_COLOR);
+                    pPainter->setPen((state == LogicState::HIGH) ? components::shift_register::HIGH_FONT_COLOR: components::shift_register::LOW_FONT_COLOR);
                     pPainter->drawText(QRect(4 * components::BORDER_WIDTH, y, mWidth - 8 * components::BORDER_WIDTH, bitStretch), text, Qt::AlignRight | Qt::AlignVCenter);
                 }
                 break;

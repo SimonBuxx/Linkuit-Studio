@@ -155,6 +155,10 @@ protected slots:
     /// \param pIndex: The new shift register box index
     void OnShiftRegisterWidthBoxIndexChanged(int32_t pIndex);
 
+    /// \brief Sets the constant state for new constant inputs to HIGH if the button is checked
+    /// \param pChecked: True, if the button is checked
+    void OnConstantHighButtonToggled(bool pChecked);
+
 protected:
     // Initialization
 
@@ -198,6 +202,10 @@ protected:
     /// \brief Sets the current component direction to the given direction if SW is in ControlMode::ADD
     /// \param pDirection: The direction to set to
     void SetComponentDirectionIfInAddMode(Direction pDirection);
+
+    /// \brief Sets the current constant state to the given state if SW is in ControlMode::ADD
+    /// \param pState: The logic state to set to
+    void SetConstantStateIfAllowed(LogicState pState);
 
     // Simulation
 
