@@ -191,6 +191,27 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uConstantHighButton, &QPushButton::toggled, this, &MainWindow::OnConstantHighButtonToggled);
     QObject::connect(mUi->uCounterBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnCounterBitWidthSliderValueChanged);
 
+    QObject::connect(mUi->uLatchButton, &QPushButton::toggled, this, [&](bool pChecked){
+        if (pChecked)
+        {
+            mCoreLogic.SetFlipFlopStyle(FlipFlopStyle::LATCH);
+        }
+    });
+
+    QObject::connect(mUi->uClockedButton, &QPushButton::toggled, this, [&](bool pChecked){
+        if (pChecked)
+        {
+            mCoreLogic.SetFlipFlopStyle(FlipFlopStyle::CLOCKED);
+        }
+    });
+
+    QObject::connect(mUi->uMasterSlaveButton, &QPushButton::toggled, this, [&](bool pChecked){
+        if (pChecked)
+        {
+            mCoreLogic.SetFlipFlopStyle(FlipFlopStyle::MASTER_SLAVE);
+        }
+    });
+
     // Connect widgets from clock configuration GUI
 
     QObject::connect(mUi->uButtonToggle, &QPushButton::toggled, this, &MainWindow::OnToggleButtonToggled);
@@ -635,7 +656,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
-            mUi->uLCounterBitWidthFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
+            mUi->uFlipFlopTypesFrame->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
@@ -646,7 +668,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
-            mUi->uLCounterBitWidthFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
+            mUi->uFlipFlopTypesFrame->hide();
             break;
         }
         case ConfiguratorMode::MULTIPLEXER_BITS:
@@ -657,7 +680,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->show();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
-            mUi->uLCounterBitWidthFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
+            mUi->uFlipFlopTypesFrame->hide();
             break;
         }
         case ConfiguratorMode::ENCODER_DECODER:
@@ -668,9 +692,10 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
-            mUi->uLCounterBitWidthFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
 #warning useless?
             SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
+            mUi->uFlipFlopTypesFrame->hide();
             break;
         }
         case ConfiguratorMode::SHIFTREGISTER_BITS:
@@ -681,7 +706,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->show();
             mUi->uConstantButtonsFrame->hide();
-            mUi->uLCounterBitWidthFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
+            mUi->uFlipFlopTypesFrame->hide();
             break;
         }
         case ConfiguratorMode::CONSTANT_STATE:
@@ -692,7 +718,8 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->show();
-            mUi->uLCounterBitWidthFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
+            mUi->uFlipFlopTypesFrame->hide();
             break;
         }
         case ConfiguratorMode::COUNTER_BITS:
@@ -703,7 +730,20 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uMultiplexerBitWidthFrame->hide();
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
-            mUi->uLCounterBitWidthFrame->show();
+            mUi->uCounterBitWidthFrame->show();
+            mUi->uFlipFlopTypesFrame->hide();
+            break;
+        }
+        case ConfiguratorMode::FLIPFLOP_TYPE:
+        {
+            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
+            mUi->uFlipFlopTypesFrame->show();
             break;
         }
         default:

@@ -25,6 +25,11 @@ void LogicTFlipFlopCell::LogicFunction()
         mStateChanged = true;
     }
 
+    if (mPrevInputStates[1] != mInputStates[1]) // Trigger repaint on every clock change
+    {
+        mStateChanged = true;
+    }
+
     mPrevInputStates = mInputStates;
 }
 
@@ -53,6 +58,15 @@ void LogicTFlipFlopCell::OnSimulationAdvance()
 
         emit StateChangedSignal();
     }
+}
+
+void LogicTFlipFlopCell::InputReady(uint32_t pInput, LogicState pState)
+{
+    if (mInputStates[pInput] != pState)
+    {
+        emit StateChangedSignal(); // to trigger immediate update of the component
+    }
+    LogicBaseCell::InputReady(pInput, pState);
 }
 
 void LogicTFlipFlopCell::OnWakeUp()

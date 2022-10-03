@@ -1,39 +1,30 @@
-#include "LogicJKFlipFlopCell.h"
+#include "LogicRsMsFlipFlopCell.h"
 
-LogicJKFlipFlopCell::LogicJKFlipFlopCell():
+LogicRsMsFlipFlopCell::LogicRsMsFlipFlopCell():
     LogicBaseCell(3, 2),
     mOutputStates(2, LogicState::LOW),
-    mPrevInputStates(2, LogicState::LOW),
+    mPrevInputStates(3, LogicState::LOW),
     mStateChanged(true)
 {}
 
-void LogicJKFlipFlopCell::LogicFunction()
+void LogicRsMsFlipFlopCell::LogicFunction()
 {
     if (mPrevInputStates[1] == LogicState::LOW && mInputStates[1] == LogicState::HIGH) // rising edge
     {
-        if (mPrevInputStates[0] == LogicState::HIGH && mPrevInputStates[2] == LogicState::HIGH) // both => toggle
+        // read in state
+        if (mInputStates[0] == LogicState::HIGH) // S high
         {
-            if (mOutputStates[0] == LogicState::LOW)
-            {
-                mOutputStates[0] = LogicState::HIGH;
-            }
-            else
-            {
-                mOutputStates[0] = LogicState::LOW;
-            }
+            mInternalState = LogicState::HIGH;
         }
-        else if (mPrevInputStates[0] == LogicState::HIGH && mPrevInputStates[2] == LogicState::LOW) // J => pull up
+        if (mInputStates[2] == LogicState::HIGH) // R high
         {
-            mOutputStates[0] = LogicState::HIGH;
+            mInternalState = LogicState::LOW;
         }
-        else if (mPrevInputStates[0] == LogicState::LOW && mPrevInputStates[2] == LogicState::HIGH) // K => pull down
-        {
-            mOutputStates[0] = LogicState::LOW;
-        }
-
+    }
+    else if (mPrevInputStates[1] == LogicState::HIGH && mInputStates[1] == LogicState::LOW) // falling edge
+    {
+        mOutputStates[0] = mInternalState;
         mOutputStates[1] = ((mOutputStates[0] == LogicState::HIGH) ? LogicState::LOW : LogicState::HIGH);
-
-        mStateChanged = true;
     }
 
     if (mPrevInputStates[1] != mInputStates[1]) // Trigger repaint on every clock change
@@ -44,7 +35,7 @@ void LogicJKFlipFlopCell::LogicFunction()
     mPrevInputStates = mInputStates;
 }
 
-LogicState LogicJKFlipFlopCell::GetOutputState(uint32_t pOutput) const
+LogicState LogicRsMsFlipFlopCell::GetOutputState(uint32_t pOutput) const
 {
     Q_ASSERT(pOutput <= 1);
     if (mOutputInverted[pOutput] && mIsActive)
@@ -57,7 +48,7 @@ LogicState LogicJKFlipFlopCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
-void LogicJKFlipFlopCell::OnSimulationAdvance()
+void LogicRsMsFlipFlopCell::OnSimulationAdvance()
 {
     AdvanceUpdateTime();
 
@@ -71,7 +62,7 @@ void LogicJKFlipFlopCell::OnSimulationAdvance()
     }
 }
 
-void LogicJKFlipFlopCell::InputReady(uint32_t pInput, LogicState pState)
+void LogicRsMsFlipFlopCell::InputReady(uint32_t pInput, LogicState pState)
 {
     if (mInputStates[pInput] != pState)
     {
@@ -80,8 +71,8 @@ void LogicJKFlipFlopCell::InputReady(uint32_t pInput, LogicState pState)
     LogicBaseCell::InputReady(pInput, pState);
 }
 
-void LogicJKFlipFlopCell::OnWakeUp()
-{   
+void LogicRsMsFlipFlopCell::OnWakeUp()
+{
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
 
     for (size_t i = 0; i < mInputStates.size(); i++)
@@ -100,11 +91,11 @@ void LogicJKFlipFlopCell::OnWakeUp()
     emit StateChangedSignal();
 }
 
-void LogicJKFlipFlopCell::OnShutdown()
+void LogicRsMsFlipFlopCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
-    mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
+    mOutputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mIsActive = false;
     emit StateChangedSignal();
 }

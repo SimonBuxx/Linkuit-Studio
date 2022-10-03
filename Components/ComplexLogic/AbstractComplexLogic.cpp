@@ -289,16 +289,42 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
         pPainter->setFont(components::complex_logic::CONNECTOR_FONT);
         switch (mDirection)
         {
+#warning split into sub functions
             case Direction::RIGHT:
             {
                 for (size_t i = 0; i < mTopInputCount; i++)
                 {
-                    pPainter->drawText(QRect(canvas::GRID_SIZE * i + canvas::GRID_SIZE - 20, 0, 40, mHeight), mInputLabels[mTopInputCount - i - 1], Qt::AlignHCenter | Qt::AlignTop);
+                    if (mInputLabels[mTopInputCount - i - 1] == ">")
+                    {
+                        SetClockInputPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+                        const QList<QPoint> trianglePointsDown = {QPoint((i + 1) * canvas::GRID_SIZE - 5, 0),
+                                                                  QPoint((i + 1) * canvas::GRID_SIZE + 5, 0),
+                                                                  QPoint((i + 1) * canvas::GRID_SIZE, 8)};
+                        pPainter->drawConvexPolygon(QPolygon(trianglePointsDown));
+                    }
+                    else
+                    {
+                        pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
+                        pPainter->drawText(QRect(canvas::GRID_SIZE * i + canvas::GRID_SIZE - 20, 0, 40, mHeight), mInputLabels[mTopInputCount - i - 1], Qt::AlignHCenter | Qt::AlignTop);
+                    }
                 }
                 for (int i = 0; i < mInputCount - mTopInputCount; i++)
                 {
-                    pPainter->drawText(QRect(2, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[i + mTopInputCount], Qt::AlignLeft | Qt::AlignVCenter);
+                    if (mInputLabels[i + mTopInputCount] == ">")
+                    {
+                        SetClockInputPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
+                        const QList<QPoint> trianglePointsRight = {QPoint(0, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 5),
+                                                                   QPoint(0, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE + 5),
+                                                                   QPoint(8, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE)};
+                        pPainter->drawConvexPolygon(QPolygon(trianglePointsRight));
+                    }
+                    else
+                    {
+                        pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
+                        pPainter->drawText(QRect(2, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[i + mTopInputCount], Qt::AlignLeft | Qt::AlignVCenter);
+                    }
                 }
+                pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
                 for (size_t i = 0; i < mOutputCount; i++)
                 {
                     pPainter->drawText(QRect(2, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 6, mWidth - 4, 10), mOutputLabels[i], Qt::AlignRight | Qt::AlignVCenter);
@@ -309,12 +335,35 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
             {
                 for (size_t i = 0; i < mTopInputCount; i++)
                 {
-                    pPainter->drawText(QRect(2, canvas::GRID_SIZE * i + canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[mTopInputCount - i - 1], Qt::AlignRight | Qt::AlignVCenter);
+                    if (mInputLabels[mTopInputCount - i - 1] == ">")
+                    {
+                        SetClockInputPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+                        const QList<QPoint> trianglePointsLeft = {QPoint(mWidth, canvas::GRID_SIZE * (i + 1) - 5), QPoint(mWidth, canvas::GRID_SIZE * (i + 1) + 5), QPoint(mWidth - 8, canvas::GRID_SIZE * (i + 1))};
+                        pPainter->drawConvexPolygon(QPolygon(trianglePointsLeft));
+                    }
+                    else
+                    {
+                        pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
+                        pPainter->drawText(QRect(2, canvas::GRID_SIZE * i + canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[mTopInputCount - i - 1], Qt::AlignRight | Qt::AlignVCenter);
+                    }
                 }
                 for (int i = 0; i < mInputCount - mTopInputCount; i++)
                 {
-                    pPainter->drawText(QRect(mWidth - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 20, 0, 40, mHeight), mInputLabels[i + mTopInputCount], Qt::AlignHCenter | Qt::AlignTop);
+                    if (mInputLabels[i + mTopInputCount] == ">")
+                    {
+                        SetClockInputPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
+                        const QList<QPoint> trianglePointsDown = {QPoint(mWidth - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 5, 0),
+                                                                         QPoint(mWidth - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE + 5, 0),
+                                                                         QPoint(mWidth - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE, 8)};
+                        pPainter->drawConvexPolygon(QPolygon(trianglePointsDown));
+                    }
+                    else
+                    {
+                        pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
+                        pPainter->drawText(QRect(mWidth - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 20, 0, 40, mHeight), mInputLabels[i + mTopInputCount], Qt::AlignHCenter | Qt::AlignTop);
+                    }
                 }
+                pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
                 for (size_t i = 0; i < mOutputCount; i++)
                 {
                     pPainter->drawText(QRect(mWidth - (mOutputsSpacing * canvas::GRID_SIZE * (mOutputCount - i - 1) + canvas::GRID_SIZE * (mOutputsTrapezoidOffset + 1)) - 20, 0, 40, mHeight), mOutputLabels[mOutputCount - i - 1], Qt::AlignHCenter | Qt::AlignBottom);

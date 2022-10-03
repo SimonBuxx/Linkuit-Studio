@@ -14,6 +14,7 @@
 #include "Components/ComplexLogic/HalfAdder.h"
 #include "Components/ComplexLogic/FullAdder.h"
 #include "Components/ComplexLogic/RsFlipFlop.h"
+#include "Components/ComplexLogic/RsMsFlipFlop.h"
 #include "Components/ComplexLogic/DFlipFlop.h"
 #include "Components/ComplexLogic/TFlipFlop.h"
 #include "Components/ComplexLogic/JKFlipFlop.h"
@@ -337,7 +338,27 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         }
         case ComponentType::RS_FLIPFLOP:
         {
-            item = new RsFlipFlop(this, mComponentDirection);
+            switch (mFlipFlopStyle)
+            {
+                case FlipFlopStyle::LATCH:
+                {
+                    item = new RsFlipFlop(this, mComponentDirection);
+                    break;
+                }
+                case FlipFlopStyle::CLOCKED:
+                {
+                    break;
+                }
+                case FlipFlopStyle::MASTER_SLAVE:
+                {
+                    item = new RsMasterSlaveFlipFlop(this, mComponentDirection);
+                    break;
+                }
+                default:
+                {
+                    throw std::logic_error("Unknown flip-flop style");
+                }
+            }
             break;
         }
         case ComponentType::D_FLIPFLOP:
@@ -465,6 +486,11 @@ void CoreLogic::SetCounterBitWidth(uint8_t pBitWidth)
 {
     Q_ASSERT(pBitWidth >= components::counter::MIN_BIT_WIDTH && pBitWidth <= components::counter::MAX_BIT_WIDTH);
     mCounterBitWidth = pBitWidth;
+}
+
+void CoreLogic::SetFlipFlopStyle(FlipFlopStyle pStyle)
+{
+    mFlipFlopStyle = pStyle;
 }
 
 void CoreLogic::SetConstantState(LogicState pState)
@@ -1849,6 +1875,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::JK_FLIPFLOP:
             {
                 item = new JKFlipFlop(this, pJson);
+                break;
+            }
+            case file::ComponentId::RS_MS_FLIPFLOP:
+            {
+                item = new RsMasterSlaveFlipFlop(this, pJson);
                 break;
             }
             case file::ComponentId::MULTIPLEXER:

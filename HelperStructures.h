@@ -42,7 +42,8 @@ namespace file
         ENCODER,
         SHIFTREGISTER,
         CONSTANT,
-        COUNTER // only append!
+        COUNTER,
+        RS_MS_FLIPFLOP // only append!
     };
 } // namespace file
 
@@ -68,6 +69,7 @@ enum class ComponentType
     DEMULTIPLEXER,
     T_FLIPFLOP,
     JK_FLIPFLOP,
+    RS_MS_FLIPFLOP,
     DECODER,
     ENCODER,
     SHIFTREGISTER,
@@ -135,6 +137,13 @@ enum class ClockMode
     PULSE
 };
 
+enum class FlipFlopStyle
+{
+    LATCH = 0,
+    CLOCKED,
+    MASTER_SLAVE
+};
+
 enum class ConfiguratorMode
 {
     NO_CONFIGURATION = 0,
@@ -144,7 +153,8 @@ enum class ConfiguratorMode
     ENCODER_DECODER,
     SHIFTREGISTER_BITS,
     CONSTANT_STATE,
-    COUNTER_BITS
+    COUNTER_BITS,
+    FLIPFLOP_TYPE
 };
 
 namespace undo

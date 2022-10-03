@@ -1,17 +1,17 @@
-#ifndef LOGICJKFLIPFLOPCELL_H
-#define LOGICJKFLIPFLOPCELL_H
+#ifndef LOGICRSMSFLIPFLOPCELL_H
+#define LOGICRSMSFLIPFLOPCELL_H
 
 #include "Components/LogicBaseCell.h"
 
 ///
-/// \brief Logic Cell class for the JK Flip-Flop
+/// \brief Logic Cell class for the RS master-slave Flip-Flop
 ///
-class LogicJKFlipFlopCell : public LogicBaseCell
+class LogicRsMsFlipFlopCell : public LogicBaseCell
 {
     Q_OBJECT
 public:
-    /// \brief Constructor for the JK flip-flop logic cell
-    LogicJKFlipFlopCell(void);
+    /// \brief Constructor for the RS master-slave flip-flop logic cell
+    LogicRsMsFlipFlopCell(void);
 
     /// \brief The logic function that determines the output states based on the inputs
     void LogicFunction(void) override;
@@ -39,8 +39,9 @@ public slots:
 protected:
     std::vector<LogicState> mOutputStates;
     std::vector<LogicState> mPrevInputStates;
+    LogicState mInternalState;
 
     bool mStateChanged;
 };
 
-#endif // LOGICJKFLIPFLOPCELL_H
+#endif // LOGICRSMSFLIPFLOPCELL_H

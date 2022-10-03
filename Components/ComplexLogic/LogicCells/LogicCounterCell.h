@@ -1,17 +1,18 @@
-#ifndef LOGICJKFLIPFLOPCELL_H
-#define LOGICJKFLIPFLOPCELL_H
+#ifndef LOGICCOUNTERCELL_H
+#define LOGICCOUNTERCELL_H
 
 #include "Components/LogicBaseCell.h"
 
 ///
-/// \brief Logic Cell class for the JK Flip-Flop
+/// \brief Logic Cell class for the synchronous counter
 ///
-class LogicJKFlipFlopCell : public LogicBaseCell
+class LogicCounterCell : public LogicBaseCell
 {
     Q_OBJECT
 public:
-    /// \brief Constructor for the JK flip-flop logic cell
-    LogicJKFlipFlopCell(void);
+    /// \brief Constructor for the counter cell
+    /// \param pBitWidth: The amount of output bits for this counter
+    LogicCounterCell(uint8_t pBitWidth);
 
     /// \brief The logic function that determines the output states based on the inputs
     void LogicFunction(void) override;
@@ -41,6 +42,10 @@ protected:
     std::vector<LogicState> mPrevInputStates;
 
     bool mStateChanged;
+
+    uint8_t mBitWidth;
+    uint32_t mValue;
+    uint32_t mMaxValue;
 };
 
-#endif // LOGICJKFLIPFLOPCELL_H
+#endif // LOGICCOUNTERCELL_H
