@@ -1900,46 +1900,66 @@ QFrame {
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="uLatchButton">
-              <property name="text">
-               <string>Latch</string>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="uFlipFlopTypeBox">
+              <property name="styleSheet">
+               <string notr="true">QComboBox {
+    background: rgba(0, 0, 0, 13);
+    padding: 4px 5px;
+    color: rgb(0, 39, 43);
+    font: 11pt &quot;Source Sans Pro&quot;;
+}
+
+QComboBox QAbstractItemView {
+    selection-background-color: rgb(220, 220, 220);
+}</string>
               </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">uFlipFlopTypeButtonGroup</string>
-              </attribute>
+              <item>
+               <property name="text">
+                <string>Latch</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Clocked</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Master-Slave</string>
+               </property>
+              </item>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="uClockedButton">
-              <property name="text">
-               <string>Clocked</string>
+            <item row="1" column="0">
+             <widget class="QLabel" name="uFlipFlopTypeLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-              <property name="checkable">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+              </property>
+              <property name="scaledContents">
                <bool>true</bool>
               </property>
-              <attribute name="buttonGroup">
-               <string notr="true">uFlipFlopTypeButtonGroup</string>
-              </attribute>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="2">
-             <widget class="QPushButton" name="uMasterSlaveButton">
-              <property name="text">
-               <string>Master-Slave</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">uFlipFlopTypeButtonGroup</string>
-              </attribute>
              </widget>
             </item>
            </layout>
@@ -3166,11 +3186,11 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
+  <buttongroup name="uConstantButtonsGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uFlipFlopTypeButtonGroup"/>
   <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uFlipFlopTypeButtonGroup"/>
-  <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
  </buttongroups>
 </ui>

@@ -164,6 +164,10 @@ protected slots:
     /// \param pChecked: True, if the button is checked
     void OnConstantHighButtonToggled(bool pChecked);
 
+    /// \brief Sets the flip-flop style to the style associated with the given index
+    /// \param pIndex: The combo box index
+    void OnFlipFlopStyleChanged(int32_t pIndex);
+
 protected:
     // Initialization
 

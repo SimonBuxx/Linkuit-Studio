@@ -191,26 +191,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uConstantHighButton, &QPushButton::toggled, this, &MainWindow::OnConstantHighButtonToggled);
     QObject::connect(mUi->uCounterBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnCounterBitWidthSliderValueChanged);
 
-    QObject::connect(mUi->uLatchButton, &QPushButton::toggled, this, [&](bool pChecked){
-        if (pChecked)
-        {
-            mCoreLogic.SetFlipFlopStyle(FlipFlopStyle::LATCH);
-        }
-    });
-
-    QObject::connect(mUi->uClockedButton, &QPushButton::toggled, this, [&](bool pChecked){
-        if (pChecked)
-        {
-            mCoreLogic.SetFlipFlopStyle(FlipFlopStyle::CLOCKED);
-        }
-    });
-
-    QObject::connect(mUi->uMasterSlaveButton, &QPushButton::toggled, this, [&](bool pChecked){
-        if (pChecked)
-        {
-            mCoreLogic.SetFlipFlopStyle(FlipFlopStyle::MASTER_SLAVE);
-        }
-    });
+    QObject::connect(mUi->uFlipFlopTypeBox, &QComboBox::currentIndexChanged, this, &MainWindow::OnFlipFlopStyleChanged);
 
     // Connect widgets from clock configuration GUI
 
@@ -833,6 +814,14 @@ void MainWindow::OnConstantHighButtonToggled(bool pChecked)
 {
     const auto state = pChecked ? LogicState::HIGH : LogicState::LOW;
     SetConstantStateIfAllowed(state);
+}
+
+void MainWindow::OnFlipFlopStyleChanged(int32_t pIndex)
+{
+    if (pIndex >= static_cast<int32_t>(FlipFlopStyle::LATCH) && pIndex <= static_cast<int32_t>(FlipFlopStyle::MASTER_SLAVE))
+    {
+        mCoreLogic.SetFlipFlopStyle(static_cast<FlipFlopStyle>(pIndex));
+    }
 }
 
 void MainWindow::EnterSimulation()
@@ -1475,6 +1464,8 @@ void MainWindow::InitializeGuiIcons()
     mUi->uLabelCounterBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
     mUi->uLabelCounterBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
     mUi->uLabelCounterBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+
+    mUi->uFlipFlopTypeLabel->setPixmap(mAwesome->icon(fa::sort, mStatusBarIconVariant).pixmap(20, 20));
 
     // Icons for status bar elements
     mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
