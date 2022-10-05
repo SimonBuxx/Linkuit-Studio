@@ -4,6 +4,7 @@ LogicRsMsFlipFlopCell::LogicRsMsFlipFlopCell():
     LogicBaseCell(3, 2),
     mOutputStates(2, LogicState::LOW),
     mPrevInputStates(3, LogicState::LOW),
+    mInternalState(LogicState::LOW),
     mStateChanged(true)
 {}
 
