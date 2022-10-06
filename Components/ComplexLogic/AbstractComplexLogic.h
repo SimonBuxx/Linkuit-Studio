@@ -65,6 +65,26 @@ protected:
     /// \param pItem: Contains drawing parameters
     void DrawComponentDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
 
+    /// \brief Draws the connector description strings or clock symbol for inputs labeled ">" (right facing component)
+    /// \param pPainter: The painter to use
+    /// \param pItem: Contains drawing parameters
+    void DrawConnectorDescriptionsRight(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
+    /// \brief Draws the connector description strings or clock symbol for inputs labeled ">" (down facing component)
+    /// \param pPainter: The painter to use
+    /// \param pItem: Contains drawing parameters
+    void DrawConnectorDescriptionsDown(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
+    /// \brief Draws the connector description strings or clock symbol for inputs labeled ">" (left facing component)
+    /// \param pPainter: The painter to use
+    /// \param pItem: Contains drawing parameters
+    void DrawConnectorDescriptionsLeft(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
+    /// \brief Draws the connector description strings or clock symbol for inputs labeled ">" (up facing component)
+    /// \param pPainter: The painter to use
+    /// \param pItem: Contains drawing parameters
+    void DrawConnectorDescriptionsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem);
+
     /// \brief Creates logic connectors at all in- and output pin points
     virtual void SetLogicConnectors(void);
 
