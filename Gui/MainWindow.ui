@@ -1305,171 +1305,6 @@ QFrame {
          <property name="bottomMargin">
           <number>15</number>
          </property>
-         <item row="2" column="0" colspan="2">
-          <widget class="QFrame" name="uPulseFrame">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>5</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="uLabelPulseIcon">
-              <property name="minimumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-        background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelPulseMinus">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-    color: rgb(0, 45, 50);
-    font: 12pt &quot;Source Sans Pro&quot;;
-        background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string>-</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="uPulseSlider">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Pulse duration</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QSlider {
-        background: none;
-}
-
-QSlider::groove:horizontal {
-    height: 1px;
-    margin: 2px 0;
-    background: rgb(0, 204, 143);
-}
-
-QSlider::handle:horizontal {
-    background: rgb(0, 204, 143);
-    width: 6px;
-    margin: -8px 0;
-}
-
-QSlider::groove:horizontal:disabled {
-    background: rgb(180, 180, 180);
-}
-
-QSlider::handle:horizontal:disabled {
-    background: rgb(180, 180, 180);
-}</string>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelPulsePlus">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-    color: rgb(0, 45, 50);
-    font: 12pt &quot;Source Sans Pro&quot;;
-        background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string>+</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelPulse">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-    color: rgb(0, 45, 50);
-    font: 11pt &quot;Source Sans Pro&quot;;
-        background: none;
-}
-
-QLabel:disabled {
-                color: rgb(180, 180, 180);
-}</string>
-              </property>
-              <property name="text">
-               <string>1 Tick / Pulse</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
          <item row="0" column="0" alignment="Qt::AlignTop">
           <widget class="QPushButton" name="uButtonPulse">
            <property name="text">
@@ -1563,7 +1398,7 @@ QLabel:disabled {
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="uLabelToggleMinus">
+             <widget class="QLabel" name="label">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -1573,79 +1408,85 @@ QLabel:disabled {
               <property name="styleSheet">
                <string notr="true">QLabel {
     color: rgb(0, 45, 50);
-    font: 12pt &quot;Source Sans Pro&quot;;
+    font: 11pt &quot;Source Sans Pro&quot;;
         background: none;
+}
+
+QLabel:disabled {
+                color: rgb(100, 100, 100);
 }</string>
               </property>
               <property name="text">
-               <string>-</string>
+               <string>Speed:</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="uToggleSlider">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Toggle speed</string>
+             <widget class="QSpinBox" name="uToggleSpinBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="styleSheet">
-               <string notr="true">QSlider {
-        background: none;
+               <string notr="true">QSpinBox {
+    background: rgba(0, 0, 0, 13);
+	padding: 4px;
+    color: rgb(0, 45, 50);
+    font: 11pt &quot;Source Sans Pro&quot;;
+    selection-color: rgb(0, 45, 50);
+    selection-background-color: rgb(0, 204, 143);
 }
 
-QSlider::groove:horizontal {
-    height: 1px;
-    margin: 2px 0;
-        background: rgb(0, 204, 143);
+QSpinBox::up-button {
+	width: 20px;
 }
 
-QSlider::handle:horizontal {
-    background: rgb(0, 204, 143);
-    width: 6px;
-    margin: -8px 0;
+QSpinBox::down-button {
+	width: 20px;
 }</string>
+              </property>
+              <property name="accelerated">
+               <bool>true</bool>
+              </property>
+              <property name="suffix">
+               <string/>
               </property>
               <property name="minimum">
                <number>1</number>
               </property>
               <property name="maximum">
-               <number>100</number>
+               <number>1000</number>
+              </property>
+              <property name="stepType">
+               <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
               </property>
               <property name="value">
-               <number>50</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelTogglePlus">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-    color: rgb(0, 45, 50);
-    font: 12pt &quot;Source Sans Pro&quot;;
-        background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string>+</string>
+               <number>500</number>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="uLabelToggle">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>85</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>85</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>Source Sans Pro</family>
@@ -1667,7 +1508,170 @@ QLabel:disabled {
 }</string>
               </property>
               <property name="text">
-               <string>50 Ticks / Toggle</string>
+               <string>Ticks / toggle</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QFrame" name="uPulseFrame">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="uLabelPulseIcon">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+        background: none;
+}</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+    color: rgb(0, 45, 50);
+    font: 11pt &quot;Source Sans Pro&quot;;
+        background: none;
+}
+
+QLabel:disabled {
+                color: rgb(100, 100, 100);
+}</string>
+              </property>
+              <property name="text">
+               <string>Duration:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="uPulseSpinBox">
+              <property name="styleSheet">
+               <string notr="true">QSpinBox {
+    background: rgba(0, 0, 0, 13);
+	padding: 4px;
+    color: rgb(0, 45, 50);
+    font: 11pt &quot;Source Sans Pro&quot;;
+    selection-color: rgb(0, 45, 50);
+    selection-background-color: rgb(0, 204, 143);
+}
+
+QSpinBox::up-button {
+	width: 20px;
+}
+
+QSpinBox::down-button {
+	width: 20px;
+}</string>
+              </property>
+              <property name="accelerated">
+               <bool>true</bool>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="stepType">
+               <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelPulse">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>85</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>85</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+    color: rgb(0, 45, 50);
+    font: 11pt &quot;Source Sans Pro&quot;;
+        background: none;
+}
+
+QLabel:disabled {
+                color: rgb(180, 180, 180);
+}</string>
+              </property>
+              <property name="text">
+               <string>Ticks / pulse</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
               </property>
              </widget>
             </item>
@@ -3186,11 +3190,10 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uConstantButtonsGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uFlipFlopTypeButtonGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
+  <buttongroup name="uConstantButtonsGroup"/>
  </buttongroups>
 </ui>

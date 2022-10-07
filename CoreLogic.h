@@ -185,10 +185,6 @@ public:
     /// \param pValue: The new toggle value
     void OnToggleValueChanged(uint32_t pValue);
 
-    /// \brief Sets the pulse value of the selected clock to the new value
-    /// \param pValue: The new pulse value
-    void OnPulseValueChanged(uint32_t pValue);
-
     /// \brief Sets the clock mode of the selected clock to the new mode
     /// \param pMode: The new clock mode
     void OnClockModeChanged(ClockMode pMode);
@@ -265,6 +261,10 @@ public slots:
     /// \param pToggle: The toggle speed
     /// \param pPulse: The pulse duration
     void OnShowClockConfiguratorRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
+
+    /// \brief Sets the pulse value of the selected clock to the new value
+    /// \param pValue: The new pulse value
+    void OnPulseValueChanged(uint32_t pValue);
 
     // Slots for configuration events
 

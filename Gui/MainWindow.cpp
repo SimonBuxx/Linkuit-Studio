@@ -196,8 +196,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     // Connect widgets from clock configuration GUI
 
     QObject::connect(mUi->uButtonToggle, &QPushButton::toggled, this, &MainWindow::OnToggleButtonToggled);
-    QObject::connect(mUi->uToggleSlider, &QSlider::valueChanged, this, &MainWindow::OnToggleSliderValueChanged);
-    QObject::connect(mUi->uPulseSlider, &QSlider::valueChanged, this, &MainWindow::OnPulseSliderValueChanged);
+    QObject::connect(mUi->uToggleSpinBox, &QSpinBox::valueChanged, this, &MainWindow::OnToggleValueChanged);
+    QObject::connect(mUi->uPulseSpinBox, &QSpinBox::valueChanged, &mCoreLogic, &CoreLogic::OnPulseValueChanged);
 
     QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, mUi->uActionDelete, &QAction::trigger);
     QObject::connect(mUi->uUndoButton, &QAbstractButton::clicked, mUi->uActionUndo, &QAction::trigger);
@@ -577,21 +577,12 @@ void MainWindow::OnToggleButtonToggled(bool pChecked)
     }
 }
 
-void MainWindow::OnToggleSliderValueChanged(int32_t pValue)
+void MainWindow::OnToggleValueChanged(int32_t pValue)
 {
-    mUi->uLabelToggle->setText(tr(pValue > 1 ? "%0 Ticks / Toggle" : "%0 Tick / Toggle").arg(pValue));
-
-    mUi->uPulseSlider->setMaximum(pValue);
+    mUi->uPulseSpinBox->setMaximum(pValue);
 
     mCoreLogic.OnToggleValueChanged(pValue);
-    mCoreLogic.OnPulseValueChanged(mUi->uPulseSlider->value());
-}
-
-void MainWindow::OnPulseSliderValueChanged(int32_t pValue)
-{
-    mUi->uLabelPulse->setText(tr(pValue > 1 ? "%0 Ticks / Pulse" : "%0 Tick / Pulse").arg(pValue));
-
-    mCoreLogic.OnPulseValueChanged(pValue);
+    mCoreLogic.OnPulseValueChanged(mUi->uPulseSpinBox->value());
 }
 
 void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
@@ -616,8 +607,8 @@ void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32
         mUi->uButtonPulse->setChecked(true);
     }
 
-    mUi->uToggleSlider->setValue(pToggle);
-    mUi->uPulseSlider->setValue(pPulse);
+    mUi->uToggleSpinBox->setValue(pToggle);
+    mUi->uPulseSpinBox->setValue(pPulse);
 }
 
 void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
@@ -1435,12 +1426,7 @@ void MainWindow::InitializeGuiIcons()
 
     // Icons for configuration elements
     mUi->uLabelToggleIcon->setPixmap(mAwesome->icon(fa::tachometer, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelTogglePlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelToggleMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
-
     mUi->uLabelPulseIcon->setPixmap(mAwesome->icon(fa::hourglasso, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelPulsePlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelPulseMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     mUi->uItemRightButton->setIcon(mAwesome->icon(fa::arrowright, mConfigButtonIconVariant));
     mUi->uItemDownButton->setIcon(mAwesome->icon(fa::arrowdown, mConfigButtonIconVariant));

@@ -109,17 +109,13 @@ protected slots:
     /// \param pPulse: The pulse duration
     void ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
 
-    /// \brief Show or hides the pulse slider and forwards the new clock mode
+    /// \brief Show or hides the pulse value box and forwards the new clock mode
     /// \param pChecked: True, if the toggle button is checked
     void OnToggleButtonToggled(bool pChecked);
 
-    /// \brief Updates the toggle speed label and forwards the change to the core logic
+    /// \brief Updates the maximum pulse duration and forwards the new toggle speed
     /// \param pValue: Tne new toggle speed
-    void OnToggleSliderValueChanged(int32_t pValue);
-
-    /// \brief Updates the pulse duration label and forwards the change to the core logic
-    /// \param pValue: Tne new pulse duration
-    void OnPulseSliderValueChanged(int32_t pValue);
+    void OnToggleValueChanged(int32_t pValue);
 
     // Item configuration
 

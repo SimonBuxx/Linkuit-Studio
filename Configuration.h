@@ -65,7 +65,7 @@ static constexpr QRectF DIMENSIONS(-32000, -32000, 64000, 64000);
 
 namespace simulation
 {
-static constexpr std::chrono::milliseconds PROPAGATION_DELAY(10);
+static constexpr std::chrono::milliseconds PROPAGATION_DELAY(1);
 } // namespace
 
 namespace components
@@ -142,16 +142,16 @@ static constexpr QColor FONT_COLOR(255, 255, 255);
 
 namespace inputs
 {
-static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(50 * simulation::PROPAGATION_DELAY);
+static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(500 * simulation::PROPAGATION_DELAY);
 
 // The default clock mode (whether the clock should toggle at timeout or pulse)
 static constexpr ClockMode DEFAULT_CLOCK_MODE = ClockMode::PULSE;
 
 // The default pulse duration
-static constexpr uint32_t DEFAULT_CLOCK_PULSE_TICKS = 10;
+static constexpr uint32_t DEFAULT_CLOCK_PULSE_TICKS = 100;
 
 // The default amount of ticks to pass before the clock timeouts
-static constexpr uint32_t DEFAULT_CLOCK_TOGGLE_TICKS = 100;
+static constexpr uint32_t DEFAULT_CLOCK_TOGGLE_TICKS = 500;
 
 namespace constant
 {
