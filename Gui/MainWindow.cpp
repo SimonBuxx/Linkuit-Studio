@@ -196,7 +196,11 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     // Connect widgets from clock configuration GUI
 
     QObject::connect(mUi->uButtonToggle, &QPushButton::toggled, this, &MainWindow::OnToggleButtonToggled);
-    QObject::connect(mUi->uToggleSpinBox, &QSpinBox::valueChanged, this, &MainWindow::OnToggleValueChanged);
+    QObject::connect(mUi->uToggleSpinBox, &QSpinBox::editingFinished, this, [this](){
+        mUi->uPulseSpinBox->setMaximum(mUi->uToggleSpinBox->value());
+        mCoreLogic.OnToggleValueChanged(mUi->uToggleSpinBox->value());
+        mCoreLogic.OnPulseValueChanged(mUi->uPulseSpinBox->value());
+    });
     QObject::connect(mUi->uPulseSpinBox, &QSpinBox::valueChanged, &mCoreLogic, &CoreLogic::OnPulseValueChanged);
 
     QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, mUi->uActionDelete, &QAction::trigger);
@@ -575,14 +579,6 @@ void MainWindow::OnToggleButtonToggled(bool pChecked)
         mUi->uPulseFrame->show();
         mCoreLogic.OnClockModeChanged(ClockMode::PULSE);
     }
-}
-
-void MainWindow::OnToggleValueChanged(int32_t pValue)
-{
-    mUi->uPulseSpinBox->setMaximum(pValue);
-
-    mCoreLogic.OnToggleValueChanged(pValue);
-    mCoreLogic.OnPulseValueChanged(mUi->uPulseSpinBox->value());
 }
 
 void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)

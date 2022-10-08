@@ -113,10 +113,6 @@ protected slots:
     /// \param pChecked: True, if the toggle button is checked
     void OnToggleButtonToggled(bool pChecked);
 
-    /// \brief Updates the maximum pulse duration and forwards the new toggle speed
-    /// \param pValue: Tne new toggle speed
-    void OnToggleValueChanged(int32_t pValue);
-
     // Item configuration
 
     /// \brief Sets the direction for new items to right if the button is checked
