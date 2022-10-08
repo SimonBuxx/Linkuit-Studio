@@ -201,7 +201,9 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         mCoreLogic.OnToggleValueChanged(mUi->uToggleSpinBox->value());
         mCoreLogic.OnPulseValueChanged(mUi->uPulseSpinBox->value());
     });
-    QObject::connect(mUi->uPulseSpinBox, &QSpinBox::valueChanged, &mCoreLogic, &CoreLogic::OnPulseValueChanged);
+    QObject::connect(mUi->uPulseSpinBox, &QSpinBox::editingFinished, this, [this](){
+        mCoreLogic.OnPulseValueChanged(mUi->uPulseSpinBox->value());
+    });
 
     QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, mUi->uActionDelete, &QAction::trigger);
     QObject::connect(mUi->uUndoButton, &QAbstractButton::clicked, mUi->uActionUndo, &QAction::trigger);

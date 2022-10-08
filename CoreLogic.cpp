@@ -195,9 +195,11 @@ void CoreLogic::OnToggleValueChanged(uint32_t pValue)
 {
     if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
     {
-        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        auto clock = static_cast<LogicClock*>(mView.Scene()->selectedItems()[0]);
+        auto clockCell = std::dynamic_pointer_cast<LogicClockCell>(clock->GetLogicCell());
+        if (nullptr != clockCell && pValue != clockCell->GetToggleTicks())
         {
-            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetToggleTicks(pValue);
+            clockCell->SetToggleTicks(pValue);
             mCircuitFileParser.MarkAsModified();
         }
     }
@@ -207,9 +209,11 @@ void CoreLogic::OnPulseValueChanged(uint32_t pValue)
 {
     if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
     {
-        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        auto clock = static_cast<LogicClock*>(mView.Scene()->selectedItems()[0]);
+        auto clockCell = std::dynamic_pointer_cast<LogicClockCell>(clock->GetLogicCell());
+        if (nullptr != clockCell && pValue != clockCell->GetPulseTicks())
         {
-            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetPulseTicks(pValue);
+            clockCell->SetPulseTicks(pValue);
             mCircuitFileParser.MarkAsModified();
         }
     }
@@ -219,9 +223,11 @@ void CoreLogic::OnClockModeChanged(ClockMode pMode)
 {
     if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
     {
-        if (nullptr != std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell()))
+        auto clock = static_cast<LogicClock*>(mView.Scene()->selectedItems()[0]);
+        auto clockCell = std::dynamic_pointer_cast<LogicClockCell>(clock->GetLogicCell());
+        if (nullptr != clockCell && pMode != clockCell->GetClockMode())
         {
-            std::dynamic_pointer_cast<LogicClockCell>(dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0])->GetLogicCell())->SetClockMode(pMode);
+            clockCell->SetClockMode(pMode);
             mCircuitFileParser.MarkAsModified();
         }
     }
