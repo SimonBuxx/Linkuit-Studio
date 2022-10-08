@@ -65,6 +65,10 @@ public:
     /// \return The JSON object with the component data
     virtual QJsonObject GetJson(void) const override;
 
+    /// \brief Gets the minimum version compatible with this component
+    /// \return the minimum version
+    virtual SwVersion GetMinVersion(void) const override;
+
 protected:
     /// \brief Paints the wire component
     /// \param pPainter: The painter to use

@@ -35,6 +35,10 @@ public:
     /// \return The JSON object with the component data
     virtual QJsonObject GetJson(void) const override;
 
+    /// \brief Gets the minimum version compatible with this component
+    /// \return the minimum version
+    virtual SwVersion GetMinVersion(void) const override;
+
     /// \brief Defines the bounding rect of this component
     /// \return A rectangle describing the bounding rect
     QRectF boundingRect(void) const override;

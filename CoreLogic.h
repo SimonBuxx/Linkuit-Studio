@@ -235,6 +235,18 @@ signals:
     /// \brief Emitted when the undo/redo button enabled state should be updated
     void UpdateUndoRedoEnabledSignal(void);
 
+    /// \brief Emitted when a file that has been created with a newer compatible software version is loaded
+    /// \param pVersion: The software version of the file
+    void FileHasNewerCompatibleVersionSignal(QString pVersion);
+
+    /// \brief Emitted when a file that has been created with a newer incompatible software version is loaded
+    /// \param pVersion: The software version of the file
+    void FileHasNewerIncompatibleVersionSignal(QString pVersion);
+
+    /// \brief Emitted when a file has been opened and parsed successfully
+    /// \param pFileInfo: Reference to the associated file info
+    void OpeningFileSuccessfulSignal(const QFileInfo &pFileInfo);
+
     /// \brief Emitted when the clock configurator should be displayed with the given settings
     /// \param pMode: The clock mode (either toggle or pulse)
     /// \param pToggle: The toggle speed
@@ -454,8 +466,9 @@ protected:
 
     // Functions for loading and saving
     /// \brief Loads a circuit from the given JSON object
+    /// \param pFileInfo: The file info of the loaded file
     /// \param pJson: The JSON data of the circuit to load
-    void ReadJson(const QJsonObject& pJson);
+    void ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson);
 
     /// \brief Creates a circuit component using the provided JSON data
     /// \param pJson: The JSON data of the circuit component

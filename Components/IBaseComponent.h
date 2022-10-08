@@ -90,6 +90,10 @@ public:
     /// \return The JSON object with the component data
     virtual QJsonObject GetJson(void) const = 0;
 
+    /// \brief Gets the minimum version compatible with this component
+    /// \return the minimum version
+    virtual SwVersion GetMinVersion(void) const = 0;
+
 protected slots:
     /// \brief Updates when this component's logic state changed
     void OnLogicStateChanged(void);

@@ -9,7 +9,13 @@
 
 static constexpr uint8_t MAX_UNDO_STACK_SIZE = 100;
 
-static constexpr const char* SW_VERSION_STRING = "0.9.7";
+static constexpr uint8_t MAJOR_VERSION = 0;
+static constexpr uint8_t MINOR_VERSION = 9;
+static constexpr uint8_t PATCH_VERSION = 7;
+
+static const std::string SW_VERSION_STRING = std::to_string(MAJOR_VERSION) + "." +
+                                             std::to_string(MINOR_VERSION) + "." +
+                                             std::to_string(PATCH_VERSION);
 
 namespace file
 {
@@ -17,6 +23,13 @@ static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::BINARY;
 
 static constexpr const char* JSON_COMPONENTS_IDENTIFIER = "components";
 static constexpr const char* JSON_TYPE_IDENTIFIER = "type";
+static constexpr const char* JSON_MAJOR_VERSION_IDENTIFIER = "major";
+static constexpr const char* JSON_MINOR_VERSION_IDENTIFIER = "minor";
+static constexpr const char* JSON_PATCH_VERSION_IDENTIFIER = "patch";
+
+static constexpr const char* JSON_COMPATIBLE_MAJOR_VERSION_IDENTIFIER = "comp_major";
+static constexpr const char* JSON_COMPATIBLE_MINOR_VERSION_IDENTIFIER = "comp_minor";
+static constexpr const char* JSON_COMPATIBLE_PATCH_VERSION_IDENTIFIER = "comp_patch";
 
 namespace runtime_config
 {

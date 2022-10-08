@@ -33,6 +33,10 @@ public:
     /// \return The JSON object with the component data
     virtual QJsonObject GetJson(void) const override = 0;
 
+    /// \brief Gets the minimum version compatible with this component
+    /// \return the minimum version
+    virtual SwVersion GetMinVersion(void) const override = 0;
+
 protected:
     /// \brief Paints the abstract gate component
     /// \param pPainter: The painter to use

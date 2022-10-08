@@ -280,3 +280,7 @@ QJsonObject LogicClock::GetJson() const
     return json;
 }
 
+SwVersion LogicClock::GetMinVersion(void) const
+{
+    return SwVersion(0, 0, 0);
+}

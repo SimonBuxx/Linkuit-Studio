@@ -96,3 +96,8 @@ LogicState LogicConstant::GetConstantState() const
 {
     return std::static_pointer_cast<LogicConstantCell>(mLogicCell)->GetConstantState();
 }
+
+SwVersion LogicConstant::GetMinVersion(void) const
+{
+    return SwVersion(0, 9, 7);
+}

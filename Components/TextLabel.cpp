@@ -215,6 +215,11 @@ QJsonObject TextLabel::GetJson() const
     return json;
 }
 
+SwVersion TextLabel::GetMinVersion(void) const
+{
+    return SwVersion(0, 0, 0);
+}
+
 void PlainTextEdit::SetLastTextState(const QString& pText)
 {
     mLastTextState = pText;

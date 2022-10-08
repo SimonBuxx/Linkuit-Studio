@@ -49,11 +49,7 @@ CoreLogic::CoreLogic(View &pView):
     QObject::connect(&mPropagationTimer, &QTimer::timeout, this, &CoreLogic::OnPropagationTimeout);
     QObject::connect(&mProcessingTimer, &QTimer::timeout, this, &CoreLogic::OnProcessingTimeout);
 
-    QObject::connect(&mCircuitFileParser, &CircuitFileParser::LoadCircuitFileSuccessSignal, this, [&](const QFileInfo& pFileInfo, const QJsonObject& pJson)
-    {
-        Q_UNUSED(pFileInfo);
-        ReadJson(pJson);
-    });
+    QObject::connect(&mCircuitFileParser, &CircuitFileParser::LoadCircuitFileSuccessSignal, this, &CoreLogic::ReadJson);
 
     if (!mRuntimeConfigParser.LoadRuntimeConfig(GetRuntimeConfigAbsolutePath()))
     {
@@ -1709,18 +1705,28 @@ void CoreLogic::DeleteSelectedComponents()
 QJsonObject CoreLogic::GetJson() const
 {
     QJsonObject json;
-
     QJsonArray components;
+    SwVersion minVersion(0, 0, 0);
 
     for (const auto& item : mView.Scene()->items())
     {
         if (nullptr != dynamic_cast<IBaseComponent*>(item))
         {
             components.append(static_cast<IBaseComponent*>(item)->GetJson());
+            auto version = static_cast<IBaseComponent*>(item)->GetMinVersion();
+            minVersion = GetNewerVersion(minVersion, version);
         }
     }
 
     json[file::JSON_COMPONENTS_IDENTIFIER] = components;
+
+    json[file::JSON_MAJOR_VERSION_IDENTIFIER] = MAJOR_VERSION;
+    json[file::JSON_MINOR_VERSION_IDENTIFIER] = MINOR_VERSION;
+    json[file::JSON_PATCH_VERSION_IDENTIFIER] = PATCH_VERSION;
+
+    json[file::JSON_COMPATIBLE_MAJOR_VERSION_IDENTIFIER] = minVersion.major;
+    json[file::JSON_COMPATIBLE_MINOR_VERSION_IDENTIFIER] = minVersion.minor;
+    json[file::JSON_COMPATIBLE_PATCH_VERSION_IDENTIFIER] = minVersion.patch;
 
     return json;
 }
@@ -1746,9 +1752,38 @@ void CoreLogic::NewCircuit()
     mCircuitFileParser.ResetCurrentFileInfo();
 }
 
-void CoreLogic::ReadJson(const QJsonObject& pJson)
+void CoreLogic::ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson)
 {
     EnterControlMode(ControlMode::EDIT); // Always start in edit mode after loading
+
+    if (pJson.contains(file::JSON_COMPATIBLE_MAJOR_VERSION_IDENTIFIER) && pJson[file::JSON_COMPATIBLE_MAJOR_VERSION_IDENTIFIER].isDouble() &&
+        pJson.contains(file::JSON_COMPATIBLE_MINOR_VERSION_IDENTIFIER) && pJson[file::JSON_COMPATIBLE_MINOR_VERSION_IDENTIFIER].isDouble() &&
+        pJson.contains(file::JSON_COMPATIBLE_PATCH_VERSION_IDENTIFIER) && pJson[file::JSON_COMPATIBLE_PATCH_VERSION_IDENTIFIER].isDouble())
+    {
+        const auto major = pJson[file::JSON_COMPATIBLE_MAJOR_VERSION_IDENTIFIER].toInt();
+        const auto minor = pJson[file::JSON_COMPATIBLE_MINOR_VERSION_IDENTIFIER].toInt();
+        const auto patch = pJson[file::JSON_COMPATIBLE_PATCH_VERSION_IDENTIFIER].toInt();
+
+        if (CompareWithCurrentVersion(SwVersion(major, minor, patch)) > 0) // version is newer
+        {
+            emit FileHasNewerIncompatibleVersionSignal(QString("%0.%1.%2").arg(major).arg(minor).arg(patch));
+            return;
+        }
+    }
+
+    if (pJson.contains(file::JSON_MAJOR_VERSION_IDENTIFIER) && pJson[file::JSON_MAJOR_VERSION_IDENTIFIER].isDouble() &&
+        pJson.contains(file::JSON_MINOR_VERSION_IDENTIFIER) && pJson[file::JSON_MINOR_VERSION_IDENTIFIER].isDouble() &&
+        pJson.contains(file::JSON_PATCH_VERSION_IDENTIFIER) && pJson[file::JSON_PATCH_VERSION_IDENTIFIER].isDouble())
+    {
+        const auto major = pJson[file::JSON_MAJOR_VERSION_IDENTIFIER].toInt();
+        const auto minor = pJson[file::JSON_MINOR_VERSION_IDENTIFIER].toInt();
+        const auto patch = pJson[file::JSON_PATCH_VERSION_IDENTIFIER].toInt();
+
+        if (CompareWithCurrentVersion(SwVersion(major, minor, patch)) > 0) // version is newer
+        {
+            emit FileHasNewerCompatibleVersionSignal(QString("%0.%1.%2").arg(major).arg(minor).arg(patch));
+        }
+    }
 
     // Delete all components
     for (const auto& item : mView.Scene()->items())
@@ -1779,6 +1814,7 @@ void CoreLogic::ReadJson(const QJsonObject& pJson)
     mRedoQueue.clear();
 
     emit UpdateUndoRedoEnabledSignal();
+    emit OpeningFileSuccessfulSignal(pFileInfo);
 }
 
 bool CoreLogic::CreateComponent(const QJsonObject &pJson)

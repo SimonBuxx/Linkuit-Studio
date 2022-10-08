@@ -46,3 +46,8 @@ QJsonObject BufferGate::GetJson() const
 
     return json;
 }
+
+SwVersion BufferGate::GetMinVersion(void) const
+{
+    return SwVersion(0, 0, 0);
+}

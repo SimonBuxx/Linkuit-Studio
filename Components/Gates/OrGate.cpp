@@ -63,3 +63,8 @@ QJsonObject OrGate::GetJson() const
 
     return json;
 }
+
+SwVersion OrGate::GetMinVersion(void) const
+{
+    return SwVersion(0, 0, 0);
+}

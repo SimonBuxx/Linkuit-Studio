@@ -47,6 +47,10 @@ public:
     /// \return The JSON object with the component data
     virtual QJsonObject GetJson(void) const override;
 
+    /// \brief Gets the minimum version compatible with this component
+    /// \return the minimum version
+    virtual SwVersion GetMinVersion(void) const override;
+
 signals:
     /// \brief Emitted when the clock configurator should be displayed with the given settings
     /// \param pMode: The clock mode

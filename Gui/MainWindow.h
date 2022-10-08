@@ -64,6 +64,14 @@ protected slots:
     /// \param pFileInfo: Info about the newly opened circuit file
     void OnCircuitFileOpenedSuccessfully(const QFileInfo& pFileInfo);
 
+    /// \brief Raises a warning that the opened file is created by a newer compatible version
+    /// \param pVersion: The newer file version
+    void OnCircuitFileHasNewerCompatibleVersion(const QString& pVersion);
+
+    /// \brief Raises an error that the opened file is created by a newer incompatible version
+    /// \param pVersion: The newer file version
+    void OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersion);
+
     /// \brief Shows an error dialog box when opening the circuit file failed
     /// \param pFileInfo: Info about the circuit file that could not be opened
     void OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo);
@@ -317,6 +325,8 @@ protected:
     QMessageBox mSaveChangesBox;
     QMessageBox mErrorOpenFileBox;
     QMessageBox mErrorSaveFileBox;
+    QMessageBox mNewerVersionCompatibleBox;
+    QMessageBox mNewerVersionIncompatibleBox;
 
     // Icon color variants
 

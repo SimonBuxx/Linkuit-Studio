@@ -71,3 +71,8 @@ QJsonObject FullAdder::GetJson() const
 
     return json;
 }
+
+SwVersion FullAdder::GetMinVersion(void) const
+{
+    return SwVersion(0, 0, 0);
+}

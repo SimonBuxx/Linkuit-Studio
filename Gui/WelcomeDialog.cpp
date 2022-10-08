@@ -74,7 +74,7 @@ WelcomeDialog::WelcomeDialog(QWidget *pParent):
         }
     });
 
-    mUi->uVersionLabel->setText(tr("Version %0").arg(SW_VERSION_STRING));
+    mUi->uVersionLabel->setText(tr("Version %0").arg(QString::fromStdString(SW_VERSION_STRING)));
 }
 
 WelcomeDialog::~WelcomeDialog()

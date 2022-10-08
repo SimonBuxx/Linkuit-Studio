@@ -116,4 +116,70 @@ inline QString GetRuntimeConfigAbsolutePath(void)
     return QCoreApplication::applicationDirPath() + file::runtime_config::RUNTIME_CONFIG_RELATIVE_PATH;
 }
 
+/// \brief Compares the two given versions
+/// \param pVersion1: The first version
+/// \param pVersion2: The second version
+/// \return negative if version 1 is older, 0 if it is the same, positive if it is newer
+inline int8_t CompareVersions(SwVersion pVersion1, SwVersion pVersion2)
+{
+    if (pVersion1.major < pVersion2.major)
+    {
+        return -1;
+    }
+    else if (pVersion1.major > pVersion2.major)
+    {
+        return 1;
+    }
+    else
+    {
+        if (pVersion1.minor < pVersion2.minor)
+        {
+            return -1;
+        }
+        else if (pVersion1.minor > pVersion2.minor)
+        {
+            return 1;
+        }
+        else
+        {
+            if (pVersion1.patch < pVersion2.patch)
+            {
+                return -1;
+            }
+            else if (pVersion1.patch > pVersion2.patch)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+}
+
+/// \brief Compares the given semantic version to the version of the current software
+/// \param pVersion: The version to compare
+/// \return negative if the given version is older, 0 if it is the same, positive if it is newer
+inline int8_t CompareWithCurrentVersion(SwVersion pVersion)
+{
+    return CompareVersions(pVersion, SwVersion(MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION));
+}
+
+/// \brief Returns the newer of the two given software versions
+/// \param pVersion1: The first version
+/// \param pVersion2: The second version
+/// \return The newer software version
+inline SwVersion GetNewerVersion(SwVersion pVersion1, SwVersion pVersion2)
+{
+    if (CompareVersions(pVersion1, pVersion2) > 0)
+    {
+        return pVersion1;
+    }
+    else
+    {
+        return pVersion2;
+    }
+}
+
 #endif // HELPERFUNCTIONS_H

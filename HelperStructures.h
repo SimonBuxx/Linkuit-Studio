@@ -8,6 +8,20 @@ namespace helpers
 static const QString SUPERSCRIPTS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 } // namespace
 
+struct SwVersion
+{
+    SwVersion(uint8_t pMajor, uint8_t pMinor, uint8_t pPatch)
+    {
+        major = pMajor;
+        minor = pMinor;
+        patch = pPatch;
+    };
+
+    uint8_t major;
+    uint8_t minor;
+    uint8_t patch;
+};
+
 namespace file
 {
     enum class SaveFormat

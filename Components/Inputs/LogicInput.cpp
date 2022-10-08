@@ -94,3 +94,8 @@ QJsonObject LogicInput::GetJson() const
 
     return json;
 }
+
+SwVersion LogicInput::GetMinVersion(void) const
+{
+    return SwVersion(0, 0, 0);
+}

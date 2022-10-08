@@ -102,6 +102,11 @@ QJsonObject ShiftRegister::GetJson() const
     return json;
 }
 
+SwVersion ShiftRegister::GetMinVersion(void) const
+{
+    return SwVersion(0, 9, 7);
+}
+
 void ShiftRegister::SetLogicConnectors()
 {
     switch(mDirection)

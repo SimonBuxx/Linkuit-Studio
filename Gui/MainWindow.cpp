@@ -81,11 +81,15 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 {
     QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabelAndSlider);
 
-    QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::LoadCircuitFileSuccessSignal, this, &MainWindow::OnCircuitFileOpenedSuccessfully);
+    QObject::connect(&mCoreLogic, &CoreLogic::OpeningFileSuccessfulSignal, this, &MainWindow::OnCircuitFileOpenedSuccessfully);
     QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::LoadCircuitFileFailedSignal, this, &MainWindow::OnCircuitFileOpeningFailed);
 
     QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::SaveCircuitFileSuccessSignal, this, &MainWindow::OnCircuitFileSavedSuccessfully);
     QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::SaveCircuitFileFailedSignal, this, &MainWindow::OnCircuitFileSavingFailed);
+
+    QObject::connect(&mCoreLogic, &CoreLogic::OpeningFileSuccessfulSignal, this, &MainWindow::OnCircuitFileOpenedSuccessfully);
+    QObject::connect(&mCoreLogic, &CoreLogic::FileHasNewerCompatibleVersionSignal, this, &MainWindow::OnCircuitFileHasNewerCompatibleVersion);
+    QObject::connect(&mCoreLogic, &CoreLogic::FileHasNewerIncompatibleVersionSignal, this, &MainWindow::OnCircuitFileHasNewerIncompatibleVersion);
 
     // Connect to core logic signals
 
@@ -443,7 +447,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionCheckUpdate, &QAction::triggered, this, [&]()
     {
-        QDesktopServices::openUrl(QUrl(QString("https://linkuit.com/update/%0").arg(SW_VERSION_STRING)));
+        QDesktopServices::openUrl(QUrl(QString("https://linkuit.com/update/%0").arg(QString::fromStdString(SW_VERSION_STRING))));
     });
 }
 
@@ -485,6 +489,32 @@ void MainWindow::OnCircuitFileOpenedSuccessfully(const QFileInfo& pFileInfo)
     mWelcomeDialog.close();
     mIsToolboxVisible = true;
     FadeInGui();
+}
+
+void MainWindow::OnCircuitFileHasNewerCompatibleVersion(const QString& pVersion)
+{
+    mNewerVersionCompatibleBox.setIcon(QMessageBox::Icon::Information);
+    mNewerVersionCompatibleBox.setWindowTitle("Linkuit Studio");
+    mNewerVersionCompatibleBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
+    mNewerVersionCompatibleBox.setText(tr("This file has been created with a newer version of Linkuit Studio."));
+    mNewerVersionCompatibleBox.setInformativeText(QString("It seems like this file was last saved using version %0. "
+        "It is marked compatible with the current version %1, but please consider updating Linkuit Studio.").arg(pVersion).arg(QString::fromStdString(SW_VERSION_STRING)));
+    mNewerVersionCompatibleBox.setStandardButtons(QMessageBox::Ok);
+    mNewerVersionCompatibleBox.setDefaultButton(QMessageBox::Ok);
+    mNewerVersionCompatibleBox.exec();
+}
+
+void MainWindow::OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersion)
+{
+    mNewerVersionIncompatibleBox.setIcon(QMessageBox::Icon::Critical);
+    mNewerVersionIncompatibleBox.setWindowTitle("Linkuit Studio");
+    mNewerVersionIncompatibleBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
+    mNewerVersionIncompatibleBox.setText(tr("This file has been created with a newer version of Linkuit Studio."));
+    mNewerVersionIncompatibleBox.setInformativeText(QString("It seems like this file was last saved using version %0. "
+        "It is marked incompatible with the current version %1. Please update Linkuit Studio to open the file.").arg(pVersion).arg(QString::fromStdString(SW_VERSION_STRING)));
+    mNewerVersionIncompatibleBox.setStandardButtons(QMessageBox::Ok);
+    mNewerVersionIncompatibleBox.setDefaultButton(QMessageBox::Ok);
+    mNewerVersionIncompatibleBox.exec();
 }
 
 void MainWindow::OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo)
