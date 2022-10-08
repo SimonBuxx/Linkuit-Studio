@@ -4,31 +4,33 @@
 LogicButtonCell::LogicButtonCell():
     LogicBaseCell(0, 1),
     mState(LogicState::LOW),
-    mButtonTimer(this)
-{
-#warning [ENHANCEMENT] use amount of ticks instead of timer
-    mButtonTimer.setInterval(components::inputs::BUTTON_TOGGLE_INTERVAL);
-    mButtonTimer.setSingleShot(true);
+    mRemainingTicks(0),
+    mStateChanged(true)
+{}
 
-    QObject::connect(&mButtonTimer, &QTimer::timeout, this, &LogicButtonCell::ButtonTimeout);
+void LogicButtonCell::LogicFunction()
+{
+    if (mState == LogicState::HIGH)
+    {
+        mRemainingTicks--;
+        if (mRemainingTicks == 0)
+        {
+            mState = LogicState::LOW;
+            mStateChanged = true;
+            emit StateChangedSignal();
+        }
+    }
 }
 
 void LogicButtonCell::ButtonClick()
 {
     if (mState != LogicState::HIGH)
     {
+        mRemainingTicks = components::inputs::BUTTON_TOGGLE_TICKS;
         mState = LogicState::HIGH;
         NotifySuccessor(0, mState);
         emit StateChangedSignal();
     }
-    mButtonTimer.start();
-}
-
-void LogicButtonCell::ButtonTimeout()
-{
-    mState = LogicState::LOW;
-    NotifySuccessor(0, mState);
-    emit StateChangedSignal();
 }
 
 LogicState LogicButtonCell::GetOutputState(uint32_t pOutput) const
@@ -37,9 +39,23 @@ LogicState LogicButtonCell::GetOutputState(uint32_t pOutput) const
     return mState;
 }
 
+void LogicButtonCell::OnSimulationAdvance()
+{
+    LogicFunction();
+
+    if (mStateChanged)
+    {
+        mStateChanged = false;
+        NotifySuccessor(0, mState);
+
+        emit StateChangedSignal();
+    }
+}
+
 void LogicButtonCell::OnWakeUp()
 {
     mState = LogicState::LOW;
+    mStateChanged = true; // Successors should be notified about wake up
     mIsActive = true;
     emit StateChangedSignal();
 }

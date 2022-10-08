@@ -3,8 +3,6 @@
 
 #include "Components/LogicBaseCell.h"
 
-#include <QTimer>
-
 ///
 /// \brief Logic cell class for the button input
 ///
@@ -15,7 +13,10 @@ public:
     /// \brief Constructor for LogicButtonCell
     LogicButtonCell(void);
 
-    /// \brief Sets the button state to HIGH and starts the timer
+    /// \brief The logic function that determines the output state
+    void LogicFunction(void) override;
+
+    /// \brief Sets the button state to HIGH, resets the remaining ticks and propagates immediately
     void ButtonClick(void);
 
     /// \brief Getter for the current output state number pOutput of this cell
@@ -24,6 +25,9 @@ public:
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
+    /// \brief Advances the simulation of this cell by one logic tick
+    void OnSimulationAdvance(void) override;
+
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;
 
@@ -31,14 +35,9 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-    /// \brief Sets the button state to LOW
-    void ButtonTimeout(void);
-
-protected:
     LogicState mState;
+    uint32_t mRemainingTicks;
     bool mStateChanged;
-
-    QTimer mButtonTimer;
 };
 
 #endif // LOGICBUTTONCELL_H

@@ -142,7 +142,7 @@ static constexpr QColor FONT_COLOR(255, 255, 255);
 
 namespace inputs
 {
-static constexpr std::chrono::milliseconds BUTTON_TOGGLE_INTERVAL(500 * simulation::PROPAGATION_DELAY);
+static constexpr uint32_t BUTTON_TOGGLE_TICKS(500);
 
 // The default clock mode (whether the clock should toggle at timeout or pulse)
 static constexpr ClockMode DEFAULT_CLOCK_MODE = ClockMode::PULSE;
