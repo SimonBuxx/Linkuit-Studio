@@ -1,6 +1,7 @@
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
 #include "Configuration.h"
+#include <QtGlobal>
 
 AboutDialog::AboutDialog(QWidget *pParent):
     QDialog(pParent),
@@ -21,7 +22,7 @@ AboutDialog::AboutDialog(QWidget *pParent):
     mUi->uCheckForUpdateButton->setIcon(mAwesome->icon(fa::refresh, mStandardIconVariant));
 
     mUi->uSoftwareNameLabel->setText(tr("Version %0").arg(QString::fromStdString(SW_VERSION_STRING)));
-    mUi->uBuildInfoLabel->setText(tr("Built with Qt 6.1.0 (MinGW 64-bit)\nBuild time: %0").arg(BUILD_TIME));
+    mUi->uBuildInfoText->setText(tr("Software version: %0<br/>Build time: %1<br/>Qt version: %2<br/>Compiler: MinGW 64-bit %3").arg(QString::fromStdString(SW_VERSION_STRING), BUILD_TIME, qVersion(), __VERSION__));
 
     QObject::connect(mUi->uCheckForUpdateButton, &QPushButton::clicked, this, &AboutDialog::CheckForUpdateClickedSignal);
 }
