@@ -6,7 +6,7 @@ RsClockedFlipFlop::RsClockedFlipFlop(const CoreLogic* pCoreLogic, Direction pDir
     AbstractComplexLogic(pCoreLogic, std::make_shared<LogicRsClockedFlipFlopCell>(), 3, 2, pDirection)
 {
     mComponentText = components::complex_logic::RS_FLIPFLOP_TEXT;
-    mInputLabels = {"R", ">", "S"};
+    mInputLabels = {"S", ">", "R"};
     mOutputLabels = {"Q", "Q̅"};
 }
 
