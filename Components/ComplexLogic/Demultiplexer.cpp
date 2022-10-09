@@ -25,7 +25,7 @@ Demultiplexer::Demultiplexer(const CoreLogic* pCoreLogic, Direction pDirection, 
         mOutputLabels.push_back(QString::fromStdString(std::to_string(i)));
     }
 
-    mSmallerDescription = true;
+    mDescriptionFontSize = 8;
 }
 
 Demultiplexer::Demultiplexer(const Demultiplexer& pObj, const CoreLogic* pCoreLogic):

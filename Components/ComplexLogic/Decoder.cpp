@@ -16,7 +16,7 @@ Decoder::Decoder(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pInp
         mOutputLabels.push_back(QString::number(i));
     }
 
-    mSmallerDescription = true;
+    mDescriptionFontSize = 8;
 }
 
 Decoder::Decoder(const Decoder& pObj, const CoreLogic* pCoreLogic):

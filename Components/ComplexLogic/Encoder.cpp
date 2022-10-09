@@ -18,7 +18,7 @@ Encoder::Encoder(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pOut
 
     mOutputLabels.push_back(QString("V"));
 
-    mSmallerDescription = true;
+    mDescriptionFontSize = 8;
 }
 
 Encoder::Encoder(const Encoder& pObj, const CoreLogic* pCoreLogic):

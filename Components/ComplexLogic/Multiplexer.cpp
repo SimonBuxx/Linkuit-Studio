@@ -25,7 +25,7 @@ Multiplexer::Multiplexer(const CoreLogic* pCoreLogic, Direction pDirection, uint
         mOutputLabels.push_back("");
     }
 
-    mSmallerDescription = true;
+    mDescriptionFontSize = 8;
 }
 
 Multiplexer::Multiplexer(const Multiplexer& pObj, const CoreLogic* pCoreLogic):

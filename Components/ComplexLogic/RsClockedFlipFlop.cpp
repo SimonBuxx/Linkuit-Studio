@@ -1,26 +1,24 @@
-#include "RsMsFlipFlop.h"
+#include "RsClockedFlipFlop.h"
 #include "CoreLogic.h"
-#include "LogicCells/LogicRsMsFlipFlopCell.h"
+#include "LogicCells/LogicRsClockedFlipFlopCell.h"
 
-RsMasterSlaveFlipFlop::RsMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
-    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicRsMsFlipFlopCell>(), 3, 2, pDirection)
+RsClockedFlipFlop::RsClockedFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
+    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicRsClockedFlipFlopCell>(), 3, 2, pDirection)
 {
-    mComponentText = components::complex_logic::RS_MS_FLIPFLOP_TEXT;
-    mInputLabels = {"S", ">", "R"};
+    mComponentText = components::complex_logic::RS_FLIPFLOP_TEXT;
+    mInputLabels = {"R", ">", "S"};
     mOutputLabels = {"Q", "Q̅"};
-
-    mDescriptionFontSize = 12;
 }
 
-RsMasterSlaveFlipFlop::RsMasterSlaveFlipFlop(const RsMasterSlaveFlipFlop& pObj, const CoreLogic* pCoreLogic):
-    RsMasterSlaveFlipFlop(pCoreLogic, pObj.mDirection)
+RsClockedFlipFlop::RsClockedFlipFlop(const RsClockedFlipFlop& pObj, const CoreLogic* pCoreLogic):
+    RsClockedFlipFlop(pCoreLogic, pObj.mDirection)
 {
     mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
     mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
 };
 
-RsMasterSlaveFlipFlop::RsMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
-    RsMasterSlaveFlipFlop(pCoreLogic, static_cast<Direction>(pJson["dir"].toInt()))
+RsClockedFlipFlop::RsClockedFlipFlop(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    RsClockedFlipFlop(pCoreLogic, static_cast<Direction>(pJson["dir"].toInt()))
 {
     setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
 
@@ -40,16 +38,16 @@ RsMasterSlaveFlipFlop::RsMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, const 
     GetLogicCell()->SetOutputInversions(outinv);
 }
 
-IBaseComponent* RsMasterSlaveFlipFlop::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* RsClockedFlipFlop::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
-    return new RsMasterSlaveFlipFlop(*this, pCoreLogic);
+    return new RsClockedFlipFlop(*this, pCoreLogic);
 }
 
-QJsonObject RsMasterSlaveFlipFlop::GetJson() const
+QJsonObject RsClockedFlipFlop::GetJson() const
 {
     QJsonObject json;
 
-    json["type"] = file::ComponentId::RS_MS_FLIPFLOP;
+    json["type"] = file::ComponentId::RS_CLOCKED_FLIPFLOP;
     json["x"] = x();
     json["y"] = y();
     json["dir"] = static_cast<int32_t>(mDirection);
@@ -74,7 +72,7 @@ QJsonObject RsMasterSlaveFlipFlop::GetJson() const
     return json;
 }
 
-SwVersion RsMasterSlaveFlipFlop::GetMinVersion(void) const
+SwVersion RsClockedFlipFlop::GetMinVersion(void) const
 {
-    return SwVersion(0, 0, 0);
+    return SwVersion(0, 9, 7);
 }

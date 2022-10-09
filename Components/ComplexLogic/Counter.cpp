@@ -18,7 +18,7 @@ Counter::Counter(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pBit
         mOutputLabels.push_back(QString::number(2) + BuildSuperscriptString(i));
     }
 
-    mSmallerDescription = true;
+    mDescriptionFontSize = 8;
 }
 
 Counter::Counter(const Counter& pObj, const CoreLogic* pCoreLogic):

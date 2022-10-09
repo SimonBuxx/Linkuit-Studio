@@ -21,30 +21,30 @@ namespace file
 {
 static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::BINARY;
 
-static constexpr const char* JSON_COMPONENTS_IDENTIFIER = "components";
-static constexpr const char* JSON_TYPE_IDENTIFIER = "type";
-static constexpr const char* JSON_MAJOR_VERSION_IDENTIFIER = "major";
-static constexpr const char* JSON_MINOR_VERSION_IDENTIFIER = "minor";
-static constexpr const char* JSON_PATCH_VERSION_IDENTIFIER = "patch";
+static constexpr auto JSON_COMPONENTS_IDENTIFIER = "components";
+static constexpr auto JSON_TYPE_IDENTIFIER = "type";
+static constexpr auto JSON_MAJOR_VERSION_IDENTIFIER = "major";
+static constexpr auto JSON_MINOR_VERSION_IDENTIFIER = "minor";
+static constexpr auto JSON_PATCH_VERSION_IDENTIFIER = "patch";
 
-static constexpr const char* JSON_COMPATIBLE_MAJOR_VERSION_IDENTIFIER = "comp_major";
-static constexpr const char* JSON_COMPATIBLE_MINOR_VERSION_IDENTIFIER = "comp_minor";
-static constexpr const char* JSON_COMPATIBLE_PATCH_VERSION_IDENTIFIER = "comp_patch";
+static constexpr auto JSON_COMPATIBLE_MAJOR_VERSION_IDENTIFIER = "comp_major";
+static constexpr auto JSON_COMPATIBLE_MINOR_VERSION_IDENTIFIER = "comp_minor";
+static constexpr auto JSON_COMPATIBLE_PATCH_VERSION_IDENTIFIER = "comp_patch";
 
 namespace runtime_config
 {
-static constexpr const char* RUNTIME_CONFIG_RELATIVE_PATH = "/runtime_config.json";
+static constexpr auto RUNTIME_CONFIG_RELATIVE_PATH = "/runtime_config.json";
 
-static constexpr const char* JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER = "show_welcome_dialog_on_startup";
-static constexpr const char* JSON_RECENT_FILES_IDENTIFIER = "recent_files";
+static constexpr auto JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER = "show_welcome_dialog_on_startup";
+static constexpr auto JSON_RECENT_FILES_IDENTIFIER = "recent_files";
 } // namespace runtime_config
 } // namespace
 
 namespace gui
 {
-static constexpr const char* DEFAULT_WINDOW_TITLE = "Linkuit Studio - Untitled";
-static constexpr const char* OPEN_FILE_DIALOG_TITLE = "Open Circuit File";
-static constexpr const char* SAVE_FILE_DIALOG_TITLE = "Save Circuit File";
+static constexpr auto DEFAULT_WINDOW_TITLE = "Linkuit Studio - Untitled";
+static constexpr auto OPEN_FILE_DIALOG_TITLE = "Open Circuit File";
+static constexpr auto SAVE_FILE_DIALOG_TITLE = "Save Circuit File";
 
 static constexpr bool SHOW_WELCOME_DIALOG_ON_STARTUP = true;
 static constexpr std::chrono::milliseconds SHOW_WELCOME_DIALOG_DELAY{300};
@@ -110,11 +110,11 @@ static constexpr Direction DEFAULT_DIRECTION = Direction::RIGHT;
 
 namespace gates
 {
-static constexpr const char* AND_TEXT = "&";
-static constexpr const char* OR_TEXT = "≥1";
-static constexpr const char* XOR_TEXT = "=1";
-static constexpr const char* NOT_TEXT = "1";
-static constexpr const char* BUFFER_TEXT = "1";
+static constexpr auto AND_TEXT = "&";
+static constexpr auto OR_TEXT = "≥1";
+static constexpr auto XOR_TEXT = "=1";
+static constexpr auto NOT_TEXT = "1";
+static constexpr auto BUFFER_TEXT = "1";
 
 static constexpr uint8_t DEFAULT_INPUT_COUNT = 2;
 static constexpr uint8_t MIN_INPUT_COUNT = 1;
@@ -208,20 +208,23 @@ static constexpr uint8_t DEFAULT_BIT_WIDTH = 4;
 
 namespace complex_logic
 {
-static constexpr const char* HALF_ADDER_TEXT = "HA";
-static constexpr const char* FULL_ADDER_TEXT = "FA";
-static constexpr const char* RS_FLIPFLOP_TEXT = "RS";
-static constexpr const char* D_FLIPFLOP_TEXT = "FF";
-static constexpr const char* T_FLIPFLOP_TEXT = "TF";
-static constexpr const char* JK_FLIPFLOP_TEXT = "JK";
-static constexpr const char* RS_MS_FLIPFLOP_TEXT = "RS-MS";
-static constexpr const char* MULTIPLEXER_TEXT = "MUX";
-static constexpr const char* DEMULTIPLEXER_TEXT = "DEMUX";
-static constexpr const char* DECODER_TEXT = "";
-static constexpr const char* ENCODER_TEXT = "";
-static constexpr const char* COUNTER_TEXT = "COUNT";
+static constexpr auto HALF_ADDER_TEXT = "HA";
+static constexpr auto FULL_ADDER_TEXT = "FA";
+static constexpr auto RS_FLIPFLOP_TEXT = "RS";
+static constexpr auto D_FLIPFLOP_TEXT = "FF";
+static constexpr auto T_FLIPFLOP_TEXT = "TF";
+static constexpr auto JK_FLIPFLOP_TEXT = "JK";
+static constexpr auto RS_MS_FLIPFLOP_TEXT = "RS-\nMS";
+static constexpr auto MULTIPLEXER_TEXT = "MUX";
+static constexpr auto DEMULTIPLEXER_TEXT = "DEMUX";
+static constexpr auto DECODER_TEXT = "";
+static constexpr auto ENCODER_TEXT = "";
+static constexpr auto COUNTER_TEXT = "COUNT";
 
-static const QFont FONT("Source Sans Pro", 20);
+static constexpr auto CLOCK_SYMBOL_STRING{">"};
+
+static const QFont FONT("Source Sans Pro");
+static constexpr uint8_t DEFAULT_DESCRIPTION_FONT_SIZE = 20;
 static const QFont CONNECTOR_FONT("Calibri Light", 10);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr QColor SMALL_TEXT_FONT_COLOR(225, 225, 225);

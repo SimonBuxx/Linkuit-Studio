@@ -57,7 +57,8 @@ namespace file
         SHIFTREGISTER,
         CONSTANT,
         COUNTER,
-        RS_MS_FLIPFLOP // only append!
+        RS_MS_FLIPFLOP,
+        RS_CLOCKED_FLIPFLOP // only append!
     };
 } // namespace file
 
@@ -84,6 +85,7 @@ enum class ComponentType
     T_FLIPFLOP,
     JK_FLIPFLOP,
     RS_MS_FLIPFLOP,
+    RS_CLOCKED_FLIPFLOP,
     DECODER,
     ENCODER,
     SHIFTREGISTER,

@@ -1,8 +1,6 @@
 #include "AbstractComplexLogic.h"
 #include "Configuration.h"
 
-static constexpr auto CLOCK_SYMBOL_STRING{">"};
-
 #warning trapezoid components should inherit IBaseComponent directly
 AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell, uint8_t pInputCount, uint8_t pOutputCount,
                                            Direction pDirection, uint8_t pTopInputCount, bool pStrechTwoPins, bool pTrapezoidShape):
@@ -13,7 +11,7 @@ AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, const st
     mInputsSpacing(1),
     mOutputsSpacing(1),
     mTopInputCount(pTopInputCount),
-    mSmallerDescription(false),
+    mDescriptionFontSize(components::complex_logic::DEFAULT_DESCRIPTION_FONT_SIZE),
     mTrapezoidShape(pTrapezoidShape),
     mInputsTrapezoidOffset(0),
     mOutputsTrapezoidOffset(0)
@@ -276,12 +274,9 @@ void AbstractComplexLogic::paint(QPainter *pPainter, const QStyleOptionGraphicsI
         pPainter->setPen(components::complex_logic::FONT_COLOR);
         pPainter->setFont(components::complex_logic::FONT);
 
-        if (mSmallerDescription)
-        {
-            auto font = pPainter->font();
-            font.setPointSize(8);
-            pPainter->setFont(font);
-        }
+        auto font = pPainter->font();
+        font.setPointSize(mDescriptionFontSize);
+        pPainter->setFont(font);
 
         pPainter->drawText(boundingRect(), mComponentText, Qt::AlignHCenter | Qt::AlignVCenter);
     }
@@ -544,7 +539,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsRight(QPainter *pPainter, co
 
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        if (mInputLabels[mTopInputCount - i - 1] == CLOCK_SYMBOL_STRING)
+        if (mInputLabels[mTopInputCount - i - 1] == components::complex_logic::CLOCK_SYMBOL_STRING)
         {
             SetClockInputPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
             const QList<QPoint> trianglePointsDown = {QPoint((i + 1) * canvas::GRID_SIZE - 5, 0),
@@ -560,7 +555,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsRight(QPainter *pPainter, co
     }
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
     {
-        if (mInputLabels[i + mTopInputCount] == CLOCK_SYMBOL_STRING)
+        if (mInputLabels[i + mTopInputCount] == components::complex_logic::CLOCK_SYMBOL_STRING)
         {
             SetClockInputPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
             const QList<QPoint> trianglePointsRight = {QPoint(0, (mInputsSpacing * i + 1) * canvas::GRID_SIZE - 5),
@@ -588,7 +583,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsDown(QPainter *pPainter, con
 
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        if (mInputLabels[mTopInputCount - i - 1] == CLOCK_SYMBOL_STRING)
+        if (mInputLabels[mTopInputCount - i - 1] == components::complex_logic::CLOCK_SYMBOL_STRING)
         {
             SetClockInputPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
             const QList<QPoint> trianglePointsLeft = {QPoint(mWidth, canvas::GRID_SIZE * (i + 1) - 5),
@@ -604,7 +599,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsDown(QPainter *pPainter, con
     }
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
     {
-        if (mInputLabels[i + mTopInputCount] == CLOCK_SYMBOL_STRING)
+        if (mInputLabels[i + mTopInputCount] == components::complex_logic::CLOCK_SYMBOL_STRING)
         {
             SetClockInputPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
             const QList<QPoint> trianglePointsDown = {QPoint(mWidth - (mInputsSpacing * i + 1) * canvas::GRID_SIZE - 5, 0),
@@ -632,7 +627,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsLeft(QPainter *pPainter, con
 
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        if (mInputLabels[mTopInputCount - i - 1] == CLOCK_SYMBOL_STRING)
+        if (mInputLabels[mTopInputCount - i - 1] == components::complex_logic::CLOCK_SYMBOL_STRING)
         {
             SetClockInputPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
             const QList<QPoint> trianglePointsUp = {QPoint(mWidth - (i + 1) * canvas::GRID_SIZE - 5, mHeight),
@@ -648,7 +643,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsLeft(QPainter *pPainter, con
     }
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
     {
-        if (mInputLabels[i + mTopInputCount] == CLOCK_SYMBOL_STRING)
+        if (mInputLabels[i + mTopInputCount] == components::complex_logic::CLOCK_SYMBOL_STRING)
         {
             SetClockInputPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
             const QList<QPoint> trianglePointsLeft = {QPoint(mWidth, mHeight - (mInputsSpacing * i + 1) * canvas::GRID_SIZE - 5),
@@ -676,7 +671,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsUp(QPainter *pPainter, const
 
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        if (mInputLabels[mTopInputCount - i - 1] == CLOCK_SYMBOL_STRING)
+        if (mInputLabels[mTopInputCount - i - 1] == components::complex_logic::CLOCK_SYMBOL_STRING)
         {
             SetClockInputPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
             const QList<QPoint> trianglePointsRight = {QPoint(0, mHeight - canvas::GRID_SIZE * (i + 1) - 5),
@@ -692,7 +687,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsUp(QPainter *pPainter, const
     }
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
     {
-        if (mInputLabels[i + mTopInputCount] == CLOCK_SYMBOL_STRING)
+        if (mInputLabels[i + mTopInputCount] == components::complex_logic::CLOCK_SYMBOL_STRING)
         {
             SetClockInputPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
             const QList<QPoint> trianglePointsUp = {QPoint((mInputsSpacing * i + 1) * canvas::GRID_SIZE - 5, mHeight),

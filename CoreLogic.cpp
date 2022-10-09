@@ -15,6 +15,7 @@
 #include "Components/ComplexLogic/FullAdder.h"
 #include "Components/ComplexLogic/RsFlipFlop.h"
 #include "Components/ComplexLogic/RsMsFlipFlop.h"
+#include "Components/ComplexLogic/RsClockedFlipFlop.h"
 #include "Components/ComplexLogic/DFlipFlop.h"
 #include "Components/ComplexLogic/TFlipFlop.h"
 #include "Components/ComplexLogic/JKFlipFlop.h"
@@ -349,6 +350,7 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
                 }
                 case FlipFlopStyle::CLOCKED:
                 {
+                    item = new RsClockedFlipFlop(this, mComponentDirection);
                     break;
                 }
                 case FlipFlopStyle::MASTER_SLAVE:
@@ -1922,6 +1924,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::RS_MS_FLIPFLOP:
             {
                 item = new RsMasterSlaveFlipFlop(this, pJson);
+                break;
+            }
+            case file::ComponentId::RS_CLOCKED_FLIPFLOP:
+            {
+                item = new RsClockedFlipFlop(this, pJson);
                 break;
             }
             case file::ComponentId::MULTIPLEXER:
