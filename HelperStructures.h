@@ -170,7 +170,8 @@ enum class ConfiguratorMode
     SHIFTREGISTER_BITS,
     CONSTANT_STATE,
     COUNTER_BITS,
-    FLIPFLOP_TYPE
+    RS_FLIPFLOP_TYPE,
+    MASTER_SLAVE
 };
 
 namespace undo

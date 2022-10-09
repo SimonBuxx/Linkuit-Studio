@@ -150,6 +150,13 @@ public:
     /// \return True, if the software is currently processing or loading
     bool IsProcessing(void) const;
 
+    /// \brief Returns true, if the current config for new D flip-flips is master-slave
+    /// \return True, if the current config for new D flip-flips is master-slave, false otherwise
+    bool IsDFlipFlopMasterSlave(void) const;
+
+    /// \brief Returns true, if the current config for new JK flip-flips is master-slave
+    /// \return True, if the current config for new JK flip-flips is master-slave, false otherwise
+    bool IsJkFlipFlopMasterSlave(void) const;
     // Functions for simulation control
 
     /// \brief Starts the simulation if in simulation mode and the simulation is not yet started
@@ -188,6 +195,10 @@ public:
     /// \brief Sets the clock mode of the selected clock to the new mode
     /// \param pMode: The new clock mode
     void OnClockModeChanged(ClockMode pMode);
+
+    /// \brief Sets the master-slave state for flip-flops with master-slave capability
+    /// \param pChecked: Whether master-slave should be enabled or disabled
+    void OnMasterSlaveToggled(bool pChecked);
 
     // Functions for saving and loading
 
@@ -482,6 +493,8 @@ protected:
     ControlMode mControlMode = ControlMode::EDIT;
     SimulationMode mSimulationMode = SimulationMode::STOPPED;
     ComponentType mComponentType = ComponentType::NONE;
+
+    // Variables for component configuration
     Direction mComponentDirection = components::DEFAULT_DIRECTION;
     uint8_t mGateInputCount = components::gates::DEFAULT_INPUT_COUNT;
     uint8_t mEncoderDecoderInputCount = components::encoder_decoder::DEFAULT_INPUT_COUNT;
@@ -490,6 +503,8 @@ protected:
     LogicState mConstantState = components::inputs::constant::DEFAULT_STATE;
     uint8_t mCounterBitWidth = components::counter::DEFAULT_BIT_WIDTH;
     FlipFlopStyle mFlipFlopStyle = FlipFlopStyle::LATCH;
+    bool mIsDFlipFlopMasterSlave = false;
+    bool mIsJkFlipFlopMasterSlave = false;
 
     // Variables for wire insertion
     QPointF mPreviewWireStart;

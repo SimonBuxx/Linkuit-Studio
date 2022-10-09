@@ -9,7 +9,7 @@ RsMasterSlaveFlipFlop::RsMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, Direct
     mInputLabels = {"S", ">", "R"};
     mOutputLabels = {"Q", "Q̅"};
 
-    mDescriptionFontSize = 12;
+    mDescriptionFontSize = 10;
 }
 
 RsMasterSlaveFlipFlop::RsMasterSlaveFlipFlop(const RsMasterSlaveFlipFlop& pObj, const CoreLogic* pCoreLogic):

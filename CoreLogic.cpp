@@ -188,6 +188,28 @@ void CoreLogic::LeaveSimulation()
     emit SimulationStopSignal();
 }
 
+void CoreLogic::OnMasterSlaveToggled(bool pChecked)
+{
+    switch (mComponentType)
+    {
+        case ComponentType::D_FLIPFLOP:
+        {
+            mIsDFlipFlopMasterSlave = pChecked;
+            break;
+        }
+        case ComponentType::JK_FLIPFLOP:
+        {
+            mIsJkFlipFlopMasterSlave = pChecked;
+            break;
+        }
+        default:
+        {
+            throw std::logic_error("Master-slave button toggled for unapplicable component type");
+            break;
+        }
+    }
+}
+
 void CoreLogic::OnToggleValueChanged(uint32_t pValue)
 {
     if (mView.Scene()->selectedItems().size() == 1 && nullptr != dynamic_cast<LogicClock*>(mView.Scene()->selectedItems()[0]))
@@ -367,7 +389,15 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         }
         case ComponentType::D_FLIPFLOP:
         {
-            item = new DFlipFlop(this, mComponentDirection);
+            if (mIsDFlipFlopMasterSlave)
+            {
+                qDebug() << "This D flip-flop would be master-slave";
+                item = new DFlipFlop(this, mComponentDirection);
+            }
+            else
+            {
+                item = new DFlipFlop(this, mComponentDirection);
+            }
             break;
         }
         case ComponentType::T_FLIPFLOP:
@@ -377,7 +407,15 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         }
         case ComponentType::JK_FLIPFLOP:
         {
-            item = new JKFlipFlop(this, mComponentDirection);
+            if (mIsJkFlipFlopMasterSlave)
+            {
+                qDebug() << "This JK flip-flop would be master-slave";
+                item = new JKFlipFlop(this, mComponentDirection);
+            }
+            else
+            {
+                item = new JKFlipFlop(this, mComponentDirection);
+            }
             break;
         }
         case ComponentType::MULTIPLEXER:
@@ -1240,6 +1278,16 @@ void CoreLogic::EndProcessing()
 bool CoreLogic::IsProcessing() const
 {
     return mIsProcessing;
+}
+
+bool CoreLogic::IsDFlipFlopMasterSlave() const
+{
+    return mIsDFlipFlopMasterSlave;
+}
+
+bool CoreLogic::IsJkFlipFlopMasterSlave() const
+{
+    return mIsJkFlipFlopMasterSlave;
 }
 
 void CoreLogic::ClearSelection()

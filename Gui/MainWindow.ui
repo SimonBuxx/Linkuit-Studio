@@ -1746,6 +1746,250 @@ QFrame {
          <property name="verticalSpacing">
           <number>6</number>
          </property>
+         <item row="5" column="0" colspan="2">
+          <widget class="QFrame" name="uShiftRegisterBitWidthFrame">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="uLabelShiftRegisterBitWidthIcon">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="uShiftRegisterWidthBox">
+              <property name="styleSheet">
+               <string notr="true">QComboBox {
+    background: rgba(0, 0, 0, 13);
+    padding: 4px 5px;
+    color: rgb(0, 39, 43);
+    font: 11pt &quot;Source Sans Pro&quot;;
+}
+
+QComboBox QAbstractItemView {
+    selection-background-color: rgb(220, 220, 220);
+}</string>
+              </property>
+              <property name="currentIndex">
+               <number>1</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>2 Bits</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>4 Bits</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>8 Bits</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>16 Bits</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>32 Bits</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="8" column="0" colspan="2">
+          <widget class="QFrame" name="uFlipFlopTypesFrame">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="uFlipFlopTypeLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="uFlipFlopTypeBox">
+              <property name="styleSheet">
+               <string notr="true">QComboBox {
+    background: rgba(0, 0, 0, 13);
+    padding: 4px 5px;
+    color: rgb(0, 39, 43);
+    font: 11pt &quot;Source Sans Pro&quot;;
+}
+
+QComboBox QAbstractItemView {
+    selection-background-color: rgb(220, 220, 220);
+}</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Latch</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Clocked</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Master-Slave</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="6" column="0" colspan="2">
+          <widget class="QFrame" name="uConstantButtonsFrame">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="uConstantLowButton">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>29</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Low (0)</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">uConstantButtonsGroup</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="uConstantHighButton">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>29</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>High (1)</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">uConstantButtonsGroup</string>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
          <item row="7" column="0" colspan="2">
           <widget class="QFrame" name="uCounterBitWidthFrame">
            <property name="frameShape">
@@ -1877,92 +2121,6 @@ QFrame {
               </property>
               <property name="text">
                <string>4 Bits</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="8" column="0" colspan="2">
-          <widget class="QFrame" name="uFlipFlopTypesFrame">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_6">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>5</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="uFlipFlopTypeBox">
-              <property name="styleSheet">
-               <string notr="true">QComboBox {
-    background: rgba(0, 0, 0, 13);
-    padding: 4px 5px;
-    color: rgb(0, 39, 43);
-    font: 11pt &quot;Source Sans Pro&quot;;
-}
-
-QComboBox QAbstractItemView {
-    selection-background-color: rgb(220, 220, 220);
-}</string>
-              </property>
-              <item>
-               <property name="text">
-                <string>Latch</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Clocked</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Master-Slave</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="uFlipFlopTypeLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -2127,15 +2285,15 @@ QComboBox QAbstractItemView {
            </layout>
           </widget>
          </item>
-         <item row="5" column="0" colspan="2">
-          <widget class="QFrame" name="uShiftRegisterBitWidthFrame">
+         <item row="4" column="0" colspan="2">
+          <widget class="QFrame" name="uEncoderDecoderInputCountFrame">
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Plain</enum>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
             <property name="leftMargin">
              <number>0</number>
             </property>
@@ -2149,7 +2307,13 @@ QComboBox QAbstractItemView {
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="uLabelShiftRegisterBitWidthIcon">
+             <widget class="QLabel" name="uLabelEncoderDecoderInputCountIcon">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>20</width>
@@ -2174,47 +2338,97 @@ QComboBox QAbstractItemView {
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="uShiftRegisterWidthBox">
+             <widget class="QLabel" name="uLabelEncoderDecoderInputCountMinus">
               <property name="styleSheet">
-               <string notr="true">QComboBox {
-    background: rgba(0, 0, 0, 13);
-    padding: 4px 5px;
-    color: rgb(0, 39, 43);
-    font: 11pt &quot;Source Sans Pro&quot;;
-}
-
-QComboBox QAbstractItemView {
-    selection-background-color: rgb(220, 220, 220);
+               <string notr="true">QLabel {
+          color: rgb(0, 45, 50);
+          font: 12pt &quot;Source Sans Pro&quot;;
+          background: none;
 }</string>
               </property>
-              <property name="currentIndex">
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="uEncoderDecoderInputCountSlider">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QSlider {
+              background: none;
+      }
+
+      QSlider::groove:horizontal {
+          height: 1px;
+          margin: 2px 0;
+              background: rgb(0, 204, 143);
+      }
+
+      QSlider::handle:horizontal {
+          background: rgb(0, 204, 143);
+          width: 6px;
+          margin: -8px 0;
+      }</string>
+              </property>
+              <property name="minimum">
+               <number>3</number>
+              </property>
+              <property name="maximum">
+               <number>5</number>
+              </property>
+              <property name="pageStep">
                <number>1</number>
               </property>
-              <item>
-               <property name="text">
-                <string>2 Bits</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>4 Bits</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>8 Bits</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>16 Bits</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>32 Bits</string>
-               </property>
-              </item>
+              <property name="value">
+               <number>3</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelEncoderDecoderInputCountPlus">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+          color: rgb(0, 45, 50);
+          font: 12pt &quot;Source Sans Pro&quot;;
+          background: none;
+}</string>
+              </property>
+              <property name="text">
+               <string>+</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelEncoderDecoderInputCount">
+              <property name="styleSheet">
+               <string notr="true">QLabel {
+          color: rgb(0, 45, 50);
+          font: 11pt &quot;Source Sans Pro&quot;;
+              background: none;
+      }
+
+      QLabel:disabled {
+                      color: rgb(100, 100, 100);
+      }</string>
+              </property>
+              <property name="text">
+               <string>3 Outputs</string>
+              </property>
              </widget>
             </item>
            </layout>
@@ -2545,15 +2759,15 @@ QComboBox QAbstractItemView {
            </layout>
           </widget>
          </item>
-         <item row="4" column="0" colspan="2">
-          <widget class="QFrame" name="uEncoderDecoderInputCountFrame">
+         <item row="9" column="0" colspan="2">
+          <widget class="QFrame" name="uMasterSlaveFrame">
            <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
+            <enum>QFrame::StyledPanel</enum>
            </property>
            <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
+            <enum>QFrame::Raised</enum>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
             <property name="leftMargin">
              <number>0</number>
             </property>
@@ -2567,193 +2781,22 @@ QComboBox QAbstractItemView {
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="uLabelEncoderDecoderInputCountIcon">
+             <widget class="QPushButton" name="uMasterSlaveButton">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
               <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelEncoderDecoderInputCountMinus">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-          color: rgb(0, 45, 50);
-          font: 12pt &quot;Source Sans Pro&quot;;
-          background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string>-</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="uEncoderDecoderInputCountSlider">
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>50</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QSlider {
-              background: none;
-      }
-
-      QSlider::groove:horizontal {
-          height: 1px;
-          margin: 2px 0;
-              background: rgb(0, 204, 143);
-      }
-
-      QSlider::handle:horizontal {
-          background: rgb(0, 204, 143);
-          width: 6px;
-          margin: -8px 0;
-      }</string>
-              </property>
-              <property name="minimum">
-               <number>3</number>
-              </property>
-              <property name="maximum">
-               <number>5</number>
-              </property>
-              <property name="pageStep">
-               <number>1</number>
-              </property>
-              <property name="value">
-               <number>3</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelEncoderDecoderInputCountPlus">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-          color: rgb(0, 45, 50);
-          font: 12pt &quot;Source Sans Pro&quot;;
-          background: none;
-}</string>
-              </property>
-              <property name="text">
-               <string>+</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelEncoderDecoderInputCount">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-          color: rgb(0, 45, 50);
-          font: 11pt &quot;Source Sans Pro&quot;;
-              background: none;
-      }
-
-      QLabel:disabled {
-                      color: rgb(100, 100, 100);
-      }</string>
-              </property>
-              <property name="text">
-               <string>3 Outputs</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="6" column="0" colspan="2">
-          <widget class="QFrame" name="uConstantButtonsFrame">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_9">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QPushButton" name="uConstantLowButton">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>29</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Low (0)</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">uConstantButtonsGroup</string>
-              </attribute>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="uConstantHighButton">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>29</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>High (1)</string>
+               <string>Master-Slave</string>
               </property>
               <property name="checkable">
                <bool>true</bool>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
-              <attribute name="buttonGroup">
-               <string notr="true">uConstantButtonsGroup</string>
-              </attribute>
              </widget>
             </item>
            </layout>
@@ -2955,7 +2998,7 @@ QMenuBar::item:pressed {
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Check for Update</string>
+    <string>Check for Updates...</string>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -3128,7 +3171,7 @@ QMenuBar::item:pressed {
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Start Tutorial...</string>
+    <string>Start Tutorial</string>
    </property>
    <property name="iconText">
     <string>Start tutorial...</string>
@@ -3190,10 +3233,10 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
   <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
  </buttongroups>
 </ui>

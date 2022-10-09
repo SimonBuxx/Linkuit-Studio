@@ -197,6 +197,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uFlipFlopTypeBox, &QComboBox::currentIndexChanged, this, &MainWindow::OnFlipFlopStyleChanged);
 
+    QObject::connect(mUi->uMasterSlaveButton, &QPushButton::toggled, &mCoreLogic, &CoreLogic::OnMasterSlaveToggled);
+
     // Connect widgets from clock configuration GUI
 
     QObject::connect(mUi->uButtonToggle, &QPushButton::toggled, this, &MainWindow::OnToggleButtonToggled);
@@ -658,6 +660,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
+            mUi->uMasterSlaveFrame->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
@@ -670,6 +673,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
+            mUi->uMasterSlaveFrame->hide();
             break;
         }
         case ConfiguratorMode::MULTIPLEXER_BITS:
@@ -682,6 +686,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
+            mUi->uMasterSlaveFrame->hide();
             break;
         }
         case ConfiguratorMode::ENCODER_DECODER:
@@ -696,6 +701,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
 #warning useless?
             SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
             mUi->uFlipFlopTypesFrame->hide();
+            mUi->uMasterSlaveFrame->hide();
             break;
         }
         case ConfiguratorMode::SHIFTREGISTER_BITS:
@@ -708,6 +714,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
+            mUi->uMasterSlaveFrame->hide();
             break;
         }
         case ConfiguratorMode::CONSTANT_STATE:
@@ -720,6 +727,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->show();
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
+            mUi->uMasterSlaveFrame->hide();
             break;
         }
         case ConfiguratorMode::COUNTER_BITS:
@@ -732,9 +740,10 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->show();
             mUi->uFlipFlopTypesFrame->hide();
+            mUi->uMasterSlaveFrame->hide();
             break;
         }
-        case ConfiguratorMode::FLIPFLOP_TYPE:
+        case ConfiguratorMode::RS_FLIPFLOP_TYPE:
         {
             mUi->uItemDirectionButtonsFrame->show();
             mUi->uGateInputCountFrame->hide();
@@ -744,6 +753,52 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->show();
+            mUi->uMasterSlaveFrame->hide();
+            break;
+        }
+        case ConfiguratorMode::MASTER_SLAVE:
+        {
+            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
+            mUi->uFlipFlopTypesFrame->hide();
+
+            switch (mCoreLogic.GetSelectedComponentType())
+            {
+                case ComponentType::D_FLIPFLOP:
+                {
+                    mUi->uMasterSlaveButton->setChecked(mCoreLogic.IsDFlipFlopMasterSlave());
+                    break;
+                }
+                case ComponentType::JK_FLIPFLOP:
+                {
+                    mUi->uMasterSlaveButton->setChecked(mCoreLogic.IsJkFlipFlopMasterSlave());
+                    break;
+                }
+                default:
+                {
+                    throw std::logic_error("Configuration mode MASTER_SLAVE selected for unapplicable component type");
+                    break;
+                }
+            }
+
+            if (mCoreLogic.GetSelectedComponentType() == ComponentType::D_FLIPFLOP)
+            {
+            }
+            else if (mCoreLogic.GetSelectedComponentType() == ComponentType::D_FLIPFLOP)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            mUi->uMasterSlaveFrame->show();
             break;
         }
         default:
