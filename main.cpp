@@ -63,8 +63,8 @@ int main(int argc, char *argv[])
     MainWindow window;
 
     if (parser.positionalArguments().size() > 0)
-    {
-        window.GetCoreLogic().GetCircuitFileParser().LoadJson(QFileInfo(path.mid(1, path.size() - 3)));
+    {        
+		window.GetCoreLogic().GetCircuitFileParser().LoadJson(QFileInfo(path.trimmed().remove("\"")));
     }
     else
     {

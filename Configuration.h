@@ -4,6 +4,7 @@
 #include <QColor>
 #include <QFont>
 #include <QRectF>
+#include <chrono>
 
 #include "HelperStructures.h"
 
