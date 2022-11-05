@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QCoreApplication::setApplicationName("Linkuit Studio");
-    QCoreApplication::setApplicationVersion(QString::fromStdString(SW_VERSION_STRING));
+    QCoreApplication::setApplicationVersion(QString(FULL_VERSION));
     app.setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
 
     QCommandLineParser parser;

@@ -1,10 +1,6 @@
 #include "View.h"
 #include "HelperFunctions.h"
 
-#include "Components/Gates/AndGate.h"
-#include "Components/Gates/OrGate.h"
-#include "Components/Gates/XorGate.h"
-
 #include <QtWidgets>
 #include <QtMath>
 
@@ -192,8 +188,6 @@ void View::Init()
     mGraphicsView.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setFrameStyle(QGraphicsView::NoFrame);
-
-#warning artifact in logo icon
 
     mProcessingOverlay = new QWidget(&mGraphicsView);
     mProcessingOverlay->setObjectName("mProcessingOverlay");

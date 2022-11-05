@@ -10,13 +10,12 @@
 
 static constexpr uint8_t MAX_UNDO_STACK_SIZE = 100;
 
-static constexpr uint8_t MAJOR_VERSION = 0;
-static constexpr uint8_t MINOR_VERSION = 9;
-static constexpr uint8_t PATCH_VERSION = 7;
+static auto versionList = QString(FULL_VERSION).split('.');
 
-static const std::string SW_VERSION_STRING = std::to_string(MAJOR_VERSION) + "." +
-                                             std::to_string(MINOR_VERSION) + "." +
-                                             std::to_string(PATCH_VERSION);
+static uint8_t MAJOR_VERSION = versionList.at(0).toInt();
+static uint8_t MINOR_VERSION = versionList.at(1).toInt();
+static uint8_t PATCH_VERSION = versionList.at(2).toInt();
+static uint8_t BUILD_VERSION = versionList.at(3).toInt();
 
 namespace file
 {

@@ -36,7 +36,7 @@ public:
     explicit MainWindow(QWidget *pParent = nullptr);
 
     /// \brief Destructor for MainWindow
-    ~MainWindow(void);
+    ~MainWindow(void) override;
 
     /// \brief Getter for the view frame
     /// \return Reference to the View object
@@ -293,8 +293,7 @@ protected:
     View mView;
     CoreLogic mCoreLogic;
 
-#warning [ENHANCEMENT] use global QtAwesome instance instead
-    QtAwesome *mAwesome; // Contains Fontawesome logos
+    QtAwesome mAwesome; // Contains Fontawesome logos
 
     QStandardItemModel mToolboxTreeModel;
 

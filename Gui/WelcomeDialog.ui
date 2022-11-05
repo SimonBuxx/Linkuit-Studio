@@ -1154,7 +1154,7 @@ QPushButton:pressed {
 }</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is an early version of Linkuit Studio and as such may contain bugs or experience crashes. If you notice any problems, please &lt;a href=&quot;https://linkuit.com/bugreport&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#00cc8f;&quot;&gt;create a bug report&lt;/span&gt;&lt;/a&gt; on the website.&lt;/p&gt;&lt;p&gt;Thank you for being one of the first to use Linkuit Studio. Your feedback is valuable to us and we hope you'll have a great experience.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is an early version of Linkuit Studio and as such may contain bugs or experience crashes. If you notice any problems, please &lt;a href=&quot;mailto:linkuit@outlook.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#00cc8f;&quot;&gt;create a bug report&lt;/span&gt;&lt;/a&gt; on the website.&lt;/p&gt;&lt;p&gt;Thank you for being one of the first to use Linkuit Studio. Your feedback is valuable to us and we hope you'll have a great experience.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

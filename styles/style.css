@@ -41,6 +41,35 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     height: 0px;
 }
 
+QScrollBar:horizontal
+{
+    height: 6px;
+    border: none;
+    background: none;
+}
+
+QScrollBar::handle:horizontal
+{
+    background: rgb(0, 204, 143);
+    min-height: 20px;
+}
+
+QScrollBar::add-line:horizontal
+{
+    width: 0px;
+}
+
+QScrollBar::sub-line:horizontal
+{
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
+{
+    background: none;
+    width: 0px;
+}
+
 QPlainTextEdit
 {
     color: white;

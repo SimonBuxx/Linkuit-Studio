@@ -2,14 +2,12 @@
 #include "ui_WelcomeDialog.h"
 #include "Configuration.h"
 
-WelcomeDialog::WelcomeDialog(QWidget *pParent):
+WelcomeDialog::WelcomeDialog(QtAwesome &pAwesome, QWidget *pParent):
     QDialog(pParent),
-    mUi(new Ui::WelcomeDialog)
+    mUi(new Ui::WelcomeDialog),
+    mAwesome(pAwesome)
 {
     mUi->setupUi(this);
-
-    mAwesome = new QtAwesome(this);
-    mAwesome->initFontAwesome();
 
     mStandardIconVariant.insert("color", QColor(0, 45, 50));
     mStandardIconVariant.insert("color-disabled", QColor(100, 100, 100));
@@ -21,11 +19,11 @@ WelcomeDialog::WelcomeDialog(QWidget *pParent):
     mWhiteIconVariant.insert("color-active", QColor(255, 255, 255));
     mWhiteIconVariant.insert("color-selected", QColor(255, 255, 255));
 
-    mUi->uNewCircuitButton->setIcon(mAwesome->icon(fa::fileo, mStandardIconVariant));
-    mUi->uOpenCircuitButton->setIcon(mAwesome->icon(fa::folderopeno, mStandardIconVariant));
-    mUi->uGithubButton->setIcon(mAwesome->icon(fa::github, mWhiteIconVariant));
-    mUi->uTwitterButton->setIcon(mAwesome->icon(fa::twitter, mWhiteIconVariant));
-    mUi->uCheckForUpdateButton->setIcon(mAwesome->icon(fa::refresh, mStandardIconVariant));
+    mUi->uNewCircuitButton->setIcon(mAwesome.icon(fa::fileo, mStandardIconVariant));
+    mUi->uOpenCircuitButton->setIcon(mAwesome.icon(fa::folderopeno, mStandardIconVariant));
+    mUi->uGithubButton->setIcon(mAwesome.icon(fa::github, mWhiteIconVariant));
+    mUi->uTwitterButton->setIcon(mAwesome.icon(fa::twitter, mWhiteIconVariant));
+    mUi->uCheckForUpdateButton->setIcon(mAwesome.icon(fa::refresh, mStandardIconVariant));
 
     QObject::connect(mUi->uNewCircuitButton, &QPushButton::clicked, this, &WelcomeDialog::NewCircuitClickedSignal);
     QObject::connect(mUi->uOpenCircuitButton, &QPushButton::clicked, this, &WelcomeDialog::OpenCircuitClickedSignal);
@@ -74,7 +72,7 @@ WelcomeDialog::WelcomeDialog(QWidget *pParent):
         }
     });
 
-    mUi->uVersionLabel->setText(tr("Version %0").arg(QString::fromStdString(SW_VERSION_STRING)));
+    mUi->uVersionLabel->setText(tr("Version %0").arg(QString(FULL_VERSION)));
 }
 
 WelcomeDialog::~WelcomeDialog()

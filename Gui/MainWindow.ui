@@ -420,7 +420,6 @@ QTreeView::item:selected {
             <font>
              <family>Source Sans Pro</family>
              <pointsize>12</pointsize>
-             <weight>50</weight>
              <italic>false</italic>
              <bold>false</bold>
             </font>
@@ -646,7 +645,7 @@ QToolTip
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="resources.qrc">
+            <iconset>
              <normaloff>:/images/icons/mouse-cursor_checked.png</normaloff>:/images/icons/mouse-cursor_checked.png</iconset>
            </property>
            <property name="iconSize">
@@ -1491,7 +1490,6 @@ QSpinBox::down-button {
                <font>
                 <family>Source Sans Pro</family>
                 <pointsize>11</pointsize>
-                <weight>50</weight>
                 <italic>false</italic>
                 <bold>false</bold>
                </font>
@@ -3011,6 +3009,9 @@ QMenuBar::item:pressed {
    <property name="text">
     <string>Save Screenshot...</string>
    </property>
+   <property name="toolTip">
+    <string>This feature is coming soon!</string>
+   </property>
    <property name="autoRepeat">
     <bool>false</bool>
    </property>
@@ -3149,10 +3150,10 @@ QMenuBar::item:pressed {
     <bool>false</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>Report Bugs...</string>
+    <string>Report a Bug...</string>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -3177,7 +3178,7 @@ QMenuBar::item:pressed {
     <string>Start tutorial...</string>
    </property>
    <property name="toolTip">
-    <string>Start tutorial...</string>
+    <string>This feature is coming soon!</string>
    </property>
   </action>
   <action name="uActionWelcomePage">
@@ -3233,10 +3234,10 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uConstantButtonsGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
  </buttongroups>
 </ui>

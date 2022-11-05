@@ -267,7 +267,6 @@ QRectF ConPoint::boundingRect() const
 
 QJsonObject ConPoint::GetJson() const
 {
-#warning [ENHANCEMENT] do not create JSON for T crossing ConPoints
     QJsonObject json;
 
     if (mConnectionType == ConnectionType::DIODE_X)

@@ -8,12 +8,13 @@ MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
     mView(mCoreLogic),
-    mCoreLogic(mView)
+    mCoreLogic(mView),
+    mAboutDialog(mAwesome, this),
+    mWelcomeDialog(mAwesome, this)
 {
     mUi->setupUi(this);
 
-    mAwesome = new QtAwesome(this);
-    mAwesome->initFontAwesome();
+    mAwesome.initFontAwesome();
 
     mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
@@ -428,8 +429,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionReportBugs, &QAction::triggered, this, [&]()
     {
-#warning change to final bug report link
-        QDesktopServices::openUrl(QUrl("https://linkuit.com/bugreport/"));
+        QDesktopServices::openUrl(QUrl("mailto:linkuit@outlook.com"));
     });
 
     QObject::connect(mUi->uActionOpenWebsite, &QAction::triggered, this, [&]()
@@ -449,7 +449,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionCheckUpdate, &QAction::triggered, this, [&]()
     {
-        QDesktopServices::openUrl(QUrl(QString("https://linkuit.com/update/%0").arg(QString::fromStdString(SW_VERSION_STRING))));
+        QDesktopServices::openUrl(QUrl(QString("https://linkuit.com/update/%0").arg(QString(FULL_VERSION))));
     });
 }
 
@@ -500,7 +500,7 @@ void MainWindow::OnCircuitFileHasNewerCompatibleVersion(const QString& pVersion)
     mNewerVersionCompatibleBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
     mNewerVersionCompatibleBox.setText(tr("This file has been created with a newer version of Linkuit Studio."));
     mNewerVersionCompatibleBox.setInformativeText(QString("It seems like this file was last saved using version %0. "
-        "It is marked compatible with the current version %1, but please consider updating Linkuit Studio.").arg(pVersion).arg(QString::fromStdString(SW_VERSION_STRING)));
+        "It is marked compatible with the current version %1, but please consider updating Linkuit Studio.").arg(pVersion).arg(QString(FULL_VERSION)));
     mNewerVersionCompatibleBox.setStandardButtons(QMessageBox::Ok);
     mNewerVersionCompatibleBox.setDefaultButton(QMessageBox::Ok);
     mNewerVersionCompatibleBox.exec();
@@ -513,7 +513,7 @@ void MainWindow::OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersio
     mNewerVersionIncompatibleBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
     mNewerVersionIncompatibleBox.setText(tr("This file has been created with a newer version of Linkuit Studio."));
     mNewerVersionIncompatibleBox.setInformativeText(QString("It seems like this file was last saved using version %0. "
-        "It is marked incompatible with the current version %1. Please update Linkuit Studio to open the file.").arg(pVersion).arg(QString::fromStdString(SW_VERSION_STRING)));
+        "It is marked incompatible with the current version %1. Please update Linkuit Studio to open the file.").arg(pVersion).arg(QString(FULL_VERSION)));
     mNewerVersionIncompatibleBox.setStandardButtons(QMessageBox::Ok);
     mNewerVersionIncompatibleBox.setDefaultButton(QMessageBox::Ok);
     mNewerVersionIncompatibleBox.exec();
@@ -521,7 +521,6 @@ void MainWindow::OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersio
 
 void MainWindow::OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo)
 {
-#warning [ENHANCEMENT] remove file from recent files list when opening failed
     mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(pFileInfo.fileName()));
     mErrorOpenFileBox.exec();
 }
@@ -698,10 +697,11 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uShiftRegisterBitWidthFrame->hide();
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->hide();
-#warning useless?
-            SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
+
+            // To update the label to "ouputs" or "inputs"
+            SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
             break;
         }
         case ConfiguratorMode::SHIFTREGISTER_BITS:
@@ -822,7 +822,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
 
 void MainWindow::OnItemRightButtonToggled(bool pChecked)
 {
-    mUi->uItemRightButton->setIcon(mAwesome->icon(fa::arrowright, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
+    mUi->uItemRightButton->setIcon(mAwesome.icon(fa::arrowright, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
     if (pChecked)
     {
         SetComponentDirectionIfInAddMode(Direction::RIGHT);
@@ -831,7 +831,7 @@ void MainWindow::OnItemRightButtonToggled(bool pChecked)
 
 void MainWindow::OnItemDownButtonToggled(bool pChecked)
 {
-    mUi->uItemDownButton->setIcon(mAwesome->icon(fa::arrowdown, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
+    mUi->uItemDownButton->setIcon(mAwesome.icon(fa::arrowdown, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
     if (pChecked)
     {
         SetComponentDirectionIfInAddMode(Direction::DOWN);
@@ -840,7 +840,7 @@ void MainWindow::OnItemDownButtonToggled(bool pChecked)
 
 void MainWindow::OnItemLeftButtonToggled(bool pChecked)
 {
-    mUi->uItemLeftButton->setIcon(mAwesome->icon(fa::arrowleft, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
+    mUi->uItemLeftButton->setIcon(mAwesome.icon(fa::arrowleft, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
     if (pChecked)
     {
         SetComponentDirectionIfInAddMode(Direction::LEFT);
@@ -849,7 +849,7 @@ void MainWindow::OnItemLeftButtonToggled(bool pChecked)
 
 void MainWindow::OnItemUpButtonToggled(bool pChecked)
 {
-    mUi->uItemUpButton->setIcon(mAwesome->icon(fa::arrowup, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
+    mUi->uItemUpButton->setIcon(mAwesome.icon(fa::arrowup, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
     if (pChecked)
     {
         SetComponentDirectionIfInAddMode(Direction::UP);
@@ -1343,12 +1343,12 @@ void MainWindow::InitializeToolboxTree()
             if (mUi->uToolboxTree->isExpanded(mUi->uToolboxTree->currentIndex()))
             {
                 mUi->uToolboxTree->collapse(mUi->uToolboxTree->currentIndex());
-                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevrondown, mChevronIconVariant));
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome.icon(fa::chevrondown, mChevronIconVariant));
             }
             else
             {
                 mUi->uToolboxTree->expand(mUi->uToolboxTree->currentIndex());
-                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome->icon(fa::chevronup, mChevronIconVariant));
+                mToolboxTreeModel.itemFromIndex(mUi->uToolboxTree->currentIndex())->setIcon(mAwesome.icon(fa::chevronup, mChevronIconVariant));
             }
         }
     });
@@ -1390,26 +1390,26 @@ void MainWindow::InitializeToolboxTree()
     labelIcon.addPixmap(QPixmap(":images/icons/label_icon.png"), QIcon::Mode::Selected);
 
     // Create category and root level items
-    mCategoryGatesItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Logic Gates");
+    mCategoryGatesItem = new QStandardItem(mAwesome.icon(fa::chevronup, mChevronIconVariant), "Logic Gates");
     mCategoryGatesItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryGatesItem);
 
-    mCategoryInputsItem = new QStandardItem(mAwesome->icon(fa::chevronup, mChevronIconVariant), "Inputs");
+    mCategoryInputsItem = new QStandardItem(mAwesome.icon(fa::chevronup, mChevronIconVariant), "Inputs");
     mCategoryInputsItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryInputsItem);
 
     auto outputItem = new QStandardItem(outputIcon, "Output");
     mToolboxTreeModel.appendRow(outputItem);
 
-    mCategoryAddersItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Adders");
+    mCategoryAddersItem = new QStandardItem(mAwesome.icon(fa::chevrondown, mChevronIconVariant), "Adders");
     mCategoryAddersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryAddersItem);
 
-    mCategoryMemoryItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Memory");
+    mCategoryMemoryItem = new QStandardItem(mAwesome.icon(fa::chevrondown, mChevronIconVariant), "Memory");
     mCategoryMemoryItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryMemoryItem);
 
-    mCategoryConvertersItem = new QStandardItem(mAwesome->icon(fa::chevrondown, mChevronIconVariant), "Converters");
+    mCategoryConvertersItem = new QStandardItem(mAwesome.icon(fa::chevrondown, mChevronIconVariant), "Converters");
     mCategoryConvertersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
@@ -1488,85 +1488,85 @@ void MainWindow::InitializeGuiIcons()
     mWhiteIconVariant.insert("color-selected", QColor(255, 255, 255));
 
     // Icons for GUI buttons
-    mUi->uEditButton->SetCheckedIcon(mAwesome->icon(fa::mousepointer, mCheckedButtonVariant));
-    mUi->uEditButton->SetUncheckedIcon(mAwesome->icon(fa::mousepointer, mUncheckedButtonVariant));
+    mUi->uEditButton->SetCheckedIcon(mAwesome.icon(fa::mousepointer, mCheckedButtonVariant));
+    mUi->uEditButton->SetUncheckedIcon(mAwesome.icon(fa::mousepointer, mUncheckedButtonVariant));
 
     mUi->uWiringButton->SetCheckedIcon(QIcon(":/images/icons/wiring_checked.png"));
     mUi->uWiringButton->SetUncheckedIcon(QIcon(":/images/icons/wiring.png"));
 
     mUi->uDeleteButton->SetIcon(QIcon(":/images/icons/delete.png"));
-    mUi->uUndoButton->SetIcon(mAwesome->icon(fa::undo, mUncheckedButtonVariant));
-    mUi->uRedoButton->SetIcon(mAwesome->icon(fa::repeat, mUncheckedButtonVariant));
+    mUi->uUndoButton->SetIcon(mAwesome.icon(fa::undo, mUncheckedButtonVariant));
+    mUi->uRedoButton->SetIcon(mAwesome.icon(fa::repeat, mUncheckedButtonVariant));
 
-    mUi->uStartButton->SetUncheckedIcon(mAwesome->icon(fa::poweroff, mUncheckedButtonVariant));
-    mUi->uStartButton->SetCheckedIcon(mAwesome->icon(fa::poweroff, mCheckedButtonVariant));
-    mUi->uRunButton->SetUncheckedIcon(mAwesome->icon(fa::play, mUncheckedButtonVariant));
-    mUi->uRunButton->SetCheckedIcon(mAwesome->icon(fa::play, mCheckedButtonVariant));
-    mUi->uPauseButton->SetUncheckedIcon(mAwesome->icon(fa::pause, mUncheckedButtonVariant));
-    mUi->uPauseButton->SetCheckedIcon(mAwesome->icon(fa::pause, mCheckedButtonVariant));
-    mUi->uStepButton->SetIcon(mAwesome->icon(fa::stepforward, mUncheckedButtonVariant));
-    mUi->uResetButton->SetIcon(mAwesome->icon(fa::refresh, mUncheckedButtonVariant));
+    mUi->uStartButton->SetUncheckedIcon(mAwesome.icon(fa::poweroff, mUncheckedButtonVariant));
+    mUi->uStartButton->SetCheckedIcon(mAwesome.icon(fa::poweroff, mCheckedButtonVariant));
+    mUi->uRunButton->SetUncheckedIcon(mAwesome.icon(fa::play, mUncheckedButtonVariant));
+    mUi->uRunButton->SetCheckedIcon(mAwesome.icon(fa::play, mCheckedButtonVariant));
+    mUi->uPauseButton->SetUncheckedIcon(mAwesome.icon(fa::pause, mUncheckedButtonVariant));
+    mUi->uPauseButton->SetCheckedIcon(mAwesome.icon(fa::pause, mCheckedButtonVariant));
+    mUi->uStepButton->SetIcon(mAwesome.icon(fa::stepforward, mUncheckedButtonVariant));
+    mUi->uResetButton->SetIcon(mAwesome.icon(fa::refresh, mUncheckedButtonVariant));
 
     // Icons for configuration elements
-    mUi->uLabelToggleIcon->setPixmap(mAwesome->icon(fa::tachometer, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelPulseIcon->setPixmap(mAwesome->icon(fa::hourglasso, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelToggleIcon->setPixmap(mAwesome.icon(fa::tachometer, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelPulseIcon->setPixmap(mAwesome.icon(fa::hourglasso, mStatusBarIconVariant).pixmap(20, 20));
 
-    mUi->uItemRightButton->setIcon(mAwesome->icon(fa::arrowright, mConfigButtonIconVariant));
-    mUi->uItemDownButton->setIcon(mAwesome->icon(fa::arrowdown, mConfigButtonIconVariant));
-    mUi->uItemLeftButton->setIcon(mAwesome->icon(fa::arrowleft, mConfigButtonIconVariant));
-    mUi->uItemUpButton->setIcon(mAwesome->icon(fa::arrowup, mConfigButtonIconVariant));
+    mUi->uItemRightButton->setIcon(mAwesome.icon(fa::arrowright, mConfigButtonIconVariant));
+    mUi->uItemDownButton->setIcon(mAwesome.icon(fa::arrowdown, mConfigButtonIconVariant));
+    mUi->uItemLeftButton->setIcon(mAwesome.icon(fa::arrowleft, mConfigButtonIconVariant));
+    mUi->uItemUpButton->setIcon(mAwesome.icon(fa::arrowup, mConfigButtonIconVariant));
 
-    mUi->uLabelGateInputCountIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelGateInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelGateInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelGateInputCountIcon->setPixmap(mAwesome.icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelGateInputCountPlus->setPixmap(mAwesome.icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelGateInputCountMinus->setPixmap(mAwesome.icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
-    mUi->uLabelEncoderDecoderInputCountIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelEncoderDecoderInputCountPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelEncoderDecoderInputCountMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelEncoderDecoderInputCountIcon->setPixmap(mAwesome.icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelEncoderDecoderInputCountPlus->setPixmap(mAwesome.icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelEncoderDecoderInputCountMinus->setPixmap(mAwesome.icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
-    mUi->uLabelMultiplexerBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelMultiplexerBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelMultiplexerBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelMultiplexerBitWidthIcon->setPixmap(mAwesome.icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelMultiplexerBitWidthPlus->setPixmap(mAwesome.icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelMultiplexerBitWidthMinus->setPixmap(mAwesome.icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
-    mUi->uLabelShiftRegisterBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelShiftRegisterBitWidthIcon->setPixmap(mAwesome.icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
 
-    mUi->uLabelCounterBitWidthIcon->setPixmap(mAwesome->icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelCounterBitWidthPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelCounterBitWidthMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelCounterBitWidthIcon->setPixmap(mAwesome.icon(fa::sortamountasc, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelCounterBitWidthPlus->setPixmap(mAwesome.icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelCounterBitWidthMinus->setPixmap(mAwesome.icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
-    mUi->uFlipFlopTypeLabel->setPixmap(mAwesome->icon(fa::sort, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uFlipFlopTypeLabel->setPixmap(mAwesome.icon(fa::sort, mStatusBarIconVariant).pixmap(20, 20));
 
     // Icons for status bar elements
-    mUi->uLabelZoomIcon->setPixmap(mAwesome->icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
-    mUi->uLabelPlus->setPixmap(mAwesome->icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
-    mUi->uLabelMinus->setPixmap(mAwesome->icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelZoomIcon->setPixmap(mAwesome.icon(fa::search, mStatusBarIconVariant).pixmap(20, 20));
+    mUi->uLabelPlus->setPixmap(mAwesome.icon(fa::plus, mPlusMinusIconVariant).pixmap(8, 8));
+    mUi->uLabelMinus->setPixmap(mAwesome.icon(fa::minus, mPlusMinusIconVariant).pixmap(8, 8));
 
     // Icons for menu bar elements
-    mUi->uActionNew->setIcon(mAwesome->icon(fa::fileo, mMenuBarIconVariant));
-    mUi->uActionOpen->setIcon(mAwesome->icon(fa::folderopeno, mMenuBarIconVariant));
-    mUi->uActionSave->setIcon(mAwesome->icon(fa::floppyo, mMenuBarIconVariant));
+    mUi->uActionNew->setIcon(mAwesome.icon(fa::fileo, mMenuBarIconVariant));
+    mUi->uActionOpen->setIcon(mAwesome.icon(fa::folderopeno, mMenuBarIconVariant));
+    mUi->uActionSave->setIcon(mAwesome.icon(fa::floppyo, mMenuBarIconVariant));
 
-    mUi->uActionUndo->setIcon(mAwesome->icon(fa::undo, mMenuBarIconVariant));
-    mUi->uActionRedo->setIcon(mAwesome->icon(fa::repeat, mMenuBarIconVariant));
-    mUi->uActionCut->setIcon(mAwesome->icon(fa::scissors, mMenuBarIconVariant));
-    mUi->uActionCopy->setIcon(mAwesome->icon(fa::copy, mMenuBarIconVariant));
-    mUi->uActionPaste->setIcon(mAwesome->icon(fa::clipboard, mMenuBarIconVariant));
-    mUi->uActionDelete->setIcon(mAwesome->icon(fa::trasho, mMenuBarIconVariant));
+    mUi->uActionUndo->setIcon(mAwesome.icon(fa::undo, mMenuBarIconVariant));
+    mUi->uActionRedo->setIcon(mAwesome.icon(fa::repeat, mMenuBarIconVariant));
+    mUi->uActionCut->setIcon(mAwesome.icon(fa::scissors, mMenuBarIconVariant));
+    mUi->uActionCopy->setIcon(mAwesome.icon(fa::copy, mMenuBarIconVariant));
+    mUi->uActionPaste->setIcon(mAwesome.icon(fa::clipboard, mMenuBarIconVariant));
+    mUi->uActionDelete->setIcon(mAwesome.icon(fa::trasho, mMenuBarIconVariant));
 
-    mUi->uActionStart->setIcon(mAwesome->icon(fa::poweroff, mMenuBarIconVariant));
-    mUi->uActionRun->setIcon(mAwesome->icon(fa::play, mMenuBarIconVariant));
-    mUi->uActionStep->setIcon(mAwesome->icon(fa::stepforward, mMenuBarIconVariant));
-    mUi->uActionReset->setIcon(mAwesome->icon(fa::refresh, mMenuBarIconVariant));
-    mUi->uActionPause->setIcon(mAwesome->icon(fa::pause, mMenuBarIconVariant));
+    mUi->uActionStart->setIcon(mAwesome.icon(fa::poweroff, mMenuBarIconVariant));
+    mUi->uActionRun->setIcon(mAwesome.icon(fa::play, mMenuBarIconVariant));
+    mUi->uActionStep->setIcon(mAwesome.icon(fa::stepforward, mMenuBarIconVariant));
+    mUi->uActionReset->setIcon(mAwesome.icon(fa::refresh, mMenuBarIconVariant));
+    mUi->uActionPause->setIcon(mAwesome.icon(fa::pause, mMenuBarIconVariant));
 
-    mUi->uActionScreenshot->setIcon(mAwesome->icon(fa::camera, mMenuBarIconVariant));
+    mUi->uActionScreenshot->setIcon(mAwesome.icon(fa::camera, mMenuBarIconVariant));
 
-    mUi->uActionStartTutorial->setIcon(mAwesome->icon(fa::graduationcap, mMenuBarIconVariant));
-    mUi->uActionReportBugs->setIcon(mAwesome->icon(fa::bug, mMenuBarIconVariant));
-    mUi->uActionOpenWebsite->setIcon(mAwesome->icon(fa::externallink, mMenuBarIconVariant));
-    mUi->uActionOpenTwitter->setIcon(mAwesome->icon(fa::twitter, mMenuBarIconVariant));
-    mUi->uActionOpenGithub->setIcon(mAwesome->icon(fa::github, mMenuBarIconVariant));
-    mUi->uActionAbout->setIcon(mAwesome->icon(fa::info, mMenuBarIconVariant));
+    mUi->uActionStartTutorial->setIcon(mAwesome.icon(fa::graduationcap, mMenuBarIconVariant));
+    mUi->uActionReportBugs->setIcon(mAwesome.icon(fa::bug, mMenuBarIconVariant));
+    mUi->uActionOpenWebsite->setIcon(mAwesome.icon(fa::externallink, mMenuBarIconVariant));
+    mUi->uActionOpenTwitter->setIcon(mAwesome.icon(fa::twitter, mMenuBarIconVariant));
+    mUi->uActionOpenGithub->setIcon(mAwesome.icon(fa::github, mMenuBarIconVariant));
+    mUi->uActionAbout->setIcon(mAwesome.icon(fa::info, mMenuBarIconVariant));
 }
 
 void MainWindow::InitializeGlobalShortcuts()
