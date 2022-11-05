@@ -1,7 +1,7 @@
 # Linkuit Studio
 ![Linkuit Studio Icon](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/linkuit_logo_new.png?raw=true)
 
-![Traffic Light Controller](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/ztaffic_lights.png?raw=true)
+![Traffic Light Controller](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/traffic_lights.png?raw=true)
 *A simple traffic light controller*
 
 ## How to compile
