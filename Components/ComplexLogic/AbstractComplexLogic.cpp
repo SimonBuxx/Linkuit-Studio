@@ -433,7 +433,7 @@ void AbstractComplexLogic::DrawComponentDetailsLeft(QPainter *pPainter, const QS
     for (size_t i = 0; i < mTopInputCount; i++)
     {
         SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
+        pPainter->drawLine(mWidth - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), mHeight, mWidth - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), mHeight + 8);
     }
 
     // Draw input connectors
@@ -458,7 +458,7 @@ void AbstractComplexLogic::DrawComponentDetailsLeft(QPainter *pPainter, const QS
         if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-            pPainter->drawEllipse(canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, mHeight + 1, 8, 8);
+            pPainter->drawEllipse(mWidth - (canvas::GRID_SIZE * i + canvas::GRID_SIZE) - 4, mHeight + 1, 8, 8);
         }
     }
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
@@ -488,7 +488,7 @@ void AbstractComplexLogic::DrawComponentDetailsUp(QPainter *pPainter, const QSty
     for (size_t i = 0; i < mTopInputCount; i++)
     {
         SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(-8, canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        pPainter->drawLine(-8, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), 0, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE));
     }
 
     // Draw input connectors
@@ -511,7 +511,7 @@ void AbstractComplexLogic::DrawComponentDetailsUp(QPainter *pPainter, const QSty
         if (mLogicCell->IsInputInverted(i))
         {
             SetInversionPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-            pPainter->drawEllipse(-9, canvas::GRID_SIZE * i + canvas::GRID_SIZE - 4, 8, 8);
+            pPainter->drawEllipse(-9, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE) - 4, 8, 8);
         }
     }
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
