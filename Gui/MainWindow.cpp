@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
 
-    mUi->uViewLayout->addWidget(&mView, 0, 0, 4, 6);
+    mUi->uViewLayout->addWidget(&mView, 0, 0, 8, 6);
 
     mView.stackUnder(mUi->uToolboxContainer);
 
@@ -1401,7 +1401,7 @@ void MainWindow::InitializeToolboxTree()
     auto outputItem = new QStandardItem(outputIcon, "Output");
     mToolboxTreeModel.appendRow(outputItem);
 
-    mCategoryAddersItem = new QStandardItem(mAwesome.icon(fa::chevrondown, mChevronIconVariant), "Adders");
+    mCategoryAddersItem = new QStandardItem(mAwesome.icon(fa::chevronup, mChevronIconVariant), "Adders");
     mCategoryAddersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryAddersItem);
 
