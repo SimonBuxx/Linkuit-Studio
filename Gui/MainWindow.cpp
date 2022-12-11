@@ -16,10 +16,13 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mAwesome.initFontAwesome();
 
+    mTutorialFrame.Init(mAwesome);
+
     mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
 
     mUi->uViewLayout->addWidget(&mView, 0, 0, 8, 6);
+    mTutorialFrame.setParent(mUi->uCentralwidget);
 
     mView.stackUnder(mUi->uToolboxContainer);
 
@@ -76,6 +79,11 @@ void MainWindow::InitializeMessageBoxes()
     mErrorSaveFileBox.setText(tr("The circuit could not be saved."));
     mErrorSaveFileBox.setStandardButtons(QMessageBox::Ok);
     mErrorSaveFileBox.setDefaultButton(QMessageBox::Ok);
+}
+
+void MainWindow::InitializeTutorial()
+{
+    mTutorialFrame.StartTutorial();
 }
 
 void MainWindow::ConnectGuiSignalsAndSlots()
@@ -220,6 +228,10 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uStepButton, &QAbstractButton::clicked, mUi->uActionStep, &QAction::trigger);
     QObject::connect(mUi->uResetButton, &QAbstractButton::clicked, mUi->uActionReset, &QAction::trigger);
     QObject::connect(mUi->uPauseButton, &QAbstractButton::clicked, mUi->uActionPause, &QAction::trigger);
+
+    // Connect tutorial frame
+    QObject::connect(&mTutorialFrame, &TutorialFrame::CurrentStepChangedSignal, this, &MainWindow::OnTutorialStepChanged);
+    QObject::connect(&mTutorialFrame, &TutorialFrame::AdvanceStepRequestSignal, this, &MainWindow::OnAdvanceTutorialStepRequest);
 
     QObject::connect(&mWelcomeDialog, &WelcomeDialog::NewCircuitClickedSignal, this, [&]()
     {
@@ -417,7 +429,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionStartTutorial, &QAction::triggered, this, [&]()
     {
-        qDebug() << "Not implemented";
+        //qDebug() << "Not implemented";
+        InitializeTutorial();
     });
 
     QObject::connect(mUi->uActionWelcomePage, &QAction::triggered, this, [&]()
@@ -596,6 +609,74 @@ void MainWindow::UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue)
 {
     mUi->uZoomLabel->setText(QString("%0%").arg(pPercentage));
     mUi->uZoomSlider->setValue(pValue);
+}
+
+void MainWindow::OnAdvanceTutorialStepRequest(uint8_t pStep)
+{
+    switch (pStep)
+    {
+        case 1:
+        {
+            if (mView.GetZoomLevel() != canvas::DEFAULT_ZOOM_LEVEL)
+            {
+                mTutorialFrame.OnAdvanceStepApproved(pStep);
+            }
+            else
+            {
+                mTutorialFrame.OnAdvanceStepDeclined(pStep);
+            }
+            // mTutorialFrame.OnAdvanceStepApproved(pStep);
+            break;
+        }
+        case 2:
+        {
+            if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() == ComponentType::AND_GATE)
+            {
+                mTutorialFrame.OnAdvanceStepApproved(pStep);
+            }
+            else
+            {
+                mTutorialFrame.OnAdvanceStepDeclined(pStep);
+            }
+            break;
+        }
+        case 3:
+        {
+            mTutorialFrame.OnAdvanceStepApproved(pStep);
+            break;
+        }
+        default:
+        {
+            mTutorialFrame.OnAdvanceStepApproved(pStep);
+            break;
+        }
+    }
+}
+
+void MainWindow::OnTutorialStepChanged(uint8_t pStep)
+{
+    switch (pStep)
+    {
+        case 1:
+        {
+            mTutorialFrame.SetCenterPosition(QPoint(width() / 2, height() / 2));
+            break;
+        }
+        case 2:
+        {
+            mTutorialFrame.SetTopLeftPosition(mUi->uToolboxContainer->mapToParent(QPoint(mUi->uToolboxContainer->width() + 20, 0)));
+            break;
+        }
+        case 3:
+        {
+            mTutorialFrame.SetTopRightPosition(mUi->uClockConfigurator->mapToParent(QPoint(-20, 0)));
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
 }
 
 void MainWindow::OnToggleButtonToggled(bool pChecked)
@@ -786,7 +867,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
                 }
             }
 
-            if (mCoreLogic.GetSelectedComponentType() == ComponentType::D_FLIPFLOP)
+            /*if (mCoreLogic.GetSelectedComponentType() == ComponentType::D_FLIPFLOP)
             {
             }
             else if (mCoreLogic.GetSelectedComponentType() == ComponentType::D_FLIPFLOP)
@@ -796,7 +877,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             else
             {
 
-            }
+            }*/
 
             mUi->uMasterSlaveFrame->show();
             break;

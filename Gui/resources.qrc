@@ -37,5 +37,8 @@
         <file>../images/icons/wiring_checked.png</file>
         <file>../images/icons/delete.png</file>
         <file>../images/icons/constant_icon.png</file>
+        <file>../tutorial/step1.html</file>
+        <file>../tutorial/step2.html</file>
+        <file>../tutorial/step3.html</file>
     </qresource>
 </RCC>

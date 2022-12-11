@@ -6,6 +6,7 @@
 #include "Gui/AboutDialog.h"
 #include "Gui/WelcomeDialog.h"
 #include "Gui/IconToolButton.h"
+#include "Gui/TutorialFrame.h"
 
 #include <QMainWindow>
 #include <QShortcut>
@@ -99,6 +100,14 @@ protected slots:
     /// \param pPercentage: The new zoom value to display
     void UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue);
 
+    /// \brief Positions the tutorial box at the correct position
+    /// \param pStep: The current tutorial step
+    void OnTutorialStepChanged(uint8_t pStep);
+
+    /// \brief Allows or declines advancing to the next tutorial step
+    /// \param pStep: The current tutorial step
+    void OnAdvanceTutorialStepRequest(uint8_t pStep);
+
     /// \brief Fades out all GUI overlay widgets and saves if they were visible before
     void FadeOutGui(void);
 
@@ -185,6 +194,9 @@ protected:
 
     /// \brief Creates message dialog boxes that can be triggered in various places
     void InitializeMessageBoxes(void);
+
+    /// \brief Initializes and starts the tutorial; can be used to reset/restart the tutorial
+    void InitializeTutorial(void);
 
     // Item configuration
 
@@ -296,6 +308,8 @@ protected:
     QtAwesome mAwesome; // Contains Fontawesome logos
 
     QStandardItemModel mToolboxTreeModel;
+
+    TutorialFrame mTutorialFrame;
 
     // Category items
     QStandardItem* mCategoryGatesItem;

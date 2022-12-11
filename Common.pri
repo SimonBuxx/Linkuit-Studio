@@ -1,6 +1,7 @@
 HEADERS += \
     $$PWD/CircuitFileParser.h \
     $$PWD/Components/ComplexLogic/Counter.h \
+    $$PWD/Components/ComplexLogic/DMsFlipFlop.h \
     $$PWD/Components/ComplexLogic/Decoder.h \
     $$PWD/Components/ComplexLogic/Demultiplexer.h \
     $$PWD/Components/ComplexLogic/Encoder.h \
@@ -8,6 +9,7 @@ HEADERS += \
     $$PWD/Components/ComplexLogic/HalfAdder.h \
     $$PWD/Components/ComplexLogic/JKFlipFlop.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicCounterCell.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicDMsFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicEncoderCell.h \
@@ -72,11 +74,13 @@ HEADERS += \
     $${PWD}/Configuration.h \
     $${PWD}/Gui/AboutDialog.h \
     $${PWD}/Gui/WelcomeDialog.h \
-    $${PWD}/Gui/IconToolButton.h
+    $${PWD}/Gui/IconToolButton.h \
+    $${PWD}/Gui/TutorialFrame.h
 
 SOURCES += \
     $$PWD/CircuitFileParser.cpp \
     $$PWD/Components/ComplexLogic/Counter.cpp \
+    $$PWD/Components/ComplexLogic/DMsFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/Decoder.cpp \
     $$PWD/Components/ComplexLogic/Demultiplexer.cpp \
     $$PWD/Components/ComplexLogic/Encoder.cpp \
@@ -84,6 +88,7 @@ SOURCES += \
     $$PWD/Components/ComplexLogic/HalfAdder.cpp \
     $$PWD/Components/ComplexLogic/JKFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicCounterCell.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicDMsFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicEncoderCell.cpp \
@@ -145,12 +150,14 @@ SOURCES += \
     $${PWD}/View.cpp \
     $${PWD}/Gui/AboutDialog.cpp \
     $${PWD}/Gui/WelcomeDialog.cpp \
-    $${PWD}/Gui/IconToolButton.cpp
+    $${PWD}/Gui/IconToolButton.cpp \
+    $${PWD}/Gui/TutorialFrame.cpp
 
 INCLUDEPATH += $${PWD}
 
 FORMS += \
     $$PWD/Gui/MainWindow.ui \
     $$PWD/Gui/AboutDialog.ui \
-    $${PWD}/Gui/WelcomeDialog.ui
+    $${PWD}/Gui/WelcomeDialog.ui \
+    $${PWD}/Gui/TutorialFrame.ui
 

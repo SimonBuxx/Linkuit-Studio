@@ -285,6 +285,11 @@ void View::SetZoom(int32_t pZoomLevel)
     }
 }
 
+int32_t View::GetZoomLevel()
+{
+    return mZoomLevel;
+}
+
 void View::ResetViewport()
 {
     SetZoom(canvas::DEFAULT_ZOOM_LEVEL);

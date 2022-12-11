@@ -215,6 +215,7 @@ static constexpr auto D_FLIPFLOP_TEXT = "FF";
 static constexpr auto T_FLIPFLOP_TEXT = "TF";
 static constexpr auto JK_FLIPFLOP_TEXT = "JK";
 static constexpr auto RS_MS_FLIPFLOP_TEXT = "RS-MS";
+static constexpr auto D_MS_FLIPFLOP_TEXT = "FF-MS";
 static constexpr auto MULTIPLEXER_TEXT = "MUX";
 static constexpr auto DEMULTIPLEXER_TEXT = "DEMUX";
 static constexpr auto DECODER_TEXT = "";

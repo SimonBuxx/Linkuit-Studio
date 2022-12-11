@@ -21,7 +21,7 @@ static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{Co
                                                                              {ComponentType::HALF_ADDER, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::FULL_ADDER, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::RS_FLIPFLOP, ConfiguratorMode::RS_FLIPFLOP_TYPE},
-                                                                             {ComponentType::D_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::D_FLIPFLOP, ConfiguratorMode::MASTER_SLAVE},
                                                                              {ComponentType::T_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::JK_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::MULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS},

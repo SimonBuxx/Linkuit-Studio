@@ -26,7 +26,6 @@
   <property name="styleSheet">
    <string notr="true">QMainWindow {
         background: rgb(242, 242, 242);
-		background: rgb(0, 255, 255);
 }
 
 QMenu {
@@ -3299,9 +3298,9 @@ QMenuBar::item:pressed {
  <connections/>
  <buttongroups>
   <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uConstantButtonsGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
  </buttongroups>
 </ui>

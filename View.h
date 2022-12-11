@@ -113,6 +113,9 @@ public:
     /// \brief Resets zoom and position
     void ResetViewport(void);
 
+    /// \brief Getter for the current zoom level
+    int32_t GetZoomLevel(void);
+
 signals:
     /// \brief Emitted when the scene is zoomed in or out
     /// \param pPercentage: The new zoom percentage

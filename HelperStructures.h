@@ -58,7 +58,8 @@ namespace file
         CONSTANT,
         COUNTER,
         RS_MS_FLIPFLOP,
-        RS_CLOCKED_FLIPFLOP // only append!
+        RS_CLOCKED_FLIPFLOP,
+        D_MS_FLIPFLOP // only append!
     };
 } // namespace file
 
@@ -80,6 +81,7 @@ enum class ComponentType
     FULL_ADDER,
     RS_FLIPFLOP,
     D_FLIPFLOP,
+    D_MS_FLIPFLOP,
     MULTIPLEXER,
     DEMULTIPLEXER,
     T_FLIPFLOP,

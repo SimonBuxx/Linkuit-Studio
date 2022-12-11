@@ -17,6 +17,7 @@
 #include "Components/ComplexLogic/RsMsFlipFlop.h"
 #include "Components/ComplexLogic/RsClockedFlipFlop.h"
 #include "Components/ComplexLogic/DFlipFlop.h"
+#include "Components/ComplexLogic/DMsFlipFlop.h"
 #include "Components/ComplexLogic/TFlipFlop.h"
 #include "Components/ComplexLogic/JKFlipFlop.h"
 #include "Components/ComplexLogic/Multiplexer.h"
@@ -391,8 +392,7 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         {
             if (mIsDFlipFlopMasterSlave)
             {
-                qDebug() << "This D flip-flop would be master-slave";
-                item = new DFlipFlop(this, mComponentDirection);
+                item = new DMasterSlaveFlipFlop(this, mComponentDirection);
             }
             else
             {
@@ -1957,6 +1957,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::D_FLIPFLOP:
             {
                 item = new DFlipFlop(this, pJson);
+                break;
+            }
+            case file::ComponentId::D_MS_FLIPFLOP:
+            {
+                item = new DMasterSlaveFlipFlop(this, pJson);
                 break;
             }
             case file::ComponentId::T_FLIPFLOP:
