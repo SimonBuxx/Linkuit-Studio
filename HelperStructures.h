@@ -59,7 +59,8 @@ namespace file
         COUNTER,
         RS_MS_FLIPFLOP,
         RS_CLOCKED_FLIPFLOP,
-        D_MS_FLIPFLOP // only append!
+        D_MS_FLIPFLOP,
+        JK_MS_FLIPFLOP // only append!
     };
 } // namespace file
 
@@ -86,6 +87,7 @@ enum class ComponentType
     DEMULTIPLEXER,
     T_FLIPFLOP,
     JK_FLIPFLOP,
+    JK_MS_FLIPFLOP,
     RS_MS_FLIPFLOP,
     RS_CLOCKED_FLIPFLOP,
     DECODER,

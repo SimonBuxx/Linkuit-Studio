@@ -525,8 +525,8 @@ void MainWindow::OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersio
     mNewerVersionIncompatibleBox.setWindowTitle("Linkuit Studio");
     mNewerVersionIncompatibleBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
     mNewerVersionIncompatibleBox.setText(tr("This file has been created with a newer version of Linkuit Studio."));
-    mNewerVersionIncompatibleBox.setInformativeText(QString("It seems like this file was last saved using version %0. "
-        "It is marked incompatible with the current version %1. Please update Linkuit Studio to open the file.").arg(pVersion).arg(QString(FULL_VERSION)));
+    mNewerVersionIncompatibleBox.setInformativeText(QString("This file is compatible with version %0 or newer. "
+        "It is therefore incompatible with the current version %1. Please update Linkuit Studio to open the file.").arg(pVersion).arg(QString(FULL_VERSION)));
     mNewerVersionIncompatibleBox.setStandardButtons(QMessageBox::Ok);
     mNewerVersionIncompatibleBox.setDefaultButton(QMessageBox::Ok);
     mNewerVersionIncompatibleBox.exec();

@@ -20,6 +20,7 @@
 #include "Components/ComplexLogic/DMsFlipFlop.h"
 #include "Components/ComplexLogic/TFlipFlop.h"
 #include "Components/ComplexLogic/JKFlipFlop.h"
+#include "Components/ComplexLogic/JkMsFlipFlop.h"
 #include "Components/ComplexLogic/Multiplexer.h"
 #include "Components/ComplexLogic/Demultiplexer.h"
 #include "Components/ComplexLogic/Decoder.h"
@@ -409,8 +410,7 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         {
             if (mIsJkFlipFlopMasterSlave)
             {
-                qDebug() << "This JK flip-flop would be master-slave";
-                item = new JKFlipFlop(this, mComponentDirection);
+                item = new JkMasterSlaveFlipFlop(this, mComponentDirection);
             }
             else
             {
@@ -1972,6 +1972,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::JK_FLIPFLOP:
             {
                 item = new JKFlipFlop(this, pJson);
+                break;
+            }
+            case file::ComponentId::JK_MS_FLIPFLOP:
+            {
+                item = new JkMasterSlaveFlipFlop(this, pJson);
                 break;
             }
             case file::ComponentId::RS_MS_FLIPFLOP:

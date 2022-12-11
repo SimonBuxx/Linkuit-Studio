@@ -8,6 +8,7 @@ HEADERS += \
     $$PWD/Components/ComplexLogic/FullAdder.h \
     $$PWD/Components/ComplexLogic/HalfAdder.h \
     $$PWD/Components/ComplexLogic/JKFlipFlop.h \
+    $$PWD/Components/ComplexLogic/JkMsFlipFlop.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicCounterCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDMsFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.h \
@@ -16,6 +17,7 @@ HEADERS += \
     $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicJKFlipFlopCell.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicJkMsFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicMultiplexerCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicRsClockedFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicRsMsFlipFlopCell.h \
@@ -87,6 +89,7 @@ SOURCES += \
     $$PWD/Components/ComplexLogic/FullAdder.cpp \
     $$PWD/Components/ComplexLogic/HalfAdder.cpp \
     $$PWD/Components/ComplexLogic/JKFlipFlop.cpp \
+    $$PWD/Components/ComplexLogic/JkMsFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicCounterCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDMsFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.cpp \
@@ -95,6 +98,7 @@ SOURCES += \
     $$PWD/Components/ComplexLogic/LogicCells/LogicFullAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicHalfAdderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicJKFlipFlopCell.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicJkMsFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicMultiplexerCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicRsClockedFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicRsMsFlipFlopCell.cpp \

@@ -23,7 +23,7 @@ static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{Co
                                                                              {ComponentType::RS_FLIPFLOP, ConfiguratorMode::RS_FLIPFLOP_TYPE},
                                                                              {ComponentType::D_FLIPFLOP, ConfiguratorMode::MASTER_SLAVE},
                                                                              {ComponentType::T_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
-                                                                             {ComponentType::JK_FLIPFLOP, ConfiguratorMode::DIRECTION_ONLY},
+                                                                             {ComponentType::JK_FLIPFLOP, ConfiguratorMode::MASTER_SLAVE},
                                                                              {ComponentType::MULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS},
                                                                              {ComponentType::DEMULTIPLEXER, ConfiguratorMode::MULTIPLEXER_BITS},
                                                                              {ComponentType::DECODER, ConfiguratorMode::ENCODER_DECODER},

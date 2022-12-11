@@ -1,25 +1,25 @@
-#include "DMsFlipFlop.h"
-#include "LogicCells/LogicDMsFlipFlopCell.h"
+#include "JkMsFlipFlop.h"
+#include "LogicCells/LogicJkMsFlipFlopCell.h"
 
-DMasterSlaveFlipFlop::DMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
-    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicDMsFlipFlopCell>(), 2, 2, pDirection)
+JkMasterSlaveFlipFlop::JkMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
+    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicJkMsFlipFlopCell>(), 3, 2, pDirection)
 {
-    mComponentText = components::complex_logic::D_MS_FLIPFLOP_TEXT;
-    mInputLabels = {"D", ">"};
+    mComponentText = components::complex_logic::JK_MS_FLIPFLOP_TEXT;
+    mInputLabels = {"J", ">", "K"};
     mOutputLabels = {"Q", "Q̅"};
 
     mDescriptionFontSize = 10;
 }
 
-DMasterSlaveFlipFlop::DMasterSlaveFlipFlop(const DMasterSlaveFlipFlop& pObj, const CoreLogic* pCoreLogic):
-    DMasterSlaveFlipFlop(pCoreLogic, pObj.mDirection)
+JkMasterSlaveFlipFlop::JkMasterSlaveFlipFlop(const JkMasterSlaveFlipFlop& pObj, const CoreLogic* pCoreLogic):
+    JkMasterSlaveFlipFlop(pCoreLogic, pObj.mDirection)
 {
     mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
     mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
 };
 
-DMasterSlaveFlipFlop::DMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
-    DMasterSlaveFlipFlop(pCoreLogic, static_cast<Direction>(pJson["dir"].toInt()))
+JkMasterSlaveFlipFlop::JkMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
+    JkMasterSlaveFlipFlop(pCoreLogic, static_cast<Direction>(pJson["dir"].toInt()))
 {
     setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
 
@@ -39,16 +39,16 @@ DMasterSlaveFlipFlop::DMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, const QJ
     GetLogicCell()->SetOutputInversions(outinv);
 }
 
-IBaseComponent* DMasterSlaveFlipFlop::CloneBaseComponent(const CoreLogic* pCoreLogic) const
+IBaseComponent* JkMasterSlaveFlipFlop::CloneBaseComponent(const CoreLogic* pCoreLogic) const
 {
-    return new DMasterSlaveFlipFlop(*this, pCoreLogic);
+    return new JkMasterSlaveFlipFlop(*this, pCoreLogic);
 }
 
-QJsonObject DMasterSlaveFlipFlop::GetJson() const
+QJsonObject JkMasterSlaveFlipFlop::GetJson() const
 {
     QJsonObject json;
 
-    json["type"] = file::ComponentId::D_MS_FLIPFLOP;
+    json["type"] = file::ComponentId::JK_MS_FLIPFLOP;
     json["x"] = x();
     json["y"] = y();
     json["dir"] = static_cast<int32_t>(mDirection);
@@ -73,7 +73,7 @@ QJsonObject DMasterSlaveFlipFlop::GetJson() const
     return json;
 }
 
-SwVersion DMasterSlaveFlipFlop::GetMinVersion(void) const
+SwVersion JkMasterSlaveFlipFlop::GetMinVersion(void) const
 {
     return SwVersion(0, 9, 8);
 }
