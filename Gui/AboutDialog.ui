@@ -1241,6 +1241,9 @@ hr { height: 1px; border-width: 0; }
             <property name="textInteractionFlags">
              <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
             </property>
+            <property name="openExternalLinks">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
          </layout>
