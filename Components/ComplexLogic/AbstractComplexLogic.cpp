@@ -566,13 +566,13 @@ void AbstractComplexLogic::DrawConnectorDescriptionsRight(QPainter *pPainter, co
         else
         {
             pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
-            pPainter->drawText(QRect(2, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[i + mTopInputCount], Qt::AlignLeft | Qt::AlignVCenter);
+            pPainter->drawText(QRect(2, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 8, mWidth - 4, 12), mInputLabels[i + mTopInputCount], Qt::AlignLeft | Qt::AlignVCenter);
         }
     }
     pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        pPainter->drawText(QRect(2, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 6, mWidth - 4, 10), mOutputLabels[i], Qt::AlignRight | Qt::AlignVCenter);
+        pPainter->drawText(QRect(2, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 8, mWidth - 4, 12), mOutputLabels[i], Qt::AlignRight | Qt::AlignVCenter);
     }
 }
 
@@ -594,7 +594,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsDown(QPainter *pPainter, con
         else
         {
             pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
-            pPainter->drawText(QRect(2, canvas::GRID_SIZE * i + canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[mTopInputCount - i - 1], Qt::AlignRight | Qt::AlignVCenter);
+            pPainter->drawText(QRect(2, canvas::GRID_SIZE * i + canvas::GRID_SIZE - 8, mWidth - 4, 12), mInputLabels[mTopInputCount - i - 1], Qt::AlignRight | Qt::AlignVCenter);
         }
     }
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
@@ -654,13 +654,13 @@ void AbstractComplexLogic::DrawConnectorDescriptionsLeft(QPainter *pPainter, con
         else
         {
             pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
-            pPainter->drawText(QRect(2, mHeight - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 6, mWidth - 4, 10), mInputLabels[i + mTopInputCount], Qt::AlignRight | Qt::AlignVCenter);
+            pPainter->drawText(QRect(2, mHeight - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE - 8, mWidth - 4, 12), mInputLabels[i + mTopInputCount], Qt::AlignRight | Qt::AlignVCenter);
         }
     }
     pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        pPainter->drawText(QRect(2, mHeight - (mOutputsSpacing * canvas::GRID_SIZE * (mOutputCount - i - 1) + canvas::GRID_SIZE * (mOutputsTrapezoidOffset + 1)) - 6, mWidth - 4, 10), mOutputLabels[mOutputCount - i - 1], Qt::AlignLeft | Qt::AlignVCenter);
+        pPainter->drawText(QRect(2, mHeight - (mOutputsSpacing * canvas::GRID_SIZE * (mOutputCount - i - 1) + canvas::GRID_SIZE * (mOutputsTrapezoidOffset + 1)) - 8, mWidth - 4, 12), mOutputLabels[mOutputCount - i - 1], Qt::AlignLeft | Qt::AlignVCenter);
     }
 }
 
@@ -682,7 +682,7 @@ void AbstractComplexLogic::DrawConnectorDescriptionsUp(QPainter *pPainter, const
         else
         {
             pPainter->setPen(components::complex_logic::SMALL_TEXT_FONT_COLOR);
-            pPainter->drawText(QRect(2, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE) - 6, mWidth - 4, 10), mInputLabels[mTopInputCount - i - 1], Qt::AlignLeft | Qt::AlignVCenter);
+            pPainter->drawText(QRect(2, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE) - 8, mWidth - 4, 12), mInputLabels[mTopInputCount - i - 1], Qt::AlignLeft | Qt::AlignVCenter);
         }
     }
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
