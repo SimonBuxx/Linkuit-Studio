@@ -43,10 +43,20 @@ public:
     /// \param pFilePath: The file info to add
     void AddRecentFilePath(const QFileInfo& pFilePath);
 
+    /// \brief Getter for the last file path
+    /// \return The path of the last opened or saved file
+    const QString& GetLastFilePath(void) const;
+
+    /// \brief Setter for the last file path
+    /// \param pLastFilePath: The path of the last opened or saved file
+    void SetLastFilePath(const QString& pLastFilePath);
+
 protected:
     std::vector<QFileInfo> mRecentFiles;
 
     bool mIsWelcomeDialogEnabledOnStartup;
+
+    QString mLastFilePath;
 };
 
 #endif // RUNTIMECONFIGPARSER_H

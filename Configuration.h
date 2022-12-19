@@ -37,6 +37,7 @@ static constexpr auto RUNTIME_CONFIG_RELATIVE_PATH = "/runtime_config.json";
 
 static constexpr auto JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER = "show_welcome_dialog_on_startup";
 static constexpr auto JSON_RECENT_FILES_IDENTIFIER = "recent_files";
+static constexpr auto JSON_LAST_FILE_PATH_IDENTIFIER = "last_file_path";
 } // namespace runtime_config
 } // namespace
 

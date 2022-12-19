@@ -347,7 +347,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
         if (!IsSaveChangesIfModifiedCanceled())
         {
-            QString path = mCoreLogic.GetCircuitFileParser().IsFileOpen() ? mCoreLogic.GetCircuitFileParser().GetFileInfo().value().absolutePath() : QDir::homePath();
+            QString path = mCoreLogic.GetCircuitFileParser().IsFileOpen() ? mCoreLogic.GetCircuitFileParser().GetFileInfo().value().absolutePath() : mCoreLogic.GetRuntimeConfigParser().GetLastFilePath();
             const auto fileInfo = QFileInfo(QFileDialog::getOpenFileName(this, tr(gui::OPEN_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)")));
 
             if (!fileInfo.absoluteFilePath().isEmpty())
@@ -376,7 +376,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
         FadeInGui();
 
         mCoreLogic.AbortPastingIfInCopy();
-        QString path = mCoreLogic.GetCircuitFileParser().IsFileOpen() ? mCoreLogic.GetCircuitFileParser().GetFileInfo().value().absolutePath() : QDir::homePath();
+        QString path = mCoreLogic.GetCircuitFileParser().IsFileOpen() ? mCoreLogic.GetCircuitFileParser().GetFileInfo().value().absolutePath() : mCoreLogic.GetRuntimeConfigParser().GetLastFilePath();
         const auto fileInfo = QFileInfo(QFileDialog::getSaveFileName(this, tr(gui::SAVE_FILE_DIALOG_TITLE), path, tr("Linkuit Studio Circuit Files (*.lsc)")));
 
         if (fileInfo.absoluteFilePath() != "")

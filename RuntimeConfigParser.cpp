@@ -2,9 +2,12 @@
 #include "HelperFunctions.h"
 #include "Configuration.h"
 
+#include <QDir>
+
 RuntimeConfigParser::RuntimeConfigParser() :
     mRecentFiles{},
-    mIsWelcomeDialogEnabledOnStartup(gui::SHOW_WELCOME_DIALOG_ON_STARTUP) // default values
+    mIsWelcomeDialogEnabledOnStartup(gui::SHOW_WELCOME_DIALOG_ON_STARTUP),
+    mLastFilePath(QDir::homePath()) // default values
 {}
 
 bool RuntimeConfigParser::LoadRuntimeConfig(const QString& pPath)
@@ -20,20 +23,25 @@ bool RuntimeConfigParser::LoadRuntimeConfig(const QString& pPath)
 
     QJsonObject json(QJsonDocument::fromJson(rawData).object());
 
-    if (!json.contains(file::runtime_config::JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER)
-            || !json.contains(file::runtime_config::JSON_RECENT_FILES_IDENTIFIER))
+    if (json.contains(file::runtime_config::JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER))
     {
-        return false;
+        mIsWelcomeDialogEnabledOnStartup = json[file::runtime_config::JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER].toBool();
     }
 
-    mIsWelcomeDialogEnabledOnStartup = json[file::runtime_config::JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER].toBool();
-
-    auto recentFiles = json[file::runtime_config::JSON_RECENT_FILES_IDENTIFIER].toArray();
-
-    for (uint32_t fileIdx = 0; fileIdx < recentFiles.size(); fileIdx++)
+    if (json.contains(file::runtime_config::JSON_RECENT_FILES_IDENTIFIER))
     {
-        auto path = recentFiles[fileIdx].toString();
-        mRecentFiles.push_back(QFileInfo(path));
+        auto recentFiles = json[file::runtime_config::JSON_RECENT_FILES_IDENTIFIER].toArray();
+
+        for (uint32_t fileIdx = 0; fileIdx < recentFiles.size(); fileIdx++)
+        {
+            auto path = recentFiles[fileIdx].toString();
+            mRecentFiles.push_back(QFileInfo(path));
+        }
+    }
+
+    if (json.contains(file::runtime_config::JSON_LAST_FILE_PATH_IDENTIFIER))
+    {
+        mLastFilePath = json[file::runtime_config::JSON_LAST_FILE_PATH_IDENTIFIER].toString();
     }
 
     return true;
@@ -64,6 +72,7 @@ bool RuntimeConfigParser::SaveRuntimeConfig(const QString& pPath)
 
     json[file::runtime_config::JSON_WELCOME_DIALOG_ENABLED_IDENTIFIER] = mIsWelcomeDialogEnabledOnStartup;
     json[file::runtime_config::JSON_RECENT_FILES_IDENTIFIER] = recentFiles;
+    json[file::runtime_config::JSON_LAST_FILE_PATH_IDENTIFIER] = mLastFilePath;
 
     saveFile.write(QJsonDocument(json).toJson());
 
@@ -100,5 +109,16 @@ void RuntimeConfigParser::AddRecentFilePath(const QFileInfo &pFilePath)
         mRecentFiles.resize(5);
     }
 
+    SaveRuntimeConfig(GetRuntimeConfigAbsolutePath());
+}
+
+const QString& RuntimeConfigParser::GetLastFilePath() const
+{
+    return mLastFilePath;
+}
+
+void RuntimeConfigParser::SetLastFilePath(const QString& pLastFilePath)
+{
+    mLastFilePath = pLastFilePath;
     SaveRuntimeConfig(GetRuntimeConfigAbsolutePath());
 }

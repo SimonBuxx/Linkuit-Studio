@@ -43,6 +43,8 @@ void CircuitFileParser::LoadJson(const QFileInfo& pFileInfo)
         mRuntimeConfigParser.AddRecentFilePath(mCurrentFile.value());
         emit LoadCircuitFileSuccessSignal(mCurrentFile.value(), jsonDoc.object());
     }
+
+    mRuntimeConfigParser.SetLastFilePath(pFileInfo.path());
 }
 
 void CircuitFileParser::SaveJson(const QJsonObject& pJson)
@@ -78,6 +80,7 @@ void CircuitFileParser::SaveJsonAs(const QFileInfo& pFileInfo, const QJsonObject
     mIsCircuitModified = false;
 
     mRuntimeConfigParser.AddRecentFilePath(mCurrentFile.value());
+    mRuntimeConfigParser.SetLastFilePath(pFileInfo.path());
 
     emit SaveCircuitFileSuccessSignal(mCurrentFile.value());}
 
