@@ -190,7 +190,7 @@ void View::Init()
 {
     setFrameStyle(QFrame::Plain | QFrame::NoFrame);
 
-    //mGraphicsView.setCacheMode(QGraphicsView::CacheBackground);
+    mGraphicsView.setCacheMode(QGraphicsView::CacheBackground);
     mGraphicsView.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
     mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
     mGraphicsView.setOptimizationFlags(QGraphicsView::DontSavePainterState);
@@ -199,6 +199,9 @@ void View::Init()
     mGraphicsView.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mGraphicsView.setFrameStyle(QGraphicsView::NoFrame);
+
+#warning evaluate if this fixes issue #31
+    // mGraphicsView.setMouseTracking(true);
 
     mProcessingOverlay = new QWidget(&mGraphicsView);
     mProcessingOverlay->setObjectName("mProcessingOverlay");
