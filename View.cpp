@@ -56,6 +56,17 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
             mPanStart = pEvent->pos();
             pEvent->accept();
         }
+        else if (pEvent->modifiers() & Qt::ShiftModifier)
+        {
+            if (!mCoreLogic.IsSimulationRunning())
+            {
+                // Add single components to selection via shift key
+                auto&& item = scene()->itemAt(mapToScene(pEvent->pos()), QTransform());
+                if (nullptr != item) {
+                    item->setSelected(true);
+                }
+            }
+        }
         else
         {
             mIsDragging = true;
