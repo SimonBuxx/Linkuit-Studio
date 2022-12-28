@@ -63,7 +63,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
                 // Add single components to selection via shift key
                 auto&& item = scene()->itemAt(mapToScene(pEvent->pos()), QTransform());
                 if (nullptr != item) {
-                    item->setSelected(true);
+                    item->setSelected(!item->isSelected());
                 }
             }
         }
