@@ -6,6 +6,13 @@
   - To zoom, hold the control key and scroll using the mouse wheel
   - To pan the scene, hold the control key and drag using the left mouse button
   
+- **Is there an official tutorial?**
+  - No, currently, there is no official tutorial. An in-place tutorial is currently being developed and will be published in a later version of Linkuit Studio.
+  
+- **Why can I not use the "Tools" > "Save Screenshot..." feature?**
+  - The screenshot feature will be implemented in a later version. This will be a simple tool to copy a screenshot of the current scene into the clipboard.
+  - In the future, this feature might be extended to support automatic zooming to capture the whole circuit and other nice-to-have options.
+  
 - **Can I export my circuits to VHDL or Verilog?**
   - No, not at the moment. VHDL and/or Verilog export is planned for a future release but not a priority right now.
   
@@ -14,6 +21,10 @@
   
 - **Is there a Linux/macOS version of Linkuit Studio?**
   - Linkuit Studio is developed on Windows and at the moment the installer is available for Windows only. Because the project is built on the Qt framework, it should be relatively easy to build for Linux/macOS. Depending on demand, there could be support for Linux/macOS in the future. Meanwhile, you can of course try to compile it yourself for your target system.
+  
+- **How do I update Linkuit Studio?**
+  - To update Linkuit Studio, navigate to "Help" > "Check for Updates..." or click on the symbol next to the version label on the welcome and about dialogs.
+  - Download the new version, if available, and install it using the installer. Just use the same install path as the current installation and the installer will replace it and will keep your software's configuration.
   
 Your question is not on the list? Please do not hesitate to contact us at linkuit@outlook.com or on Twitter [@goLinkuit](https://twitter.com/goLinkuit/) (German or English).
 
