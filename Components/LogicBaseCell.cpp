@@ -5,6 +5,7 @@
 
 LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mInputStates(pInputs, LogicState::LOW),
+    mInputConnected(pInputs, false),
     mInputInverted(pInputs, false),
     mOutputInverted(pOutputs, false),
     mOutputCells(pOutputs, std::make_pair(nullptr, 0)),
@@ -15,6 +16,21 @@ LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
 void LogicBaseCell::ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput)
 {
     mOutputCells[pOutput] = std::make_pair(pLogicCell, pInput);
+}
+
+void LogicBaseCell::SetConnected(uint32_t pInput)
+{
+    mInputConnected[pInput] = true;
+}
+
+bool LogicBaseCell::IsInputConnected(uint32_t pInput)
+{
+    return mInputConnected[pInput];
+}
+
+bool LogicBaseCell::IsOutputConnected(uint32_t pOutput)
+{
+    return (nullptr != mOutputCells[pOutput].first);
 }
 
 LogicState LogicBaseCell::GetInputState(uint32_t pInput) const

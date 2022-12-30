@@ -38,5 +38,6 @@ void LogicOutputCell::OnShutdown()
 {
     mState = LogicState::LOW;
     mIsActive = false;
+    mInputConnected[0] = false;
     emit StateChangedSignal();
 }

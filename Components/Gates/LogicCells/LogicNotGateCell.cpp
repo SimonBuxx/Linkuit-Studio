@@ -64,6 +64,7 @@ void LogicNotGateCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates[0] = LogicState::LOW;
+    mInputConnected[0] = false;
     mCurrentState = LogicState::LOW;
     mIsActive = false;
     emit StateChangedSignal();

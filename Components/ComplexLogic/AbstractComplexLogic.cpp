@@ -324,22 +324,31 @@ void AbstractComplexLogic::DrawComponentDetailsRight(QPainter *pPainter, const Q
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
+        if (!mLogicCell->IsInputConnected(mTopInputCount - i - 1))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
+        }
     }
 
     // Draw input connectors
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(-8, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE, 0, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE);
+        if (!mLogicCell->IsInputConnected(i + mTopInputCount))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(-8, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE, 0, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE);
+        }
     }
 
     // Draw output connectors
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mWidth + 8, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE);
+        if (!mLogicCell->IsOutputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mWidth, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mWidth + 8, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE);
+        }
     }
 
     // Draw inversion circles
@@ -377,24 +386,33 @@ void AbstractComplexLogic::DrawComponentDetailsDown(QPainter *pPainter, const QS
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth, canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        if (!mLogicCell->IsOutputConnected(mTopInputCount - i - 1))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mWidth, canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        }
     }
 
     // Draw input connectors
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth - canvas::GRID_SIZE * (mInputsSpacing * i + mInputsTrapezoidOffset + 1), -8,
-                           mWidth - canvas::GRID_SIZE * (mInputsSpacing * i + mInputsTrapezoidOffset + 1), 0);
+        if (!mLogicCell->IsInputConnected(i + mTopInputCount))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mWidth - canvas::GRID_SIZE * (mInputsSpacing * i + mInputsTrapezoidOffset + 1), -8,
+                               mWidth - canvas::GRID_SIZE * (mInputsSpacing * i + mInputsTrapezoidOffset + 1), 0);
+        }
     }
 
     // Draw output connectors
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth - (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight,
-                           mWidth - (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight + 8);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mWidth - (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight,
+                               mWidth - (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight + 8);
+        }
     }
 
     // Draw inversion circles
@@ -432,24 +450,33 @@ void AbstractComplexLogic::DrawComponentDetailsLeft(QPainter *pPainter, const QS
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), mHeight, mWidth - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), mHeight + 8);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mWidth - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), mHeight, mWidth - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), mHeight + 8);
+        }
     }
 
     // Draw input connectors
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth, mHeight - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE,
-                           mWidth + 8, mHeight - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE);
+        if (!mLogicCell->IsInputConnected(i + mTopInputCount))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mWidth, mHeight - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE,
+                               mWidth + 8, mHeight - (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE);
+        }
     }
 
     // Draw output connectors
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(-8, mHeight - ((mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE), 0,
-                               mHeight - ((mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE));
+        if (!mLogicCell->IsOutputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(-8, mHeight - ((mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE), 0,
+                                   mHeight - ((mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE));
+        }
     }
 
     // Draw inversion circles
@@ -487,22 +514,31 @@ void AbstractComplexLogic::DrawComponentDetailsUp(QPainter *pPainter, const QSty
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(-8, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), 0, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE));
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(-8, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE), 0, mHeight - (canvas::GRID_SIZE * i + canvas::GRID_SIZE));
+        }
     }
 
     // Draw input connectors
     for (int i = 0; i < mInputCount - mTopInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine((mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight + 8);
+        if (!mLogicCell->IsInputConnected(i + mTopInputCount))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i + mTopInputCount), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine((mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight, (mInputsSpacing * i + mInputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight + 8);
+        }
     }
 
     // Draw output connectors
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine((mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, -8, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, 0);
+        if (!mLogicCell->IsOutputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine((mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, -8, (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, 0);
+        }
     }
 
     // Draw inversion circles

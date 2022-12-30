@@ -150,13 +150,19 @@ void AbstractGate::DrawGateDetailsRight(QPainter *pPainter, const QStyleOptionGr
     // Draw input connectors
     for (size_t i = 0; i < mInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(-8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(-8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        }
     }
 
-    // Draw output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth, mHeight / 2 - mOutputPositionOffset, mWidth + 8, mHeight / 2 - mOutputPositionOffset);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        // Draw output connector
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth, mHeight / 2 - mOutputPositionOffset, mWidth + 8, mHeight / 2 - mOutputPositionOffset);
+    }
 
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
@@ -180,13 +186,19 @@ void AbstractGate::DrawGateDetailsDown(QPainter *pPainter, const QStyleOptionGra
     // Draw input connectors
     for (size_t i = 0; i < mInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, -8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, 0);
+        }
     }
 
-    // Draw output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth / 2 + mOutputPositionOffset, mHeight, mWidth / 2 + mOutputPositionOffset, mHeight + 8);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        // Draw output connector
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth / 2 + mOutputPositionOffset, mHeight, mWidth / 2 + mOutputPositionOffset, mHeight + 8);
+    }
 
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
@@ -210,13 +222,19 @@ void AbstractGate::DrawGateDetailsLeft(QPainter *pPainter, const QStyleOptionGra
     // Draw input connectors
     for (size_t i = 0; i < mInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mWidth, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE);
+        }
     }
 
-    // Draw output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(-8, mHeight / 2 + mOutputPositionOffset, 0, mHeight / 2 + mOutputPositionOffset);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        // Draw output connector
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(-8, mHeight / 2 + mOutputPositionOffset, 0, mHeight / 2 + mOutputPositionOffset);
+    }
 
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)
@@ -240,13 +258,19 @@ void AbstractGate::DrawGateDetailsUp(QPainter *pPainter, const QStyleOptionGraph
     // Draw input connectors
     for (size_t i = 0; i < mInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight, mInputsSpacing * canvas::GRID_SIZE * i + canvas::GRID_SIZE, mHeight + 8);
+        }
     }
 
-    // Draw output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth / 2 - mOutputPositionOffset, -8, mWidth / 2 - mOutputPositionOffset, 0);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        // Draw output connector
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth / 2 - mOutputPositionOffset, -8, mWidth / 2 - mOutputPositionOffset, 0);
+    }
 
     // Draw inversion circles
     for (size_t i = 0; i < mInputCount; i++)

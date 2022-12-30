@@ -34,6 +34,7 @@ void LogicWireCell::AppendOutput(const std::shared_ptr<LogicBaseCell>& pLogicCel
 {
     mOutputCells.push_back(std::make_pair(pLogicCell, pInput));
     mOutputInverted.push_back(false);
+    pLogicCell->SetConnected(pInput);
 }
 
 void LogicWireCell::AddInputSlot()

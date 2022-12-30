@@ -74,6 +74,7 @@ void LogicOrGateCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mCurrentState = LogicState::LOW;
     mIsActive = false;
     emit StateChangedSignal();

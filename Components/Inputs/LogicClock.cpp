@@ -156,8 +156,11 @@ void LogicClock::paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pOpti
 void LogicClock::DrawClockDetailsRight(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption)
 {
     // Draw clock output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pOption->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth, mHeight / 2, mWidth + 8, mHeight / 2);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pOption->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth, mHeight / 2, mWidth + 8, mHeight / 2);
+    }
 
     // Draw inversion circle
     if (mLogicCell->IsOutputInverted(0))
@@ -170,8 +173,11 @@ void LogicClock::DrawClockDetailsRight(QPainter *pPainter, const QStyleOptionGra
 void LogicClock::DrawClockDetailsDown(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption)
 {
     // Draw clock output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pOption->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth / 2, mHeight, mWidth / 2, mHeight + 8);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pOption->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth / 2, mHeight, mWidth / 2, mHeight + 8);
+    }
 
     // Draw inversion circle
     if (mLogicCell->IsOutputInverted(0))
@@ -184,8 +190,11 @@ void LogicClock::DrawClockDetailsDown(QPainter *pPainter, const QStyleOptionGrap
 void LogicClock::DrawClockDetailsLeft(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption)
 {
     // Draw clock output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pOption->state & QStyle::State_Selected);
-    pPainter->drawLine(-8, mHeight / 2, 0, mHeight / 2);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pOption->state & QStyle::State_Selected);
+        pPainter->drawLine(-8, mHeight / 2, 0, mHeight / 2);
+    }
 
     // Draw inversion circle
     if (mLogicCell->IsOutputInverted(0))
@@ -198,8 +207,11 @@ void LogicClock::DrawClockDetailsLeft(QPainter *pPainter, const QStyleOptionGrap
 void LogicClock::DrawClockDetailsUp(QPainter *pPainter, const QStyleOptionGraphicsItem *pOption)
 {
     // Draw clock output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pOption->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth / 2, -8, mWidth / 2, 0);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(), pOption->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth / 2, -8, mWidth / 2, 0);
+    }
 
     // Draw inversion circle
     if (mLogicCell->IsOutputInverted(0))

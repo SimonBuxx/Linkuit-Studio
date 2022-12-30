@@ -391,13 +391,19 @@ void ShiftRegister::DrawComponentDetailsRight(QPainter *pPainter, const QStyleOp
     // Draw input connectors
     for (int i = 0; i < mInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(-8, (mInputsSpacing * i + 1) * canvas::GRID_SIZE, 0, (mInputsSpacing * i + 1) * canvas::GRID_SIZE);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(-8, (mInputsSpacing * i + 1) * canvas::GRID_SIZE, 0, (mInputsSpacing * i + 1) * canvas::GRID_SIZE);
+        }
     }
 
     // Draw output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(mOutputCount - 1), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth, canvas::GRID_SIZE, mWidth + 8, canvas::GRID_SIZE);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(mOutputCount - 1), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth, canvas::GRID_SIZE, mWidth + 8, canvas::GRID_SIZE);
+    }
 
     // Draw inversion circles
     for (int i = 0; i < mInputCount; i++)
@@ -423,15 +429,21 @@ void ShiftRegister::DrawComponentDetailsDown(QPainter *pPainter, const QStyleOpt
     // Draw input connectors
     for (int i = 0; i < mInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(canvas::GRID_SIZE * (mInputsSpacing * i + 1), -8,
-                           canvas::GRID_SIZE * (mInputsSpacing * i + 1), 0);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(canvas::GRID_SIZE * (mInputsSpacing * i + 1), -8,
+                               canvas::GRID_SIZE * (mInputsSpacing * i + 1), 0);
+        }
     }
 
     // Draw output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(mOutputCount - 1), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(mWidth - canvas::GRID_SIZE, mHeight,
-                       mWidth - canvas::GRID_SIZE, mHeight + 8);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(mOutputCount - 1), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(mWidth - canvas::GRID_SIZE, mHeight,
+                           mWidth - canvas::GRID_SIZE, mHeight + 8);
+    }
 
     // Draw inversion circles
     for (int i = 0; i < mInputCount; i++)
@@ -457,15 +469,21 @@ void ShiftRegister::DrawComponentDetailsLeft(QPainter *pPainter, const QStyleOpt
     // Draw input connectors
     for (int i = 0; i < mInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine(mWidth, mHeight - (mInputsSpacing * i + 1) * canvas::GRID_SIZE,
-                           mWidth + 8, mHeight - (mInputsSpacing * i + 1) * canvas::GRID_SIZE);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine(mWidth, mHeight - (mInputsSpacing * i + 1) * canvas::GRID_SIZE,
+                               mWidth + 8, mHeight - (mInputsSpacing * i + 1) * canvas::GRID_SIZE);
+        }
     }
 
     // Draw output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(mOutputCount - 1), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(-8, mHeight - canvas::GRID_SIZE, 0,
-                               mHeight - canvas::GRID_SIZE);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(mOutputCount - 1), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(-8, mHeight - canvas::GRID_SIZE, 0,
+                                   mHeight - canvas::GRID_SIZE);
+    }
 
     // Draw inversion circles
     for (int i = 0; i < mInputCount; i++)
@@ -491,13 +509,19 @@ void ShiftRegister::DrawComponentDetailsUp(QPainter *pPainter, const QStyleOptio
     // Draw input connectors
     for (int i = 0; i < mInputCount; i++)
     {
-        SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
-        pPainter->drawLine((mInputsSpacing * i + 1) * canvas::GRID_SIZE, mHeight, (mInputsSpacing * i + 1) * canvas::GRID_SIZE, mHeight + 8);
+        if (!mLogicCell->IsInputConnected(i))
+        {
+            SetConnectorPen(pPainter, mLogicCell->GetInputState(i), pItem->state & QStyle::State_Selected);
+            pPainter->drawLine((mInputsSpacing * i + 1) * canvas::GRID_SIZE, mHeight, (mInputsSpacing * i + 1) * canvas::GRID_SIZE, mHeight + 8);
+        }
     }
 
     // Draw output connector
-    SetConnectorPen(pPainter, mLogicCell->GetOutputState(mOutputCount - 1), pItem->state & QStyle::State_Selected);
-    pPainter->drawLine(canvas::GRID_SIZE, -8, canvas::GRID_SIZE, 0);
+    if (!mLogicCell->IsOutputConnected(0))
+    {
+        SetConnectorPen(pPainter, mLogicCell->GetOutputState(mOutputCount - 1), pItem->state & QStyle::State_Selected);
+        pPainter->drawLine(canvas::GRID_SIZE, -8, canvas::GRID_SIZE, 0);
+    }
 
     // Draw inversion circles
     for (int i = 0; i < mInputCount; i++)

@@ -30,7 +30,6 @@ LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint
         mWidth = components::wires::BOUNDING_RECT_SIZE;
         mHeight = pLength;
         mShape.addRect(mWidth * -0.5f, -1, mWidth, mHeight + 2);
-
     }
 }
 

@@ -49,6 +49,7 @@ void LogicDiodeCell::OnShutdown()
     mState = LogicState::LOW;
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>{LogicState::LOW};
+    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mOutputInverted = std::vector<bool>{false};
     mInputInverted = std::vector<bool>{false};
     mIsActive = false;

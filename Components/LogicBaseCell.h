@@ -47,6 +47,20 @@ public:
     /// \param pOutput: The output number of this cell to connect
     void ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput);
 
+    /// \brief Marks the input with the given index as connected
+    /// \param pInput: The index of the input
+    void SetConnected(uint32_t pInput);
+
+    /// \brief Returns true, if the given input is connected to another logic cell
+    /// \param pInput: The index of the input
+    /// \return True, if the given input is connected to another logic cell
+    bool IsInputConnected(uint32_t pInput);
+
+    /// \brief Returns true, if the given output is connected to another logic cell
+    /// \param pOutput: The index of the output
+    /// \return True, if the given output is connected to another logic cell
+    bool IsOutputConnected(uint32_t pOutput);
+
     /// \brief Getter for the current input state number pInput of this cell
     /// \param pInput: The number of the input to retreive
     /// \return The logic state of this cell's input number pInput
@@ -122,6 +136,7 @@ signals:
 
 protected:
     std::vector<LogicState> mInputStates;
+    std::vector<bool> mInputConnected;
     std::vector<bool> mInputInverted;
     std::vector<bool> mOutputInverted;
 
