@@ -190,7 +190,8 @@ void View::Init()
 {
     setFrameStyle(QFrame::Plain | QFrame::NoFrame);
 
-    mGraphicsView.setCacheMode(QGraphicsView::CacheBackground);
+    //mGraphicsView.setCacheMode(QGraphicsView::CacheBackground);
+#warning assess if SmoothPixmapTransform is neccessary / impacts performance
     mGraphicsView.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
     mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
     mGraphicsView.setOptimizationFlags(QGraphicsView::DontSavePainterState);
