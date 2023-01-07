@@ -122,6 +122,13 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
             return;
         }
     }
+    else if (pEvent->button() == Qt::RightButton)
+    {
+        if (!mCoreLogic.IsSimulationRunning())
+        {
+            mView.ShowPieMenu(mapFromGlobal(QCursor::pos()));
+        }
+    }
 
     QGraphicsView::mouseReleaseEvent(pEvent);
 
@@ -149,6 +156,11 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
 
     if (mIsLeftMousePressed)
     {
+        if (mView.GetPieMenu()->isVisible())
+        {
+            mView.GetPieMenu()->update();
+        }
+
         if (mIsAddingWire)
         {
             mCoreLogic.ShowPreviewWires(mapToScene(pEvent->pos()));
@@ -181,10 +193,14 @@ void GraphicsView::mouseDoubleClickEvent(QMouseEvent *pEvent)
     return; // Prevent interaction while not in edit mode
 }
 
-View::View(CoreLogic &pCoreLogic):
+View::View(QtAwesome &pAwesome, CoreLogic &pCoreLogic):
     mGraphicsView(*this, pCoreLogic),
-    mCoreLogic(pCoreLogic)
-{}
+    mCoreLogic(pCoreLogic),
+    mAwesome(pAwesome)
+{
+    mStandardPieMenuIconVariant.insert("color", QColor(0, 45, 50));
+    mDisabledPieMenuIconVariant.insert("color", QColor(180, 180, 180));
+}
 
 void View::Init()
 {
@@ -218,6 +234,55 @@ void View::Init()
     mProcessingOverlay->setLayout(mProcessingLayout);
 
     mProcessingOverlay->hide();
+
+    mPieMenu = new PieMenu(mAwesome, &mGraphicsView);
+    mPieMenu->hide();
+
+#warning move into separate method
+    QObject::connect(mPieMenu, &PieMenu::PieMenuButtonClicked, this, [&](int32_t pButtonIndex)
+    {
+        switch (pButtonIndex)
+        {
+            case 0:
+            {
+                emit UndoFromPieMenuSignal();
+                break;
+            }
+            case 1:
+            {
+                if (mCoreLogic.GetControlMode() == ControlMode::WIRE)
+                {
+                    mCoreLogic.EnterControlMode(ControlMode::EDIT);
+                }
+                else
+                {
+                    mCoreLogic.EnterControlMode(ControlMode::WIRE);
+                }
+                break;
+            }
+            case 2:
+            {
+                emit RedoFromPieMenuSignal();
+                break;
+            }
+            case 3:
+            {
+                if (mCoreLogic.GetControlMode() != ControlMode::COPY)
+                {
+                    mCoreLogic.DeleteSelectedComponents();
+                }
+                else
+                {
+                    mCoreLogic.AbortPastingIfInCopy();
+                }
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
+    });
 
     mMainLayout = new QGridLayout();
     mMainLayout->setContentsMargins(0, 0, 0, 0);
@@ -303,6 +368,34 @@ void View::SetZoom(int32_t pZoomLevel)
 int32_t View::GetZoomLevel()
 {
     return mZoomLevel;
+}
+
+void View::ShowPieMenu(const QPoint &pPos)
+{
+    auto geometry = mPieMenu->geometry();
+    geometry.setTopLeft(pPos - QPoint(101, 101));
+
+    mPieMenu->setGeometry(geometry);
+
+    // Set pie menu icons
+    mPieMenu->SetIcons(0, mAwesome.icon(fa::undo, mStandardPieMenuIconVariant), mAwesome.icon(fa::undo, mDisabledPieMenuIconVariant));
+    mPieMenu->SetIcons(1, mCoreLogic.GetControlMode() == ControlMode::WIRE ? mAwesome.icon(fa::mousepointer, mStandardPieMenuIconVariant) : QIcon(":/images/icons/wiring.png"), mAwesome.icon(fa::mousepointer, mDisabledPieMenuIconVariant));
+    mPieMenu->SetIcons(2, mAwesome.icon(fa::repeat, mStandardPieMenuIconVariant), mAwesome.icon(fa::repeat, mDisabledPieMenuIconVariant));
+    mPieMenu->SetIcons(3, mAwesome.icon(fa::trasho, mStandardPieMenuIconVariant), mAwesome.icon(fa::trasho, mDisabledPieMenuIconVariant));
+    mPieMenu->SetIcons(4, mAwesome.icon(fa::close, mStandardPieMenuIconVariant), mAwesome.icon(fa::close, mDisabledPieMenuIconVariant));
+
+    mPieMenu->show();
+    mPieMenu->setFocus();
+}
+
+void View::HidePieMenu()
+{
+    mPieMenu->hide();
+}
+
+PieMenu* View::GetPieMenu()
+{
+    return mPieMenu;
 }
 
 void View::ResetViewport()

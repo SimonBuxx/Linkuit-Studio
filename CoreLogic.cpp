@@ -92,6 +92,7 @@ void CoreLogic::SelectAll()
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
 {
     mView.Scene()->clearFocus();
+    mView.GetPieMenu()->hide();
     emit HideClockConfiguratorSignal();
 
     if (pNewMode == mControlMode)

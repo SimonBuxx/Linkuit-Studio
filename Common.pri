@@ -35,6 +35,7 @@ HEADERS += \
     $$PWD/Components/Inputs/LogicClock.h \
     $$PWD/Components/Inputs/LogicConstant.h \
     $$PWD/Components/LogicDiodeCell.h \
+    $$PWD/Gui/PieMenu.h \
     $$PWD/RuntimeConfigParser.h \
     $$PWD/Undo/UndoCopyType.h \
     $${PWD}/Components/ComplexLogic/DFlipFlop.h \
@@ -116,6 +117,7 @@ SOURCES += \
     $$PWD/Components/Inputs/LogicClock.cpp \
     $$PWD/Components/Inputs/LogicConstant.cpp \
     $$PWD/Components/LogicDiodeCell.cpp \
+    $$PWD/Gui/PieMenu.cpp \
     $$PWD/RuntimeConfigParser.cpp \
     $$PWD/Undo/UndoCopyType.cpp \
     $${PWD}/Components/ComplexLogic/DFlipFlop.cpp \

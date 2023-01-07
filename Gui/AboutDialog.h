@@ -31,7 +31,7 @@ signals:
 protected:
     Ui::AboutDialog *mUi;
 
-    QtAwesome &mAwesome; // Contains Fontawesome logos
+    QtAwesome &mAwesome; // Contains Fontawesome icons
 
     QVariantMap mStandardIconVariant;
 };

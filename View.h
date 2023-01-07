@@ -4,6 +4,7 @@
 #include "CoreLogic.h"
 #include "Configuration.h"
 
+#include "Gui/PieMenu.h"
 #include "QtAwesome.h"
 
 #include <QFrame>
@@ -86,8 +87,9 @@ class View : public QFrame
     Q_OBJECT
 public:
     /// \brief Creator for the View class
+    /// \param pAwesome: Reference to the QtAwesome object
     /// \param pCoreLogic: Reference to the core logic
-    View(CoreLogic &pCoreLogic);
+    View(QtAwesome &pAwesome, CoreLogic &pCoreLogic);
 
     /// \brief Initializes the GraphicsView and sets up all signal/slot connections
     void Init(void);
@@ -116,11 +118,19 @@ public:
     /// \brief Getter for the current zoom level
     int32_t GetZoomLevel(void);
 
+    void ShowPieMenu(const QPoint &pPos);
+    void HidePieMenu(void);
+
+    PieMenu* GetPieMenu(void);
+
 signals:
     /// \brief Emitted when the scene is zoomed in or out
     /// \param pPercentage: The new zoom percentage
     /// \param pValue: The new zoom value
     void ZoomLevelChangedSignal(uint8_t pPercentage, uint32_t pValue);
+
+    void UndoFromPieMenuSignal(void);
+    void RedoFromPieMenuSignal(void);
 
 public slots:
     /// \brief Sets the zoom level and updates the displayed percentage
@@ -156,6 +166,10 @@ protected:
     QGraphicsScene *mScene;
     CoreLogic &mCoreLogic;
 
+    QtAwesome &mAwesome;
+    QVariantMap mStandardPieMenuIconVariant;
+    QVariantMap mDisabledPieMenuIconVariant;
+
     QGridLayout *mMainLayout;
 
     // Over-canvas elements
@@ -163,6 +177,8 @@ protected:
     QWidget *mProcessingOverlay;
     QLabel *mProcessingImage;
     QGridLayout *mProcessingLayout;
+
+    PieMenu *mPieMenu;
 
     int32_t mZoomLevel = canvas::DEFAULT_ZOOM_LEVEL;
 };

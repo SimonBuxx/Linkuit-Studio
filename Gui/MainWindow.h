@@ -305,7 +305,7 @@ protected:
     View mView;
     CoreLogic mCoreLogic;
 
-    QtAwesome mAwesome; // Contains Fontawesome logos
+    QtAwesome mAwesome; // Contains Fontawesome icons
 
     QStandardItemModel mToolboxTreeModel;
 

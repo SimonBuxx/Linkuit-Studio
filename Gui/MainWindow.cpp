@@ -7,7 +7,7 @@
 MainWindow::MainWindow(QWidget *pParent) :
     QMainWindow(pParent),
     mUi(new Ui::MainWindow),
-    mView(mCoreLogic),
+    mView(mAwesome, mCoreLogic),
     mCoreLogic(mView),
     mAboutDialog(mAwesome, this),
     mWelcomeDialog(mAwesome, this)
@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *pParent) :
     InitializeGuiIcons();
     InitializeGlobalShortcuts();
     InitializeMessageBoxes();
+
+    UpdateUndoRedoEnabled(false);
 
     mUi->uItemRightButton->setChecked(true); // Button for component direction RIGHT
 
@@ -89,6 +91,8 @@ void MainWindow::InitializeTutorial()
 void MainWindow::ConnectGuiSignalsAndSlots()
 {
     QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, &MainWindow::UpdateZoomLabelAndSlider);
+    QObject::connect(&mView, &View::UndoFromPieMenuSignal, this, &MainWindow::Undo);
+    QObject::connect(&mView, &View::RedoFromPieMenuSignal, this, &MainWindow::Redo);
 
     QObject::connect(&mCoreLogic, &CoreLogic::OpeningFileSuccessfulSignal, this, &MainWindow::OnCircuitFileOpenedSuccessfully);
     QObject::connect(&mCoreLogic.GetCircuitFileParser(), &CircuitFileParser::LoadCircuitFileFailedSignal, this, &MainWindow::OnCircuitFileOpeningFailed);
@@ -1032,6 +1036,8 @@ void MainWindow::UpdateUndoRedoEnabled(bool pEnable)
         mUi->uActionRedo->setEnabled(!mCoreLogic.IsRedoQueueEmpty());
         mUi->uUndoButton->setEnabled(!mCoreLogic.IsUndoQueueEmpty());
         mUi->uRedoButton->setEnabled(!mCoreLogic.IsRedoQueueEmpty());
+        mView.GetPieMenu()->SetButtonEnabled(0, !mCoreLogic.IsUndoQueueEmpty());
+        mView.GetPieMenu()->SetButtonEnabled(2, !mCoreLogic.IsRedoQueueEmpty());
     }
     else
     {
@@ -1039,6 +1045,8 @@ void MainWindow::UpdateUndoRedoEnabled(bool pEnable)
         mUi->uActionRedo->setEnabled(false);
         mUi->uUndoButton->setEnabled(false);
         mUi->uRedoButton->setEnabled(false);
+        mView.GetPieMenu()->SetButtonEnabled(0, false);
+        mView.GetPieMenu()->SetButtonEnabled(2, false);
     }
 }
 
@@ -1575,7 +1583,7 @@ void MainWindow::InitializeGuiIcons()
     mUi->uWiringButton->SetCheckedIcon(QIcon(":/images/icons/wiring_checked.png"));
     mUi->uWiringButton->SetUncheckedIcon(QIcon(":/images/icons/wiring.png"));
 
-    mUi->uDeleteButton->SetIcon(QIcon(":/images/icons/delete.png"));
+    mUi->uDeleteButton->SetIcon(mAwesome.icon(fa::trasho, mUncheckedButtonVariant));
     mUi->uUndoButton->SetIcon(mAwesome.icon(fa::undo, mUncheckedButtonVariant));
     mUi->uRedoButton->SetIcon(mAwesome.icon(fa::repeat, mUncheckedButtonVariant));
 
