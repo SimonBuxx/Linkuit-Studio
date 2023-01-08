@@ -119,7 +119,8 @@ public:
     int32_t GetZoomLevel(void);
 
     void ShowPieMenu(const QPoint &pPos);
-    void HidePieMenu(void);
+
+    void UpdatePieMenuIcons(void);
 
     PieMenu* GetPieMenu(void);
 
@@ -160,6 +161,8 @@ protected:
     /// \param pZoomLevel: The zoom level decides whether to draw the grid or not
     /// \return A pixel map containing a background grid tile
     QPixmap DrawGridPattern(int32_t pZoomLevel);
+
+    void OnPieMenuButtonClicked(int8_t pButtonIndex);
 
 protected:
     GraphicsView mGraphicsView;

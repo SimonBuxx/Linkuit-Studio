@@ -92,7 +92,15 @@ void CoreLogic::SelectAll()
 void CoreLogic::EnterControlMode(ControlMode pNewMode)
 {
     mView.Scene()->clearFocus();
-    mView.GetPieMenu()->hide();
+    if (pNewMode == ControlMode::SIMULATION)
+    {
+        mView.GetPieMenu()->Hide();
+    }
+    else
+    {
+        mView.GetPieMenu()->HideIfNotPinned();
+    }
+
     emit HideClockConfiguratorSignal();
 
     if (pNewMode == mControlMode)
@@ -124,6 +132,8 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
         EnterSimulation();
         RunSimulation();
     }
+
+    mView.UpdatePieMenuIcons();
 
     Q_ASSERT(mControlMode == pNewMode);
 }

@@ -49,6 +49,11 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
 
     if (pEvent->button() == Qt::LeftButton) // RMB ignored
     {
+        if (mView.GetPieMenu()->isVisible())
+        {
+            mView.GetPieMenu()->HideIfNotPinned();
+        }
+
         mIsLeftMousePressed = true;
         if (pEvent->modifiers() & Qt::ControlModifier)
         {
@@ -235,54 +240,11 @@ void View::Init()
 
     mProcessingOverlay->hide();
 
+    // Initialize pie menu
     mPieMenu = new PieMenu(mAwesome, &mGraphicsView);
-    mPieMenu->hide();
+    mPieMenu->Hide();
 
-#warning move into separate method
-    QObject::connect(mPieMenu, &PieMenu::PieMenuButtonClicked, this, [&](int32_t pButtonIndex)
-    {
-        switch (pButtonIndex)
-        {
-            case 0:
-            {
-                emit UndoFromPieMenuSignal();
-                break;
-            }
-            case 1:
-            {
-                if (mCoreLogic.GetControlMode() == ControlMode::WIRE)
-                {
-                    mCoreLogic.EnterControlMode(ControlMode::EDIT);
-                }
-                else
-                {
-                    mCoreLogic.EnterControlMode(ControlMode::WIRE);
-                }
-                break;
-            }
-            case 2:
-            {
-                emit RedoFromPieMenuSignal();
-                break;
-            }
-            case 3:
-            {
-                if (mCoreLogic.GetControlMode() != ControlMode::COPY)
-                {
-                    mCoreLogic.DeleteSelectedComponents();
-                }
-                else
-                {
-                    mCoreLogic.AbortPastingIfInCopy();
-                }
-                break;
-            }
-            default:
-            {
-                break;
-            }
-        }
-    });
+    QObject::connect(mPieMenu, &PieMenu::PieMenuButtonClicked, this, &View::OnPieMenuButtonClicked);
 
     mMainLayout = new QGridLayout();
     mMainLayout->setContentsMargins(0, 0, 0, 0);
@@ -370,6 +332,60 @@ int32_t View::GetZoomLevel()
     return mZoomLevel;
 }
 
+void View::UpdatePieMenuIcons()
+{
+    mPieMenu->SetIcons(0, mAwesome.icon(fa::undo, mStandardPieMenuIconVariant), mAwesome.icon(fa::undo, mDisabledPieMenuIconVariant));
+    mPieMenu->SetIcons(1, mCoreLogic.GetControlMode() == ControlMode::WIRE ? mAwesome.icon(fa::mousepointer, mStandardPieMenuIconVariant) : QIcon(":/images/icons/wiring.png"), mAwesome.icon(fa::mousepointer, mDisabledPieMenuIconVariant));
+    mPieMenu->SetIcons(2, mAwesome.icon(fa::repeat, mStandardPieMenuIconVariant), mAwesome.icon(fa::repeat, mDisabledPieMenuIconVariant));
+    mPieMenu->SetIcons(3, mAwesome.icon(fa::trasho, mStandardPieMenuIconVariant), mAwesome.icon(fa::trasho, mDisabledPieMenuIconVariant));
+    mPieMenu->SetIcons(4, mAwesome.icon(fa::close, mStandardPieMenuIconVariant), mAwesome.icon(fa::close, mDisabledPieMenuIconVariant));
+}
+
+void View::OnPieMenuButtonClicked(int8_t pButtonIndex)
+{
+    switch (pButtonIndex)
+    {
+        case 0:
+        {
+            emit UndoFromPieMenuSignal();
+            break;
+        }
+        case 1:
+        {
+            if (mCoreLogic.GetControlMode() == ControlMode::WIRE)
+            {
+                mCoreLogic.EnterControlMode(ControlMode::EDIT);
+            }
+            else
+            {
+                mCoreLogic.EnterControlMode(ControlMode::WIRE);
+            }
+            break;
+        }
+        case 2:
+        {
+            emit RedoFromPieMenuSignal();
+            break;
+        }
+        case 3:
+        {
+            if (mCoreLogic.GetControlMode() != ControlMode::COPY)
+            {
+                mCoreLogic.DeleteSelectedComponents();
+            }
+            else
+            {
+                mCoreLogic.AbortPastingIfInCopy();
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+}
+
 void View::ShowPieMenu(const QPoint &pPos)
 {
     auto geometry = mPieMenu->geometry();
@@ -377,20 +393,10 @@ void View::ShowPieMenu(const QPoint &pPos)
 
     mPieMenu->setGeometry(geometry);
 
-    // Set pie menu icons
-    mPieMenu->SetIcons(0, mAwesome.icon(fa::undo, mStandardPieMenuIconVariant), mAwesome.icon(fa::undo, mDisabledPieMenuIconVariant));
-    mPieMenu->SetIcons(1, mCoreLogic.GetControlMode() == ControlMode::WIRE ? mAwesome.icon(fa::mousepointer, mStandardPieMenuIconVariant) : QIcon(":/images/icons/wiring.png"), mAwesome.icon(fa::mousepointer, mDisabledPieMenuIconVariant));
-    mPieMenu->SetIcons(2, mAwesome.icon(fa::repeat, mStandardPieMenuIconVariant), mAwesome.icon(fa::repeat, mDisabledPieMenuIconVariant));
-    mPieMenu->SetIcons(3, mAwesome.icon(fa::trasho, mStandardPieMenuIconVariant), mAwesome.icon(fa::trasho, mDisabledPieMenuIconVariant));
-    mPieMenu->SetIcons(4, mAwesome.icon(fa::close, mStandardPieMenuIconVariant), mAwesome.icon(fa::close, mDisabledPieMenuIconVariant));
+    UpdatePieMenuIcons();
 
     mPieMenu->show();
     mPieMenu->setFocus();
-}
-
-void View::HidePieMenu()
-{
-    mPieMenu->hide();
 }
 
 PieMenu* View::GetPieMenu()

@@ -16,6 +16,10 @@ public:
 
     void SetButtonEnabled(uint8_t pButtonIndex, bool pEnable);
 
+    void HideIfNotPinned(void);
+
+    void Hide(void);
+
 signals:
     void PieMenuButtonClicked(int8_t pButtonIndex);
 
@@ -26,7 +30,9 @@ protected:
     void mouseMoveEvent(QMouseEvent *pEvent) override;
     void leaveEvent(QEvent *pEvent) override;
 
-    int8_t Selected(void) const;
+    int8_t CurrentSelection(void) const;
+
+    void DrawPinButton(QPainter& pPainter, bool pMouseOver);
 
 protected:
     std::vector<QIcon> mButtonIcons;
@@ -36,8 +42,11 @@ protected:
     QtAwesome &mAwesome; // Contains Fontawesome icons
 
     QVariantMap mStandardIconVariant;
+    QVariantMap mPinnedIconVariant;
 
     std::vector<bool> mButtonsEnabled;
+
+    bool mIsPinned = false;
 };
 
 #endif // PIEMENU_H
