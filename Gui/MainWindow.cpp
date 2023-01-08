@@ -1048,6 +1048,11 @@ void MainWindow::UpdateUndoRedoEnabled(bool pEnable)
         mView.GetPieMenu()->SetButtonEnabled(0, false);
         mView.GetPieMenu()->SetButtonEnabled(2, false);
     }
+
+    if (mView.GetPieMenu()->isVisible())
+    {
+        mView.GetPieMenu()->update();
+    }
 }
 
 void MainWindow::Undo()
