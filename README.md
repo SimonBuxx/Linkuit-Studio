@@ -1,5 +1,10 @@
 # Linkuit Studio
 
+Linkuit Studio is an open-source logic circuit simulator that is designed to be intuitive and easy to use. Its aim is to provide a platform for learning and experimentation with logic circuits.
+
+![Traffic Light Controller](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/traffic_lights.png?raw=true)
+*A simple traffic light controller circuit, consisting of a counter and a diode matrix*
+
 ## FAQ
 
 - **How do I zoom and pan the scene?**
@@ -28,12 +33,9 @@
   
 Your question is not on the list? Please do not hesitate to contact us at linkuit@outlook.com or on Twitter [@goLinkuit](https://twitter.com/goLinkuit/) (German or English).
 
-![Traffic Light Controller](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/traffic_lights.png?raw=true)
-*A simple traffic light controller*
-
 ## How to compile
 
 *Qt Creator for open source* can be downloaded here: https://www.qt.io/download-qt-installer
 
-I am currently using **Qt Creator 8.0.2** on Windows with **Qt 6.4.0**. The compiler I use is **MinGW 64-bit 11.2.0**.
+I am currently using **Qt Creator 9.0.1** on Windows with **Qt 6.4.0**. The compiler I use is **MinGW 64-bit 11.2.0**.
 After installing Qt Creator, the **.pro** file can be opened with Qt Creator, from where you can compile the project.
