@@ -203,7 +203,7 @@ View::View(QtAwesome &pAwesome, CoreLogic &pCoreLogic):
     mCoreLogic(pCoreLogic),
     mAwesome(pAwesome)
 {
-    mStandardPieMenuIconVariant.insert("color", QColor(0, 45, 50));
+    mStandardPieMenuIconVariant.insert("color", QColor(0, 0, 0));
     mDisabledPieMenuIconVariant.insert("color", QColor(180, 180, 180));
 }
 
@@ -241,10 +241,10 @@ void View::Init()
     mProcessingOverlay->hide();
 
     // Initialize pie menu
-    mPieMenu = new PieMenu(mAwesome, &mGraphicsView);
-    mPieMenu->Hide();
+    mPieMenu = new PieMenu(&mGraphicsView);
+    mPieMenu->hide();
 
-    QObject::connect(mPieMenu, &PieMenu::PieMenuButtonClicked, this, &View::OnPieMenuButtonClicked);
+    QObject::connect(mPieMenu, &PieMenu::ButtonClickedSignal, this, &View::OnPieMenuButtonClicked);
 
     mMainLayout = new QGridLayout();
     mMainLayout->setContentsMargins(0, 0, 0, 0);
@@ -334,11 +334,13 @@ int32_t View::GetZoomLevel()
 
 void View::UpdatePieMenuIcons()
 {
-    mPieMenu->SetIcons(0, mAwesome.icon(fa::undo, mStandardPieMenuIconVariant), mAwesome.icon(fa::undo, mDisabledPieMenuIconVariant));
-    mPieMenu->SetIcons(1, mCoreLogic.GetControlMode() == ControlMode::WIRE ? mAwesome.icon(fa::mousepointer, mStandardPieMenuIconVariant) : QIcon(":/images/icons/wiring.png"), mAwesome.icon(fa::mousepointer, mDisabledPieMenuIconVariant));
-    mPieMenu->SetIcons(2, mAwesome.icon(fa::repeat, mStandardPieMenuIconVariant), mAwesome.icon(fa::repeat, mDisabledPieMenuIconVariant));
-    mPieMenu->SetIcons(3, mAwesome.icon(fa::trasho, mStandardPieMenuIconVariant), mAwesome.icon(fa::trasho, mDisabledPieMenuIconVariant));
-    mPieMenu->SetIcons(4, mAwesome.icon(fa::close, mStandardPieMenuIconVariant), mAwesome.icon(fa::close, mDisabledPieMenuIconVariant));
+    mPieMenu->SetButtonIcon(0, mCoreLogic.GetControlMode() == ControlMode::WIRE ? QImage(":/images/icons/material_symbols/arrow_selector_tool_FILL1_wght400_GRAD0_opsz24.svg") :
+                                                                                  QImage(":/images/icons/material_symbols/edit_FILL1_wght400_GRAD0_opsz24.svg"));
+    mPieMenu->SetButtonIcon(1, QImage(":/images/icons/material_symbols/redo_FILL0_wght400_GRAD0_opsz24.svg"));
+    mPieMenu->SetButtonIcon(2, QImage(":/images/icons/material_symbols/delete_FILL0_wght400_GRAD0_opsz24.svg"));
+    mPieMenu->SetButtonIcon(3, QImage(":/images/icons/material_symbols/undo_FILL0_wght400_GRAD0_opsz24.svg"));
+    mPieMenu->SetCloseButtonIcon(QIcon(":/images/icons/material_symbols/close_FILL1_wght400_GRAD0_opsz24.svg"));
+    mPieMenu->SetPinButtonIcon(QIcon(":/images/icons/pushpin-icon.png"));
 }
 
 void View::OnPieMenuButtonClicked(int8_t pButtonIndex)
@@ -346,11 +348,6 @@ void View::OnPieMenuButtonClicked(int8_t pButtonIndex)
     switch (pButtonIndex)
     {
         case 0:
-        {
-            emit UndoFromPieMenuSignal();
-            break;
-        }
-        case 1:
         {
             if (mCoreLogic.GetControlMode() == ControlMode::WIRE)
             {
@@ -362,12 +359,12 @@ void View::OnPieMenuButtonClicked(int8_t pButtonIndex)
             }
             break;
         }
-        case 2:
+        case 1:
         {
             emit RedoFromPieMenuSignal();
             break;
         }
-        case 3:
+        case 2:
         {
             if (mCoreLogic.GetControlMode() != ControlMode::COPY)
             {
@@ -377,6 +374,11 @@ void View::OnPieMenuButtonClicked(int8_t pButtonIndex)
             {
                 mCoreLogic.AbortPastingIfInCopy();
             }
+            break;
+        }
+        case 3:
+        {
+            emit UndoFromPieMenuSignal();
             break;
         }
         default:
@@ -389,7 +391,7 @@ void View::OnPieMenuButtonClicked(int8_t pButtonIndex)
 void View::ShowPieMenu(const QPoint &pPos)
 {
     auto geometry = mPieMenu->geometry();
-    geometry.setTopLeft(pPos - QPoint(101, 101));
+    geometry.setTopLeft(pPos - QPoint(81, 81));
 
     mPieMenu->setGeometry(geometry);
 

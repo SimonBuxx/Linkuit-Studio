@@ -1,8 +1,6 @@
 #ifndef ABOUTDIALOG_H
 #define ABOUTDIALOG_H
 
-#include "QtAwesome.h"
-
 #include <QDialog>
 
 namespace Ui {
@@ -17,9 +15,8 @@ class AboutDialog : public QDialog
     Q_OBJECT
 public:
     /// \brief Constructor for the about dialog
-    /// \param pAwesome: Reference to the QtAwesome object
     /// \param pParent: Pointer to the parent widget
-    explicit AboutDialog(QtAwesome &pAwesome, QWidget *pParent = nullptr);
+    explicit AboutDialog(QWidget *pParent = nullptr);
 
     /// \brief Destructor for the about dialog
     ~AboutDialog(void) override;
@@ -30,10 +27,6 @@ signals:
 
 protected:
     Ui::AboutDialog *mUi;
-
-    QtAwesome &mAwesome; // Contains Fontawesome icons
-
-    QVariantMap mStandardIconVariant;
 };
 
 #endif // ABOUTDIALOG_H

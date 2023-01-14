@@ -344,11 +344,6 @@ protected:
     // Icon color variants
 
     QVariantMap mMenuBarIconVariant;
-    QVariantMap mChevronIconVariant;
-    QVariantMap mCheckedButtonVariant;
-    QVariantMap mUncheckedButtonVariant;
-    QVariantMap mStatusBarIconVariant;
-    QVariantMap mPlusMinusIconVariant;
     QVariantMap mConfigButtonIconVariant;
     QVariantMap mWhiteIconVariant;
 

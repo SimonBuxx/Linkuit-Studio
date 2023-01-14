@@ -19,11 +19,10 @@ WelcomeDialog::WelcomeDialog(QtAwesome &pAwesome, QWidget *pParent):
     mWhiteIconVariant.insert("color-active", QColor(255, 255, 255));
     mWhiteIconVariant.insert("color-selected", QColor(255, 255, 255));
 
-    mUi->uNewCircuitButton->setIcon(mAwesome.icon(fa::fileo, mStandardIconVariant));
-    mUi->uOpenCircuitButton->setIcon(mAwesome.icon(fa::folderopeno, mStandardIconVariant));
+    mUi->uNewCircuitButton->setIcon(mAwesome.icon(fa::file, mWhiteIconVariant));
+    mUi->uOpenCircuitButton->setIcon(mAwesome.icon(fa::folderopen, mStandardIconVariant));
     mUi->uGithubButton->setIcon(mAwesome.icon(fa::github, mWhiteIconVariant));
     mUi->uTwitterButton->setIcon(mAwesome.icon(fa::twitter, mWhiteIconVariant));
-    mUi->uCheckForUpdateButton->setIcon(mAwesome.icon(fa::refresh, mStandardIconVariant));
 
     QObject::connect(mUi->uNewCircuitButton, &QPushButton::clicked, this, &WelcomeDialog::NewCircuitClickedSignal);
     QObject::connect(mUi->uOpenCircuitButton, &QPushButton::clicked, this, &WelcomeDialog::OpenCircuitClickedSignal);

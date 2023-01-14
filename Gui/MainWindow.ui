@@ -38,7 +38,7 @@ QMenu::item {
 
 QMenu::item:selected {
     background-color: rgb(230, 230, 230);
-	color: rgb(0, 0, 0);
+        color: rgb(0, 0, 0);
 }</string>
   </property>
   <property name="locale">
@@ -163,7 +163,7 @@ QWidget:hover {
     color: rgb(180, 180, 180);
     font: 10pt &quot;Source Sans Pro&quot;;
     background: none;
-	margin-top: 5px;
+        margin-top: 5px;
 }</string>
            </property>
            <property name="text">
@@ -407,21 +407,21 @@ QFrame {
              <widget class="QLabel" name="uLabelShiftRegisterBitWidthIcon">
               <property name="minimumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="text">
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/sort_FILL1_wght400_GRAD0_opsz24.svg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -506,21 +506,21 @@ QComboBox QAbstractItemView {
               </property>
               <property name="minimumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="styleSheet">
                <string notr="true"/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/unfold_more_FILL1_wght400_GRAD0_opsz24.svg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -651,6 +651,31 @@ QComboBox QAbstractItemView {
              <widget class="QLabel" name="uLabelCounterBitWidthIcon">
               <property name="minimumSize">
                <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/sort_FILL1_wght400_GRAD0_opsz24.svg</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelCounterBitWidthMinus">
+              <property name="minimumSize">
+               <size>
                 <width>20</width>
                 <height>20</height>
                </size>
@@ -661,19 +686,6 @@ QComboBox QAbstractItemView {
                 <height>20</height>
                </size>
               </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelCounterBitWidthPlus">
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -682,7 +694,10 @@ QComboBox QAbstractItemView {
 }</string>
               </property>
               <property name="text">
-               <string>-</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/remove_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
               </property>
              </widget>
             </item>
@@ -729,7 +744,19 @@ QComboBox QAbstractItemView {
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="uLabelCounterBitWidthMinus">
+             <widget class="QLabel" name="uLabelCounterBitWidthPlus">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -738,7 +765,10 @@ QComboBox QAbstractItemView {
 }</string>
               </property>
               <property name="text">
-               <string>+</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/add_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
               </property>
              </widget>
             </item>
@@ -794,21 +824,21 @@ QComboBox QAbstractItemView {
              <widget class="QLabel" name="uLabelGateInputCountIcon">
               <property name="minimumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="text">
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/sort_FILL1_wght400_GRAD0_opsz24.svg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -823,6 +853,18 @@ QComboBox QAbstractItemView {
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -831,7 +873,10 @@ QComboBox QAbstractItemView {
       }</string>
               </property>
               <property name="text">
-               <string>-</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/remove_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
               </property>
              </widget>
             </item>
@@ -839,7 +884,7 @@ QComboBox QAbstractItemView {
              <widget class="QSlider" name="uGateInputCountSlider">
               <property name="minimumSize">
                <size>
-                <width>64</width>
+                <width>50</width>
                 <height>0</height>
                </size>
               </property>
@@ -888,6 +933,18 @@ QComboBox QAbstractItemView {
             </item>
             <item>
              <widget class="QLabel" name="uLabelGateInputCountPlus">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -896,7 +953,10 @@ QComboBox QAbstractItemView {
       }</string>
               </property>
               <property name="text">
-               <string>+</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/add_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
               </property>
              </widget>
             </item>
@@ -952,6 +1012,31 @@ QComboBox QAbstractItemView {
               </property>
               <property name="minimumSize">
                <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/sort_FILL1_wght400_GRAD0_opsz24.svg</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="uLabelEncoderDecoderInputCountMinus">
+              <property name="minimumSize">
+               <size>
                 <width>20</width>
                 <height>20</height>
                </size>
@@ -962,19 +1047,6 @@ QComboBox QAbstractItemView {
                 <height>20</height>
                </size>
               </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="uLabelEncoderDecoderInputCountMinus">
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -983,7 +1055,10 @@ QComboBox QAbstractItemView {
 }</string>
               </property>
               <property name="text">
-               <string>-</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/remove_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
               </property>
              </widget>
             </item>
@@ -991,7 +1066,7 @@ QComboBox QAbstractItemView {
              <widget class="QSlider" name="uEncoderDecoderInputCountSlider">
               <property name="minimumSize">
                <size>
-                <width>50</width>
+                <width>40</width>
                 <height>0</height>
                </size>
               </property>
@@ -1037,6 +1112,18 @@ QComboBox QAbstractItemView {
             </item>
             <item>
              <widget class="QLabel" name="uLabelEncoderDecoderInputCountPlus">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -1045,7 +1132,10 @@ QComboBox QAbstractItemView {
 }</string>
               </property>
               <property name="text">
-               <string>+</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/add_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
               </property>
              </widget>
             </item>
@@ -1100,7 +1190,7 @@ QComboBox QAbstractItemView {
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
               </property>
               <property name="iconSize">
@@ -1138,7 +1228,7 @@ QComboBox QAbstractItemView {
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
               </property>
               <property name="iconSize">
@@ -1179,7 +1269,7 @@ QComboBox QAbstractItemView {
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
               </property>
               <property name="iconSize">
@@ -1217,7 +1307,7 @@ QComboBox QAbstractItemView {
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
               </property>
               <property name="iconSize">
@@ -1274,21 +1364,21 @@ QComboBox QAbstractItemView {
              <widget class="QLabel" name="uLabelMultiplexerBitWidthIcon">
               <property name="minimumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="text">
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/sort_FILL1_wght400_GRAD0_opsz24.svg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -1303,6 +1393,18 @@ QComboBox QAbstractItemView {
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -1311,7 +1413,10 @@ QComboBox QAbstractItemView {
 }</string>
               </property>
               <property name="text">
-               <string>-</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/remove_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
               </property>
              </widget>
             </item>
@@ -1362,6 +1467,18 @@ QComboBox QAbstractItemView {
             </item>
             <item>
              <widget class="QLabel" name="uLabelMultiplexerBitWidthPlus">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">QLabel {
           color: rgb(0, 45, 50);
@@ -1370,7 +1487,10 @@ QComboBox QAbstractItemView {
       }</string>
               </property>
               <property name="text">
-               <string>+</string>
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/add_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
               </property>
              </widget>
             </item>
@@ -1537,7 +1657,7 @@ QComboBox QAbstractItemView {
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+            <pixmap resource="resources.qrc">:/images/icons/material_symbols/search_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -1551,23 +1671,19 @@ QComboBox QAbstractItemView {
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_13">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
+          <widget class="QLabel" name="uLabelMinus">
+           <property name="minimumSize">
             <size>
-             <width>10</width>
+             <width>20</width>
              <height>20</height>
             </size>
            </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLabel" name="uLabelMinus">
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <family>Source Sans Pro</family>
@@ -1583,7 +1699,10 @@ QComboBox QAbstractItemView {
 }</string>
            </property>
            <property name="text">
-            <string>-</string>
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resources.qrc">:/images/icons/material_symbols/remove_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
            </property>
           </widget>
          </item>
@@ -1651,6 +1770,18 @@ QSlider::handle:disabled {
          </item>
          <item>
           <widget class="QLabel" name="uLabelPlus">
+           <property name="minimumSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
            <property name="styleSheet">
             <string notr="true">QLabel {
     color: rgb(0, 45, 50);
@@ -1658,7 +1789,10 @@ QSlider::handle:disabled {
 }</string>
            </property>
            <property name="text">
-            <string>+</string>
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resources.qrc">:/images/icons/material_symbols/add_FILL1_wght400_GRAD0_opsz20.svg</pixmap>
            </property>
           </widget>
          </item>
@@ -1813,13 +1947,13 @@ QToolTip
             <string/>
            </property>
            <property name="icon">
-            <iconset>
-             <normaloff>:/images/icons/mouse-cursor_checked.png</normaloff>:/images/icons/mouse-cursor_checked.png</iconset>
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/icons/material_symbols/arrow_selector_tool_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/arrow_selector_tool_FILL1_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
            <property name="checkable">
@@ -1883,12 +2017,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/material_symbols/undo_FILL0_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/undo_FILL0_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
           </widget>
@@ -1934,12 +2068,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/material_symbols/skip_next_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/skip_next_FILL1_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
           </widget>
@@ -1985,12 +2119,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/material_symbols/restart_alt_FILL0_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/restart_alt_FILL0_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
           </widget>
@@ -2002,7 +2136,7 @@ IconToolButton:pressed {
     color: rgb(180, 180, 180);
     font: 10pt &quot;Source Sans Pro&quot;;
     background: none;
-	margin-bottom: 5px;
+        margin-bottom: 5px;
 }</string>
            </property>
            <property name="text">
@@ -2051,12 +2185,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/material_symbols/delete_FILL0_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/delete_FILL0_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
           </widget>
@@ -2143,12 +2277,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/material_symbols/redo_FILL0_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/redo_FILL0_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
           </widget>
@@ -2178,12 +2312,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/play_icon.png</normaloff>:/images/icons/play_icon.png</iconset>
+             <normaloff>:/images/icons/material_symbols/play_arrow_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/play_arrow_FILL1_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
            <property name="checkable">
@@ -2204,7 +2338,7 @@ IconToolButton:pressed {
     color: rgb(180, 180, 180);
     font: 10pt &quot;Source Sans Pro&quot;;
     background: none;
-	margin-bottom: 5px;
+        margin-bottom: 5px;
 }</string>
            </property>
            <property name="text">
@@ -2242,12 +2376,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/wiring.png</normaloff>:/images/icons/wiring.png</iconset>
+             <normaloff>:/images/icons/material_symbols/edit_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/edit_FILL1_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>20</width>
-             <height>20</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
            <property name="checkable">
@@ -2280,12 +2414,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/material_symbols/power_settings_new_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/power_settings_new_FILL1_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
            <property name="checkable">
@@ -2372,12 +2506,12 @@ IconToolButton:pressed {
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/images/icons/edit_icon.png</normaloff>:/images/icons/edit_icon.png</iconset>
+             <normaloff>:/images/icons/material_symbols/pause_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/pause_FILL1_wght400_GRAD0_opsz24.svg</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>22</width>
-             <height>22</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
            <property name="checkable">
@@ -2570,14 +2704,14 @@ QFrame {
              <widget class="QLabel" name="uLabelToggleIcon">
               <property name="minimumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -2589,7 +2723,7 @@ QFrame {
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/speed_FILL0_wght400_GRAD0_opsz24.svg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -2631,7 +2765,7 @@ QLabel:disabled {
               <property name="styleSheet">
                <string notr="true">QSpinBox {
     background: rgba(0, 0, 0, 13);
-	padding: 4px;
+        padding: 4px;
     color: rgb(0, 45, 50);
     font: 11pt &quot;Source Sans Pro&quot;;
     selection-color: rgb(0, 45, 50);
@@ -2639,11 +2773,11 @@ QLabel:disabled {
 }
 
 QSpinBox::up-button {
-	width: 20px;
+        width: 20px;
 }
 
 QSpinBox::down-button {
-	width: 20px;
+        width: 20px;
 }</string>
               </property>
               <property name="accelerated">
@@ -2747,14 +2881,14 @@ QLabel:disabled {
              <widget class="QLabel" name="uLabelPulseIcon">
               <property name="minimumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>20</width>
-                <height>20</height>
+                <width>24</width>
+                <height>24</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -2766,7 +2900,7 @@ QLabel:disabled {
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+               <pixmap resource="resources.qrc">:/images/icons/material_symbols/timelapse_FILL0_wght400_GRAD0_opsz24.svg</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -2802,7 +2936,7 @@ QLabel:disabled {
               <property name="styleSheet">
                <string notr="true">QSpinBox {
     background: rgba(0, 0, 0, 13);
-	padding: 4px;
+        padding: 4px;
     color: rgb(0, 45, 50);
     font: 11pt &quot;Source Sans Pro&quot;;
     selection-color: rgb(0, 45, 50);
@@ -2810,11 +2944,11 @@ QLabel:disabled {
 }
 
 QSpinBox::up-button {
-	width: 20px;
+        width: 20px;
 }
 
 QSpinBox::down-button {
-	width: 20px;
+        width: 20px;
 }</string>
               </property>
               <property name="accelerated">
@@ -2896,12 +3030,12 @@ QLabel:disabled {
     <string notr="true">QMenuBar {
     background-color: rgb(255, 255, 255);
     font: 10pt &quot;Source Sans Pro&quot;;
-	padding: 5px 0;
+        padding: 5px 0;
 }
 
 QMenuBar::item {
-	padding: 5px;
-	border-radius: 3px;
+        padding: 5px;
+        border-radius: 3px;
 }
 
 QMenuBar::item:selected {
@@ -2912,24 +3046,6 @@ QMenuBar::item:pressed {
     background: rgb(220, 220, 220);
 }</string>
    </property>
-   <widget class="QMenu" name="uMenuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="uActionNew"/>
-    <addaction name="uActionOpen"/>
-    <addaction name="separator"/>
-    <addaction name="uActionSave"/>
-    <addaction name="uActionSaveAs"/>
-    <addaction name="separator"/>
-    <addaction name="uActionRecentFile1"/>
-    <addaction name="uActionRecentFile2"/>
-    <addaction name="uActionRecentFile3"/>
-    <addaction name="uActionRecentFile4"/>
-    <addaction name="uActionRecentFile5"/>
-    <addaction name="separator"/>
-    <addaction name="uActionClose"/>
-   </widget>
    <widget class="QMenu" name="uMenuHelp">
     <property name="title">
      <string>Help</string>
@@ -2976,6 +3092,24 @@ QMenuBar::item:pressed {
     <addaction name="separator"/>
     <addaction name="uActionSelectAll"/>
    </widget>
+   <widget class="QMenu" name="uMenuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="uActionNew"/>
+    <addaction name="uActionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="uActionSave"/>
+    <addaction name="uActionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="uActionRecentFile1"/>
+    <addaction name="uActionRecentFile2"/>
+    <addaction name="uActionRecentFile3"/>
+    <addaction name="uActionRecentFile4"/>
+    <addaction name="uActionRecentFile5"/>
+    <addaction name="separator"/>
+    <addaction name="uActionClose"/>
+   </widget>
    <addaction name="uMenuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuSimulation"/>
@@ -3000,6 +3134,10 @@ QMenuBar::item:pressed {
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/play_arrow_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/play_arrow_FILL1_wght400_GRAD0_opsz24.svg</iconset>
+   </property>
    <property name="text">
     <string>Run</string>
    </property>
@@ -3010,6 +3148,10 @@ QMenuBar::item:pressed {
   <action name="uActionReset">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/restart_alt_FILL0_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/restart_alt_FILL0_wght400_GRAD0_opsz24.svg</iconset>
    </property>
    <property name="text">
     <string>Reset</string>
@@ -3022,6 +3164,10 @@ QMenuBar::item:pressed {
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/pause_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/pause_FILL1_wght400_GRAD0_opsz24.svg</iconset>
+   </property>
    <property name="text">
     <string>Pause</string>
    </property>
@@ -3032,6 +3178,10 @@ QMenuBar::item:pressed {
   <action name="uActionStep">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/skip_next_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/skip_next_FILL1_wght400_GRAD0_opsz24.svg</iconset>
    </property>
    <property name="text">
     <string>Step</string>
@@ -3044,6 +3194,10 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionStart">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/power_settings_new_FILL1_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/power_settings_new_FILL1_wght400_GRAD0_opsz24.svg</iconset>
+   </property>
    <property name="text">
     <string>Start</string>
    </property>
@@ -3068,6 +3222,10 @@ QMenuBar::item:pressed {
   <action name="uActionScreenshot">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/screenshot_monitor_FILL0_wght400_GRAD0_opsz20.svg</normaloff>:/images/icons/material_symbols/screenshot_monitor_FILL0_wght400_GRAD0_opsz20.svg</iconset>
    </property>
    <property name="text">
     <string>Save Screenshot...</string>
@@ -3135,6 +3293,10 @@ QMenuBar::item:pressed {
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/undo_FILL0_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/undo_FILL0_wght400_GRAD0_opsz24.svg</iconset>
+   </property>
    <property name="text">
     <string>Undo</string>
    </property>
@@ -3146,6 +3308,10 @@ QMenuBar::item:pressed {
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/redo_FILL0_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/redo_FILL0_wght400_GRAD0_opsz24.svg</iconset>
+   </property>
    <property name="text">
     <string>Redo</string>
    </property>
@@ -3154,6 +3320,10 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionCopy">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/icons/sharp_content_copy_black_24dp.png</normaloff>:/images/icons/sharp_content_copy_black_24dp.png</iconset>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
@@ -3165,6 +3335,10 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionPaste">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/icons/sharp_content_paste_black_24dp.png</normaloff>:/images/icons/sharp_content_paste_black_24dp.png</iconset>
+   </property>
    <property name="text">
     <string>Paste</string>
    </property>
@@ -3176,6 +3350,10 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionCut">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/icons/sharp_content_cut_black_24dp.png</normaloff>:/images/icons/sharp_content_cut_black_24dp.png</iconset>
+   </property>
    <property name="text">
     <string>Cut</string>
    </property>
@@ -3187,6 +3365,10 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionDelete">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/material_symbols/delete_FILL0_wght400_GRAD0_opsz24.svg</normaloff>:/images/icons/material_symbols/delete_FILL0_wght400_GRAD0_opsz24.svg</iconset>
+   </property>
    <property name="text">
     <string>Delete</string>
    </property>
@@ -3233,6 +3415,10 @@ QMenuBar::item:pressed {
   <action name="uActionStartTutorial">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/icons/sharp_school_black_24dp.png</normaloff>:/images/icons/sharp_school_black_24dp.png</iconset>
    </property>
    <property name="text">
     <string>Start Tutorial</string>
@@ -3298,9 +3484,9 @@ QMenuBar::item:pressed {
  <connections/>
  <buttongroups>
   <buttongroup name="uConstantButtonsGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
  </buttongroups>
 </ui>

@@ -94,7 +94,7 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
     mView.Scene()->clearFocus();
     if (pNewMode == ControlMode::SIMULATION)
     {
-        mView.GetPieMenu()->Hide();
+        mView.GetPieMenu()->hide();
     }
     else
     {

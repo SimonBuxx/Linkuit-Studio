@@ -3,8 +3,6 @@
 
 #include <QPushButton>
 
-#include "QtAwesome.h"
-
 ///
 /// \brief The IconToolButton class represents a tool button with associated icons
 ///
@@ -16,17 +14,9 @@ public:
     /// \param pParent: Pointer to the parent widget
     IconToolButton(QWidget *pParent = nullptr);
 
-    /// \brief Setter for the icon that is displayed when the button is checked
-    /// \param pIcon: Icon to display
-    void SetCheckedIcon(const QIcon &pIcon);
-
-    /// \brief Setter for the icon that is displayed when the button is unchecked
-    /// \param pIcon: Icon to display
-    void SetUncheckedIcon(const QIcon &pIcon);
-
     /// \brief Setter for the icon that is displayed when the button is not checkable
-    /// \param pIcon: Icon to display
-    void SetIcon(const QIcon &pIcon);
+    /// \param pImage: Image for the icon to display
+    void SetIcon(const QImage &pImage);
 
 protected:
     /// \brief Updates the icon based on the buttons state

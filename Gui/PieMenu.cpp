@@ -1,179 +1,55 @@
 #include "PieMenu.h"
+
 #include <QPainter>
 #include <QApplication>
+#include <QMouseEvent>
 
-PieMenu::PieMenu(QtAwesome &pAwesome, QWidget *pParent):
+PieMenu::PieMenu(QWidget *pParent):
     QWidget(pParent),
-    mButtonIcons{5, QIcon()},
-    mButtonDisabledIcons{5, QIcon()},
-    mButtonPaths{4, QPainterPath()},
-    mAwesome(pAwesome),
-    mButtonsEnabled(5, true)
+    mDefaultButtonIcons{mButtonCount, QIcon()},
+    mDisabledButtonIcons{mButtonCount, QIcon()},
+    mPieButtonPaths{mButtonCount, QPainterPath()},
+    mButtonsEnabled(mButtonCount, true),
+    mBaseSize(mPieRadius * 2, mPieRadius * 2),
+    mFullSize(mBaseSize + QSize(mStrokeWidth * 2, mStrokeWidth * 2)),
+    mAnglePerButton(360.0f / mButtonCount),
+    mCloseButtonIndex(mButtonCount + 1),
+    mPinButtonIndex(mButtonCount + 2)
 {
-    setMinimumSize(202, 202);
-    setMaximumSize(202, 202);
+    setMinimumSize(mFullSize);
+    setMaximumSize(mFullSize);
     setMouseTracking(true);
+    hide();
 
-    mStandardIconVariant.insert("color", QColor(0, 45, 50));
-    mPinnedIconVariant.insert("color", QColor(255, 255, 255));
-
-    mButtonPaths[0].moveTo(101, 101);
-    mButtonPaths[0].arcTo(QRectF(1, 1, 200, 200), 135, 90);
-
-    mButtonPaths[1].moveTo(101, 101);
-    mButtonPaths[1].arcTo(QRectF(1, 1, 200, 200), 45, 90);
-
-    mButtonPaths[2].moveTo(101, 101);
-    mButtonPaths[2].arcTo(QRectF(1, 1, 200, 200), -45, 90);
-
-    mButtonPaths[3].moveTo(101, 101);
-    mButtonPaths[3].arcTo(QRectF(1, 1, 200, 200), -135, 90);
+    InitPainterPaths();
 }
 
-void PieMenu::SetButtonEnabled(uint8_t pButtonIndex, bool pEnable)
+void PieMenu::InitPainterPaths()
 {
-    Q_ASSERT(pButtonIndex < 5);
+    for (uint8_t i = 0; i < mButtonCount; i++)
+    {
+        QPainterPath path;
 
-    mButtonsEnabled[pButtonIndex] = pEnable;
+        qreal angle = mAnglePerButton * (i - 1) + mBaseAngle;
+
+        path.moveTo(mFullSize.width() / 2.0f, mFullSize.height() / 2.0f);
+        path.arcTo(QRectF(mStrokeWidth, mStrokeWidth, mFullSize.width() - mStrokeWidth * 2,
+                          mFullSize.height() - mStrokeWidth * 2), -angle, mAnglePerButton);
+
+        mPieButtonPaths[i] = path;
+    }
 }
 
-void PieMenu::SetIcons(uint8_t pButtonIndex, const QIcon& pIcon, const QIcon& pDisabledIcon)
+void PieMenu::Display()
 {
-    Q_ASSERT(pButtonIndex < 5);
+    auto geometryAdjusted = geometry();
+    auto mappedPosition = mapToParent(mapFromGlobal(QCursor::pos()));
 
-    mButtonIcons[pButtonIndex] = pIcon;
-    mButtonDisabledIcons[pButtonIndex] = pDisabledIcon;
-}
+    geometryAdjusted.setTopLeft(mappedPosition - QPoint(mFullSize.width() / 2, mFullSize.height() / 2));
+    setGeometry(geometryAdjusted);
 
-void PieMenu::paintEvent(QPaintEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-
-    const auto selected = CurrentSelection();
-
-    for (int8_t i = 0; i < 4; i++)
-    {
-        if (selected == i)
-        {
-            if (i % 2 == 0)
-            {
-                painter.fillPath(mButtonPaths[i], QBrush(QApplication::mouseButtons() != Qt::NoButton ? QColor(220, 220, 220) : QColor(230, 230, 230)));
-            }
-            else
-            {
-                painter.fillPath(mButtonPaths[i], QBrush(QApplication::mouseButtons() != Qt::NoButton ? QColor(200, 200, 200) : QColor(220, 220, 220)));
-            }
-        }
-        else
-        {
-            painter.fillPath(mButtonPaths[i], QBrush((i % 2 == 0) ? QColor(250, 250, 250) : QColor(242, 242, 242))); // Default
-        }
-    }
-
-    for (int8_t i = 0; i < 4; i++)
-    {
-        painter.strokePath(mButtonPaths[i], QPen(QColor(200, 200, 200), 1));
-    }
-
-    // Draw the center button
-    painter.setPen(QPen(QColor(200, 200, 200), 1));
-
-    if (selected == 4)
-    {
-        painter.setBrush(QBrush(QApplication::mouseButtons() != Qt::NoButton ? QColor(220, 220, 220) : QColor(230, 230, 230)));
-    }
-    else
-    {
-        painter.setBrush(QBrush(QColor(242, 242, 242)));
-    }
-    painter.drawEllipse(QRectF(67, 67, 70, 70));
-
-    DrawPinButton(painter, (selected == 5));
-
-    // Draw the button icons
-    painter.drawPixmap(QRect(20, 87, 30, 30), mButtonsEnabled[0] ? mButtonIcons[0].pixmap(30, 30) : mButtonDisabledIcons[0].pixmap(30, 30));  // left
-    painter.drawPixmap(QRect(85, 20, 30, 30), mButtonsEnabled[1] ? mButtonIcons[1].pixmap(30, 30) : mButtonDisabledIcons[1].pixmap(30, 30));  // up
-    painter.drawPixmap(QRect(152, 85, 30, 30), mButtonsEnabled[2] ? mButtonIcons[2].pixmap(30, 30) : mButtonDisabledIcons[2].pixmap(30, 30)); // right
-    painter.drawPixmap(QRect(87, 152, 30, 30), mButtonsEnabled[3] ? mButtonIcons[3].pixmap(30, 30) : mButtonDisabledIcons[3].pixmap(30, 30)); // down
-    painter.drawPixmap(QRect(87, 87, 30, 30), mButtonsEnabled[4] ? mButtonIcons[4].pixmap(30, 30) : mButtonDisabledIcons[4].pixmap(30, 30));  // center
-}
-
-void PieMenu::DrawPinButton(QPainter& pPainter, bool pMouseOver)
-{
-    pPainter.setPen(QPen(mIsPinned ? QColor(0, 143, 100) : QColor(200, 200, 200), 1));
-
-    if (pMouseOver)
-    {
-        if (QApplication::mouseButtons() != Qt::NoButton)
-        {
-            pPainter.setBrush(mIsPinned ? QColor(0, 204, 143) : QBrush(QColor(200, 200, 200)));
-        }
-        else
-        {
-            pPainter.setBrush(mIsPinned ? QColor(0, 204, 143) : QBrush(QColor(220, 220, 220)));
-        }
-    }
-    else
-    {
-        pPainter.setBrush(QBrush(mIsPinned ? QColor(0, 204, 143) : QColor(255, 255, 255)));
-    }
-
-    pPainter.drawEllipse(QRectF(180, 0, 21, 21));
-
-    pPainter.drawPixmap(QRect(183, 2, 15, 15), mAwesome.icon(fa::thumbtack, mIsPinned ? mPinnedIconVariant : mStandardIconVariant).pixmap(15, 15));
-}
-
-int8_t PieMenu::CurrentSelection() const
-{
-    const auto cursor = mapFromGlobal(QCursor::pos());
-
-    if (cursor.x() <= 0 || cursor.x() >= 202 || cursor.y() < 0 || cursor.y() >= 202) // out of widget
-    {
-        return -1;
-    }
-
-    double dist0 = sqrt(std::pow(cursor.x(), 2) + std::pow(cursor.y() - 100, 2));
-    double dist1 = sqrt(std::pow(cursor.x() - 100, 2) + std::pow(cursor.y(), 2));
-    double dist2 = sqrt(std::pow(200 - cursor.x(), 2) + std::pow(100 - cursor.y(), 2));
-    double dist3 = sqrt(std::pow(100 - cursor.x(), 2) + std::pow(200 - cursor.y(), 2));
-    double dist4 = sqrt(std::pow(100 - cursor.x(), 2) + std::pow(100 - cursor.y(), 2));
-    double dist5 = sqrt(std::pow(190 - cursor.x(), 2) + std::pow(10 - cursor.y(), 2));
-
-    if (dist5 <= 12)
-    {
-        return 5; // pin button
-    }
-
-    if (dist4 <= 38)
-    {
-        return 4; // center button
-    }
-
-    if (dist0 <= dist1 && dist0 <= dist2 && dist0 <= dist3)
-    {
-        return 0;
-    }
-
-    if (dist1 <= dist0 && dist1 <= dist2 && dist1 <= dist3)
-    {
-        return 1;
-    }
-
-    if (dist2 <= dist0 && dist2 <= dist1 && dist2 <= dist3)
-    {
-        return 2;
-    }
-
-    if (dist3 <= dist0 && dist3 <= dist1 && dist3 <= dist2)
-    {
-        return 3;
-    }
-
-    return 0;
+    show();
+    setFocus();
 }
 
 void PieMenu::HideIfNotPinned()
@@ -184,45 +60,237 @@ void PieMenu::HideIfNotPinned()
     }
 }
 
-void PieMenu::Hide()
+void PieMenu::SetButtonEnabled(uint8_t pIndex, bool pEnable)
 {
-    hide();
-    mIsPinned = false;
+    Q_ASSERT(pIndex < mButtonsEnabled.size());
+    mButtonsEnabled[pIndex] = pEnable;
 }
 
-void PieMenu::leaveEvent(QEvent *pEvent)
+void PieMenu::SetButtonIcon(uint8_t pIndex, const QImage& pIconImage)
 {
-    update();
-    QWidget::leaveEvent(pEvent);
+    mDefaultButtonIcons[pIndex] = QIcon(QPixmap::fromImage(pIconImage));
+
+    auto img = pIconImage;
+    img.fill(Qt::transparent);
+
+    QPainter painter(&img);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.setOpacity(0.1);
+    painter.drawImage(0, 0, pIconImage);
+
+    mDisabledButtonIcons[pIndex] = QIcon(QPixmap::fromImage(img));
+}
+
+void PieMenu::SetCloseButtonIcon(const QIcon& pIcon)
+{
+    mCloseIcon = pIcon;
+}
+
+void PieMenu::SetPinButtonIcon(const QIcon& pIcon)
+{
+    mPinIcon = pIcon;
+}
+
+void PieMenu::paintEvent(QPaintEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+    const auto buttonUnderMouse = GetButtonUnderMouse();
+
+    paintPieButtons(painter, buttonUnderMouse);
+
+    paintCloseButton(painter, (buttonUnderMouse == mCloseButtonIndex));
+
+    if (mShowPinButton)
+    {
+        paintPinButton(painter, (buttonUnderMouse == mPinButtonIndex));
+    }
+}
+
+void PieMenu::paintPieButtons(QPainter& pPainter, int8_t pMouseover)
+{
+    for (int8_t i = 0; i < mButtonCount; i++)
+    {
+        if (pMouseover == i)
+        {
+            if (mAlternateColors && (i % 2 == 0))
+            {
+                pPainter.fillPath(mPieButtonPaths[i], QBrush(QApplication::mouseButtons() == Qt::LeftButton ? QColor(200, 200, 200) : QColor(220, 220, 220)));
+            }
+            else
+            {
+                pPainter.fillPath(mPieButtonPaths[i], QBrush(QApplication::mouseButtons() == Qt::LeftButton ? QColor(220, 220, 220) : QColor(230, 230, 230)));
+            }
+        }
+        else
+        {
+            if (mAlternateColors && (i % 2 == 0))
+            {
+                pPainter.fillPath(mPieButtonPaths[i], QBrush(QColor(242, 242, 242)));
+            }
+            else
+            {
+                pPainter.fillPath(mPieButtonPaths[i], QBrush(QColor(250, 250, 250)));
+            }
+        }
+    }
+
+    for (int8_t i = 0; i < mButtonCount; i++)
+    {
+        pPainter.strokePath(mPieButtonPaths[i], QPen(QColor(200, 200, 200), mStrokeWidth));
+    }
+
+    for (int8_t i = 0; i < mButtonCount; i++)
+    {
+        qreal angle = mAnglePerButton * i + mBaseAngle - mAnglePerButton * 0.5f;
+
+        QPoint referencePoint = QPoint(mPieRadius * qCos((angle * M_PI) / 180) + mPieRadius,
+                                        mPieRadius * qSin((angle * M_PI) / 180) + mPieRadius);
+
+        int8_t index = i + 1;
+
+        if (index >= mButtonCount)
+        {
+            index = 0;
+        }
+
+        pPainter.drawPixmap(QRect((referencePoint.x() * 2 + mFullSize.width() / 2) / 3 - mPieIconSize / 2 + mStrokeWidth, (referencePoint.y() * 2 + mFullSize.height() / 2) / 3 - mPieIconSize / 2 + mStrokeWidth, mPieIconSize, mPieIconSize),
+                           mButtonsEnabled[index] ? mDefaultButtonIcons[index].pixmap(mPieIconSize, mPieIconSize) : mDisabledButtonIcons[index].pixmap(mPieIconSize, mPieIconSize));
+    }
+}
+
+void PieMenu::paintCloseButton(QPainter& pPainter, bool pMouseover)
+{
+    pPainter.setPen(QPen(QColor(200, 200, 200), mStrokeWidth));
+
+    if (pMouseover)
+    {
+        pPainter.setBrush(QBrush(QApplication::mouseButtons() == Qt::LeftButton ? QColor(220, 220, 220) : QColor(230, 230, 230)));
+    }
+    else
+    {
+        pPainter.setBrush(QBrush(QColor(242, 242, 242)));
+    }
+
+    pPainter.drawEllipse(QRectF(mPieRadius - mCloseButtonRadius + mStrokeWidth, mPieRadius - mCloseButtonRadius + mStrokeWidth,
+                               mCloseButtonRadius * 2, mCloseButtonRadius * 2));
+
+    pPainter.drawPixmap(QRect(mFullSize.width() / 2 - mCloseIconSize / 2, mFullSize.height() / 2 - mCloseIconSize / 2,
+                             mCloseIconSize, mCloseIconSize), mCloseIcon.pixmap(mCloseIconSize, mCloseIconSize));
+}
+
+void PieMenu::paintPinButton(QPainter& pPainter, bool pMouseover)
+{
+    pPainter.setPen(QPen(mIsPinned ? QColor(150, 150, 150) : QColor(200, 200, 200), mStrokeWidth));
+
+    if (pMouseover)
+    {
+        if (QApplication::mouseButtons() == Qt::LeftButton)
+        {
+            pPainter.setBrush(mIsPinned ? QColor(190, 190, 190) : QBrush(QColor(200, 200, 200)));
+        }
+        else
+        {
+            pPainter.setBrush(mIsPinned ? QColor(190, 190, 190) : QBrush(QColor(220, 220, 220)));
+        }
+    }
+    else
+    {
+        pPainter.setBrush(QBrush(mIsPinned ? QColor(190, 190, 190) : QColor(255, 255, 255)));
+    }
+
+    pPainter.drawEllipse(QRectF(mBaseSize.width() - mPinButtonRadius * 2, mStrokeWidth, mPinButtonRadius * 2, mPinButtonRadius * 2));
+
+    pPainter.drawPixmap(QRect(mBaseSize.width() - mPinButtonRadius - mPinIconSize / 2, mStrokeWidth + mPinButtonRadius - mPinIconSize / 2,
+                             mPinIconSize, mPinIconSize), mPinIcon.pixmap(mPinIconSize, mPinIconSize));
+}
+int8_t PieMenu::GetButtonUnderMouse() const
+{
+    const auto cursor = mapFromGlobal(QCursor::pos());
+
+    if (cursor.x() <= 0 || cursor.x() >= mFullSize.width() || cursor.y() < 0 || cursor.y() >= mFullSize.height()) // out of widget
+    {
+        return -1;
+    }
+
+    int8_t nearest = -1;
+    uint32_t distance = UINT_MAX;
+    for (size_t i = 0; i < mButtonCount; i++)
+    {
+        qreal angle = mAnglePerButton * i + mBaseAngle - mAnglePerButton * 0.5f;
+
+        QPoint referencePoint = QPoint(mPieRadius * qCos((angle * M_PI) / 180) + mPieRadius,
+                                        mPieRadius * qSin((angle * M_PI) / 180) + mPieRadius);
+
+        uint32_t current = sqrt(std::pow(referencePoint.x() - cursor.x(), 2) + std::pow(referencePoint.y() - cursor.y(), 2));
+
+        if (current < distance)
+        {
+            distance = current;
+
+            int8_t index = i + 1;
+
+            if (index >= mButtonCount)
+            {
+                index = 0;
+            }
+
+            nearest = index;
+        }
+    }
+
+    qreal distanceToPinButton = sqrt(std::pow(mBaseSize.width() - mPinButtonRadius - cursor.x(), 2) + std::pow(mPinButtonRadius - cursor.y(), 2));
+
+    if (distanceToPinButton < mPinButtonRadius + mStrokeWidth)
+    {
+        return mPinButtonIndex;
+    }
+
+    qreal distanceToCloseButton = sqrt(std::pow(mBaseSize.width() / 2 - cursor.x(), 2) + std::pow(mBaseSize.height() / 2 - cursor.y(), 2));
+
+    if (distanceToCloseButton < mCloseButtonRadius + mStrokeWidth)
+    {
+        return mCloseButtonIndex;
+    }
+
+    return nearest;
 }
 
 void PieMenu::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     update();
 
-    const auto selected = CurrentSelection();
-
-    if (selected == 5)
+    if (pEvent->button() == Qt::LeftButton)
     {
-        // Pin button clicked
-        mIsPinned = !mIsPinned;
+        const auto buttonUnderMouse = GetButtonUnderMouse();
+
+        if (buttonUnderMouse == mPinButtonIndex)
+        {
+            mIsPinned = !mIsPinned;
+        }
+        else if (buttonUnderMouse == mCloseButtonIndex)
+        {
+            hide();
+        }
+        else if (buttonUnderMouse >= 0 && buttonUnderMouse < mButtonCount && mButtonsEnabled[buttonUnderMouse])
+        {
+            emit ButtonClickedSignal(buttonUnderMouse);
+
+            if (!mIsPinned && buttonUnderMouse != 1 && buttonUnderMouse != 3)
+            {
+                hide();
+            }
+        }
+        QWidget::mouseReleaseEvent(pEvent);
     }
-    else if (mButtonsEnabled[selected])
+    else
     {
-        emit PieMenuButtonClicked(selected);
-
-        if (selected == 4)
-        {
-            Hide();
-        }
-
-        if ((selected == 1 || selected == 3) && !mIsPinned)
-        {
-            Hide();
-        }
+        pEvent->accept();
     }
-
-    QWidget::mouseReleaseEvent(pEvent);
 }
 
 void PieMenu::mousePressEvent(QMouseEvent *pEvent)
@@ -235,5 +303,11 @@ void PieMenu::mouseMoveEvent(QMouseEvent *pEvent)
 {
     update();
     QWidget::mouseMoveEvent(pEvent);
+}
+
+void PieMenu::leaveEvent(QEvent *pEvent)
+{
+    update();
+    QWidget::leaveEvent(pEvent);
 }
 
