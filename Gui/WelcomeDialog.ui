@@ -37,11 +37,11 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QDialog {
-	background: rgb(255, 255, 255);
+        background: rgb(255, 255, 255);
 }
 
 QLabel {
-	font-family: &quot;Source Sans Pro&quot;;
+        font-family: &quot;Source Sans Pro&quot;;
 }
 
 QPushButton
@@ -112,7 +112,7 @@ QPushButton:pressed
    </property>
    <property name="styleSheet">
     <string notr="true">#uFooter {
-	background: rgb(0, 45, 50);
+        background: rgb(0, 45, 50);
 }</string>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -146,24 +146,25 @@ QPushButton:pressed
        <widget class="QCheckBox" name="uShowOnStartupCheckbox">
         <property name="styleSheet">
          <string notr="true">QCheckBox {
-	font-size: 12pt;
-	color: rgb(255, 255, 255);
+                font-family: &quot;Source Sans Pro&quot;;
+        font-size: 12pt;
+        color: rgb(255, 255, 255);
 }
 
 QCheckBox::indicator {
-    border: 2px solid rgb(255, 255, 255);
-    background: none;
-	border-radius: 3px;
+    border: none;
+    background: rgb(0, 29, 33);
+    border-radius: 2px;
 }
 
 QCheckBox::indicator:checked {
-    border: 2px solid rgb(255, 255, 255);
+    border: none;
     background: rgb(0, 204, 143);
-	border-radius: 3px;
+    border-radius: 2px;
 }</string>
         </property>
         <property name="text">
-         <string>Display this Window on Startup</string>
+         <string>Show on Startup</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -178,9 +179,12 @@ QCheckBox::indicator:checked {
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>427</width>
           <height>20</height>
          </size>
         </property>
@@ -214,14 +218,14 @@ QCheckBox::indicator:checked {
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
-	background: none;
+        background: none;
 }</string>
         </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="resources.qrc">
+         <iconset>
           <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
         </property>
         <property name="iconSize">
@@ -273,14 +277,14 @@ QCheckBox::indicator:checked {
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
-	background: none;
+        background: none;
 }</string>
         </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="resources.qrc">
+         <iconset>
           <normaloff>:/images/icons/stop_icon.png</normaloff>:/images/icons/stop_icon.png</iconset>
         </property>
         <property name="iconSize">
@@ -295,6 +299,9 @@ QCheckBox::indicator:checked {
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -320,7 +327,7 @@ QCheckBox::indicator:checked {
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
-	min-width: 100px;
+        min-width: 100px;
 }</string>
         </property>
         <property name="locale">
@@ -397,12 +404,12 @@ QCheckBox::indicator:checked {
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font-size: 14pt;
-	color: rgb(0, 45, 50);
+        font-size: 14pt;
+        color: rgb(0, 45, 50);
 }</string>
          </property>
          <property name="text">
-          <string>Version </string>
+          <string>Version 0.0.0.000</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -425,8 +432,8 @@ QCheckBox::indicator:checked {
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font: 50px &quot;Quicksand Light&quot;;
-	color: rgb(0, 204, 143);
+        font: 50px &quot;Quicksand Light&quot;;
+        color: rgb(0, 204, 143);
 }</string>
          </property>
          <property name="text">
@@ -462,7 +469,7 @@ QCheckBox::indicator:checked {
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
-	background: none;
+        background: none;
 }</string>
          </property>
          <property name="text">
@@ -496,8 +503,8 @@ QCheckBox::indicator:checked {
          </property>
          <property name="styleSheet">
           <string notr="true">QLabel {
-	font: 50px &quot;Quicksand SemiBold&quot;;
-	color: rgb(0, 45, 50);
+        font: 50px &quot;Quicksand SemiBold&quot;;
+        color: rgb(0, 45, 50);
 }</string>
          </property>
          <property name="text">
@@ -559,8 +566,8 @@ QCheckBox::indicator:checked {
       </property>
       <property name="styleSheet">
        <string notr="true">QLabel {
-	font: 30px &quot;Quicksand SemiBold&quot;;
-	color: rgb(0, 45, 50);
+        font: 30px &quot;Quicksand SemiBold&quot;;
+        color: rgb(0, 45, 50);
 }</string>
       </property>
       <property name="text">
@@ -573,27 +580,33 @@ QCheckBox::indicator:checked {
       <property name="styleSheet">
        <string notr="true">QPushButton {
     padding: 11px 20px;
-	border-radius: 5px;
+        border-radius: 5px;
 }</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <property name="leftMargin">
-        <number>1</number>
+        <number>9</number>
        </property>
        <property name="topMargin">
         <number>9</number>
        </property>
        <property name="rightMargin">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="verticalSpacing">
         <number>6</number>
        </property>
        <item row="0" column="0">
         <widget class="QPushButton" name="uNewCircuitButton">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="font">
           <font>
            <family>Source Sans Pro</family>
@@ -627,15 +640,14 @@ QPushButton:pressed
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <spacer name="horizontalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="0" colspan="2">
+       <item row="1" column="0">
         <widget class="QPushButton" name="uOpenCircuitButton">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="font">
           <font>
            <family>Source Sans Pro</family>
@@ -676,8 +688,8 @@ text-align: left;
       </property>
       <property name="styleSheet">
        <string notr="true">QLabel {
-	font: 30px &quot;Quicksand SemiBold&quot;;
-	color: rgb(0, 45, 50);
+        font: 30px &quot;Quicksand SemiBold&quot;;
+        color: rgb(0, 45, 50);
 }</string>
       </property>
       <property name="text">
@@ -701,8 +713,8 @@ text-align: left;
       </property>
       <property name="styleSheet">
        <string notr="true">QLabel {
-	font: 30px &quot;Quicksand SemiBold&quot;;
-	color: rgb(0, 45, 50);
+        font: 30px &quot;Quicksand SemiBold&quot;;
+        color: rgb(0, 45, 50);
 }</string>
       </property>
       <property name="text">
@@ -758,20 +770,20 @@ text-align: left;
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
-	background: none;
-	font-size: 12pt;
-	color: rgb(0, 204, 143);
-	padding: 0;
-	margin-right: 10px;
-	text-align: left;
+        background: none;
+        font-size: 12pt;
+        color: rgb(0, 204, 143);
+        padding: 0;
+        margin-right: 10px;
+        text-align: left;
 }
 
 QPushButton:hover {
-	text-decoration: underline;
+        text-decoration: underline;
 }
 
 QPushButton:pressed {
-	color: rgb(0, 143, 100);
+        color: rgb(0, 143, 100);
 }</string>
            </property>
            <property name="text">
@@ -793,8 +805,8 @@ QPushButton:pressed {
            </property>
            <property name="styleSheet">
             <string notr="true">QLabel {
-	font-size: 12pt;
-	color: rgb(0, 45, 50);
+        font-size: 12pt;
+        color: rgb(0, 45, 50);
 }</string>
            </property>
            <property name="text">
@@ -825,20 +837,20 @@ QPushButton:pressed {
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
-	background: none;
-	font-size: 12pt;
-	color: rgb(0, 204, 143);
-	padding: 0;
-	margin-right: 10px;
-	text-align: left;
+        background: none;
+        font-size: 12pt;
+        color: rgb(0, 204, 143);
+        padding: 0;
+        margin-right: 10px;
+        text-align: left;
 }
 
 QPushButton:hover {
-	text-decoration: underline;
+        text-decoration: underline;
 }
 
 QPushButton:pressed {
-	color: rgb(0, 143, 100);
+        color: rgb(0, 143, 100);
 }</string>
            </property>
            <property name="text">
@@ -860,8 +872,8 @@ QPushButton:pressed {
            </property>
            <property name="styleSheet">
             <string notr="true">QLabel {
-	font-size: 12pt;
-	color: rgb(0, 45, 50);
+        font-size: 12pt;
+        color: rgb(0, 45, 50);
 }</string>
            </property>
            <property name="text">
@@ -889,20 +901,20 @@ QPushButton:pressed {
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
-	background: none;
-	font-size: 12pt;
-	color: rgb(0, 204, 143);
-	padding: 0;
-	margin-right: 10px;
-	text-align: left;
+        background: none;
+        font-size: 12pt;
+        color: rgb(0, 204, 143);
+        padding: 0;
+        margin-right: 10px;
+        text-align: left;
 }
 
 QPushButton:hover {
-	text-decoration: underline;
+        text-decoration: underline;
 }
 
 QPushButton:pressed {
-	color: rgb(0, 143, 100);
+        color: rgb(0, 143, 100);
 }</string>
            </property>
            <property name="text">
@@ -918,8 +930,8 @@ QPushButton:pressed {
           <widget class="QLabel" name="uRecentFileLabel_3">
            <property name="styleSheet">
             <string notr="true">QLabel {
-	font-size: 12pt;
-	color: rgb(0, 45, 50);
+        font-size: 12pt;
+        color: rgb(0, 45, 50);
 }</string>
            </property>
            <property name="text">
@@ -947,20 +959,20 @@ QPushButton:pressed {
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
-	background: none;
-	font-size: 12pt;
-	color: rgb(0, 204, 143);
-	padding: 0;
-	margin-right: 10px;
-	text-align: left;
+        background: none;
+        font-size: 12pt;
+        color: rgb(0, 204, 143);
+        padding: 0;
+        margin-right: 10px;
+        text-align: left;
 }
 
 QPushButton:hover {
-	text-decoration: underline;
+        text-decoration: underline;
 }
 
 QPushButton:pressed {
-	color: rgb(0, 143, 100);
+        color: rgb(0, 143, 100);
 }</string>
            </property>
            <property name="text">
@@ -976,8 +988,8 @@ QPushButton:pressed {
           <widget class="QLabel" name="uRecentFileLabel_4">
            <property name="styleSheet">
             <string notr="true">QLabel {
-	font-size: 12pt;
-	color: rgb(0, 45, 50);
+        font-size: 12pt;
+        color: rgb(0, 45, 50);
 }</string>
            </property>
            <property name="text">
@@ -1005,20 +1017,20 @@ QPushButton:pressed {
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
-	background: none;
-	font-size: 12pt;
-	color: rgb(0, 204, 143);
-	padding: 0;
-	margin-right: 10px;
-	text-align: left;
+        background: none;
+        font-size: 12pt;
+        color: rgb(0, 204, 143);
+        padding: 0;
+        margin-right: 10px;
+        text-align: left;
 }
 
 QPushButton:hover {
-	text-decoration: underline;
+        text-decoration: underline;
 }
 
 QPushButton:pressed {
-	color: rgb(0, 143, 100);
+        color: rgb(0, 143, 100);
 }</string>
            </property>
            <property name="text">
@@ -1034,8 +1046,8 @@ QPushButton:pressed {
           <widget class="QLabel" name="uRecentFileLabel_5">
            <property name="styleSheet">
             <string notr="true">QLabel {
-	font-size: 12pt;
-	color: rgb(0, 45, 50);
+        font-size: 12pt;
+        color: rgb(0, 45, 50);
 }</string>
            </property>
            <property name="text">
@@ -1071,9 +1083,9 @@ QPushButton:pressed {
       </property>
       <property name="styleSheet">
        <string notr="true">QLabel {
-	font-size: 11pt;
-	color: rgb(0, 45, 50);
-	margin-left: 10px;
+        font-size: 12pt;
+        color: rgb(0, 45, 50);
+        margin-left: 10px;
 }</string>
       </property>
       <property name="text">
