@@ -17,18 +17,8 @@ void LogicDecoderCell::LogicFunction()
         value += (mInputStates[i] == LogicState::HIGH) ? std::pow(2, i) : 0;
     }
 
-    if (value != mPreviousValue && mOutputStates[mPreviousValue] != LogicState::LOW)
-    {
-        mOutputStates[mPreviousValue] = LogicState::LOW;
-        mStateChanged = true;
-    }
-
-    if (mOutputStates[value] != LogicState::HIGH)
-    {
-        mOutputStates[value] = LogicState::HIGH;
-        mStateChanged = true;
-    }
-
+    mStateChanged |= AssureStateIf(value != mPreviousValue, mOutputStates[mPreviousValue], LogicState::LOW);
+    mStateChanged |= AssureState(mOutputStates[value], LogicState::HIGH);
     mPreviousValue = value;
 }
 

@@ -157,33 +157,7 @@ protected slots:
     /// \param pIndex: The combo box index
     void OnFlipFlopStyleChanged(int32_t pIndex);
 
-protected:
-    // Initialization
-
-    /// \brief Connects signals and slots of the GUI widgets and core logic
-    void ConnectGuiSignalsAndSlots(void);
-
-    /// \brief Creates all items for the toolbox tree
-    void InitializeToolboxTree(void);
-
-    /// \brief Sets icosn for all tool buttons and menu bar elements
-    void InitializeGuiIcons(void);
-
-    /// \brief Creates global shortcuts
-    void InitializeGlobalShortcuts(void);
-
-    /// \brief Creates message dialog boxes that can be triggered in various places
-    void InitializeMessageBoxes(void);
-
-    /// \brief Initializes and starts the tutorial; can be used to reset/restart the tutorial
-    void InitializeTutorial(void);
-
-    // Item configuration
-
-    /// \brief Shows the item configurator with widgets according to the ConfiguratorMode
-    /// \param pMode: The mode for the item configurator
-    void ShowItemConfigurator(ConfiguratorMode pMode);
-
+protected slots:
     /// \brief Sets the current gate input count to the given value if SW is in ControlMode::ADD and either AND, OR or XOR is selected
     /// \param pCount: The input count value to set to
     void SetGateInputCountIfAllowed(uint8_t pCount);
@@ -211,6 +185,33 @@ protected:
     /// \brief Sets the current en-/decoder input count to the given value if SW is in ControlMode::ADD and COUNTER is selected
     /// \param pCount: The counter bit width value to set to
     void SetCounterBitWidthIfAllowed(uint8_t pBitWidth);
+
+protected:
+    // Initialization
+
+    /// \brief Connects signals and slots of the GUI widgets and core logic
+    void ConnectGuiSignalsAndSlots(void);
+
+    /// \brief Creates all items for the toolbox tree
+    void InitializeToolboxTree(void);
+
+    /// \brief Sets icosn for all tool buttons and menu bar elements
+    void InitializeGuiIcons(void);
+
+    /// \brief Creates global shortcuts
+    void InitializeGlobalShortcuts(void);
+
+    /// \brief Creates message dialog boxes that can be triggered in various places
+    void InitializeMessageBoxes(void);
+
+    /// \brief Initializes and starts the tutorial; can be used to reset/restart the tutorial
+    void InitializeTutorial(void);
+
+    // Item configuration
+
+    /// \brief Shows the item configurator with widgets according to the ConfiguratorMode
+    /// \param pMode: The mode for the item configurator
+    void ShowItemConfigurator(ConfiguratorMode pMode);
 
     // Simulation
 
@@ -252,15 +253,15 @@ protected:
 
     /// \brief Extends the closing event to display a message box when there are unsaved changes
     /// \param pEvent: Pointer to the close event
-    void closeEvent(QCloseEvent *pEvent);
+    void closeEvent(QCloseEvent *pEvent) override;
 
     /// \brief Extends the key press event to fade out the GUI overlay after a specified interval
     /// \param pEvent: Pointer to the key event
-    void keyPressEvent(QKeyEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
     /// \brief Extends the key release event to fade in the GUI overlay after a specified interval
     /// \param pEvent: Pointer to the key event
-    void keyReleaseEvent(QKeyEvent *pEvent);
+    void keyReleaseEvent(QKeyEvent *pEvent) override;
 
     // Animation
 

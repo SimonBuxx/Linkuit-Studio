@@ -128,6 +128,28 @@ void LogicBaseCell::InputReady(uint32_t pInput, LogicState pState)
     }
 }
 
+bool LogicBaseCell::AssureState(LogicState &pSubject, const LogicState &pTargetState)
+{
+    if (pSubject != pTargetState)
+    {
+        pSubject = pTargetState;
+        return true;
+    }
+
+    return false;
+}
+
+bool LogicBaseCell::AssureStateIf(bool pCondition, LogicState &pSubject, const LogicState &pTargetState)
+{
+    if (pCondition && pSubject != pTargetState)
+    {
+        pSubject = pTargetState;
+        return true;
+    }
+
+    return false;
+}
+
 void LogicBaseCell::AdvanceUpdateTime()
 {
     switch (mNextUpdateTime)

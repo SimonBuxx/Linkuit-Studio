@@ -16,11 +16,7 @@ void LogicMultiplexerCell::LogicFunction()
         input += (mInputStates[i] == LogicState::HIGH) ? std::pow(2, i) : 0;
     }
 
-    if (mOutputStates[0] != mInputStates[input + mDigitCount])
-    {
-        mOutputStates[0] = mInputStates[input + mDigitCount];
-        mStateChanged = true;
-    }
+    mStateChanged |= AssureState(mOutputStates[0], mInputStates[input + mDigitCount]);
 }
 
 LogicState LogicMultiplexerCell::GetOutputState(uint32_t pOutput) const

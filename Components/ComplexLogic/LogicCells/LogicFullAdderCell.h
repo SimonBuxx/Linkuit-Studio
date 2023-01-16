@@ -32,14 +32,6 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-#warning [ENHANCEMENT] assess if this is useful for other logic cells
-    /// \brief Sets the state pObj to the state pTargetState if it isn't in that state already
-    /// Marks the state as changed if pSubject wasn't already in pTargetState
-    /// \param pSubject: Reference to the state to set
-    /// \param pTargetState: The target state
-    void AssureState(LogicState &pSubject, LogicState pTargetState);
-
-protected:
     std::vector<LogicState> mOutputStates;
 
     bool mStateChanged;

@@ -12,34 +12,25 @@ void LogicFullAdderCell::LogicFunction()
             || (mInputStates[0] == LogicState::LOW && mInputStates[1] == LogicState::HIGH && mInputStates[2] == LogicState::LOW)
             || (mInputStates[0] == LogicState::LOW && mInputStates[1] == LogicState::LOW && mInputStates[2] == LogicState::HIGH))
     {
-        AssureState(mOutputStates[0], LogicState::HIGH);
-        AssureState(mOutputStates[1], LogicState::LOW);
+        mStateChanged |= AssureState(mOutputStates[0], LogicState::HIGH);
+        mStateChanged |= AssureState(mOutputStates[1], LogicState::LOW);
     }
     else if ((mInputStates[0] == LogicState::HIGH && mInputStates[1] == LogicState::HIGH && mInputStates[2] == LogicState::LOW) // Two inputs high
              || (mInputStates[0] == LogicState::HIGH && mInputStates[1] == LogicState::LOW && mInputStates[2] == LogicState::HIGH)
              || (mInputStates[0] == LogicState::LOW && mInputStates[1] == LogicState::HIGH && mInputStates[2] == LogicState::HIGH))
     {
-        AssureState(mOutputStates[0], LogicState::LOW);
-        AssureState(mOutputStates[1], LogicState::HIGH);
+        mStateChanged |= AssureState(mOutputStates[0], LogicState::LOW);
+        mStateChanged |= AssureState(mOutputStates[1], LogicState::HIGH);
     }
     else if (mInputStates[0] == LogicState::HIGH && mInputStates[1] == LogicState::HIGH && mInputStates[2] == LogicState::HIGH) // All inputs high
     {
-        AssureState(mOutputStates[0], LogicState::HIGH);
-        AssureState(mOutputStates[1], LogicState::HIGH);
+        mStateChanged |= AssureState(mOutputStates[0], LogicState::HIGH);
+        mStateChanged |= AssureState(mOutputStates[1], LogicState::HIGH);
     }
     else // No input high
     {
-        AssureState(mOutputStates[0], LogicState::LOW);
-        AssureState(mOutputStates[1], LogicState::LOW);
-    }
-}
-
-void LogicFullAdderCell::AssureState(LogicState &pSubject, LogicState pTargetState)
-{
-    if (pSubject != pTargetState)
-    {
-        pSubject = pTargetState;
-        mStateChanged = true;
+        mStateChanged |= AssureState(mOutputStates[0], LogicState::LOW);
+        mStateChanged |= AssureState(mOutputStates[1], LogicState::LOW);
     }
 }
 

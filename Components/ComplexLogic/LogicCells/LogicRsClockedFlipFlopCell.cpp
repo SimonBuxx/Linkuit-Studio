@@ -11,30 +11,6 @@ void LogicRsClockedFlipFlopCell::LogicFunction()
 {
     if (mPrevInputStates[1] == LogicState::LOW && mInputStates[1] == LogicState::HIGH) // rising edge
     {
-        /*if (mPrevInputStates[0] == LogicState::HIGH && mPrevInputStates[2] == LogicState::HIGH) // both => toggle
-        {
-            if (mOutputStates[0] == LogicState::LOW)
-            {
-                mOutputStates[0] = LogicState::HIGH;
-            }
-            else
-            {
-                mOutputStates[0] = LogicState::LOW;
-            }
-        }
-        else if (mPrevInputStates[0] == LogicState::HIGH && mPrevInputStates[2] == LogicState::LOW) // J => pull up
-        {
-            mOutputStates[0] = LogicState::HIGH;
-        }
-        else if (mPrevInputStates[0] == LogicState::LOW && mPrevInputStates[2] == LogicState::HIGH) // K => pull down
-        {
-            mOutputStates[0] = LogicState::LOW;
-        }
-
-        mOutputStates[1] = ((mOutputStates[0] == LogicState::HIGH) ? LogicState::LOW : LogicState::HIGH);
-
-        mStateChanged = true;*/
-
         if (mInputStates[0] == LogicState::HIGH) // S high
         {
             if (mOutputStates[0] != LogicState::HIGH || mOutputStates[1] != LogicState::LOW)

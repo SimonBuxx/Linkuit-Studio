@@ -120,6 +120,22 @@ protected:
     /// \return The output logic state
     LogicState ApplyInversion(LogicState pState, uint32_t pOutput) const;
 
+    /// \brief Sets the state pSubject to the state pTargetState if it isn't in that state already
+    /// Returns true if pSubject wasn't already in pTargetState
+    /// \param pSubject: Reference to the state to set
+    /// \param pTargetState: The target state
+    /// \return True, if the state has been changed
+    bool AssureState(LogicState &pSubject, const LogicState &pTargetState);
+
+    /// \brief Sets the state pSubject to the state pTargetState if it isn't in that state already
+    /// and if the given condition is true
+    /// Returns true if pSubject wasn't already in pTargetState
+    /// \param pCondition: The condition to be true for the state to be assured
+    /// \param pSubject: Reference to the state to set
+    /// \param pTargetState: The target state
+    /// \return True, if the state has been changed
+    bool AssureStateIf(bool pCondition, LogicState &pSubject, const LogicState &pTargetState);
+
 public slots:
     /// \brief Advances the simulation of this cell by one logic tick
     virtual void OnSimulationAdvance(void) {};

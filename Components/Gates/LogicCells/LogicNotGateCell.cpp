@@ -11,11 +11,7 @@ LogicNotGateCell::LogicNotGateCell():
 
 void LogicNotGateCell::LogicFunction()
 {
-    if (mCurrentState != mInputStates[0])
-    {
-         mCurrentState = mInputStates[0];
-         mStateChanged = true;
-    }
+    mStateChanged |= AssureState(mCurrentState, mInputStates[0]);
 }
 
 LogicState LogicNotGateCell::GetOutputState(uint32_t pOutput) const

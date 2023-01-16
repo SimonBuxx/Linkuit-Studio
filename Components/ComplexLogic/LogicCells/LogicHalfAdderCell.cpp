@@ -11,42 +11,18 @@ void LogicHalfAdderCell::LogicFunction()
     if ((mInputStates[0] == LogicState::HIGH && mInputStates[1] == LogicState::LOW) // One input high
         || (mInputStates[0] == LogicState::LOW && mInputStates[1] == LogicState::HIGH))
     {
-        if (mOutputStates[0] != LogicState::HIGH)
-        {
-            mOutputStates[0] = LogicState::HIGH;
-            mStateChanged = true;
-        }
-        if (mOutputStates[1] != LogicState::LOW)
-        {
-            mOutputStates[1] = LogicState::LOW;
-            mStateChanged = true;
-        }
+        mStateChanged |= AssureState(mOutputStates[0], LogicState::HIGH);
+        mStateChanged |= AssureState(mOutputStates[1], LogicState::LOW);
     }
     else if (mInputStates[0] == LogicState::HIGH) // Both inputs high
     {
-        if (mOutputStates[0] != LogicState::LOW)
-        {
-            mOutputStates[0] = LogicState::LOW;
-            mStateChanged = true;
-        }
-        if (mOutputStates[1] != LogicState::HIGH)
-        {
-            mOutputStates[1] = LogicState::HIGH;
-            mStateChanged = true;
-        }
+        mStateChanged |= AssureState(mOutputStates[0], LogicState::LOW);
+        mStateChanged |= AssureState(mOutputStates[1], LogicState::HIGH);
     }
     else // No input high
     {
-        if (mOutputStates[0] != LogicState::LOW)
-        {
-            mOutputStates[0] = LogicState::LOW;
-            mStateChanged = true;
-        }
-        if (mOutputStates[1] != LogicState::LOW)
-        {
-            mOutputStates[1] = LogicState::LOW;
-            mStateChanged = true;
-        }
+        mStateChanged |= AssureState(mOutputStates[0], LogicState::LOW);
+        mStateChanged |= AssureState(mOutputStates[1], LogicState::LOW);
     }
 }
 

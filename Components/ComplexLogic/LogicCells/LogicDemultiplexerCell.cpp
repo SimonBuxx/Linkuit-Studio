@@ -17,18 +17,8 @@ void LogicDemultiplexerCell::LogicFunction()
         output += (mInputStates[i] == LogicState::HIGH) ? std::pow(2, i) : 0;
     }
 
-    if (output != mPreviousOutput && mOutputStates[mPreviousOutput] != LogicState::LOW)
-    {
-        mOutputStates[mPreviousOutput] = LogicState::LOW;
-        mStateChanged = true;
-    }
-
-    if (mOutputStates[output] != mInputStates[mDigitCount])
-    {
-        mOutputStates[output] = mInputStates[mDigitCount];
-        mStateChanged = true;
-    }
-
+    mStateChanged |= AssureStateIf(output != mPreviousOutput, mOutputStates[mPreviousOutput], LogicState::LOW);
+    mStateChanged |= AssureState(mOutputStates[output], mInputStates[mDigitCount]);
     mPreviousOutput = output;
 }
 

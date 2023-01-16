@@ -9,11 +9,7 @@ LogicBufferGateCell::LogicBufferGateCell():
 
 void LogicBufferGateCell::LogicFunction()
 {
-    if (mCurrentState != mInputStates[0])
-    {
-         mCurrentState = mInputStates[0];
-         mStateChanged = true;
-    }
+    mStateChanged |= AssureState(mCurrentState, mInputStates[0]);
 }
 
 LogicState LogicBufferGateCell::GetOutputState(uint32_t pOutput) const

@@ -22,16 +22,8 @@ void LogicEncoderCell::LogicFunction()
 
     if (value != mPreviousValue)
     {
-        if (value >= 0 && mOutputStates[mOutputCount - 1] == LogicState::LOW)
-        {
-            mOutputStates[mOutputCount - 1] = LogicState::HIGH;
-            mStateChanged = true;
-        }
-        else if (value < 0 && mOutputStates[mOutputCount - 1] == LogicState::HIGH)
-        {
-            mOutputStates[mOutputCount - 1] = LogicState::LOW;
-            mStateChanged = true;
-        }
+        mStateChanged |= AssureStateIf(value >= 0, mOutputStates[mOutputCount - 1], LogicState::HIGH);
+        mStateChanged |= AssureStateIf(value < 0, mOutputStates[mOutputCount - 1], LogicState::LOW);
 
         uint8_t remainder = 0;
         uint8_t val = (value >= 0) ? value : 0;
@@ -40,11 +32,7 @@ void LogicEncoderCell::LogicFunction()
             remainder = val % 2;
             val /= 2;
             auto newState = (remainder == 1) ? LogicState::HIGH : LogicState::LOW;
-            if (mOutputStates[i] != newState)
-            {
-                mOutputStates[i] = newState;
-                mStateChanged = true;
-            }
+            mStateChanged |= AssureState(mOutputStates[i], newState);
         }
     }
 
