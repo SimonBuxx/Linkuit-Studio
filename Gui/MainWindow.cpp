@@ -192,12 +192,12 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uZoomSlider, &QSlider::valueChanged, &mView, &View::SetZoom);
 
-    QObject::connect(mUi->uEditButton, &QAbstractButton::clicked, [&]()
+    QObject::connect(mUi->uEditButton, &QAbstractButton::clicked, this, [&]()
     {
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
     });
 
-    QObject::connect(mUi->uWiringButton, &QAbstractButton::clicked, [&]()
+    QObject::connect(mUi->uWiringButton, &QAbstractButton::clicked, this, [&]()
     {
         mCoreLogic.EnterControlMode(ControlMode::WIRE);
     });
@@ -209,12 +209,12 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uItemLeftButton, &QPushButton::toggled, this, &MainWindow::OnItemLeftButtonToggled);
     QObject::connect(mUi->uItemUpButton, &QPushButton::toggled, this, &MainWindow::OnItemUpButtonToggled);
 
-    QObject::connect(mUi->uGateInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnGateInputCountSliderValueChanged);
-    QObject::connect(mUi->uEncoderDecoderInputCountSlider, &QSlider::valueChanged, this, &MainWindow::OnEncoderDecoderInputCountSliderValueChanged);
-    QObject::connect(mUi->uMultiplexerBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnMultiplexerBitWidthSliderValueChanged);
-    QObject::connect(mUi->uShiftRegisterWidthBox, &QComboBox::currentIndexChanged, this, &MainWindow::OnShiftRegisterWidthBoxIndexChanged);
+    QObject::connect(mUi->uGateInputCountSlider, &QSlider::valueChanged, this, &MainWindow::SetGateInputCountIfAllowed);
+    QObject::connect(mUi->uEncoderDecoderInputCountSlider, &QSlider::valueChanged, this, &MainWindow::SetEncoderDecoderInputCountIfAllowed);
+    QObject::connect(mUi->uMultiplexerBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::SetMultiplexerBitWidthIfAllowed);
+    QObject::connect(mUi->uShiftRegisterWidthBox, &QComboBox::currentIndexChanged, this, &MainWindow::SetShiftRegisterBitWidthIfAllowed);
     QObject::connect(mUi->uConstantHighButton, &QPushButton::toggled, this, &MainWindow::OnConstantHighButtonToggled);
-    QObject::connect(mUi->uCounterBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::OnCounterBitWidthSliderValueChanged);
+    QObject::connect(mUi->uCounterBitWidthSlider, &QSlider::valueChanged, this, &MainWindow::SetCounterBitWidthIfAllowed);
 
     QObject::connect(mUi->uFlipFlopTypeBox, &QComboBox::currentIndexChanged, this, &MainWindow::OnFlipFlopStyleChanged);
 
@@ -449,7 +449,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     {
         ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
         SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
-        mWelcomeDialog.show();
+        ShowWelcomeDialog(std::chrono::milliseconds(0));
     });
 
     QObject::connect(mUi->uActionReportBugs, &QAction::triggered, this, [&]()
@@ -525,7 +525,7 @@ void MainWindow::OnCircuitFileHasNewerCompatibleVersion(const QString& pVersion)
     mNewerVersionCompatibleBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
     mNewerVersionCompatibleBox.setText(tr("This file has been created with a newer version of Linkuit Studio."));
     mNewerVersionCompatibleBox.setInformativeText(QString("It seems like this file was last saved using version %0. "
-        "It is marked compatible with the current version %1, but please consider updating Linkuit Studio.").arg(pVersion).arg(QString(FULL_VERSION)));
+        "It is marked compatible with the current version %1, but please consider updating Linkuit Studio.").arg(pVersion, QString(FULL_VERSION)));
     mNewerVersionCompatibleBox.setStandardButtons(QMessageBox::Ok);
     mNewerVersionCompatibleBox.setDefaultButton(QMessageBox::Ok);
     mNewerVersionCompatibleBox.exec();
@@ -538,7 +538,7 @@ void MainWindow::OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersio
     mNewerVersionIncompatibleBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
     mNewerVersionIncompatibleBox.setText(tr("This file has been created with a newer version of Linkuit Studio."));
     mNewerVersionIncompatibleBox.setInformativeText(QString("This file is compatible with version %0 or newer. "
-        "It is therefore incompatible with the current version %1. Please update Linkuit Studio to open the file.").arg(pVersion).arg(QString(FULL_VERSION)));
+        "It is therefore incompatible with the current version %1. Please update Linkuit Studio to open the file.").arg(pVersion, QString(FULL_VERSION)));
     mNewerVersionIncompatibleBox.setStandardButtons(QMessageBox::Ok);
     mNewerVersionIncompatibleBox.setDefaultButton(QMessageBox::Ok);
     mNewerVersionIncompatibleBox.exec();
@@ -960,34 +960,6 @@ void MainWindow::OnItemUpButtonToggled(bool pChecked)
     {
         SetComponentDirectionIfInAddMode(Direction::UP);
     }
-}
-
-void MainWindow::OnGateInputCountSliderValueChanged(int32_t pValue)
-{
-    SetGateInputCountIfAllowed(pValue);
-}
-
-void MainWindow::OnEncoderDecoderInputCountSliderValueChanged(int32_t pValue)
-{
-    SetEncoderDecoderInputCountIfAllowed(pValue);
-}
-
-void MainWindow::OnMultiplexerBitWidthSliderValueChanged(int32_t pValue)
-{
-    SetMultiplexerBitWidthIfAllowed(pValue);
-}
-
-void MainWindow::OnShiftRegisterWidthBoxIndexChanged(int32_t pIndex)
-{
-    static const std::vector<uint8_t> values{2, 4, 8, 16, 32};
-    Q_ASSERT(pIndex < static_cast<int32_t>(values.size()));
-
-    SetShiftRegisterBitWidthIfAllowed(values[pIndex]);
-}
-
-void MainWindow::OnCounterBitWidthSliderValueChanged(int32_t pValue)
-{
-    SetCounterBitWidthIfAllowed(pValue);
 }
 
 void MainWindow::OnConstantHighButtonToggled(bool pChecked)
@@ -1641,7 +1613,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(1);
        SetEncoderDecoderInputCountIfAllowed(1);
        SetMultiplexerBitWidthIfAllowed(1);
-       SetShiftRegisterBitWidthIfAllowed(1);
+       SetShiftRegisterBitWidthIfAllowed(0);
        SetCounterBitWidthIfAllowed(1);
     });
     QObject::connect(mTwoGateInputsShortcut, &QShortcut::activated, this, [&]()
@@ -1649,7 +1621,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(2);
        SetEncoderDecoderInputCountIfAllowed(2);
        SetMultiplexerBitWidthIfAllowed(2);
-       SetShiftRegisterBitWidthIfAllowed(2);
+       SetShiftRegisterBitWidthIfAllowed(1);
        SetCounterBitWidthIfAllowed(2);
     });
     QObject::connect(mThreeGateInputsShortcut, &QShortcut::activated, this, [&]()
@@ -1657,7 +1629,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(3);
        SetEncoderDecoderInputCountIfAllowed(3);
        SetMultiplexerBitWidthIfAllowed(3);
-       SetShiftRegisterBitWidthIfAllowed(3);
+       SetShiftRegisterBitWidthIfAllowed(2);
        SetCounterBitWidthIfAllowed(3);
     });
     QObject::connect(mFourGateInputsShortcut, &QShortcut::activated, this, [&]()
@@ -1665,7 +1637,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(4);
        SetEncoderDecoderInputCountIfAllowed(4);
        SetMultiplexerBitWidthIfAllowed(4);
-       SetShiftRegisterBitWidthIfAllowed(4);
+       SetShiftRegisterBitWidthIfAllowed(3);
        SetCounterBitWidthIfAllowed(4);
     });
     QObject::connect(mFiveGateInputsShortcut, &QShortcut::activated, this, [&]()
@@ -1673,7 +1645,7 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(5);
        SetEncoderDecoderInputCountIfAllowed(5);
        SetMultiplexerBitWidthIfAllowed(5);
-       SetShiftRegisterBitWidthIfAllowed(5);
+       SetShiftRegisterBitWidthIfAllowed(4);
        SetCounterBitWidthIfAllowed(5);
     });
     QObject::connect(mSixGateInputsShortcut, &QShortcut::activated, this, [&]()
@@ -1681,7 +1653,6 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(6);
        SetEncoderDecoderInputCountIfAllowed(6);
        SetMultiplexerBitWidthIfAllowed(6);
-       SetShiftRegisterBitWidthIfAllowed(6);
        SetCounterBitWidthIfAllowed(6);
     });
     QObject::connect(mSevenGateInputsShortcut, &QShortcut::activated, this, [&]()
@@ -1689,7 +1660,6 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(7);
        SetEncoderDecoderInputCountIfAllowed(7);
        SetMultiplexerBitWidthIfAllowed(7);
-       SetShiftRegisterBitWidthIfAllowed(7);
        SetCounterBitWidthIfAllowed(7);
     });
     QObject::connect(mEightGateInputsShortcut, &QShortcut::activated, this, [&]()
@@ -1697,7 +1667,6 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(8);
        SetEncoderDecoderInputCountIfAllowed(8);
        SetMultiplexerBitWidthIfAllowed(8);
-       SetShiftRegisterBitWidthIfAllowed(8);
        SetCounterBitWidthIfAllowed(8);
     });
     QObject::connect(mNineGateInputsShortcut, &QShortcut::activated, this, [&]()
@@ -1705,7 +1674,6 @@ void MainWindow::InitializeGlobalShortcuts()
        SetGateInputCountIfAllowed(9);
        SetEncoderDecoderInputCountIfAllowed(9);
        SetMultiplexerBitWidthIfAllowed(9);
-       SetShiftRegisterBitWidthIfAllowed(9);
        SetCounterBitWidthIfAllowed(9);
     });
 
@@ -1777,14 +1745,16 @@ void MainWindow::SetMultiplexerBitWidthIfAllowed(uint8_t pBitWidth)
     }
 }
 
-void MainWindow::SetShiftRegisterBitWidthIfAllowed(uint8_t pBitWidth)
+void MainWindow::SetShiftRegisterBitWidthIfAllowed(uint8_t pBitWidthIndex)
 {
-    if (pBitWidth > 0 && pBitWidth <= components::shift_register::MAX_BIT_WIDTH)
+    static const std::vector<uint8_t> values{2, 4, 8, 16, 32};
+
+    if (pBitWidthIndex < values.size())
     {
         if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() == ComponentType::SHIFTREGISTER)
         {
-            mCoreLogic.SetShiftRegisterBitWidth(pBitWidth);
-            mUi->uShiftRegisterWidthBox->setCurrentText(tr("%0 Bits").arg(pBitWidth));
+            mCoreLogic.SetShiftRegisterBitWidth(values[pBitWidthIndex]);
+            mUi->uShiftRegisterWidthBox->setCurrentText(tr("%0 Bits").arg(values[pBitWidthIndex]));
         }
     }
 }

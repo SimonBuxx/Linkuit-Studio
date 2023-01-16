@@ -149,27 +149,6 @@ protected slots:
     /// \param pChecked: True, if the button is checked
     void OnItemUpButtonToggled(bool pChecked);
 
-#warning remove and directly call protected functions as slots
-    /// \brief Sets the gate input count to the given value, if allowed
-    /// \param pValue: The new gate input count
-    void OnGateInputCountSliderValueChanged(int32_t pValue);
-
-    /// \brief Sets the en-/decoder input count to the given value, if allowed
-    /// \param pValue: The new en-/decoder input count
-    void OnEncoderDecoderInputCountSliderValueChanged(int32_t pValue);
-
-    /// \brief Sets the (de-)multiplexer bit width to the given value, if allowed
-    /// \param pValue: The new (de-)multiplexer bit width
-    void OnMultiplexerBitWidthSliderValueChanged(int32_t pValue);
-
-    /// \brief Sets the shift register bit width to the value of the new index, if allowed
-    /// \param pIndex: The new shift register box index
-    void OnShiftRegisterWidthBoxIndexChanged(int32_t pIndex);
-
-    /// \brief Sets the counter bit width to the given value, if allowed
-    /// \param pValue: The new counter bit width
-    void OnCounterBitWidthSliderValueChanged(int32_t pValue);
-
     /// \brief Sets the constant state for new constant inputs to HIGH if the button is checked
     /// \param pChecked: True, if the button is checked
     void OnConstantHighButtonToggled(bool pChecked);
