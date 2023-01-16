@@ -23,7 +23,8 @@ public:
 
     /// \brief Load the circuit in the given file
     /// \param pFileInfo: The file to load
-    void LoadJson(const QFileInfo& pFileInfo);
+    /// \param pIsFromRecents: Whether the file to open is from the recent files list
+    void LoadJson(const QFileInfo& pFileInfo, bool pIsFromRecents = false);
 
     /// \brief Saves the circuit to current file
     /// \param pJson: The JSON to save into the file
@@ -59,7 +60,8 @@ signals:
 
     /// \brief Emitted when a circuit file could not be opened
     /// \param pFileInfo: Info about the file
-    void LoadCircuitFileFailedSignal(const QFileInfo& pFileInfo);
+    /// \param pIsFromRecents: Whether the file is from the recent files list
+    void LoadCircuitFileFailedSignal(const QFileInfo& pFileInfo, bool pIsFromRecents);
 
     /// \brief Emitted when a circuit file has been saved successfully
     /// \param pFileInfo: Info about the saved file

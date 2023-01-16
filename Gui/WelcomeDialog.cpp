@@ -88,6 +88,15 @@ void WelcomeDialog::SetRecentFilePaths(const std::vector<QFileInfo>& pRecentFile
 {
     mRecentFilePaths = pRecentFilePaths;
 
+    if (mRecentFilePaths.empty())
+    {
+        mUi->uNoRecentFilesLabel->show();
+    }
+    else
+    {
+        mUi->uNoRecentFilesLabel->hide();
+    }
+
     for (uint8_t i = 0; i < 5; i++)
     {
         auto pathLabel = mUi->uRecentContainer->findChild<QLabel*>(QString("uRecentFileLabel_%0").arg(i + 1));

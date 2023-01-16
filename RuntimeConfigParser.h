@@ -43,6 +43,10 @@ public:
     /// \param pFilePath: The file info to add
     void AddRecentFilePath(const QFileInfo& pFilePath);
 
+    /// \brief Tries to remove a file from the list of recent files
+    /// \param pFilePath: The file info to remove
+    void RemoveRecentFilePath(const QFileInfo &pFilePath);
+
     /// \brief Getter for the last file path
     /// \return The path of the last opened or saved file
     const QString& GetLastFilePath(void) const;

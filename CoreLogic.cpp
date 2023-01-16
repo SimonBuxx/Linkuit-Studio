@@ -60,7 +60,7 @@ CoreLogic::CoreLogic(View &pView):
     }
 }
 
-const RuntimeConfigParser& CoreLogic::GetRuntimeConfigParser() const
+RuntimeConfigParser& CoreLogic::GetRuntimeConfigParser()
 {
     return mRuntimeConfigParser;
 }

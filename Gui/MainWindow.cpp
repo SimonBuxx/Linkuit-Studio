@@ -75,6 +75,14 @@ void MainWindow::InitializeMessageBoxes()
     mErrorOpenFileBox.setStandardButtons(QMessageBox::Ok);
     mErrorOpenFileBox.setDefaultButton(QMessageBox::Ok);
 
+    mErrorOpenRecentFileBox.setIcon(QMessageBox::Icon::Critical);
+    mErrorOpenRecentFileBox.setWindowTitle("Linkuit Studio");
+    mErrorOpenRecentFileBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
+    mErrorOpenRecentFileBox.setText(tr("The file could not be opened."));
+    mErrorOpenRecentFileBox.setInformativeText("Remove it from the list?");
+    mErrorOpenRecentFileBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    mErrorOpenRecentFileBox.setDefaultButton(QMessageBox::Yes);
+
     mErrorSaveFileBox.setIcon(QMessageBox::Icon::Critical);
     mErrorSaveFileBox.setWindowTitle("Linkuit Studio");
     mErrorSaveFileBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
@@ -536,10 +544,23 @@ void MainWindow::OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersio
     mNewerVersionIncompatibleBox.exec();
 }
 
-void MainWindow::OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo)
+void MainWindow::OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo, bool pIsFromRecents)
 {
-    mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(pFileInfo.fileName()));
-    mErrorOpenFileBox.exec();
+    if (pIsFromRecents)
+    {
+        mErrorOpenRecentFileBox.setText(tr("The file %0 could not be opened.").arg(pFileInfo.fileName()));
+        if (mErrorOpenRecentFileBox.exec() == QMessageBox::Yes)
+        {
+            mCoreLogic.GetRuntimeConfigParser().RemoveRecentFilePath(pFileInfo);
+            ConfigureWelcomeDialog(mCoreLogic.GetRuntimeConfigParser().IsWelcomeDialogEnabledOnStartup(), mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+            SetRecentFileMenuActions(mCoreLogic.GetRuntimeConfigParser().GetRecentFilePaths());
+        }
+    }
+    else
+    {
+        mErrorOpenFileBox.setText(tr("The file %0 could not be opened.").arg(pFileInfo.fileName()));
+        mErrorOpenFileBox.exec();
+    }
 }
 
 void MainWindow::OnCircuitFileSavedSuccessfully(const QFileInfo& pFileInfo)
@@ -558,7 +579,7 @@ void MainWindow::OpenRecentFile(const QFileInfo& pFileInfo)
 {
     if (!IsSaveChangesIfModifiedCanceled())
     {
-        mCoreLogic.GetCircuitFileParser().LoadJson(pFileInfo);
+        mCoreLogic.GetCircuitFileParser().LoadJson(pFileInfo, true);
     }
 }
 

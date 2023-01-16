@@ -31,7 +31,7 @@ public:
 
     /// \brief Getter for the runtime config parser object
     /// \return Reference to the runtime config parser
-    const RuntimeConfigParser& GetRuntimeConfigParser(void) const;
+    RuntimeConfigParser& GetRuntimeConfigParser(void);
 
     /// \brief Getter for the circuit file parser object
     /// \return Reference to the circuit file parser

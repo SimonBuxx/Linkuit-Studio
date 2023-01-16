@@ -112,6 +112,17 @@ void RuntimeConfigParser::AddRecentFilePath(const QFileInfo &pFilePath)
     SaveRuntimeConfig(GetRuntimeConfigAbsolutePath());
 }
 
+void RuntimeConfigParser::RemoveRecentFilePath(const QFileInfo &pFilePath)
+{
+    auto pos = std::find(mRecentFiles.begin(), mRecentFiles.end(), pFilePath);
+    if (pos != mRecentFiles.end())
+    {
+        mRecentFiles.erase(pos);
+    }
+
+    SaveRuntimeConfig(GetRuntimeConfigAbsolutePath());
+}
+
 const QString& RuntimeConfigParser::GetLastFilePath() const
 {
     return mLastFilePath;

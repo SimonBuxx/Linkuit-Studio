@@ -6,13 +6,13 @@ CircuitFileParser::CircuitFileParser(RuntimeConfigParser& pRuntimeConfigParser):
     mRuntimeConfigParser(pRuntimeConfigParser)
 {}
 
-void CircuitFileParser::LoadJson(const QFileInfo& pFileInfo)
+void CircuitFileParser::LoadJson(const QFileInfo& pFileInfo, bool pIsFromRecents)
 {
     QFile loadFile(pFileInfo.absoluteFilePath());
 
     if (!loadFile.open(QIODevice::ReadOnly))
     {
-        emit LoadCircuitFileFailedSignal(pFileInfo);
+        emit LoadCircuitFileFailedSignal(pFileInfo, pIsFromRecents);
         return;
     }
 
@@ -25,7 +25,7 @@ void CircuitFileParser::LoadJson(const QFileInfo& pFileInfo)
         if (rawData.isEmpty())
         {
             // if the data could not be decompressed
-            emit LoadCircuitFileFailedSignal(pFileInfo);
+            emit LoadCircuitFileFailedSignal(pFileInfo, pIsFromRecents);
             return;
         }
 

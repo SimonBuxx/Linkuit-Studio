@@ -75,7 +75,8 @@ protected slots:
 
     /// \brief Shows an error dialog box when opening the circuit file failed
     /// \param pFileInfo: Info about the circuit file that could not be opened
-    void OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo);
+    /// \param pIsFromRecents: Whether the file is from the recent files list
+    void OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo, bool pIsFromRecents);
 
     /// \brief Configures the GUI and inserts the newly saved file into the recent files
     /// \param pFileInfo: Info about the newly saved circuit file
@@ -337,6 +338,7 @@ protected:
 
     QMessageBox mSaveChangesBox;
     QMessageBox mErrorOpenFileBox;
+    QMessageBox mErrorOpenRecentFileBox;
     QMessageBox mErrorSaveFileBox;
     QMessageBox mNewerVersionCompatibleBox;
     QMessageBox mNewerVersionIncompatibleBox;
