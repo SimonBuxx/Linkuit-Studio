@@ -2,8 +2,8 @@
 
 Linkuit Studio is an open-source logic circuit simulator that is designed to be intuitive and easy to use. Its aim is to provide a platform for learning and experimentation with logic circuits.
 
-![Traffic Light Controller](https://github.com/SimonBuxx/Linkuit-Studio/blob/master/images/traffic_lights.png?raw=true)
-*A simple traffic light controller circuit, consisting of a counter and a diode matrix*
+![Application Screenshot](https://user-images.githubusercontent.com/6598913/212575956-8ef6735c-0650-4ace-9043-637acf7f4128.png)
+*A screenshot of the application in editing mode*
 
 ## FAQ
 
