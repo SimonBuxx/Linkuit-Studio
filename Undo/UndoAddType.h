@@ -20,7 +20,7 @@ public:
     UndoAddType(std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents);
 
     /// \brief Destructor for the UndoAddType
-    ~UndoAddType(void);
+    ~UndoAddType(void) override;
 
     /// \brief Gets the type of this undo action
     /// \return An undo::Type object

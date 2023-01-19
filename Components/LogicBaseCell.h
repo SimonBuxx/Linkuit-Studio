@@ -26,7 +26,7 @@ public:
     LogicBaseCell(uint32_t pInputs, uint32_t pOutputs);
 
     /// \brief Default destructor for LogicBaseCell
-    virtual ~LogicBaseCell() = default;
+    ~LogicBaseCell() override = default;
 
     /// \brief The logic function that determines the output states based on the inputs
     virtual void LogicFunction(void) {};

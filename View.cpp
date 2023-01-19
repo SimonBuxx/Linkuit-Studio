@@ -485,7 +485,7 @@ void View::FadeInProcessingOverlay()
         anim->setEndValue(1.0f);
         anim->setEasingCurve(QEasingCurve::OutQuad);
 
-        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
+        QObject::connect(anim, &QPropertyAnimation::finished, this, [&]()
         {
             delete mProcessingOverlay->graphicsEffect();
         });
@@ -514,7 +514,7 @@ void View::FadeOutProcessingOverlay()
         anim->setEndValue(0.0f);
         anim->setEasingCurve(QEasingCurve::OutQuad);
 
-        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
+        QObject::connect(anim, &QPropertyAnimation::finished, this, [&]()
         {
             delete mProcessingOverlay->graphicsEffect();
             mProcessingOverlay->hide();

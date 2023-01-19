@@ -15,7 +15,7 @@ public:
     UndoDeleteType(std::vector<IBaseComponent*> &pDeletedComponents);
 
     /// \brief Destructor for the UndoDeleteType
-    ~UndoDeleteType(void);
+    ~UndoDeleteType(void) override;
 
     /// \brief Gets the type of this undo action
     /// \return An undo::Type object
