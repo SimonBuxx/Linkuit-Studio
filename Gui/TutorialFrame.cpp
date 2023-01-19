@@ -75,6 +75,8 @@ void TutorialFrame::SetCurrentStep(uint8_t pStep)
     const auto filename = QString(":/tutorial/step%0.html").arg(mCurrentStep);
     const auto html = LoadTutorialFile(filename);
     mUi->uTutorialText->setHtml(html.value_or(tr("Could not load tutorial file %0").arg(filename)));
+    mUi->uTutorialText->setFixedHeight(mUi->uTutorialText->document()->size().height());
+    this->setFixedHeight(mUi->uTutorialText->document()->size().height() + 110);
 
     if (mCurrentStep == mNumberOfSteps)
     {

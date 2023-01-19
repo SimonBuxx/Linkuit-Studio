@@ -127,7 +127,7 @@ QMenu::item:selected {
         <property name="styleSheet">
          <string notr="true">QWidget {
         background: rgb(250, 250, 250);
-        border-radius: 3px;
+        border-radius: 5px;
 }
 
 QWidget:hover {
@@ -334,7 +334,7 @@ QTreeView::item:selected {
         <property name="styleSheet">
          <string notr="true">QWidget {
     background: rgb(250, 250, 250);
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
 QWidget:hover {
@@ -1870,7 +1870,7 @@ QSlider::handle:disabled {
         <property name="styleSheet">
          <string notr="true">QWidget {
         background: rgb(250, 250, 250);
-        border-radius: 3px;
+        border-radius: 5px;
 }
 
 QWidget:hover {
@@ -2593,7 +2593,7 @@ IconToolButton:pressed {
         <property name="styleSheet">
          <string notr="true">QWidget {
     background: rgb(250, 250, 250);
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
 QWidget:hover {
@@ -3413,9 +3413,6 @@ QMenuBar::item:pressed {
    </property>
   </action>
   <action name="uActionStartTutorial">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset>
      <normaloff>:/images/icons/sharp_school_black_24dp.png</normaloff>:/images/icons/sharp_school_black_24dp.png</iconset>
@@ -3484,9 +3481,9 @@ QMenuBar::item:pressed {
  <connections/>
  <buttongroups>
   <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
   <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
  </buttongroups>
 </ui>

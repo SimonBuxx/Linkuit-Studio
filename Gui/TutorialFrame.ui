@@ -60,12 +60,12 @@
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background: rgba(242, 242, 242, 242);
-    border-radius: 3px;
+    background: rgb(250, 250, 250);
+    border-radius: 5px;
 }
 
 QWidget:hover {
-    background: rgb(242, 242, 242);
+    background: rgb(255, 255, 255);
 }
 
 #uDeclinedFrame {
@@ -79,19 +79,22 @@ QLabel {
 }
 
 QPushButton {
-    padding: 5px;
+    padding: 11px 20px;
+    border-radius: 5px;
     font: 11pt &quot;Source Sans Pro&quot;;
 
     background: rgb(0, 204, 143);
     color: rgb(255, 255, 255);
 }
 
-QPushButton:hover {
-    background: rgb(0, 204, 143);
+QPushButton:hover
+{
+    background: rgb(0, 143, 100);
 }
 
-QPushButton:pressed {
-    background: rgb(0, 143, 100);
+QPushButton:pressed
+{
+    background: rgb(0, 100, 70);
 }</string>
      </property>
      <property name="frameShape">
@@ -100,7 +103,7 @@ QPushButton:pressed {
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,0,0,0">
+     <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,0,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetMinimumSize</enum>
       </property>
@@ -116,20 +119,7 @@ QPushButton:pressed {
       <property name="bottomMargin">
        <number>15</number>
       </property>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="pushButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Next Step</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QFrame" name="uDeclinedFrame">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -221,7 +211,7 @@ QPushButton:pressed {
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+            <pixmap>:/images/icons/stop_icon.png</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -229,6 +219,19 @@ QPushButton:pressed {
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="pushButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Next Step</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="0">
@@ -276,13 +279,24 @@ QPushButton:pressed {
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
