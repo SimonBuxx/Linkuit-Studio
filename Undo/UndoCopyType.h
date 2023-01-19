@@ -25,7 +25,7 @@ public:
                  QPointF pOffset);
 
     /// \brief Destructor for the UndoCopyType
-    ~UndoCopyType(void);
+    ~UndoCopyType(void) override;
 
     /// \brief Gets the type of this undo action
     /// \return An undo::Type object

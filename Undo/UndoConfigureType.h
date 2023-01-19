@@ -74,7 +74,7 @@ struct TextLabelContentChangedData : ConfigChangedData
     /// \param pTextLabel: The text label that has been altered
     /// \param pPreviousText: The previous text content of the label
     /// \param pCurrentText: The current text content of the label
-    TextLabelContentChangedData(TextLabel* pTextLabel, QString pPreviousText, QString pCurrentText):
+    TextLabelContentChangedData(TextLabel* pTextLabel, const QString &pPreviousText, const QString &pCurrentText):
         textLabel(pTextLabel),
         previousText(pPreviousText),
         currentText(pCurrentText)

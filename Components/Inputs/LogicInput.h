@@ -29,7 +29,7 @@ public:
     /// \brief Clone function for the input component
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \return A pointer to the new component
-    virtual IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
+    IBaseComponent* CloneBaseComponent(const CoreLogic* pCoreLogic) const override;
 
     /// \brief Triggers the switch input to toggle if in simulation mode
     /// \param pEvent: Pointer to the mouse press event
@@ -44,11 +44,11 @@ public:
 
     /// \brief Saves the dats of this component to the given JSON object
     /// \return The JSON object with the component data
-    virtual QJsonObject GetJson(void) const override;
+    QJsonObject GetJson(void) const override;
 
     /// \brief Gets the minimum version compatible with this component
     /// \return the minimum version
-    virtual SwVersion GetMinVersion(void) const override;
+    SwVersion GetMinVersion(void) const override;
 
 protected:
     /// \brief Paints the input component

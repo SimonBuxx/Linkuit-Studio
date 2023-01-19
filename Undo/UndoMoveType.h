@@ -23,7 +23,7 @@ public:
     UndoMoveType(std::vector<IBaseComponent*> &pMovedComponents, std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents, QPointF pOffset);
 
     /// \brief Destructor for the UndoMoveType
-    ~UndoMoveType(void);
+    ~UndoMoveType(void) override;
 
     /// \brief Gets the type of this undo action
     /// \return An undo::Type object
