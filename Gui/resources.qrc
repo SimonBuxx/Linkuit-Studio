@@ -52,5 +52,9 @@
         <file>../images/icons/material_symbols/speed_FILL0_wght400_GRAD0_opsz24.svg</file>
         <file>../images/icons/material_symbols/timelapse_FILL0_wght400_GRAD0_opsz24.svg</file>
         <file>../images/icons/material_symbols/screenshot_monitor_FILL0_wght400_GRAD0_opsz20.svg</file>
+        <file>../images/icons/material_symbols/check_circle_FILL1_wght400_GRAD0_opsz20.svg</file>
+        <file>../images/icons/material_symbols/cancel_FILL1_wght400_GRAD0_opsz20.svg</file>
+        <file>../tutorial/step4.html</file>
+        <file>../tutorial/step5.html</file>
     </qresource>
 </RCC>

@@ -3,6 +3,8 @@
 
 #include <QFile>
 
+#include "HelperFunctions.h"
+
 TutorialFrame::TutorialFrame(QWidget *pParent) :
     QWidget(pParent),
     mUi(new Ui::TutorialFrame)
@@ -11,7 +13,18 @@ TutorialFrame::TutorialFrame(QWidget *pParent) :
 
     mUi->uDeclinedFrame->hide();
 
-    QObject::connect(mUi->pushButton, &QPushButton::clicked, this, &TutorialFrame::NextStep);
+    QObject::connect(mUi->uContinueButton, &QPushButton::clicked, this, [&]()
+    {
+        emit AdvanceStepRequestSignal(mCurrentStep);
+    });
+    QObject::connect(mUi->uQuitButton, &QPushButton::clicked, this, [this](){
+        FadeOutWidget(*this, gui::FADE_ANIMATION_DURATION);
+    });
+
+    auto image = QImage(":/images/icons/material_symbols/check_circle_FILL1_wght400_GRAD0_opsz20.svg");
+    image.invertPixels();
+
+    mWhiteCheckIcon = QIcon(QPixmap::fromImage(image));
 
     hide();
 }
@@ -19,13 +32,6 @@ TutorialFrame::TutorialFrame(QWidget *pParent) :
 TutorialFrame::~TutorialFrame()
 {
     delete mUi;
-}
-
-void TutorialFrame::Init(QtAwesome &pAwesome)
-{
-    QVariantMap iconVariant;
-    iconVariant.insert("color", QColor(255, 0, 0));
-    mUi->uDeclinedIcon->setPixmap(pAwesome.icon(fa::exclamationcircle, iconVariant).pixmap(20, 20));
 }
 
 void TutorialFrame::SetTopLeftPosition(QPoint pPos)
@@ -59,18 +65,33 @@ std::optional<QString> TutorialFrame::LoadTutorialFile(const QString& pFilename)
     return std::nullopt;
 }
 
-void TutorialFrame::SetCurrentStep(uint8_t pStep)
+void TutorialFrame::SetCurrentStep(TutorialStep pStep)
 {
     mCurrentStep = pStep;
 
-    show();
-
-    if (mCurrentStep > mNumberOfSteps)
+    if (mCurrentStep == TutorialStep::NONE)
     {
-        mCurrentStep = 0;
-        hide();
+        FadeOutWidget(*this, gui::FADE_ANIMATION_DURATION);
         return;
     }
+
+    mUi->uDeclinedFrame->hide();
+
+    FadeInWidget(*this, gui::FADE_ANIMATION_DURATION);
+
+    Q_ASSERT(HAS_AUTO_ADVANCE.size() >= mCurrentStep);
+    if (HAS_AUTO_ADVANCE[mCurrentStep - 1])
+    {
+        mUi->uContinueButton->setIcon(QIcon(":/images/icons/material_symbols/cancel_FILL1_wght400_GRAD0_opsz20.svg"));
+    }
+    else
+    {
+        mUi->uContinueButton->setEnabled(true);
+        mUi->uContinueButton->setIcon(mWhiteCheckIcon);
+    }
+
+    mUi->uContinueButton->setEnabled(!HAS_AUTO_ADVANCE[mCurrentStep - 1]);
+    mUi->uContinueButton->setText("Continue");
 
     const auto filename = QString(":/tutorial/step%0.html").arg(mCurrentStep);
     const auto html = LoadTutorialFile(filename);
@@ -80,49 +101,43 @@ void TutorialFrame::SetCurrentStep(uint8_t pStep)
 
     if (mCurrentStep == mNumberOfSteps)
     {
-        mUi->pushButton->setText("Finish Tutorial");
+        mUi->uContinueButton->setText("Finish");
     }
     else
     {
-        mUi->pushButton->setText("Next Step");
+        mUi->uContinueButton->setText("Continue");
     }
 
     emit CurrentStepChangedSignal(mCurrentStep);
 }
 
-void TutorialFrame::NextStep()
-{
-    emit AdvanceStepRequestSignal(mCurrentStep);
-}
-
 void TutorialFrame::StartTutorial()
 {
-    SetCurrentStep(1);
+    SetCurrentStep(TutorialStep::INTRODUCTION);
 }
 
-void TutorialFrame::OnAdvanceStepApproved(uint8_t pStep)
+uint8_t TutorialFrame::GetCurrentStep(void) const
 {
-    if (pStep == mCurrentStep)
-    {
-        SetCurrentStep(++mCurrentStep);
-        mUi->uDeclinedFrame->hide();
-    }
-    else
-    {
-        throw std::logic_error("Tutorial step advancing approved for other than the current tutorial step");
-    }
-
+    return mCurrentStep;
 }
 
-void TutorialFrame::OnAdvanceStepDeclined(uint8_t pStep)
+void TutorialFrame::ApproveStepOnCondition(TutorialStep pStep)
 {
-    if (pStep == mCurrentStep)
-    {
-        mUi->uDeclinedFrame->show();
-    }
-    else
-    {
-        throw std::logic_error("Tutorial step advancing declined for other than the current tutorial step");
-    }
+    Q_ASSERT(pStep == mCurrentStep);
+    mUi->uContinueButton->setEnabled(true);
+    mUi->uContinueButton->setIcon(mWhiteCheckIcon);
+    mUi->uContinueButton->setText("Continue");
+}
 
+void TutorialFrame::OnAdvanceStepApproved(TutorialStep pStep)
+{
+    Q_ASSERT(pStep == mCurrentStep);
+    uint8_t step = static_cast<uint8_t>(mCurrentStep);
+    SetCurrentStep(step < mNumberOfSteps ? static_cast<TutorialStep>(++step) : TutorialStep::NONE);
+}
+
+void TutorialFrame::OnAdvanceStepDeclined(TutorialStep pStep)
+{
+    Q_ASSERT(pStep == mCurrentStep);
+    mUi->uDeclinedFrame->show();
 }

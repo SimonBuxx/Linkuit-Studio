@@ -146,7 +146,7 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
         }
     }
 
-    mView.ZoomIn(0); // To remove buggy line left by the selection rectangle
+    //mView.ZoomIn(0); // To remove buggy line left by the selection rectangle
 }
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *pEvent)
@@ -242,7 +242,7 @@ void View::Init()
 
     // Initialize pie menu
     mPieMenu = new PieMenu(&mGraphicsView);
-    mPieMenu->hide();
+    //mPieMenu->hide();
 
     QObject::connect(mPieMenu, &PieMenu::ButtonClickedSignal, this, &View::OnPieMenuButtonClicked);
 
@@ -327,7 +327,7 @@ void View::SetZoom(int32_t pZoomLevel)
     }
 }
 
-int32_t View::GetZoomLevel()
+int32_t View::GetZoomLevel() const
 {
     return mZoomLevel;
 }
@@ -397,7 +397,7 @@ void View::ShowPieMenu(const QPoint &pPos)
 
     UpdatePieMenuIcons();
 
-    mPieMenu->show();
+    FadeInWidget(*mPieMenu, gui::PIE_MENU_ANIMATION_DURATION);
     mPieMenu->setFocus();
 }
 

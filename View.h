@@ -116,7 +116,7 @@ public:
     void ResetViewport(void);
 
     /// \brief Getter for the current zoom level
-    int32_t GetZoomLevel(void);
+    int32_t GetZoomLevel(void) const;
 
     void ShowPieMenu(const QPoint &pPos);
 

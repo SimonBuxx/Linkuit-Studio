@@ -51,12 +51,13 @@ static constexpr bool SHOW_WELCOME_DIALOG_ON_STARTUP = true;
 static constexpr std::chrono::milliseconds SHOW_WELCOME_DIALOG_DELAY{300};
 
 
-static constexpr std::chrono::milliseconds PROCESSING_OVERLAY_TIMEOUT(100);
+static constexpr std::chrono::milliseconds PROCESSING_OVERLAY_TIMEOUT{100};
 
 static constexpr bool FADE_OUT_GUI_ON_CTRL = true;
-static constexpr std::chrono::milliseconds FADE_OUT_GUI_TIMEOUT(1000);
+static constexpr std::chrono::milliseconds FADE_OUT_GUI_TIMEOUT{1000};
 
-static constexpr int32_t FADE_ANIMATION_DURATION = 200;
+static constexpr uint32_t FADE_ANIMATION_DURATION{200};
+static constexpr uint32_t PIE_MENU_ANIMATION_DURATION{100};
 } // namespace
 
 namespace canvas

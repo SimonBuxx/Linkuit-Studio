@@ -5,6 +5,8 @@
 
 #include <QCoreApplication>
 #include <QGraphicsItem>
+#include <QPropertyAnimation>
+#include <QGraphicsEffect>
 #include <QPoint>
 
 static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{ComponentType::AND_GATE, ConfiguratorMode::DIRECTION_AND_INPUT_COUNT},
@@ -178,6 +180,74 @@ inline SwVersion GetNewerVersion(SwVersion pVersion1, SwVersion pVersion2)
     else
     {
         return pVersion2;
+    }
+}
+
+/// \brief Fades in the given GUI widget of type T
+/// \param pWidget: The GUI widget to fade in
+/// \param pDuration: The time the animation will take
+template <typename T>
+void FadeInWidget(T& pWidget, uint32_t pDuration)
+{
+    bool stoppedCurrentAnimation = false;
+    if (pWidget.graphicsEffect() != nullptr)
+    {
+        delete pWidget.graphicsEffect();
+        stoppedCurrentAnimation = true;
+    }
+
+    if (stoppedCurrentAnimation || !pWidget.isVisible())
+    {
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
+        pWidget.setGraphicsEffect(effect);
+        pWidget.show();
+
+        QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
+        anim->setDuration(pDuration);
+        anim->setStartValue(0.0f);
+        anim->setEndValue(1.0f);
+        anim->setEasingCurve(QEasingCurve::InCirc);
+
+        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
+                         {
+                             delete pWidget.graphicsEffect();
+                         });
+
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+}
+
+/// \brief Fades out the given GUI widget of type T
+/// \param pWidget: The GUI widget to fade out
+/// \param pDuration: The time the animation will take
+template <typename T>
+void FadeOutWidget(T& pWidget, uint32_t pDuration)
+{
+    bool stoppedCurrentAnimation = false;
+    if (pWidget.graphicsEffect() != nullptr)
+    {
+        delete pWidget.graphicsEffect();
+        stoppedCurrentAnimation = true;
+    }
+
+    if (stoppedCurrentAnimation || pWidget.isVisible())
+    {
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
+        pWidget.setGraphicsEffect(effect);
+
+        QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
+        anim->setDuration(pDuration);
+        anim->setStartValue(1.0f);
+        anim->setEndValue(0.0f);
+        anim->setEasingCurve(QEasingCurve::OutCirc);
+
+        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
+                         {
+                             delete pWidget.graphicsEffect();
+                             pWidget.hide();
+                         });
+
+        anim->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }
 
