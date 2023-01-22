@@ -80,18 +80,8 @@ void TutorialFrame::SetCurrentStep(TutorialStep pStep)
     FadeInWidget(*this, gui::FADE_ANIMATION_DURATION);
 
     Q_ASSERT(HAS_AUTO_ADVANCE.size() >= mCurrentStep);
-    if (HAS_AUTO_ADVANCE[mCurrentStep - 1])
-    {
-        mUi->uContinueButton->setIcon(QIcon(":/images/icons/material_symbols/cancel_FILL1_wght400_GRAD0_opsz20.svg"));
-    }
-    else
-    {
-        mUi->uContinueButton->setEnabled(true);
-        mUi->uContinueButton->setIcon(mWhiteCheckIcon);
-    }
 
-    mUi->uContinueButton->setEnabled(!HAS_AUTO_ADVANCE[mCurrentStep - 1]);
-    mUi->uContinueButton->setText("Continue");
+    UpdateContinueButton(!HAS_AUTO_ADVANCE[mCurrentStep - 1]);
 
     const auto filename = QString(":/tutorial/step%0.html").arg(mCurrentStep);
     const auto html = LoadTutorialFile(filename);
@@ -99,6 +89,11 @@ void TutorialFrame::SetCurrentStep(TutorialStep pStep)
     mUi->uTutorialText->setFixedHeight(mUi->uTutorialText->document()->size().height());
     this->setFixedHeight(mUi->uTutorialText->document()->size().height() + 110);
 
+    emit CurrentStepChangedSignal(mCurrentStep);
+}
+
+void TutorialFrame::UpdateContinueButton(bool pEnabled)
+{
     if (mCurrentStep == mNumberOfSteps)
     {
         mUi->uContinueButton->setText("Finish");
@@ -108,7 +103,16 @@ void TutorialFrame::SetCurrentStep(TutorialStep pStep)
         mUi->uContinueButton->setText("Continue");
     }
 
-    emit CurrentStepChangedSignal(mCurrentStep);
+    if (pEnabled)
+    {
+        mUi->uContinueButton->setIcon(mWhiteCheckIcon);
+    }
+    else
+    {
+        mUi->uContinueButton->setIcon(QIcon(":/images/icons/material_symbols/cancel_FILL1_wght400_GRAD0_opsz20.svg"));
+    }
+
+    mUi->uContinueButton->setEnabled(pEnabled);
 }
 
 void TutorialFrame::StartTutorial()
@@ -124,9 +128,7 @@ uint8_t TutorialFrame::GetCurrentStep(void) const
 void TutorialFrame::ApproveStepOnCondition(TutorialStep pStep)
 {
     Q_ASSERT(pStep == mCurrentStep);
-    mUi->uContinueButton->setEnabled(true);
-    mUi->uContinueButton->setIcon(mWhiteCheckIcon);
-    mUi->uContinueButton->setText("Continue");
+    UpdateContinueButton(true);
 }
 
 void TutorialFrame::OnAdvanceStepApproved(TutorialStep pStep)

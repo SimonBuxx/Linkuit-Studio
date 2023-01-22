@@ -45,6 +45,8 @@ signals:
 protected:
     void SetCurrentStep(TutorialStep pStep);
 
+    void UpdateContinueButton(bool pEnabled);
+
     std::optional<QString> LoadTutorialFile(const QString &pFilename);
 
 protected:
