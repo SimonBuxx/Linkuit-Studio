@@ -747,6 +747,8 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     addedComponents.insert(addedComponents.end(), addedConPoints.begin(), addedConPoints.end());
     AppendUndo(new UndoAddType(addedComponents, deletedComponents));
     mWireStartDirection = WireDirection::UNSET;
+
+    emit WireAddedSignal();
 }
 
 template<typename T>
@@ -2323,19 +2325,6 @@ bool CoreLogic::IsTutorialConditionTrue(uint8_t pStep) const
 {
     switch (pStep)
     {
-        case TutorialStep::NAVIGATION:
-        {
-            return (mView.GetZoomLevel() != canvas::DEFAULT_ZOOM_LEVEL);
-        }
-        case TutorialStep::OR_GATE:
-        {
-            auto&& comp = mView.Components();
-            auto it = std::find_if(comp.begin(), comp.end(), [](QGraphicsItem* pItem){
-                return (nullptr != dynamic_cast<OrGate*>(pItem));
-            });
-
-            return (it != comp.end());
-        }
         default:
         {
             return true;

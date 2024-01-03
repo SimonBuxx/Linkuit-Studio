@@ -268,8 +268,8 @@ QTreeView::item:selected {
            </property>
            <property name="iconSize">
             <size>
-             <width>20</width>
-             <height>20</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
            <property name="verticalScrollMode">
@@ -3480,10 +3480,10 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uConstantButtonsGroup"/>
   <buttongroup name="uItemDirectionButtonGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>

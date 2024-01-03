@@ -9,8 +9,8 @@
 namespace Ui {
 class TutorialFrame;
 }
-static constexpr auto NUMBER_OF_STEPS = 5;
-static const std::array<bool, NUMBER_OF_STEPS> HAS_AUTO_ADVANCE{false, true, true, true, true};
+static constexpr auto NUMBER_OF_STEPS = 8;
+static const std::array<bool, NUMBER_OF_STEPS> HAS_AUTO_ADVANCE{false, true, true, true, true, true, true, true};
 
 class TutorialFrame : public QWidget
 {

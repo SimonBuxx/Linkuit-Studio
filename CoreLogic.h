@@ -232,6 +232,8 @@ signals:
 #warning missing documentation
     void ComponentAddedSignal(ComponentType pNewType);
 
+    void WireAddedSignal(void);
+
     /// \brief Emitted when a longer process has been started and the GUI needs to be disabled
     void ProcessingStartedSignal(void);
 
