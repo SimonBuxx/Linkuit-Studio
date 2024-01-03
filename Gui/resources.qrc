@@ -49,5 +49,33 @@
         <file>../images/icons/material_symbols/speed_FILL0_wght400_GRAD0_opsz24.svg</file>
         <file>../images/icons/material_symbols/timelapse_FILL0_wght400_GRAD0_opsz24.svg</file>
         <file>../images/icons/material_symbols/screenshot_monitor_FILL0_wght400_GRAD0_opsz20.svg</file>
+        <file>../images/icons/material_symbols/check_circle_FILL1_wght400_GRAD0_opsz20.svg</file>
+        <file>../images/icons/material_symbols/cancel_FILL1_wght400_GRAD0_opsz20.svg</file>
+        <file>../tutorial/step4.html</file>
+        <file>../tutorial/step5.html</file>
+        <file>../tutorial/step6.html</file>
+        <file>../tutorial/icons/edit_FILL1_wght400_GRAD0_opsz15.svg</file>
+        <file>../tutorial/icons/gate.png</file>
+        <file>../tutorial/icons/keyboard_control_key_FILL0_wght400_GRAD0_opsz15.svg</file>
+        <file>../tutorial/icons/pause_FILL1_wght400_GRAD0_opsz15.svg</file>
+        <file>../tutorial/icons/play_arrow_FILL1_wght400_GRAD0_opsz15.svg</file>
+        <file>../tutorial/icons/restart_alt_FILL0_wght400_GRAD0_opsz15.svg</file>
+        <file>../tutorial/icons/skip_next_FILL1_wght400_GRAD0_opsz15.svg</file>
+        <file>../tutorial/step7.html</file>
+        <file>../tutorial/step8.html</file>
+        <file>../tutorial/icons/power_settings_new_FILL1_wght400_GRAD0_opsz15.svg</file>
+        <file>../images/icons/gate24.png</file>
+        <file>../images/icons/input24.png</file>
+        <file>../images/icons/button24.png</file>
+        <file>../images/icons/constant24.png</file>
+        <file>../images/icons/clock24.png</file>
+        <file>../tutorial/icons/input.png</file>
+        <file>../images/icons/demux24.png</file>
+        <file>../images/icons/flipflop24.png</file>
+        <file>../images/icons/full_adder24.png</file>
+        <file>../images/icons/output24.png</file>
+        <file>../tutorial/icons/output.png</file>
+        <file>../images/icons/decoder24.png</file>
+        <file>../images/icons/encoder24.png</file>
     </qresource>
 </RCC>

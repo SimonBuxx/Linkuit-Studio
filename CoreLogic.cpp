@@ -94,7 +94,7 @@ void CoreLogic::EnterControlMode(ControlMode pNewMode)
     mView.Scene()->clearFocus();
     if (pNewMode == ControlMode::SIMULATION)
     {
-        mView.GetPieMenu()->hide();
+        FadeOutWidget(*(mView.GetPieMenu()), gui::PIE_MENU_ANIMATION_DURATION);
     }
     else
     {
@@ -503,6 +503,8 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
     auto addedComponents = std::vector<IBaseComponent*>{static_cast<IBaseComponent*>(item.value())};
     AppendUndo(new UndoAddType(addedComponents));
 
+    emit ComponentAddedSignal(mComponentType);
+
     return true;
 }
 
@@ -745,6 +747,8 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     addedComponents.insert(addedComponents.end(), addedConPoints.begin(), addedConPoints.end());
     AppendUndo(new UndoAddType(addedComponents, deletedComponents));
     mWireStartDirection = WireDirection::UNSET;
+
+    emit WireAddedSignal();
 }
 
 template<typename T>
@@ -2314,4 +2318,16 @@ void CoreLogic::Redo()
         mCircuitFileParser.MarkAsModified();
     }
     ClearSelection();
+}
+
+#warning remove when all steps are automated
+bool CoreLogic::IsTutorialConditionTrue(uint8_t pStep) const
+{
+    switch (pStep)
+    {
+        default:
+        {
+            return true;
+        }
+    }
 }

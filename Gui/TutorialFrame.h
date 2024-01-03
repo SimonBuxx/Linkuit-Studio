@@ -1,52 +1,61 @@
 #ifndef TUTORIALFRAME_H
 #define TUTORIALFRAME_H
 
-#include "QtAwesome.h"
-
 #include <QWidget>
+#include <array>
+
+#include "HelperStructures.h"
 
 namespace Ui {
 class TutorialFrame;
 }
+static constexpr auto NUMBER_OF_STEPS = 8;
+static const std::array<bool, NUMBER_OF_STEPS> HAS_AUTO_ADVANCE{false, true, true, true, true, true, true, true};
 
 class TutorialFrame : public QWidget
 {
     Q_OBJECT
 
 public:
+    /// \brief Constructor for TutorialFrame
+    /// \param pParent: Reference to the parent widget
     explicit TutorialFrame(QWidget *pParent = nullptr);
+
+    /// \brief Default destructor for TutorialFrame
     ~TutorialFrame(void) override;
 
-    void Init(QtAwesome &pAwesome);
-
     void SetTopLeftPosition(QPoint pPos);
-
     void SetTopRightPosition(QPoint pPos);
-
     void SetCenterPosition(QPoint pPos);
-
-    void SetCurrentStep(uint8_t pStep);
-
-    void NextStep(void);
 
     void StartTutorial(void);
 
-    void OnAdvanceStepApproved(uint8_t pStep);
-    void OnAdvanceStepDeclined(uint8_t pStep);
+    void OnAdvanceStepApproved(TutorialStep pStep);
+    void OnAdvanceStepDeclined(TutorialStep pStep);
+
+    uint8_t GetCurrentStep(void) const;
+
+    void ApproveStepOnCondition(TutorialStep pStep);
 
 signals:
-    void AdvanceStepRequestSignal(uint8_t pStep);
+    void AdvanceStepRequestSignal(TutorialStep pStep);
 
-    void CurrentStepChangedSignal(uint8_t pStep);
+    void CurrentStepChangedSignal(TutorialStep pStep);
 
 protected:
+    void SetCurrentStep(TutorialStep pStep);
+
+    void UpdateContinueButton(bool pEnabled);
+
     std::optional<QString> LoadTutorialFile(const QString &pFilename);
 
 protected:
     Ui::TutorialFrame *mUi;
 
-    uint8_t mCurrentStep = 0;
-    uint8_t mNumberOfSteps = 3;
+    TutorialStep mCurrentStep = TutorialStep::NONE;
+    uint8_t mNumberOfSteps = NUMBER_OF_STEPS;
+
+    QIcon mWhiteCheckIcon;
 };
 
 #endif // TUTORIALFRAME_H

@@ -209,6 +209,11 @@ public:
     /// \brief Resets the canvas
     void NewCircuit(void);
 
+    /// \brief Returns true, if the advance conditions for the given tutorial step are met
+    /// \param pStep: The tutorial step
+    /// \return True, if the advance conditions for the given tutorial step are met
+    bool IsTutorialConditionTrue(uint8_t pStep) const;
+
     // ////////////////////////////
 
 signals:
@@ -223,6 +228,11 @@ signals:
     /// \brief Emitted when the selected component type for new components changes
     /// \param pNewType: The newly selected component type
     void ComponentTypeChangedSignal(ComponentType pNewType);
+
+#warning missing documentation
+    void ComponentAddedSignal(ComponentType pNewType);
+
+    void WireAddedSignal(void);
 
     /// \brief Emitted when a longer process has been started and the GUI needs to be disabled
     void ProcessingStartedSignal(void);

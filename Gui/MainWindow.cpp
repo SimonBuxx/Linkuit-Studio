@@ -16,8 +16,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     mAwesome.initFontAwesome();
 
-    mTutorialFrame.Init(mAwesome);
-
     mScene.setSceneRect(canvas::DIMENSIONS);
     mView.SetScene(mScene);
 
@@ -35,6 +33,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     InitializeGuiIcons();
     InitializeGlobalShortcuts();
     InitializeMessageBoxes();
+    InitializeTutorial();
 
     UpdateUndoRedoEnabled(false);
 
@@ -93,7 +92,64 @@ void MainWindow::InitializeMessageBoxes()
 
 void MainWindow::InitializeTutorial()
 {
-    mTutorialFrame.StartTutorial();
+    QObject::connect(&mView, &View::ZoomLevelChangedSignal, this, [&]() {
+        if (mTutorialFrame.GetCurrentStep() == TutorialStep::NAVIGATION)
+        {
+            mTutorialFrame.ApproveStepOnCondition(TutorialStep::NAVIGATION);
+        }
+    });
+
+    QObject::connect(&mCoreLogic, &CoreLogic::ComponentAddedSignal, this, [&](ComponentType pType) {
+        switch (mTutorialFrame.GetCurrentStep())
+        {
+            case TutorialStep::OR_GATE:
+            {
+                if (pType == ComponentType::OR_GATE)
+                {
+                    mTutorialFrame.ApproveStepOnCondition(TutorialStep::OR_GATE);
+                }
+                break;
+            }
+            case TutorialStep::INPUTS:
+            {
+                if (pType == ComponentType::INPUT)
+                {
+                    mTutorialFrame.ApproveStepOnCondition(TutorialStep::INPUTS);
+                }
+                break;
+            }
+            case TutorialStep::OUTPUT:
+            {
+                if (pType == ComponentType::OUTPUT)
+                {
+                    mTutorialFrame.ApproveStepOnCondition(TutorialStep::OUTPUT);
+                }
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
+    });
+
+    QObject::connect(&mCoreLogic, &CoreLogic::WireAddedSignal, this, [&]() {
+        if (mTutorialFrame.GetCurrentStep() == TutorialStep::WIRES)
+        {
+            mTutorialFrame.ApproveStepOnCondition(TutorialStep::WIRES);
+        }
+    });
+
+    QObject::connect(mUi->uStartButton, &QAbstractButton::clicked, this, [&]() {
+        if (mTutorialFrame.GetCurrentStep() == TutorialStep::START_SIMULATION)
+        {
+            mTutorialFrame.ApproveStepOnCondition(TutorialStep::START_SIMULATION);
+        }
+        if (mTutorialFrame.GetCurrentStep() == TutorialStep::END_SIMULATION)
+        {
+            mTutorialFrame.ApproveStepOnCondition(TutorialStep::END_SIMULATION);
+        }
+    });
 }
 
 void MainWindow::ConnectGuiSignalsAndSlots()
@@ -117,7 +173,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(&mCoreLogic, &CoreLogic::ShowClockConfiguratorSignal, this, &MainWindow::ShowClockConfigurator);
     QObject::connect(&mCoreLogic, &CoreLogic::HideClockConfiguratorSignal, this, [&]()
     {
-        FadeOutWidget(mUi->uClockConfigurator);
+        FadeOutWidget(*(mUi->uClockConfigurator), gui::FADE_ANIMATION_DURATION);
     });
     QObject::connect(&mCoreLogic, &CoreLogic::ControlModeChangedSignal, this, [&](ControlMode pNewMode)
     {
@@ -125,7 +181,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
         if (pNewMode != ControlMode::ADD)
         {
-            FadeOutWidget(mUi->uItemConfigurator);
+            FadeOutWidget(*(mUi->uItemConfigurator), gui::FADE_ANIMATION_DURATION);
             mIsItemConfiguratorVisible = false;
         }
         if (pNewMode == ControlMode::SIMULATION)
@@ -441,8 +497,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionStartTutorial, &QAction::triggered, this, [&]()
     {
-        //qDebug() << "Not implemented";
-        InitializeTutorial();
+        mTutorialFrame.StartTutorial();
     });
 
     QObject::connect(mUi->uActionWelcomePage, &QAction::triggered, this, [&]()
@@ -636,67 +691,51 @@ void MainWindow::UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue)
     mUi->uZoomSlider->setValue(pValue);
 }
 
-void MainWindow::OnAdvanceTutorialStepRequest(uint8_t pStep)
+void MainWindow::OnAdvanceTutorialStepRequest(TutorialStep pStep)
 {
-    switch (pStep)
+    if (mCoreLogic.IsTutorialConditionTrue(pStep))
     {
-        case 1:
-        {
-            if (mView.GetZoomLevel() != canvas::DEFAULT_ZOOM_LEVEL)
-            {
-                mTutorialFrame.OnAdvanceStepApproved(pStep);
-            }
-            else
-            {
-                mTutorialFrame.OnAdvanceStepDeclined(pStep);
-            }
-            // mTutorialFrame.OnAdvanceStepApproved(pStep);
-            break;
-        }
-        case 2:
-        {
-            if (mCoreLogic.GetControlMode() == ControlMode::ADD && mCoreLogic.GetSelectedComponentType() == ComponentType::AND_GATE)
-            {
-                mTutorialFrame.OnAdvanceStepApproved(pStep);
-            }
-            else
-            {
-                mTutorialFrame.OnAdvanceStepDeclined(pStep);
-            }
-            break;
-        }
-        case 3:
-        {
-            mTutorialFrame.OnAdvanceStepApproved(pStep);
-            break;
-        }
-        default:
-        {
-            mTutorialFrame.OnAdvanceStepApproved(pStep);
-            break;
-        }
+        mTutorialFrame.OnAdvanceStepApproved(pStep);
+    }
+    else
+    {
+        mTutorialFrame.OnAdvanceStepDeclined(pStep);
     }
 }
 
-void MainWindow::OnTutorialStepChanged(uint8_t pStep)
+void MainWindow::OnTutorialStepChanged(TutorialStep pStep)
 {
     switch (pStep)
     {
-        case 1:
+        case TutorialStep::INTRODUCTION:
+        case TutorialStep::NAVIGATION:
         {
             mTutorialFrame.SetCenterPosition(QPoint(width() / 2, height() / 2));
             break;
         }
-        case 2:
+        case TutorialStep::OR_GATE:
+        case TutorialStep::INPUTS:
+        case TutorialStep::OUTPUT:
         {
             mTutorialFrame.SetTopLeftPosition(mUi->uToolboxContainer->mapToParent(QPoint(mUi->uToolboxContainer->width() + 20, 0)));
             break;
         }
-        case 3:
+        case TutorialStep::WIRES:
+        {
+            mTutorialFrame.SetTopLeftPosition(QPoint(mUi->uTopBar->x(), mUi->uTopBar->y() + mUi->uTopBar->height() + 20));
+            break;
+        }
+        case TutorialStep::START_SIMULATION:
+        case TutorialStep::END_SIMULATION:
+        {
+            mTutorialFrame.SetTopRightPosition(QPoint(mUi->uTopBar->x() + mUi->uTopBar->width(), mUi->uTopBar->y() + mUi->uTopBar->height() + 20));
+            break;
+        }
+        /*case TutorialStep::INPUTS:
         {
             mTutorialFrame.SetTopRightPosition(mUi->uClockConfigurator->mapToParent(QPoint(-20, 0)));
             break;
-        }
+        }*/
         default:
         {
             break;
@@ -724,7 +763,7 @@ void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32
 {
     if (!mIsGuiHidden)
     {
-        FadeInWidget(mUi->uClockConfigurator);
+        FadeInWidget(*(mUi->uClockConfigurator), gui::FADE_ANIMATION_DURATION);
     }
     else
     {
@@ -752,7 +791,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
     {
         case ConfiguratorMode::NO_CONFIGURATION:
         {
-            FadeOutWidget(mUi->uItemConfigurator);
+            FadeOutWidget(*(mUi->uItemConfigurator), gui::FADE_ANIMATION_DURATION);
             return;
         }
         case ConfiguratorMode::DIRECTION_ONLY:
@@ -915,7 +954,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
 
     if (!mIsGuiHidden)
     {
-        FadeInWidget(mUi->uItemConfigurator);
+            FadeInWidget(*(mUi->uItemConfigurator), gui::FADE_ANIMATION_DURATION);
     }
     else
     {
@@ -981,7 +1020,7 @@ void MainWindow::EnterSimulation()
     if (!mCoreLogic.IsSimulationRunning())
     {
         mCoreLogic.EnterControlMode(ControlMode::SIMULATION);
-        FadeOutWidget(mUi->uToolboxContainer);
+        FadeOutWidget(*(mUi->uToolboxContainer), gui::FADE_ANIMATION_DURATION);
     }
 }
 
@@ -1012,7 +1051,7 @@ void MainWindow::StopSimulation()
         mCoreLogic.EnterControlMode(ControlMode::EDIT);
         if (!mIsGuiHidden)
         {
-            FadeInWidget(mUi->uToolboxContainer);
+            FadeInWidget(*(mUi->uToolboxContainer), gui::FADE_ANIMATION_DURATION);
         }
         else
         {
@@ -1297,10 +1336,10 @@ void MainWindow::FadeOutGui()
     mIsClockConfiguratorVisible = mUi->uClockConfigurator->isVisible();
     mIsItemConfiguratorVisible = mUi->uItemConfigurator->isVisible();
 
-    FadeOutWidget(mUi->uTopBar);
-    FadeOutWidget(mUi->uToolboxContainer);
-    FadeOutWidget(mUi->uClockConfigurator);
-    FadeOutWidget(mUi->uItemConfigurator);
+    FadeOutWidget(*(mUi->uTopBar), gui::FADE_ANIMATION_DURATION);
+    FadeOutWidget(*(mUi->uToolboxContainer), gui::FADE_ANIMATION_DURATION);
+    FadeOutWidget(*(mUi->uClockConfigurator), gui::FADE_ANIMATION_DURATION);
+    FadeOutWidget(*(mUi->uItemConfigurator), gui::FADE_ANIMATION_DURATION);
     mIsGuiHidden = true;
 }
 
@@ -1311,18 +1350,18 @@ void MainWindow::FadeInGui()
         return;
     }
 
-    FadeInWidget(mUi->uTopBar);
+    FadeInWidget(*(mUi->uTopBar), gui::FADE_ANIMATION_DURATION);
     if (mIsToolboxVisible && mCoreLogic.GetControlMode() != ControlMode::SIMULATION) // Keep GUI hidden if simulation started
     {
-        FadeInWidget(mUi->uToolboxContainer);
+        FadeInWidget(*(mUi->uToolboxContainer), gui::FADE_ANIMATION_DURATION);
     }
     if (mIsClockConfiguratorVisible && mCoreLogic.GetControlMode() != ControlMode::SIMULATION)
     {
-        FadeInWidget(mUi->uClockConfigurator);
+        FadeInWidget(*(mUi->uClockConfigurator), gui::FADE_ANIMATION_DURATION);
     }
     if (mIsItemConfiguratorVisible && mCoreLogic.GetControlMode() != ControlMode::SIMULATION)
     {
-        FadeInWidget(mUi->uItemConfigurator);
+        FadeInWidget(*(mUi->uItemConfigurator), gui::FADE_ANIMATION_DURATION);
     }
 
     mIsGuiHidden = false;
@@ -1435,38 +1474,38 @@ void MainWindow::InitializeToolboxTree()
         }
     });
 
-    QIcon gateIcon(":images/icons/gate.png");
-    gateIcon.addPixmap(QPixmap(":images/icons/gate.png"), QIcon::Mode::Selected);
+    QIcon gateIcon(":images/icons/gate24.png");
+    gateIcon.addPixmap(QPixmap(":images/icons/gate24.png"), QIcon::Mode::Selected);
 
-    QIcon inputIcon(":images/icons/input_icon.png");
-    inputIcon.addPixmap(QPixmap(":images/icons/input_icon.png"), QIcon::Mode::Selected);
+    QIcon inputIcon(":images/icons/input24.png");
+    inputIcon.addPixmap(QPixmap(":images/icons/input24.png"), QIcon::Mode::Selected);
 
-    QIcon buttonIcon(":images/icons/button_icon.png");
-    buttonIcon.addPixmap(QPixmap(":images/icons/button_icon.png"), QIcon::Mode::Selected);
+    QIcon buttonIcon(":images/icons/button24.png");
+    buttonIcon.addPixmap(QPixmap(":images/icons/button24.png"), QIcon::Mode::Selected);
 
-    QIcon clockIcon(":images/icons/clock_icon.png");
-    clockIcon.addPixmap(QPixmap(":images/icons/clock_icon.png"), QIcon::Mode::Selected);
+    QIcon clockIcon(":images/icons/clock24.png");
+    clockIcon.addPixmap(QPixmap(":images/icons/clock24.png"), QIcon::Mode::Selected);
 
-    QIcon constantIcon(":images/icons/constant_icon.png");
-    constantIcon.addPixmap(QPixmap(":images/icons/constant_icon.png"), QIcon::Mode::Selected);
+    QIcon constantIcon(":images/icons/constant24.png");
+    constantIcon.addPixmap(QPixmap(":images/icons/constant24.png"), QIcon::Mode::Selected);
 
-    QIcon outputIcon(":images/icons/output_icon.png");
-    outputIcon.addPixmap(QPixmap(":images/icons/output_icon.png"), QIcon::Mode::Selected);
+    QIcon outputIcon(":images/icons/output24.png");
+    outputIcon.addPixmap(QPixmap(":images/icons/output24.png"), QIcon::Mode::Selected);
 
-    QIcon flipflopIcon(":images/icons/flipflop_icon.png");
-    flipflopIcon.addPixmap(QPixmap(":images/icons/flipflop_icon.png"), QIcon::Mode::Selected);
+    QIcon flipflopIcon(":images/icons/flipflop24.png");
+    flipflopIcon.addPixmap(QPixmap(":images/icons/flipflop24.png"), QIcon::Mode::Selected);
 
-    QIcon fulladderIcon(":images/icons/full_adder_icon.png");
-    fulladderIcon.addPixmap(QPixmap(":images/icons/full_adder_icon.png"), QIcon::Mode::Selected);
+    QIcon fulladderIcon(":images/icons/full_adder24.png");
+    fulladderIcon.addPixmap(QPixmap(":images/icons/full_adder24.png"), QIcon::Mode::Selected);
 
-    QIcon demultiplexerIcon(":images/icons/demultiplexer.png");
-    demultiplexerIcon.addPixmap(QPixmap(":images/icons/demultiplexer.png"), QIcon::Mode::Selected);
+    QIcon demultiplexerIcon(":images/icons/demux24.png");
+    demultiplexerIcon.addPixmap(QPixmap(":images/icons/demux24.png"), QIcon::Mode::Selected);
 
-    QIcon encoderIcon(":images/icons/encoder.png");
-    encoderIcon.addPixmap(QPixmap(":images/icons/encoder.png"), QIcon::Mode::Selected);
+    QIcon encoderIcon(":images/icons/encoder24.png");
+    encoderIcon.addPixmap(QPixmap(":images/icons/encoder24.png"), QIcon::Mode::Selected);
 
-    QIcon decoderIcon(":images/icons/decoder.png");
-    decoderIcon.addPixmap(QPixmap(":images/icons/decoder.png"), QIcon::Mode::Selected);
+    QIcon decoderIcon(":images/icons/decoder24.png");
+    decoderIcon.addPixmap(QPixmap(":images/icons/decoder24.png"), QIcon::Mode::Selected);
 
     QIcon labelIcon(":images/icons/label_icon.png");
     labelIcon.addPixmap(QPixmap(":images/icons/label_icon.png"), QIcon::Mode::Selected);
@@ -1688,7 +1727,7 @@ void MainWindow::InitializeGlobalShortcuts()
         mUi->uToolboxTree->clearSelection();
         if (!mIsGuiHidden)
         {
-            FadeInWidget(mUi->uToolboxContainer);
+            FadeInWidget(*(mUi->uToolboxContainer), gui::FADE_ANIMATION_DURATION);
         }
         else
         {
@@ -2005,66 +2044,3 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
         qDebug() << "Unknown higher level item";
     }
 }
-
-template <typename T>
-void MainWindow::FadeInWidget(T& pWidget)
-{
-    bool stoppedCurrentAnimation = false;
-    if (pWidget->graphicsEffect() != nullptr)
-    {
-        delete pWidget->graphicsEffect();
-        stoppedCurrentAnimation = true;
-    }
-
-    if (stoppedCurrentAnimation || !pWidget->isVisible())
-    {
-        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
-        pWidget->setGraphicsEffect(effect);
-        pWidget->show();
-
-        QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
-        anim->setDuration(gui::FADE_ANIMATION_DURATION);
-        anim->setStartValue(0.0f);
-        anim->setEndValue(1.0f);
-        anim->setEasingCurve(QEasingCurve::OutCirc);
-
-        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
-        {
-            delete pWidget->graphicsEffect();
-        });
-
-        anim->start(QAbstractAnimation::DeleteWhenStopped);
-    }
-}
-
-template <typename T>
-void MainWindow::FadeOutWidget(T& pWidget)
-{
-    bool stoppedCurrentAnimation = false;
-    if (pWidget->graphicsEffect() != nullptr)
-    {
-        delete pWidget->graphicsEffect();
-        stoppedCurrentAnimation = true;
-    }
-
-    if (stoppedCurrentAnimation || pWidget->isVisible())
-    {
-        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect();
-        pWidget->setGraphicsEffect(effect);
-
-        QPropertyAnimation *anim = new QPropertyAnimation(effect, "opacity");
-        anim->setDuration(gui::FADE_ANIMATION_DURATION);
-        anim->setStartValue(1.0f);
-        anim->setEndValue(0.0f);
-        anim->setEasingCurve(QEasingCurve::OutCirc);
-
-        QObject::connect(anim, &QPropertyAnimation::finished, [&]()
-        {
-            delete pWidget->graphicsEffect();
-            pWidget->hide();
-        });
-
-        anim->start(QAbstractAnimation::DeleteWhenStopped);
-    }
-}
-

@@ -60,12 +60,12 @@
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
-    background: rgba(242, 242, 242, 242);
-    border-radius: 3px;
+    background: rgb(250, 250, 250);
+    border-radius: 5px;
 }
 
 QWidget:hover {
-    background: rgb(242, 242, 242);
+    background: rgb(255, 255, 255);
 }
 
 #uDeclinedFrame {
@@ -79,19 +79,28 @@ QLabel {
 }
 
 QPushButton {
-    padding: 5px;
+    padding: 11px 20px;
+    border-radius: 5px;
     font: 11pt &quot;Source Sans Pro&quot;;
 
     background: rgb(0, 204, 143);
     color: rgb(255, 255, 255);
 }
 
-QPushButton:hover {
-    background: rgb(0, 204, 143);
+QPushButton:hover
+{
+    background: rgb(0, 143, 100);
 }
 
-QPushButton:pressed {
-    background: rgb(0, 143, 100);
+QPushButton:pressed
+{
+    background: rgb(0, 100, 70);
+}
+
+QPushButton:disabled
+{
+    background: rgb(220, 220, 220);
+    color: rgb(160, 160, 160);
 }</string>
      </property>
      <property name="frameShape">
@@ -116,20 +125,53 @@ QPushButton:pressed {
       <property name="bottomMargin">
        <number>15</number>
       </property>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="pushButton">
+      <item row="0" column="0" colspan="2">
+       <widget class="QTextBrowser" name="uTutorialText">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text">
-         <string>Next Step</string>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <stylestrategy>PreferDefault</stylestrategy>
+         </font>
+        </property>
+        <property name="cursor" stdset="0">
+         <cursorShape>ArrowCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QTextBrowser {
+	color: rgb(0, 45, 50);
+	background: rgba(0, 0, 0, 0);
+}</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustToContents</enum>
+        </property>
+        <property name="undoRedoEnabled">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="markdown">
+         <string/>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::NoTextInteraction</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0" colspan="2">
        <widget class="QFrame" name="uDeclinedFrame">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -221,7 +263,7 @@ QPushButton:pressed {
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="resources.qrc">:/images/icons/stop_icon.png</pixmap>
+            <pixmap>:/images/icons/stop_icon.png</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -231,50 +273,64 @@ QPushButton:pressed {
         </layout>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QTextBrowser" name="uTutorialText">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+      <item row="1" column="0" colspan="2">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
         </property>
-        <property name="cursor" stdset="0">
-         <cursorShape>ArrowCursor</cursorShape>
+       </spacer>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="topMargin">
+         <number>0</number>
         </property>
-        <property name="styleSheet">
-         <string notr="true">QTextBrowser {
-	color: rgb(0, 45, 50);
-	background: rgba(0, 0, 0, 0);
-}</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContents</enum>
-        </property>
-        <property name="undoRedoEnabled">
-         <bool>false</bool>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="markdown">
-         <string/>
-        </property>
-        <property name="textInteractionFlags">
-         <set>Qt::NoTextInteraction</set>
-        </property>
-       </widget>
+        <item>
+         <widget class="QPushButton" name="uQuitButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Quit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="uContinueButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Continue</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/images/icons/material_symbols/cancel_FILL1_wght400_GRAD0_opsz20.svg</normaloff>:/images/icons/material_symbols/cancel_FILL1_wght400_GRAD0_opsz20.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>

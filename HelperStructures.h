@@ -178,6 +178,19 @@ enum class ConfiguratorMode
     MASTER_SLAVE
 };
 
+enum TutorialStep
+{
+    NONE = 0,
+    INTRODUCTION = 1,
+    NAVIGATION = 2,
+    OR_GATE = 3,
+    INPUTS = 4,
+    OUTPUT = 5,
+    WIRES = 6,
+    START_SIMULATION = 7,
+    END_SIMULATION = 8
+};
+
 namespace undo
 {
 enum class Type

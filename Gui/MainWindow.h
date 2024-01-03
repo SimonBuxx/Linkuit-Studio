@@ -14,8 +14,6 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QPropertyAnimation>
-#include <QtWidgets>
 
 // forward declarations
 class View;
@@ -103,11 +101,11 @@ protected slots:
 
     /// \brief Positions the tutorial box at the correct position
     /// \param pStep: The current tutorial step
-    void OnTutorialStepChanged(uint8_t pStep);
+    void OnTutorialStepChanged(TutorialStep pStep);
 
     /// \brief Allows or declines advancing to the next tutorial step
     /// \param pStep: The current tutorial step
-    void OnAdvanceTutorialStepRequest(uint8_t pStep);
+    void OnAdvanceTutorialStepRequest(TutorialStep pStep);
 
     /// \brief Fades out all GUI overlay widgets and saves if they were visible before
     void FadeOutGui(void);
@@ -263,18 +261,6 @@ protected:
     /// \param pEvent: Pointer to the key event
     void keyReleaseEvent(QKeyEvent *pEvent) override;
 
-    // Animation
-
-    /// \brief Fades in the given GUI widget of type T
-    /// \param pWidget: The GUI widget to fade in
-    template <typename T>
-    void FadeInWidget(T& pWidget);
-
-    /// \brief Fades out the given GUI widget of type T
-    /// \param pWidget: The GUI widget to fade out
-    template <typename T>
-    void FadeOutWidget(T& pWidget);
-
     /// \brief Asks if the changes should be saved if the current circuit is modified
     /// \return True, when the user pressed "Cancel"; False, if the circuit was unchanged,
     /// if the circuit has been saved or changes were discarded
@@ -290,6 +276,7 @@ protected:
 
     QStandardItemModel mToolboxTreeModel;
 
+    // Tutorial
     TutorialFrame mTutorialFrame;
 
     // Category items

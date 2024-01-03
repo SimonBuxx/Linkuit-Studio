@@ -1,4 +1,5 @@
 #include "PieMenu.h"
+#include "HelperFunctions.h"
 
 #include <QPainter>
 #include <QApplication>
@@ -56,7 +57,7 @@ void PieMenu::HideIfNotPinned()
 {
     if (!mIsPinned)
     {
-        hide();
+        FadeOutWidget(*this, gui::PIE_MENU_ANIMATION_DURATION);
     }
 }
 
@@ -274,7 +275,7 @@ void PieMenu::mouseReleaseEvent(QMouseEvent *pEvent)
         }
         else if (buttonUnderMouse == mCloseButtonIndex)
         {
-            hide();
+            FadeOutWidget(*this, gui::PIE_MENU_ANIMATION_DURATION);
         }
         else if (buttonUnderMouse >= 0 && buttonUnderMouse < mButtonCount && mButtonsEnabled[buttonUnderMouse])
         {
@@ -282,7 +283,7 @@ void PieMenu::mouseReleaseEvent(QMouseEvent *pEvent)
 
             if (!mIsPinned && buttonUnderMouse != 1 && buttonUnderMouse != 3)
             {
-                hide();
+                FadeOutWidget(*this, gui::PIE_MENU_ANIMATION_DURATION);
             }
         }
         QWidget::mouseReleaseEvent(pEvent);
