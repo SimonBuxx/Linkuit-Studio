@@ -3110,8 +3110,15 @@ QMenuBar::item:pressed {
     <addaction name="separator"/>
     <addaction name="uActionClose"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="uActionHideGrid"/>
+   </widget>
    <addaction name="uMenuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
    <addaction name="menuSimulation"/>
    <addaction name="menuTools"/>
    <addaction name="uMenuHelp"/>
@@ -3467,6 +3474,20 @@ QMenuBar::item:pressed {
     <string>Find us on Twitter...</string>
    </property>
   </action>
+  <action name="uActionHideGrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide Grid</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+   <property name="autoRepeat">
+    <bool>false</bool>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -3480,10 +3501,10 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uItemDirectionButtonGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
  </buttongroups>
 </ui>

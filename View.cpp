@@ -300,6 +300,12 @@ void View::OnSimulationStop()
     mGraphicsView.setDragMode(QGraphicsView::RubberBandDrag);
 }
 
+void View::SetHideGrid(bool pValue)
+{
+    mHideGrid = pValue;
+    SetupMatrix();
+}
+
 void View::SetupMatrix()
 {
     double scale = std::pow(2, (mZoomLevel - canvas::DEFAULT_ZOOM_LEVEL) / 50.0f);
@@ -308,7 +314,17 @@ void View::SetupMatrix()
     matrix.scale(scale, scale);
 
     mGraphicsView.setTransform(matrix);
-    mGraphicsView.setBackgroundBrush(DrawGridPattern(mZoomLevel));
+    if (!mHideGrid)
+    {
+        mGraphicsView.setBackgroundBrush(DrawGridPattern(mZoomLevel));
+    }
+    else
+    {
+        QPixmap pixmap(canvas::GRID_SIZE, canvas::GRID_SIZE);
+        pixmap.fill(canvas::BACKGROUND_COLOR);
+
+        mGraphicsView.setBackgroundBrush(pixmap);
+    }
 
     emit ZoomLevelChangedSignal(scale * 100, mZoomLevel);
 }

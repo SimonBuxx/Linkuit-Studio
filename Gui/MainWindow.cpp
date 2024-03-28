@@ -404,6 +404,9 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             mCoreLogic.NewCircuit();
             setWindowTitle(tr(gui::DEFAULT_WINDOW_TITLE));
 
+            mUi->uActionHideGrid->setChecked(false);
+            mView.SetHideGrid(false);
+
             mIsToolboxVisible = true;
             FadeInGui();
         }
@@ -421,6 +424,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
             if (!fileInfo.absoluteFilePath().isEmpty())
             {
                 mCoreLogic.GetCircuitFileParser().LoadJson(fileInfo);
+                mUi->uActionHideGrid->setChecked(false);
+                mView.SetHideGrid(false);
             }
         }
     });
@@ -489,6 +494,8 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     });
 
     QObject::connect(mUi->uActionSelectAll, &QAction::triggered, &mCoreLogic, &CoreLogic::SelectAll);
+
+    QObject::connect(mUi->uActionHideGrid, &QAction::triggered, &mView, &View::SetHideGrid);
 
     QObject::connect(mUi->uActionScreenshot, &QAction::triggered, this, [&]()
     {
@@ -635,6 +642,8 @@ void MainWindow::OpenRecentFile(const QFileInfo& pFileInfo)
     if (!IsSaveChangesIfModifiedCanceled())
     {
         mCoreLogic.GetCircuitFileParser().LoadJson(pFileInfo, true);
+        mUi->uActionHideGrid->setChecked(false);
+        mView.SetHideGrid(false);
     }
 }
 

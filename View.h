@@ -152,6 +152,10 @@ public slots:
     /// \brief Enables buttons available for editing and enables component selection
     void OnSimulationStop(void);
 
+    /// \brief Sets or unsets the grid hide flag
+    /// \param pValue: The new flag status
+    void SetHideGrid(bool pValue);
+
 protected slots:
     /// \brief Applies the current transform to the GraphicsView and sets the scene background
     void SetupMatrix(void);
@@ -184,6 +188,7 @@ protected:
     PieMenu *mPieMenu;
 
     int32_t mZoomLevel = canvas::DEFAULT_ZOOM_LEVEL;
+    bool mHideGrid = false;
 };
 
 #endif // VIEW_H
