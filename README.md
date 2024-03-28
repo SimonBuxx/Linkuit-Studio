@@ -2,7 +2,7 @@
 
 Linkuit Studio is an open-source logic circuit simulator that is designed to be intuitive and easy to use. Its aim is to provide a platform for learning and experimentation with logic circuits.
 
-![Application Screenshot](https://user-images.githubusercontent.com/6598913/212575956-8ef6735c-0650-4ace-9043-637acf7f4128.png)
+![Application Screenshot](https://linkuit.com/images/linkuit_screenshot2.png)
 *A screenshot of the application in editing mode*
 
 ## FAQ
