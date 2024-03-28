@@ -151,7 +151,7 @@ static constexpr uint32_t SIZE = 15;
 
 namespace text_label
 {
-static const QFont FONT("Quicksand Medium", 10);
+static const QFont FONT("Quicksand Medium", 12);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 } // namespace
 

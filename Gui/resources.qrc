@@ -77,5 +77,8 @@
         <file>../tutorial/icons/output.png</file>
         <file>../images/icons/decoder24.png</file>
         <file>../images/icons/encoder24.png</file>
+        <file>../tutorial/step1.html</file>
+        <file>../tutorial/step2.html</file>
+        <file>../tutorial/step3.html</file>
     </qresource>
 </RCC>

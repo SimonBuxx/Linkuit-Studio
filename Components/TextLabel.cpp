@@ -24,7 +24,7 @@ void TextLabel::InitProxyWidget(bool pTakeFocus, const QString& pText)
     mPlainTextEdit->document()->setDocumentMargin(1);
 
     mPlainTextEdit->setFont(components::text_label::FONT);
-    mPlainTextEdit->move(10, canvas::GRID_SIZE * -0.5f + 1);
+    mPlainTextEdit->move(10, canvas::GRID_SIZE * -0.5f - 1);
     mPlainTextEdit->setUndoRedoEnabled(false);
     mPlainTextEdit->setContextMenuPolicy(Qt::NoContextMenu);
     mPlainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -131,7 +131,7 @@ void TextLabel::UpdatePlainTextEditSize()
     QFontMetrics metrics(mPlainTextEdit->font());
 
     // Update QPlainTextEdit height
-    uint32_t rowHeight = metrics.lineSpacing() + 1;
+    uint32_t rowHeight = metrics.lineSpacing();
     QMargins margins = mPlainTextEdit->contentsMargins();
     double newHeight = rowHeight * mPlainTextEdit->document()->lineCount()
             + (mPlainTextEdit->document()->documentMargin() + mPlainTextEdit->frameWidth()) * 2 + margins.top() + margins.bottom() + 2;
@@ -144,7 +144,7 @@ void TextLabel::UpdatePlainTextEditSize()
     this->setOpacity(0);
     update();
 
-    mHeight = std::ceil((newHeight - 5) / canvas::GRID_SIZE) * canvas::GRID_SIZE;
+    mHeight = std::ceil((newHeight - 6) / canvas::GRID_SIZE) * canvas::GRID_SIZE;
     mWidth = mPlainTextEdit->width() + canvas::GRID_SIZE * 0.5f;
 
     mShape.clear();
