@@ -745,7 +745,11 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     }
 
     addedComponents.insert(addedComponents.end(), addedConPoints.begin(), addedConPoints.end());
-    AppendUndo(new UndoAddType(addedComponents, deletedComponents));
+
+    if (!addedComponents.empty() || !deletedComponents.empty())
+    {
+        AppendUndo(new UndoAddType(addedComponents, deletedComponents));
+    }
     mWireStartDirection = WireDirection::UNSET;
 
     emit WireAddedSignal();
