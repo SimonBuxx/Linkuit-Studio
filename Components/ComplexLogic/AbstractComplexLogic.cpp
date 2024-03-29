@@ -386,7 +386,7 @@ void AbstractComplexLogic::DrawComponentDetailsDown(QPainter *pPainter, const QS
     // Draw top input connectors
     for (size_t i = 0; i < mTopInputCount; i++)
     {
-        if (!mLogicCell->IsOutputConnected(mTopInputCount - i - 1))
+        if (!mLogicCell->IsInputConnected(mTopInputCount - i - 1))
         {
             SetConnectorPen(pPainter, mLogicCell->GetInputState(mTopInputCount - i - 1), pItem->state & QStyle::State_Selected);
             pPainter->drawLine(mWidth, canvas::GRID_SIZE * i + canvas::GRID_SIZE, mWidth + 8, canvas::GRID_SIZE * i + canvas::GRID_SIZE);
