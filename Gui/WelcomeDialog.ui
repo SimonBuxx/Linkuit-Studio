@@ -273,7 +273,7 @@ QCheckBox::indicator:checked {
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="toolTip">
-         <string>Find us on Twitter!</string>
+         <string>Find us on X!</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
@@ -1102,7 +1102,7 @@ QPushButton:pressed {
 }</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is an early version of Linkuit Studio and as such may contain bugs or crash unexpectedly. If you notice a problem, please &lt;a href=&quot;mailto:linkuit@outlook.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#00cc8f;&quot;&gt;create a bug report&lt;/span&gt;&lt;/a&gt; so that it can be fixed.&lt;/p&gt;&lt;p&gt;Thank you for being one of the first to use Linkuit Studio. Your feedback is valuable to us and we hope you'll have a great experience.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Welcome to Linkuit Studio, let's start experimenting with logic circuits! If you notice a problem, please &lt;a href=&quot;mailto:linkuit@outlook.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#00cc8f;&quot;&gt;create a bug report&lt;/span&gt;&lt;/a&gt; so that it can be fixed.&lt;/p&gt;&lt;p&gt;Thank you for using Linkuit Studio. Your feedback is valuable to us and we hope you'll have a great experience.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

@@ -3471,7 +3471,7 @@ QMenuBar::item:pressed {
   </action>
   <action name="uActionOpenTwitter">
    <property name="text">
-    <string>Find us on Twitter...</string>
+    <string>Find us on X...</string>
    </property>
   </action>
   <action name="uActionHideGrid">
@@ -3501,10 +3501,10 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uConstantButtonsGroup"/>
-  <buttongroup name="uItemDirectionButtonGroup"/>
-  <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uSimulationButtonGroup"/>
   <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uItemDirectionButtonGroup"/>
+  <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uSimulationButtonGroup"/>
  </buttongroups>
 </ui>
