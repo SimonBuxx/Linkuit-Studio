@@ -407,7 +407,7 @@ void AbstractComplexLogic::DrawComponentDetailsDown(QPainter *pPainter, const QS
     // Draw output connectors
     for (size_t i = 0; i < mOutputCount; i++)
     {
-        if (!mLogicCell->IsInputConnected(i))
+        if (!mLogicCell->IsOutputConnected(i))
         {
             SetConnectorPen(pPainter, mLogicCell->GetOutputState(i), pItem->state & QStyle::State_Selected);
             pPainter->drawLine(mWidth - (mOutputsSpacing * i + mOutputsTrapezoidOffset + 1) * canvas::GRID_SIZE, mHeight,
