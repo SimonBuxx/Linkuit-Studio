@@ -70,6 +70,9 @@ void GraphicsView::mousePressEvent(QMouseEvent *pEvent)
                 if (nullptr != item) {
                     item->setSelected(!item->isSelected());
                 }
+
+                // Hide clock configurator when another component is added to the selection
+                emit mCoreLogic.HideClockConfiguratorSignal();
             }
         }
         else
