@@ -22,7 +22,7 @@ WelcomeDialog::WelcomeDialog(QtAwesome &pAwesome, QWidget *pParent):
     mUi->uNewCircuitButton->setIcon(mAwesome.icon(fa::file, mWhiteIconVariant));
     mUi->uOpenCircuitButton->setIcon(mAwesome.icon(fa::folderopen, mStandardIconVariant));
     mUi->uGithubButton->setIcon(mAwesome.icon(fa::github, mWhiteIconVariant));
-    mUi->uTwitterButton->setIcon(mAwesome.icon(fa::twitter, mWhiteIconVariant));
+    //mUi->uTwitterButton->setIcon(mAwesome.icon(fa::twitter, mWhiteIconVariant));
 
     QObject::connect(mUi->uNewCircuitButton, &QPushButton::clicked, this, &WelcomeDialog::NewCircuitClickedSignal);
     QObject::connect(mUi->uOpenCircuitButton, &QPushButton::clicked, this, &WelcomeDialog::OpenCircuitClickedSignal);

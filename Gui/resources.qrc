@@ -80,5 +80,7 @@
         <file>../tutorial/step1.html</file>
         <file>../tutorial/step2.html</file>
         <file>../tutorial/step3.html</file>
+        <file>../images/icons/x-icon.png</file>
+        <file>../images/icons/x-icon.svg</file>
     </qresource>
 </RCC>

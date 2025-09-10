@@ -31,11 +31,11 @@ Linkuit Studio is an open-source logic circuit simulator that is designed to be 
   - To update Linkuit Studio, navigate to "Help" > "Check for Updates..." or click on the symbol next to the version label on the welcome and about dialogs.
   - Download the new version, if available, and install it using the installer. Just use the same install path as the current installation and the installer will replace it and will keep your software's configuration.
   
-Your question is not on the list? Please do not hesitate to contact us at linkuit@outlook.com or on Twitter [@goLinkuit](https://twitter.com/goLinkuit/) (German or English).
+Your question is not on the list? Please do not hesitate to contact us at linkuit@outlook.com or on X [@goLinkuit](https://x.com/goLinkuit/) (German or English).
 
 ## How to compile
 
 *Qt Creator for open source* can be downloaded here: https://www.qt.io/download-qt-installer
 
-I am currently using **Qt Creator 9.0.1** on Windows with **Qt 6.4.0**. The compiler I use is **MinGW 64-bit 11.2.0**.
+I am currently using **Qt Creator 16.0.0** on Windows with **Qt 6.7.2**. The compiler I use is **MinGW 64-bit 11.2.0**.
 After installing Qt Creator, the **.pro** file can be opened with Qt Creator, from where you can compile the project.

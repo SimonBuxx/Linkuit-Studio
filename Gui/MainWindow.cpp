@@ -526,7 +526,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     QObject::connect(mUi->uActionOpenTwitter, &QAction::triggered, this, [&]()
     {
-        QDesktopServices::openUrl(QUrl("https://twitter.com/goLinkuit/"));
+        QDesktopServices::openUrl(QUrl("https://x.com/goLinkuit/"));
     });
 
     QObject::connect(mUi->uActionOpenGithub, &QAction::triggered, this, [&]()
@@ -1628,7 +1628,7 @@ void MainWindow::InitializeGuiIcons()
     mUi->uActionStartTutorial->setIcon(mAwesome.icon(fa::graduationcap, mMenuBarIconVariant));
     mUi->uActionReportBugs->setIcon(mAwesome.icon(fa::bug, mMenuBarIconVariant));
     mUi->uActionOpenWebsite->setIcon(mAwesome.icon(fa::externallink, mMenuBarIconVariant));
-    mUi->uActionOpenTwitter->setIcon(mAwesome.icon(fa::twitter, mMenuBarIconVariant));
+    //mUi->uActionOpenTwitter->setIcon(mAwesome.icon(fa::twitter, mMenuBarIconVariant));
     mUi->uActionOpenGithub->setIcon(mAwesome.icon(fa::github, mMenuBarIconVariant));
     mUi->uActionAbout->setIcon(mAwesome.icon(fa::info, mMenuBarIconVariant));
 }

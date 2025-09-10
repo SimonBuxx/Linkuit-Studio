@@ -157,7 +157,7 @@ QTextEdit QMenu::item:selected {
 }</string>
          </property>
          <property name="standardButtons">
-          <set>QDialogButtonBox::Close</set>
+          <set>QDialogButtonBox::StandardButton::Close</set>
          </property>
         </widget>
        </item>
@@ -186,7 +186,7 @@ QTextEdit QMenu::item:selected {
         <property name="spacing">
          <number>6</number>
         </property>
-        <item row="1" column="2" colspan="2" alignment="Qt::AlignLeft">
+        <item row="1" column="2" colspan="2" alignment="Qt::AlignmentFlag::AlignLeft">
          <widget class="QLabel" name="uLogoRightPart">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -211,7 +211,7 @@ QTextEdit QMenu::item:selected {
           </property>
          </widget>
         </item>
-        <item row="1" column="0" alignment="Qt::AlignHCenter">
+        <item row="1" column="0" alignment="Qt::AlignmentFlag::AlignHCenter">
          <widget class="QLabel" name="uLogoLeftPart">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -235,7 +235,7 @@ QTextEdit QMenu::item:selected {
            <string>linkuit</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -293,7 +293,7 @@ QTextEdit QMenu::item:selected {
         <item row="1" column="4" rowspan="2">
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -337,17 +337,17 @@ QTextEdit QMenu::item:selected {
            <string>Version</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
          <spacer name="horizontalSpacer">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
+           <enum>QSizePolicy::Policy::Fixed</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -362,10 +362,10 @@ QTextEdit QMenu::item:selected {
       <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
-         <enum>Qt::Vertical</enum>
+         <enum>Qt::Orientation::Vertical</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Policy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -379,13 +379,14 @@ QTextEdit QMenu::item:selected {
        <widget class="QTabWidget" name="uAboutTabWidget">
         <property name="styleSheet">
          <string notr="true">QTabWidget {
-	border-radius:3px; 
+	border-radius: 3px; 
 	background-color: white;
-	background:white;
+	background: white;
 }
 
 QTabWidget QWidget {
 	background: white;
+	color: black;
 }</string>
         </property>
         <property name="currentIndex">
@@ -428,10 +429,10 @@ QTabWidget QWidget {
 }</string>
             </property>
             <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
+             <enum>QFrame::Shape::NoFrame</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Plain</enum>
+             <enum>QFrame::Shadow::Plain</enum>
             </property>
             <property name="undoRedoEnabled">
              <bool>false</bool>
@@ -444,7 +445,7 @@ QTabWidget QWidget {
 
 `MIT License`
 
-`Copyright (c) 2024 Simon Buchholz`
+`Copyright (c) 2025 Simon Buchholz`
 
 `Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the &quot;Software&quot;), to deal in
@@ -478,7 +479,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt;MIT License&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Courier New';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt;Copyright (c) 2024 Simon Buchholz&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt;Copyright (c) 2025 Simon Buchholz&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Courier New';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt;Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &amp;quot;Software&amp;quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Courier New';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -528,16 +529,16 @@ li.checked::marker { content: &quot;\2612&quot;; }
 }</string>
             </property>
             <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
+             <enum>QFrame::Shape::NoFrame</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Plain</enum>
+             <enum>QFrame::Shadow::Plain</enum>
             </property>
             <property name="horizontalScrollBarPolicy">
-             <enum>Qt::ScrollBarAlwaysOff</enum>
+             <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
             </property>
             <property name="lineWrapMode">
-             <enum>QTextEdit::WidgetWidth</enum>
+             <enum>QTextEdit::LineWrapMode::WidgetWidth</enum>
             </property>
             <property name="markdown">
              <string>## Qt Libraries
@@ -549,7 +550,7 @@ licensed under the GNU LGPLv3.
 
 `                       Version 3, 29 June 2007`
 
-` Copyright (C) 2007 Free Software Foundation, Inc. &lt;http://fsf.org/&gt;`
+` Copyright (C) 2007 Free Software Foundation, Inc. \&lt;http://fsf.org/&gt;`
 
 ` Everyone is permitted to copy and distribute verbatim copies`
 
@@ -808,11 +809,11 @@ repositories &lt;https://github.com/qt/qtbase.git&gt; and
 
 ## **Font Awesome Fonts**
 
-`-----------------------------------------------------------`
+`\-----------------------------------------------------------`
 
 `SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007`
 
-`-----------------------------------------------------------`
+`\-----------------------------------------------------------`
 
 `PREAMBLE`
 
@@ -880,11 +881,11 @@ repositories &lt;https://github.com/qt/qtbase.git&gt; and
 
 `Software, subject to the following conditions:`
 
-`1) Neither the Font Software nor any of its individual components,`
+`1\) Neither the Font Software nor any of its individual components,`
 
 `in Original or Modified Versions, may be sold by itself.`
 
-`2) Original or Modified Versions of the Font Software may be bundled,`
+`2\) Original or Modified Versions of the Font Software may be bundled,`
 
 `redistributed and/or sold with any software, provided that each copy`
 
@@ -896,7 +897,7 @@ repositories &lt;https://github.com/qt/qtbase.git&gt; and
 
 `binary files as long as those fields can be easily viewed by the user.`
 
-`3) No Modified Version of the Font Software may use the Reserved Font`
+`3\) No Modified Version of the Font Software may use the Reserved Font`
 
 `Name(s) unless explicit written permission is granted by the corresponding`
 
@@ -904,7 +905,7 @@ repositories &lt;https://github.com/qt/qtbase.git&gt; and
 
 `presented to the users.`
 
-`4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font`
+`4\) The name(s) of the Copyright Holder(s) or the Author(s) of the Font`
 
 `Software shall not be used to promote, endorse or advertise any`
 
@@ -914,7 +915,7 @@ repositories &lt;https://github.com/qt/qtbase.git&gt; and
 
 `permission.`
 
-`5) The Font Software, modified or unmodified, in part or in whole,`
+`5\) The Font Software, modified or unmodified, in part or in whole,`
 
 `must be distributed entirely under this license, and must not be`
 
@@ -1740,7 +1741,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
 &lt;p style=&quot; margin-top:5px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Some icons are gratefully taken from &lt;/span&gt;&lt;a href=&quot;https://uxwing.com/&quot;&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline; color:#007af4;&quot;&gt;https://uxwing.com/&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; and modified. For their licensing see &lt;/span&gt;&lt;a href=&quot;https://uxwing.com/license/&quot;&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline; color:#007af4;&quot;&gt;https://uxwing.com/license/&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="textInteractionFlags">
-             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+             <set>Qt::TextInteractionFlag::LinksAccessibleByMouse|Qt::TextInteractionFlag::TextSelectableByMouse</set>
             </property>
             <property name="openExternalLinks">
              <bool>true</bool>
@@ -1787,10 +1788,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
 }</string>
             </property>
             <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
+             <enum>QFrame::Shape::NoFrame</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Plain</enum>
+             <enum>QFrame::Shadow::Plain</enum>
             </property>
             <property name="undoRedoEnabled">
              <bool>false</bool>
