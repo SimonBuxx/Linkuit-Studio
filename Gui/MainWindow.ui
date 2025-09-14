@@ -3514,10 +3514,10 @@ QMenuBar::item:pressed {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="uEditToolButtonGroup"/>
-  <buttongroup name="uConstantButtonsGroup"/>
+  <buttongroup name="uTogglePulseButtonGroup"/>
   <buttongroup name="uItemDirectionButtonGroup"/>
   <buttongroup name="uSimulationButtonGroup"/>
-  <buttongroup name="uTogglePulseButtonGroup"/>
+  <buttongroup name="uEditToolButtonGroup"/>
+  <buttongroup name="uConstantButtonsGroup"/>
  </buttongroups>
 </ui>

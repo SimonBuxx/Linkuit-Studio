@@ -9,6 +9,19 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+TARGET_SUBDIR =
+CONFIG(debug, debug|release) {
+    TARGET_SUBDIR = debug
+} else {
+    TARGET_SUBDIR = release
+}
+
+CONF_FILE = $$PWD/qt.conf
+DEST_DIR = $$OUT_PWD/$$TARGET_SUBDIR
+
+win32: QMAKE_POST_LINK += copy /Y $$shell_path($$CONF_FILE) $$shell_path($$DEST_DIR)
+unix:  QMAKE_POST_LINK += cp $$shell_path($$CONF_FILE) $$shell_path($$DEST_DIR)
+
 #build_nr.commands = $${PWD}/build_inc.bat
 #build_nr.depends = FORCE
 #QMAKE_EXTRA_TARGETS += build_nr

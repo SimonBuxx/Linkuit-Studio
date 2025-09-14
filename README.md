@@ -37,5 +37,5 @@ Your question is not on the list? Please do not hesitate to contact us at linkui
 
 *Qt Creator for open source* can be downloaded here: https://www.qt.io/download-qt-installer
 
-I am currently using **Qt Creator 16.0.0** on Windows with **Qt 6.7.2**. The compiler I use is **MinGW 64-bit 11.2.0**.
+I am currently using **Qt Creator 17.0.1** on Windows with **Qt 6.9.2**. The compiler I use is **MinGW 64-bit 13.1.0**.
 After installing Qt Creator, the **.pro** file can be opened with Qt Creator, from where you can compile the project.

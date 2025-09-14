@@ -81,11 +81,12 @@ QPlainTextEdit
 
 QMessageBox {
     margin: 10px;
+    background-color: white;
 }
 
 QMessageBox QLabel {
     font: 11pt "Source Sans Pro";
-    color: rgb(0, 45, 50);
+    color: black;
 }
 
 QMessageBox QPushButton

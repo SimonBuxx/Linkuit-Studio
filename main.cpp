@@ -29,6 +29,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion(QString(FULL_VERSION));
     app.setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
 
+    // Force light window theme
+    const QPalette defaultPalette;
+    app.setPalette(defaultPalette.color(QPalette::WindowText));
+
     QCommandLineParser parser;
     parser.setApplicationDescription("Linkuit Studio");
     parser.addPositionalArgument("file", QCoreApplication::translate("file", "Circuit file to open."));
@@ -46,7 +50,11 @@ int main(int argc, char *argv[])
 
     QApplication::setStyle("fusion");
 
+    QFontDatabase::addApplicationFont(":/fonts/Quicksand-Bold.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/Quicksand-Light.ttf");
     QFontDatabase::addApplicationFont(":/fonts/Quicksand-Medium.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/Quicksand-SemiBold.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular.ttf");
 
     const auto&& stylesheet = LoadStylesheet(":/styles/style.css");
 

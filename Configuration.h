@@ -123,7 +123,7 @@ static constexpr uint8_t MIN_INPUT_COUNT = 1;
 static constexpr uint8_t MAX_INPUT_COUNT = 9;
 static constexpr uint8_t GRID_WIDTH = 3;
 
-static const QFont FONT("Calibri Light", 25);
+static const QFont FONT("Calibri", 25, QFont::Light);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 } // namespace
 
@@ -151,7 +151,7 @@ static constexpr uint32_t SIZE = 15;
 
 namespace text_label
 {
-static const QFont FONT("Quicksand Medium", 12);
+static const QFont FONT("Quicksand", 12, QFont::Medium);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 } // namespace
 
@@ -171,7 +171,7 @@ static constexpr uint32_t DEFAULT_CLOCK_TOGGLE_TICKS = 500;
 namespace constant
 {
 static constexpr LogicState DEFAULT_STATE = LogicState::HIGH;
-static const QFont FONT("Quicksand Medium", 10);
+static const QFont FONT("Quicksand", 10, QFont::Medium);
 static constexpr QColor LOW_FONT_COLOR(255, 255, 255);
 static constexpr QColor HIGH_FONT_COLOR(255, 255, 255);
 }
@@ -196,7 +196,7 @@ namespace shift_register
 static constexpr uint8_t MIN_BIT_WIDTH = 2;
 static constexpr uint8_t MAX_BIT_WIDTH = 32;
 static constexpr uint8_t DEFAULT_BIT_WIDTH = 4;
-static const QFont FONT("Quicksand Medium", 10);
+static const QFont FONT("Quicksand", 10, QFont::Medium);
 static constexpr QColor LOW_FONT_COLOR(255, 255, 255);
 static constexpr QColor HIGH_FONT_COLOR(255, 255, 255);
 } // namespace
@@ -229,7 +229,7 @@ static constexpr auto CLOCK_SYMBOL_STRING{">"};
 
 static const QFont FONT("Source Sans Pro");
 static constexpr uint8_t DEFAULT_DESCRIPTION_FONT_SIZE = 20;
-static const QFont CONNECTOR_FONT("Calibri Light", 10);
+static const QFont CONNECTOR_FONT("Calibri", 10, QFont::Light);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr QColor SMALL_TEXT_FONT_COLOR(225, 225, 225);
 } // namespace
