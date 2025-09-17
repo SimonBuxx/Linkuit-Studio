@@ -631,39 +631,42 @@ void CoreLogic::AddWires(QPointF pEndPoint)
             item->setPos(std::min(mPreviewWireStart.x(), snappedEndPoint.x()), snappedEndPoint.y());
         }
 
-        // Delete wires that are completely behind the new wire
-        const auto containedWires = DeleteContainedWires(item);
-        deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
-
-        // Find wires left or right of the new wire (those may be partly behind the new wire)
-        auto startAdjacent = GetAdjacentWire(QPointF(item->x() - 2, item->y()), WireDirection::HORIZONTAL);
-        auto endAdjacent = GetAdjacentWire(QPointF(item->x() + item->GetLength() + 2, item->y()), WireDirection::HORIZONTAL);
-
-        auto horizontalWire = MergeWires(item, startAdjacent, endAdjacent);
-
-        delete item;
-
-        if (startAdjacent == endAdjacent)
+        if (!IsWireContainedInIntersectingWires(item))
         {
-            endAdjacent = std::nullopt;
-        }
+            // Delete wires that are completely behind the new wire
+            const auto containedWires = DeleteContainedWires(item);
+            deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
 
-        if (startAdjacent.has_value())
-        {
-            deletedComponents.push_back(static_cast<IBaseComponent*>(startAdjacent.value()));
-            Q_ASSERT(startAdjacent.value());
-            mView.Scene()->removeItem(startAdjacent.value());
-        }
+            // Find wires left or right of the new wire (those may be partly behind the new wire)
+            auto startAdjacent = GetAdjacentWire(QPointF(item->x() - 2, item->y()), WireDirection::HORIZONTAL);
+            auto endAdjacent = GetAdjacentWire(QPointF(item->x() + item->GetLength() + 2, item->y()), WireDirection::HORIZONTAL);
 
-        if (endAdjacent.has_value())
-        {
-            deletedComponents.push_back(static_cast<IBaseComponent*>(endAdjacent.value()));
-            Q_ASSERT(endAdjacent.value());
-            mView.Scene()->removeItem(endAdjacent.value());
-        }
+            auto horizontalWire = MergeWires(item, startAdjacent, endAdjacent);
 
-        mView.Scene()->addItem(horizontalWire);
-        addedComponents.push_back(static_cast<IBaseComponent*>(horizontalWire));
+            delete item;
+
+            if (startAdjacent == endAdjacent)
+            {
+                endAdjacent = std::nullopt;
+            }
+
+            if (startAdjacent.has_value())
+            {
+                deletedComponents.push_back(static_cast<IBaseComponent*>(startAdjacent.value()));
+                Q_ASSERT(startAdjacent.value());
+                mView.Scene()->removeItem(startAdjacent.value());
+            }
+
+            if (endAdjacent.has_value())
+            {
+                deletedComponents.push_back(static_cast<IBaseComponent*>(endAdjacent.value()));
+                Q_ASSERT(endAdjacent.value());
+                mView.Scene()->removeItem(endAdjacent.value());
+            }
+
+            mView.Scene()->addItem(horizontalWire);
+            addedComponents.push_back(static_cast<IBaseComponent*>(horizontalWire));
+        }
     }
 
     // Add vertical wire
@@ -680,37 +683,40 @@ void CoreLogic::AddWires(QPointF pEndPoint)
             item->setPos(snappedEndPoint.x(), std::min(mPreviewWireStart.y(), snappedEndPoint.y()));
         }
 
-        // Delete wires that are completely behind the new wire
-        const auto containedWires = DeleteContainedWires(item);
-        deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
-
-        // Find wires above or below of the new wire (those may be partly behind the new wire)
-        auto startAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() - 2), WireDirection::VERTICAL);
-        auto endAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() + item->GetLength() + 2), WireDirection::VERTICAL);
-
-        auto verticalWire = MergeWires(item, startAdjacent, endAdjacent);
-
-        delete item;
-
-        if (startAdjacent == endAdjacent)
+        if (!IsWireContainedInIntersectingWires(item))
         {
-            endAdjacent = std::nullopt;
-        }
+            // Delete wires that are completely behind the new wire
+            const auto containedWires = DeleteContainedWires(item);
+            deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
 
-        if (startAdjacent.has_value())
-        {
-            deletedComponents.push_back(static_cast<IBaseComponent*>(startAdjacent.value()));
-            mView.Scene()->removeItem(startAdjacent.value());
-        }
+            // Find wires above or below of the new wire (those may be partly behind the new wire)
+            auto startAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() - 2), WireDirection::VERTICAL);
+            auto endAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() + item->GetLength() + 2), WireDirection::VERTICAL);
 
-        if (endAdjacent.has_value())
-        {
-            deletedComponents.push_back(static_cast<IBaseComponent*>(endAdjacent.value()));
-            mView.Scene()->removeItem(endAdjacent.value());
-        }
+            auto verticalWire = MergeWires(item, startAdjacent, endAdjacent);
 
-        mView.Scene()->addItem(verticalWire);
-        addedComponents.push_back(static_cast<IBaseComponent*>(verticalWire));
+            delete item;
+
+            if (startAdjacent == endAdjacent)
+            {
+                endAdjacent = std::nullopt;
+            }
+
+            if (startAdjacent.has_value())
+            {
+                deletedComponents.push_back(static_cast<IBaseComponent*>(startAdjacent.value()));
+                mView.Scene()->removeItem(startAdjacent.value());
+            }
+
+            if (endAdjacent.has_value())
+            {
+                deletedComponents.push_back(static_cast<IBaseComponent*>(endAdjacent.value()));
+                mView.Scene()->removeItem(endAdjacent.value());
+            }
+
+            mView.Scene()->addItem(verticalWire);
+            addedComponents.push_back(static_cast<IBaseComponent*>(verticalWire));
+        }
     }
 
     std::vector<IBaseComponent*> addedConPoints;
@@ -848,7 +854,7 @@ std::vector<LogicWire*> CoreLogic::DeleteContainedWires(const LogicWire* pWire)
 {
     std::vector<LogicWire*> deletedComponents;
 
-    QRectF collisionRect;
+    QRectF collisionRect; // CollisionRect is oversized for ContainsItemShape request
     if (pWire->GetDirection() == WireDirection::HORIZONTAL)
     {
         collisionRect = QRectF(pWire->x() - 2, pWire->y() - components::wires::BOUNDING_RECT_SIZE / 2.0f - 2,
@@ -862,16 +868,56 @@ std::vector<LogicWire*> CoreLogic::DeleteContainedWires(const LogicWire* pWire)
 
     const auto&& containedComponents = mView.Scene()->items(collisionRect, Qt::ContainsItemShape, Qt::DescendingOrder);
 
-    for (const auto &wire : containedComponents)
+    for (const auto &comp : containedComponents)
     {
-        if (dynamic_cast<LogicWire*>(wire) != nullptr && static_cast<LogicWire*>(wire)->GetDirection() == pWire->GetDirection() && wire != pWire)
+        if (dynamic_cast<LogicWire*>(comp) != nullptr && static_cast<LogicWire*>(comp)->GetDirection() == pWire->GetDirection() && comp != pWire)
         {
-            deletedComponents.push_back(static_cast<LogicWire*>(wire));
-            mView.Scene()->removeItem(wire);
+            deletedComponents.push_back(static_cast<LogicWire*>(comp));
+            mView.Scene()->removeItem(comp);
         }
     }
 
     return deletedComponents;
+}
+
+bool CoreLogic::IsWireContainedInIntersectingWires(const LogicWire* pWire) const
+{
+    QRectF collisionRect; // CollisionRect is undersized for IntersectsItemShape request
+    if (pWire->GetDirection() == WireDirection::HORIZONTAL)
+    {
+        collisionRect = QRectF(pWire->x() + 2, pWire->y() - components::wires::BOUNDING_RECT_SIZE / 2.0f + 2,
+                               pWire->GetLength() - 4, components::wires::BOUNDING_RECT_SIZE - 4);
+    }
+    else
+    {
+        collisionRect = QRectF(pWire->x() - components::wires::BOUNDING_RECT_SIZE / 2.0f + 2, pWire->y() + 2,
+                               components::wires::BOUNDING_RECT_SIZE - 4, pWire->GetLength() - 4);
+    }
+
+    const auto&& intersectingComponents = mView.Scene()->items(collisionRect, Qt::IntersectsItemShape, Qt::DescendingOrder);
+
+    for (const auto &comp : intersectingComponents)
+    {
+        if (dynamic_cast<LogicWire*>(comp) != nullptr && static_cast<LogicWire*>(comp)->GetDirection() == pWire->GetDirection() && comp != pWire)
+        {
+            if (static_cast<LogicWire*>(comp)->GetDirection() == WireDirection::HORIZONTAL)
+            {
+                if (pWire->x() >= static_cast<LogicWire*>(comp)->x() && pWire->x() + pWire->GetLength() <= static_cast<LogicWire*>(comp)->x() + static_cast<LogicWire*>(comp)->GetLength())
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (pWire->y() >= static_cast<LogicWire*>(comp)->y() && pWire->y() + pWire->GetLength() <= static_cast<LogicWire*>(comp)->y() + static_cast<LogicWire*>(comp)->GetLength())
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 std::optional<LogicWire*> CoreLogic::GetAdjacentWire(QPointF pCheckPosition, WireDirection pDirection) const

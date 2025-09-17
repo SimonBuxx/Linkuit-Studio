@@ -355,6 +355,12 @@ protected:
     /// \return A vector containing pointers to all deleted wires
     std::vector<LogicWire*> DeleteContainedWires(const LogicWire* pWire);
 
+
+    /// \brief Checks if the given wire is fully contained in another existing wire to prevent unnecessary undos
+    /// \param pWire: The wire to check
+    /// \return True, if the given wire is fully contained in another existing wire
+    bool IsWireContainedInIntersectingWires(const LogicWire* pWire) const;
+
     /// \brief Searches a wire at the given position that has the given direction
     /// \param pCheckPosition: The position to check at
     /// \param pDirection: The direction to look for
