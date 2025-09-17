@@ -898,22 +898,15 @@ bool CoreLogic::IsWireContainedInIntersectingWires(const LogicWire* pWire) const
 
     for (const auto &comp : intersectingComponents)
     {
-        if (dynamic_cast<LogicWire*>(comp) != nullptr && static_cast<LogicWire*>(comp)->GetDirection() == pWire->GetDirection() && comp != pWire)
+        if (dynamic_cast<LogicWire*>(comp) == nullptr || static_cast<LogicWire*>(comp)->GetDirection() != pWire->GetDirection() || comp == pWire)
         {
-            if (static_cast<LogicWire*>(comp)->GetDirection() == WireDirection::HORIZONTAL)
-            {
-                if (pWire->x() >= static_cast<LogicWire*>(comp)->x() && pWire->x() + pWire->GetLength() <= static_cast<LogicWire*>(comp)->x() + static_cast<LogicWire*>(comp)->GetLength())
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                if (pWire->y() >= static_cast<LogicWire*>(comp)->y() && pWire->y() + pWire->GetLength() <= static_cast<LogicWire*>(comp)->y() + static_cast<LogicWire*>(comp)->GetLength())
-                {
-                    return true;
-                }
-            }
+            continue;
+        }
+
+        if ((pWire->GetDirection() == WireDirection::HORIZONTAL && pWire->x() >= static_cast<LogicWire*>(comp)->x() && pWire->x() + pWire->GetLength() <= static_cast<LogicWire*>(comp)->x() + static_cast<LogicWire*>(comp)->GetLength()) ||
+            (pWire->GetDirection() == WireDirection::VERTICAL   && pWire->y() >= static_cast<LogicWire*>(comp)->y() && pWire->y() + pWire->GetLength() <= static_cast<LogicWire*>(comp)->y() + static_cast<LogicWire*>(comp)->GetLength()))
+        {
+            return true; // pWire is fully contained in an intersecting wire
         }
     }
 
