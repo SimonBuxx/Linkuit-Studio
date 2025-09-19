@@ -147,6 +147,26 @@ protected slots:
     /// \param pChecked: True, if the button is checked
     void OnItemUpButtonToggled(bool pChecked);
 
+    /// \brief Sets the output color for new outputs to default if the button is checked
+    /// \param pChecked: True, if the button is checked
+    void OnOutputColorDefaultButtonToggled(bool pChecked);
+
+    /// \brief Sets the output color for new outputs to green if the button is checked
+    /// \param pChecked: True, if the button is checked
+    void OnOutputColorGreenButtonToggled(bool pChecked);
+
+    /// \brief Sets the output color for new outputs to red if the button is checked
+    /// \param pChecked: True, if the button is checked
+    void OnOutputColorRedButtonToggled(bool pChecked);
+
+    /// \brief Sets the output color for new outputs to blue if the button is checked
+    /// \param pChecked: True, if the button is checked
+    void OnOutputColorBlueButtonToggled(bool pChecked);
+
+    /// \brief Sets the output color for new outputs to yellow if the button is checked
+    /// \param pChecked: True, if the button is checked
+    void OnOutputColorYellowButtonToggled(bool pChecked);
+
     /// \brief Sets the constant state for new constant inputs to HIGH if the button is checked
     /// \param pChecked: True, if the button is checked
     void OnConstantHighButtonToggled(bool pChecked);
@@ -175,6 +195,10 @@ protected slots:
     /// \brief Sets the current component direction to the given direction if SW is in ControlMode::ADD
     /// \param pDirection: The direction to set to
     void SetComponentDirectionIfInAddMode(Direction pDirection);
+
+    /// \brief Sets the current output color to the given color if SW is in ControlMode::ADD
+    /// \param pDirection: The direction to set to
+    void SetOutputColorIfInAddMode(OutputColor pColor);
 
     /// \brief Sets the current constant state to the given state if SW is in ControlMode::ADD
     /// \param pState: The logic state to set to

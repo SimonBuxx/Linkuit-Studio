@@ -18,7 +18,7 @@ static const std::map<ComponentType, ConfiguratorMode> CONFIGURATOR_MODE_MAP{{Co
                                                                              {ComponentType::CONSTANT, ConfiguratorMode::CONSTANT_STATE},
                                                                              {ComponentType::BUTTON, ConfiguratorMode::NO_CONFIGURATION},
                                                                              {ComponentType::CLOCK, ConfiguratorMode::DIRECTION_ONLY},
-                                                                             {ComponentType::OUTPUT, ConfiguratorMode::NO_CONFIGURATION},
+                                                                             {ComponentType::OUTPUT, ConfiguratorMode::OUTPUT_COLOR},
                                                                              {ComponentType::TEXT_LABEL, ConfiguratorMode::NO_CONFIGURATION},
                                                                              {ComponentType::HALF_ADDER, ConfiguratorMode::DIRECTION_ONLY},
                                                                              {ComponentType::FULL_ADDER, ConfiguratorMode::DIRECTION_ONLY},

@@ -61,7 +61,8 @@ ConPoint::ConPoint(const CoreLogic* pCoreLogic, const QJsonObject& pJson):
         if (pJson["dir"] == static_cast<int32_t>(DiodeDirection::HORIZONTAL))
         {
             mConnectionType = ConnectionType::DIODE_X;
-        } else if (pJson["dir"] == static_cast<int32_t>(DiodeDirection::VERTICAL))
+        }
+        else if (pJson["dir"] == static_cast<int32_t>(DiodeDirection::VERTICAL))
         {
             mConnectionType = ConnectionType::DIODE_Y;
         }

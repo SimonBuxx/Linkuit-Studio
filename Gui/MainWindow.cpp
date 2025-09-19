@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *pParent) :
     UpdateUndoRedoEnabled(false);
 
     mUi->uItemRightButton->setChecked(true); // Button for component direction RIGHT
+    mUi->uOutputColorDefaultButton->setChecked(true); // Button for output color DEFAULT
 
     mUi->uItemConfigurator->hide();
     mUi->uClockConfigurator->hide();
@@ -264,6 +265,12 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(mUi->uItemDownButton, &QPushButton::toggled, this, &MainWindow::OnItemDownButtonToggled);
     QObject::connect(mUi->uItemLeftButton, &QPushButton::toggled, this, &MainWindow::OnItemLeftButtonToggled);
     QObject::connect(mUi->uItemUpButton, &QPushButton::toggled, this, &MainWindow::OnItemUpButtonToggled);
+
+    QObject::connect(mUi->uOutputColorDefaultButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorDefaultButtonToggled);
+    QObject::connect(mUi->uOutputColorGreenButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorGreenButtonToggled);
+    QObject::connect(mUi->uOutputColorRedButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorRedButtonToggled);
+    QObject::connect(mUi->uOutputColorBlueButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorBlueButtonToggled);
+    QObject::connect(mUi->uOutputColorYellowButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorYellowButtonToggled);
 
     QObject::connect(mUi->uGateInputCountSlider, &QSlider::valueChanged, this, &MainWindow::SetGateInputCountIfAllowed);
     QObject::connect(mUi->uEncoderDecoderInputCountSlider, &QSlider::valueChanged, this, &MainWindow::SetEncoderDecoderInputCountIfAllowed);
@@ -814,6 +821,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
@@ -827,6 +835,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::MULTIPLEXER_BITS:
@@ -840,6 +849,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::ENCODER_DECODER:
@@ -853,6 +863,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
 
             // To update the label to "ouputs" or "inputs"
             SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
@@ -869,6 +880,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::CONSTANT_STATE:
@@ -882,6 +894,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::COUNTER_BITS:
@@ -895,6 +908,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->show();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::RS_FLIPFLOP_TYPE:
@@ -908,6 +922,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->show();
             mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
             break;
         }
         case ConfiguratorMode::MASTER_SLAVE:
@@ -920,6 +935,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
+            mUi->uOutputColorButtonsFrame->hide();
 
             switch (mCoreLogic.GetSelectedComponentType())
             {
@@ -953,6 +969,20 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             }*/
 
             mUi->uMasterSlaveFrame->show();
+            break;
+        }
+        case ConfiguratorMode::OUTPUT_COLOR:
+        {
+            mUi->uItemDirectionButtonsFrame->hide();
+            mUi->uGateInputCountFrame->hide();
+            mUi->uEncoderDecoderInputCountFrame->hide();
+            mUi->uMultiplexerBitWidthFrame->hide();
+            mUi->uShiftRegisterBitWidthFrame->hide();
+            mUi->uConstantButtonsFrame->hide();
+            mUi->uCounterBitWidthFrame->hide();
+            mUi->uFlipFlopTypesFrame->hide();
+            mUi->uMasterSlaveFrame->hide();
+            mUi->uOutputColorButtonsFrame->show();
             break;
         }
         default:
@@ -1007,6 +1037,46 @@ void MainWindow::OnItemUpButtonToggled(bool pChecked)
     if (pChecked)
     {
         SetComponentDirectionIfInAddMode(Direction::UP);
+    }
+}
+
+void MainWindow::OnOutputColorDefaultButtonToggled(bool pChecked)
+{
+    if (pChecked)
+    {
+        SetOutputColorIfInAddMode(OutputColor::DEFAULT);
+    }
+}
+
+void MainWindow::OnOutputColorGreenButtonToggled(bool pChecked)
+{
+    if (pChecked)
+    {
+        SetOutputColorIfInAddMode(OutputColor::GREEN);
+    }
+}
+
+void MainWindow::OnOutputColorRedButtonToggled(bool pChecked)
+{
+    if (pChecked)
+    {
+        SetOutputColorIfInAddMode(OutputColor::RED);
+    }
+}
+
+void MainWindow::OnOutputColorBlueButtonToggled(bool pChecked)
+{
+    if (pChecked)
+    {
+        SetOutputColorIfInAddMode(OutputColor::BLUE);
+    }
+}
+
+void MainWindow::OnOutputColorYellowButtonToggled(bool pChecked)
+{
+    if (pChecked)
+    {
+        SetOutputColorIfInAddMode(OutputColor::YELLOW);
     }
 }
 
@@ -1812,6 +1882,14 @@ void MainWindow::SetComponentDirectionIfInAddMode(Direction pDirection)
     if (mCoreLogic.GetControlMode() == ControlMode::ADD)
     {
         mCoreLogic.SetComponentDirection(pDirection);
+    }
+}
+
+void MainWindow::SetOutputColorIfInAddMode(OutputColor pColor)
+{
+    if (mCoreLogic.GetControlMode() == ControlMode::ADD)
+    {
+        mCoreLogic.SetOutputColor(pColor);
     }
 }
 

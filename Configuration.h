@@ -177,6 +177,20 @@ static constexpr QColor HIGH_FONT_COLOR(255, 255, 255);
 }
 } // namespace
 
+namespace outputs
+{
+static constexpr QColor DEFAULT_COLOR_LOW(0, 100, 70);
+static constexpr QColor DEFAULT_COLOR_HIGH(0, 204, 143);
+static constexpr QColor GREEN_COLOR_LOW(22, 100, 22);
+static constexpr QColor GREEN_COLOR_HIGH(0, 255, 0);
+static constexpr QColor RED_COLOR_LOW(131, 33, 33);
+static constexpr QColor RED_COLOR_HIGH(200, 50, 50);
+static constexpr QColor BLUE_COLOR_LOW(5, 51, 97);
+static constexpr QColor BLUE_COLOR_HIGH(10, 100, 190);
+static constexpr QColor YELLOW_COLOR_LOW(134, 134, 9);
+static constexpr QColor YELLOW_COLOR_HIGH(240, 240, 50);
+} // namespace
+
 namespace multiplexer
 {
 static constexpr uint8_t MIN_BIT_WIDTH = 1;

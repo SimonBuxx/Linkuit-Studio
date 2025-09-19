@@ -164,6 +164,15 @@ enum class FlipFlopStyle
     MASTER_SLAVE
 };
 
+enum class OutputColor
+{
+    DEFAULT,
+    GREEN,
+    RED,
+    BLUE,
+    YELLOW
+};
+
 enum class ConfiguratorMode
 {
     NO_CONFIGURATION = 0,
@@ -175,7 +184,8 @@ enum class ConfiguratorMode
     CONSTANT_STATE,
     COUNTER_BITS,
     RS_FLIPFLOP_TYPE,
-    MASTER_SLAVE
+    MASTER_SLAVE,
+    OUTPUT_COLOR
 };
 
 enum TutorialStep

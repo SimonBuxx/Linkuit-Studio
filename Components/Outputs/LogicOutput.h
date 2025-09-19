@@ -3,7 +3,6 @@
 
 #include "../IBaseComponent.h"
 #include "HelperStructures.h"
-#include "LogicCells/LogicOutputCell.h"
 
 ///
 /// \brief The LogicOutput class represents a logic output
@@ -14,7 +13,8 @@ class LogicOutput : public IBaseComponent
 public:
     /// \brief Constructor for LogicOutput
     /// \param pCoreLogic: Pointer to the core logic
-    LogicOutput(const CoreLogic* pCoreLogic);
+    /// \param pColor: The output's color
+    LogicOutput(const CoreLogic* pCoreLogic, OutputColor pColor = OutputColor::DEFAULT);
 
     /// \brief Copy constructor for LogicOutput
     /// \param pObj: The object to be copied
@@ -52,6 +52,9 @@ protected:
     /// \param pItem: Contains drawing parameters
     /// \param pWidget: Unused, the widget that is been painted on
     void paint(QPainter *pPainter, const QStyleOptionGraphicsItem *pItem, QWidget *pWidget) override;
+
+protected:
+    OutputColor mColor;
 };
 
 #endif // LOGICOUTPUT_H

@@ -111,6 +111,10 @@ public:
     /// \param pStyle: The new flip-flop style
     void SetFlipFlopStyle(FlipFlopStyle pStyle);
 
+    /// \brief Setter for the output color
+    /// \param pColor: The new output color
+    void SetOutputColor(OutputColor pColor);
+
     /// \brief Sets the starting point of the preview wires to the given point and adds them to the scene
     /// \param pStartPoint: The point where the new wire drawing action started
     void SetPreviewWireStart(QPointF pStartPoint);
@@ -521,6 +525,7 @@ protected:
     FlipFlopStyle mFlipFlopStyle = FlipFlopStyle::LATCH;
     bool mIsDFlipFlopMasterSlave = false;
     bool mIsJkFlipFlopMasterSlave = false;
+    OutputColor mOutputColor = OutputColor::DEFAULT;
 
     // Variables for wire insertion
     QPointF mPreviewWireStart;

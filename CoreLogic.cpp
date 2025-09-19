@@ -356,7 +356,7 @@ std::optional<IBaseComponent*> CoreLogic::GetItem() const
         }
         case ComponentType::OUTPUT:
         {
-            item = new LogicOutput(this);
+            item = new LogicOutput(this, mOutputColor);
             break;
         }
         case ComponentType::TEXT_LABEL:
@@ -546,6 +546,11 @@ void CoreLogic::SetCounterBitWidth(uint8_t pBitWidth)
 void CoreLogic::SetFlipFlopStyle(FlipFlopStyle pStyle)
 {
     mFlipFlopStyle = pStyle;
+}
+
+void CoreLogic::SetOutputColor(OutputColor pColor)
+{
+    mOutputColor = pColor;
 }
 
 void CoreLogic::SetConstantState(LogicState pState)
