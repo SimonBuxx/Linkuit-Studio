@@ -981,7 +981,8 @@ bool CoreLogic::IsCollidingComponent(QGraphicsItem* pComponent) const
 {
     return (dynamic_cast<IBaseComponent*>(pComponent) != nullptr
             && dynamic_cast<LogicWire*>(pComponent) == nullptr
-            && dynamic_cast<ConPoint*>(pComponent) == nullptr);
+            && dynamic_cast<ConPoint*>(pComponent) == nullptr
+            && dynamic_cast<TextLabel*>(pComponent) == nullptr);
 }
 
 bool CoreLogic::IsTCrossing(const LogicWire* pWire1, const LogicWire* pWire2) const

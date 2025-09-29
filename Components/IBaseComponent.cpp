@@ -88,12 +88,18 @@ std::shared_ptr<LogicBaseCell> IBaseComponent::GetLogicCell()
 
 void IBaseComponent::Deregister()
 {
-    mLogicCell->Deregister();
+    if (mLogicCell != nullptr)
+    {
+        mLogicCell->Deregister();
+    }
 }
 
 void IBaseComponent::Register()
 {
-    mLogicCell->Register();
+    if (mLogicCell != nullptr)
+    {
+        mLogicCell->Register();
+    }
 }
 
 std::optional<const LogicConnector*> IBaseComponent::InvertConnectorByPoint(QPointF pPoint)
