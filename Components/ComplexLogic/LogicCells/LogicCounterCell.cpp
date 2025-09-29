@@ -83,31 +83,6 @@ LogicState LogicCounterCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
-void LogicCounterCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        for (size_t i = 0; i < mOutputStates.size(); i++)
-        {
-            NotifySuccessor(i, mOutputStates[i]);
-        }
-
-        emit StateChangedSignal();
-    }
-}
-
-void LogicCounterCell::InputReady(uint32_t pInput, LogicState pState)
-{
-    if (mInputStates[pInput] != pState)
-    {
-        emit StateChangedSignal(); // to trigger immediate update of the component
-    }
-    LogicBaseCell::InputReady(pInput, pState);
-}
-
 void LogicCounterCell::OnWakeUp()
 {
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);

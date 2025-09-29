@@ -27,8 +27,6 @@
 
 LogicMultiplexerCell::LogicMultiplexerCell(uint8_t pDigitCount):
     LogicBaseCell(pDigitCount + std::pow(2, pDigitCount), 1),
-    mOutputStates(1, LogicState::LOW),
-    mStateChanged(true),
     mDigitCount(pDigitCount)
 {}
 
@@ -41,7 +39,11 @@ void LogicMultiplexerCell::LogicFunction()
         input += (mInputStates[i] == LogicState::HIGH) ? std::pow(2, i) : 0;
     }
 
-    mStateChanged |= AssureState(mOutputStates[0], mInputStates[input + mDigitCount]);
+    if (mCurrentOutputStates[0] != mInputStates[input + mDigitCount])
+    {
+        mNextOutputStates[0] = mInputStates[input + mDigitCount];
+        mStateChanged = true;
+    }
 }
 
 LogicState LogicMultiplexerCell::GetOutputState(uint32_t pOutput) const
@@ -49,24 +51,11 @@ LogicState LogicMultiplexerCell::GetOutputState(uint32_t pOutput) const
     Q_ASSERT(pOutput <= 1);
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mOutputStates[pOutput]);
+        return InvertState(mCurrentOutputStates[pOutput]);
     }
     else
     {
-        return mOutputStates[pOutput];
-    }
-}
-
-void LogicMultiplexerCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        NotifySuccessor(0, mOutputStates[0]);
-
-        emit StateChangedSignal();
+        return mCurrentOutputStates[pOutput];
     }
 }
 
@@ -79,12 +68,10 @@ void LogicMultiplexerCell::OnWakeUp()
         mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
     }
 
-    mOutputStates[0] = LogicState::LOW;
-    mNextUpdateTime = UpdateTime::NOW;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicMultiplexerCell::OnShutdown()
@@ -92,7 +79,8 @@ void LogicMultiplexerCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

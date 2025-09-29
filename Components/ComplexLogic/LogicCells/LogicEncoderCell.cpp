@@ -76,7 +76,7 @@ LogicState LogicEncoderCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
-void LogicEncoderCell::OnSimulationAdvance()
+/*void LogicEncoderCell::OnSimulationAdvance()
 {
     AdvanceUpdateTime();
 
@@ -90,7 +90,7 @@ void LogicEncoderCell::OnSimulationAdvance()
 
         emit StateChangedSignal();
     }
-}
+}*/
 
 void LogicEncoderCell::OnWakeUp()
 {

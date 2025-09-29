@@ -48,7 +48,8 @@ IBaseComponent::IBaseComponent(const CoreLogic* pCoreLogic, const std::shared_pt
 
     if (mLogicCell != nullptr)
     {
-        QObject::connect(pCoreLogic, &CoreLogic::SimulationAdvanceSignal, mLogicCell.get(), &LogicBaseCell::OnSimulationAdvance);
+        QObject::connect(pCoreLogic, &CoreLogic::CalculateNextStateSignal, mLogicCell.get(), &LogicBaseCell::OnCalculateNextState);
+        QObject::connect(pCoreLogic, &CoreLogic::CommitStateSignal, mLogicCell.get(), &LogicBaseCell::OnCommitState);
         QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, mLogicCell.get(), &LogicBaseCell::OnShutdown);
         QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal,mLogicCell.get(), &LogicBaseCell::OnWakeUp);
         QObject::connect(mLogicCell.get(), &LogicBaseCell::StateChangedSignal, this, &IBaseComponent::OnLogicStateChanged);
@@ -142,4 +143,9 @@ void IBaseComponent::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
 QPainterPath IBaseComponent::shape() const
 {
     return mShape;
+}
+
+IBaseComponent::~IBaseComponent(void)
+{
+
 }

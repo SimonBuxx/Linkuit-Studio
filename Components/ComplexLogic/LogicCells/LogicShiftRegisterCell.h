@@ -52,15 +52,7 @@ public:
     /// \return The logic state of this cell's output number pOutput (ignoring inversion)
     LogicState GetOutputStateUninverted(uint32_t pOutput = 0) const;
 
-    /// \brief Sets input number pInput to the new state pState
-    /// \param pInput: The number of the changed input
-    /// \param pState: The new state of the input
-    void InputReady(uint32_t pInput, LogicState pState) override;
-
 public slots:
-    /// \brief Advances the simulation of this cell by one logic tick
-    void OnSimulationAdvance(void) override;
-
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;
 

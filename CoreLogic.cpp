@@ -283,7 +283,8 @@ bool CoreLogic::IsSimulationRunning() const
 
 void CoreLogic::OnPropagationTimeout()
 {
-    emit SimulationAdvanceSignal();
+    emit CalculateNextStateSignal();
+    emit CommitStateSignal();
 }
 
 bool CoreLogic::IsUndoQueueEmpty() const
@@ -1226,7 +1227,13 @@ void CoreLogic::CreateWireLogicCells()
 
     for (const auto& group : mWireGroups)
     {
-        auto logicCell = std::make_shared<LogicWireCell>(this);
+        auto logicCell = std::make_shared<LogicWireCell>();
+
+        QObject::connect(this, &CoreLogic::CalculateNextStateSignal, logicCell.get(), &LogicBaseCell::OnCalculateNextState);
+        QObject::connect(this, &CoreLogic::CommitStateSignal, logicCell.get(), &LogicBaseCell::OnCommitState);
+        QObject::connect(this, &CoreLogic::SimulationStopSignal, logicCell.get(), &LogicBaseCell::OnShutdown);
+        QObject::connect(this, &CoreLogic::SimulationStartSignal, logicCell.get(), &LogicBaseCell::OnWakeUp);
+
         mLogicWireCells.emplace_back(logicCell);
         for (auto& comp : group)
         {
@@ -1849,10 +1856,7 @@ void CoreLogic::NewCircuit()
     EnterControlMode(ControlMode::EDIT); // Always start in edit mode after loading
 
     // Delete all components
-    for (const auto& item : mView.Scene()->items())
-    {
-        mView.Scene()->removeItem(item);
-    }
+    mView.Scene()->clear();
 
     mView.ResetViewport();
 
@@ -1899,10 +1903,7 @@ void CoreLogic::ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson)
     }
 
     // Delete all components
-    for (const auto& item : mView.Scene()->items())
-    {
-        mView.Scene()->removeItem(item);
-    }
+    mView.Scene()->clear();
 
     mView.ResetViewport();
 

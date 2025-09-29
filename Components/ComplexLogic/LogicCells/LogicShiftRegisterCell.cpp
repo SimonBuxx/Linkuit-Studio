@@ -68,31 +68,6 @@ LogicState LogicShiftRegisterCell::GetOutputStateUninverted(uint32_t pOutput) co
     return mOutputStates[pOutput];
 }
 
-void LogicShiftRegisterCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        for (size_t i = 0; i < mOutputStates.size(); i++)
-        {
-            NotifySuccessor(i, mOutputStates[i]);
-        }
-
-        emit StateChangedSignal();
-    }
-}
-
-void LogicShiftRegisterCell::InputReady(uint32_t pInput, LogicState pState)
-{
-    if (mInputStates[pInput] != pState)
-    {
-        emit StateChangedSignal(); // to trigger immediate update of the component
-    }
-    LogicBaseCell::InputReady(pInput, pState);
-}
-
 void LogicShiftRegisterCell::OnWakeUp()
 {   
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);

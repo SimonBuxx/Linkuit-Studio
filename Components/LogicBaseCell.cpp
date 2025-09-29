@@ -9,8 +9,11 @@ LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mInputInverted(pInputs, false),
     mOutputInverted(pOutputs, false),
     mOutputCells(pOutputs, std::make_pair(nullptr, 0)),
+    mCurrentOutputStates(pOutputs, LogicState::LOW),
+    mNextOutputStates(pOutputs, LogicState::LOW),
     mNextUpdateTime(UpdateTime::INF),
-    mIsActive(false)
+    mIsActive(false),
+    mStateChanged(false)
 {}
 
 void LogicBaseCell::ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput)
@@ -83,51 +86,6 @@ void LogicBaseCell::InvertOutput(uint32_t pOutput)
     mOutputInverted[pOutput] = !mOutputInverted[pOutput];
 }
 
-bool LogicBaseCell::IsActive() const
-{
-    return mIsActive;
-}
-
-void LogicBaseCell::NotifySuccessor(uint32_t pOutput, LogicState pState) const
-{
-    Q_ASSERT(mOutputCells.size() > pOutput);
-    if (mOutputCells[pOutput].first != nullptr) // If successor exists
-    {
-        if (mOutputCells[pOutput].first->IsInputInverted(mOutputCells[pOutput].second))
-        {
-            const auto&& forwardedState = ApplyInversion(InvertState(pState), pOutput);
-            mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, forwardedState);
-        }
-        else
-        {
-            const auto&& forwardedState = ApplyInversion(pState, pOutput);
-            mOutputCells[pOutput].first->InputReady(mOutputCells[pOutput].second, forwardedState);
-        }
-    }
-}
-
-LogicState LogicBaseCell::ApplyInversion(LogicState pState, uint32_t pOutput) const
-{
-    Q_ASSERT(mOutputInverted.size() > pOutput);
-    if (mOutputInverted[pOutput])
-    {
-        return InvertState(pState);
-    }
-    else
-    {
-        return pState;
-    }
-}
-
-void LogicBaseCell::InputReady(uint32_t pInput, LogicState pState)
-{
-    if (mInputStates[pInput] != pState)
-    {
-        mInputStates[pInput] = pState;
-        mNextUpdateTime = UpdateTime::NEXT_TICK;
-    }
-}
-
 bool LogicBaseCell::AssureState(LogicState &pSubject, const LogicState &pTargetState)
 {
     if (pSubject != pTargetState)
@@ -150,24 +108,43 @@ bool LogicBaseCell::AssureStateIf(bool pCondition, LogicState &pSubject, const L
     return false;
 }
 
-void LogicBaseCell::AdvanceUpdateTime()
+void LogicBaseCell::OnCalculateNextState()
 {
-    switch (mNextUpdateTime)
+    LogicFunction();
+}
+
+void LogicBaseCell::OnCommitState()
+{
+    mCurrentOutputStates = mNextOutputStates;
+
+    if (mStateChanged)
     {
-        case UpdateTime::NEXT_TICK:
+        emit StateChangedSignal();
+        mStateChanged = false;
+    }
+
+    for (size_t i = 0; i < mOutputCells.size(); ++i)
+    {
+        if (mOutputCells[i].first != nullptr)
         {
-            mNextUpdateTime = UpdateTime::NOW; // Update in next cycle
-            break;
+            LogicState stateToSend = mCurrentOutputStates[i];
+            if (IsOutputInverted(i))
+            {
+                stateToSend = InvertState(stateToSend);
+            }
+
+            mOutputCells[i].first->SetInputState(mOutputCells[i].second, stateToSend);
         }
-        case UpdateTime::NOW:
-        {
-            LogicFunction(); // Update output states now
-            mNextUpdateTime = UpdateTime::INF;
-            break;
-        }
-        case UpdateTime::INF:
-        {
-            break; // No update scheduled
-        }
+    }
+}
+
+void LogicBaseCell::SetInputState(uint32_t pInput, LogicState pState)
+{
+    if (IsInputInverted(pInput))
+    {
+        mInputStates[pInput] = InvertState(pState);
+    }
+    else {
+        mInputStates[pInput] = pState;
     }
 }

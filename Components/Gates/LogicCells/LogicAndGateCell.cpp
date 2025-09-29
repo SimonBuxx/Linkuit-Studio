@@ -1,10 +1,7 @@
 #include "LogicAndGateCell.h"
 
 LogicAndGateCell::LogicAndGateCell(uint32_t pInputs):
-    LogicBaseCell(pInputs, 1),
-    mPreviousState(LogicState::LOW),
-    mCurrentState(LogicState::LOW),
-    mStateChanged(true)
+    LogicBaseCell(pInputs, 1)
 {}
 
 void LogicAndGateCell::LogicFunction()
@@ -13,17 +10,17 @@ void LogicAndGateCell::LogicFunction()
     {
         if (input != LogicState::HIGH)
         {
-            if (mPreviousState != LogicState::LOW)
+            if (mCurrentOutputStates[0] != LogicState::LOW)
             {
-                mCurrentState = LogicState::LOW;
+                mNextOutputStates[0] = LogicState::LOW;
                 mStateChanged = true;
             }
             return;
         }
     }
-    if (mPreviousState != LogicState::HIGH)
+    if (mCurrentOutputStates[0] != LogicState::HIGH)
     {
-        mCurrentState = LogicState::HIGH;
+        mNextOutputStates[0] = LogicState::HIGH;
         mStateChanged = true;
     }
 }
@@ -32,42 +29,27 @@ LogicState LogicAndGateCell::GetOutputState(uint32_t pOutput) const
 {
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mCurrentState);
+        return InvertState(mCurrentOutputStates[0]);
     }
     else
     {
-        return mCurrentState;
-    }
-}
-
-void LogicAndGateCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        NotifySuccessor(0, mCurrentState);
-        mPreviousState = mCurrentState;
-
-        emit StateChangedSignal();
+        return mCurrentOutputStates[0];
     }
 }
 
 void LogicAndGateCell::OnWakeUp()
 {
+    mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+
     for (size_t i = 0; i < mInputStates.size(); i++)
     {
         mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
     }
 
-    mPreviousState = LogicState::LOW;
-    mCurrentState = LogicState::LOW;
-    mNextUpdateTime = UpdateTime::NOW;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicAndGateCell::OnShutdown()
@@ -75,7 +57,8 @@ void LogicAndGateCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mCurrentState = LogicState::LOW;
+    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

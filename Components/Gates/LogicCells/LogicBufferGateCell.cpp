@@ -1,65 +1,48 @@
 #include "LogicBufferGateCell.h"
 
 LogicBufferGateCell::LogicBufferGateCell():
-    LogicBaseCell(1, 1),
-    mPreviousState(LogicState::LOW),
-    mCurrentState(LogicState::LOW),
-    mStateChanged(true)
+    LogicBaseCell(1, 1)
 {}
 
 void LogicBufferGateCell::LogicFunction()
 {
-    mStateChanged |= AssureState(mCurrentState, mInputStates[0]);
+    mStateChanged = AssureState(mNextOutputStates[0], mInputStates[0]);
 }
 
 LogicState LogicBufferGateCell::GetOutputState(uint32_t pOutput) const
 {
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mCurrentState);
+        return InvertState(mCurrentOutputStates[0]);
     }
     else
     {
-        return mCurrentState;
-    }
-}
-
-void LogicBufferGateCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        NotifySuccessor(0, mCurrentState);
-        mPreviousState = mCurrentState;
-
-        emit StateChangedSignal();
+        return mCurrentOutputStates[0];
     }
 }
 
 void LogicBufferGateCell::OnWakeUp()
 {
+    mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+
     for (size_t i = 0; i < mInputStates.size(); i++)
     {
         mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
     }
 
-    mPreviousState = LogicState::LOW;
-    mCurrentState = LogicState::LOW;
-    mNextUpdateTime = UpdateTime::NOW;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicBufferGateCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
-    mInputStates[0] = LogicState::LOW;
-    mInputConnected[0] = false;
-    mCurrentState = LogicState::LOW;
+    mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
+    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

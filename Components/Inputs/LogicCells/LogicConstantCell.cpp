@@ -2,43 +2,30 @@
 
 LogicConstantCell::LogicConstantCell(LogicState pConstantState):
     LogicBaseCell(0, 1),
-    mState(LogicState::LOW),
-    mConstantState(pConstantState),
-    mStateChanged(true)
+    mConstantState(pConstantState)
 {}
 
 LogicState LogicConstantCell::GetOutputState(uint32_t pOutput) const
 {
     Q_UNUSED(pOutput);
-    return mState;
-}
-
-void LogicConstantCell::OnSimulationAdvance()
-{
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        NotifySuccessor(0, mState);
-
-        emit StateChangedSignal();
-    }
+    return mCurrentOutputStates[0];
 }
 
 void LogicConstantCell::OnWakeUp()
 {
-    mState = mConstantState;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates = std::vector<LogicState>{1, mConstantState};
+    mNextOutputStates = std::vector<LogicState>{1, mConstantState};
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicConstantCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
-    mState = LogicState::LOW;
+    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 LogicState LogicConstantCell::GetConstantState() const

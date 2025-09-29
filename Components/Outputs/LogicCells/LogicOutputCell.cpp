@@ -10,8 +10,10 @@ void LogicOutputCell::LogicFunction()
     if (mState != mInputStates[0])
     {
         mState = mInputStates[0];
-        emit StateChangedSignal();
+        mStateChanged = true;
     }
+
+    qDebug() << (int) mState;
 }
 
 LogicState LogicOutputCell::GetOutputState(uint32_t pOutput) const
@@ -20,24 +22,19 @@ LogicState LogicOutputCell::GetOutputState(uint32_t pOutput) const
     return mState;
 }
 
-void LogicOutputCell::InputReady(uint32_t pInput, LogicState pState)
-{
-    Q_ASSERT(pInput == 0);
-    mInputStates[pInput] = pState;
-    LogicFunction();
-}
-
 void LogicOutputCell::OnWakeUp()
 {
+    mInputStates = std::vector<LogicState>{1, LogicState::LOW};
     mState = LogicState::LOW;
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicOutputCell::OnShutdown()
 {
+    mInputStates = std::vector<LogicState>{1, LogicState::LOW};
+    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mState = LogicState::LOW;
     mIsActive = false;
-    mInputConnected[0] = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

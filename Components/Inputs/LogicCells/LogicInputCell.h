@@ -28,8 +28,6 @@ public slots:
     /// \brief Initializes the logic cell's states and triggers a component repaint
     void OnWakeUp(void) override;
 
-protected:
-    LogicState mState;
 };
 
 #endif // LOGICINPUTCELL_H

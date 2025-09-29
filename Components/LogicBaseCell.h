@@ -31,16 +31,6 @@ public:
     /// \brief The logic function that determines the output states based on the inputs
     virtual void LogicFunction(void) {};
 
-    /// \brief Notifies the logic cell connected to output pOutput to update its input state to pState
-    /// \param pOutput: The number of the output that has changed to pState
-    /// \param pState: The new state of the output
-    void NotifySuccessor(uint32_t pOutput, LogicState pState) const;
-
-    /// \brief Sets input number pInput to the new state pState
-    /// \param pInput: The number of the changed input
-    /// \param pState: The new state of the input
-    virtual void InputReady(uint32_t pInput, LogicState pState);
-
     /// \brief Sets logic cell pLogicCell's input number pInput to this cell's output number pOutput
     /// \param pLogicCell: The logic cell to connect to this cell's output
     /// \param pInput: The number of the input of the connected cell
@@ -105,21 +95,9 @@ public:
     /// \return The logic state of this cell's output number pOutput
     virtual LogicState GetOutputState(uint32_t pOutput = 0) const = 0;
 
-    /// \brief Returns true, if this logic cell is not shut down
-    /// \return True, if logic cell active
-    bool IsActive(void) const;
+    virtual void SetInputState(uint32_t pInput, LogicState pState);
 
 protected:
-    /// \brief If the mNextUpdateTime value is NOW, AdvanceUpdateTime calls LogicFunction()
-    /// If it's NEXT_TICK, the update time is advanced to NOW
-    void AdvanceUpdateTime(void);
-
-    /// \brief Inverts the given state if pOutput is an inverted output
-    /// \param pState: A logic state
-    /// \param pOutput: A number of a cell output
-    /// \return The output logic state
-    LogicState ApplyInversion(LogicState pState, uint32_t pOutput) const;
-
     /// \brief Sets the state pSubject to the state pTargetState if it isn't in that state already
     /// Returns true if pSubject wasn't already in pTargetState
     /// \param pSubject: Reference to the state to set
@@ -137,8 +115,9 @@ protected:
     bool AssureStateIf(bool pCondition, LogicState &pSubject, const LogicState &pTargetState);
 
 public slots:
-    /// \brief Advances the simulation of this cell by one logic tick
-    virtual void OnSimulationAdvance(void) {};
+    virtual void OnCalculateNextState(void);
+
+    virtual void OnCommitState(void);
 
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     virtual void OnShutdown(void) {};
@@ -159,9 +138,15 @@ protected:
     // Pairs of connected LogicCell and input number of that cell
     std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>> mOutputCells;
 
+    std::vector<LogicState> mCurrentOutputStates;
+    std::vector<LogicState> mNextOutputStates;
+
+#warning remove
     UpdateTime mNextUpdateTime;
 
     bool mIsActive;
+
+    bool mStateChanged;
 };
 
 #endif // LOGICBASECELL_H

@@ -66,7 +66,7 @@ LogicState LogicRsFlipFlopCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
-void LogicRsFlipFlopCell::OnSimulationAdvance()
+/*void LogicRsFlipFlopCell::OnSimulationAdvance()
 {
     AdvanceUpdateTime();
 
@@ -78,7 +78,7 @@ void LogicRsFlipFlopCell::OnSimulationAdvance()
 
         emit StateChangedSignal();
     }
-}
+}*/
 
 void LogicRsFlipFlopCell::OnWakeUp()
 {

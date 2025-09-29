@@ -64,7 +64,7 @@ LogicState LogicHalfAdderCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
-void LogicHalfAdderCell::OnSimulationAdvance()
+/*void LogicHalfAdderCell::OnSimulationAdvance()
 {
     AdvanceUpdateTime();
 
@@ -76,7 +76,7 @@ void LogicHalfAdderCell::OnSimulationAdvance()
 
         emit StateChangedSignal();
     }
-}
+}*/
 
 void LogicHalfAdderCell::OnWakeUp()
 {

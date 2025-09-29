@@ -94,6 +94,8 @@ public:
     /// \return the minimum version
     virtual SwVersion GetMinVersion(void) const = 0;
 
+    ~IBaseComponent(void);
+
 protected slots:
     /// \brief Updates when this component's logic state changed
     void OnLogicStateChanged(void);

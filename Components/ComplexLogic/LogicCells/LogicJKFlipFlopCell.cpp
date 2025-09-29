@@ -82,29 +82,6 @@ LogicState LogicJKFlipFlopCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
-void LogicJKFlipFlopCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        NotifySuccessor(0, mOutputStates[0]);
-        NotifySuccessor(1, mOutputStates[1]);
-
-        emit StateChangedSignal();
-    }
-}
-
-void LogicJKFlipFlopCell::InputReady(uint32_t pInput, LogicState pState)
-{
-    if (mInputStates[pInput] != pState)
-    {
-        emit StateChangedSignal(); // to trigger immediate update of the component
-    }
-    LogicBaseCell::InputReady(pInput, pState);
-}
-
 void LogicJKFlipFlopCell::OnWakeUp()
 {   
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);

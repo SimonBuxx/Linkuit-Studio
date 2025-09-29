@@ -48,9 +48,6 @@ public:
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
-    /// \brief Advances the simulation of this cell by one logic tick
-    void OnSimulationAdvance(void) override;
-
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;
 
@@ -58,10 +55,6 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-    std::vector<LogicState> mOutputStates;
-
-    bool mStateChanged;
-
     uint8_t mDigitCount;
 };
 

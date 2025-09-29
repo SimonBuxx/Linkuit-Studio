@@ -252,7 +252,9 @@ signals:
     void SimulationStartSignal(void);
 
     /// \brief Emitted when the simulation should advance by one step
-    void SimulationAdvanceSignal(void);
+    void CalculateNextStateSignal(void);
+
+    void CommitStateSignal(void);
 
     /// \brief Emitted when the core logic has stopped the simulation
     void SimulationStopSignal(void);

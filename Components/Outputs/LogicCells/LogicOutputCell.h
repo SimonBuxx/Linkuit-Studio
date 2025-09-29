@@ -21,11 +21,6 @@ public:
     /// \return The logic state of this cell's output number pOutput
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
-    /// \brief Sets input number pInput to the new state pState
-    /// \param pInput: The number of the changed input
-    /// \param pState: The new state of the input
-    void InputReady(uint32_t pInput, LogicState pState) override;
-
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;

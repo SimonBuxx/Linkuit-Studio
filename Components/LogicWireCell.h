@@ -13,11 +13,12 @@ class LogicWireCell : public LogicBaseCell
     Q_OBJECT
 public:
     /// \brief Constructor for LogicWireCell
-    /// \param pCoreLogic: Pointer to the core logic
-    LogicWireCell(const CoreLogic* pCoreLogic);
+    LogicWireCell(void);
 
     /// \brief The logic function that determines the output states based on the inputs
-    void LogicFunction(void) override;
+    //void LogicFunction(void) override;
+
+    void SetInputState(uint32_t pInput, LogicState pState) override;
 
     /// \brief Getter for the current output state number pOutput of this cell
     /// \param pOutput: The number of the output to retreive
@@ -36,20 +37,14 @@ public:
     /// \return The number of inputs to this wire cell
     uint32_t GetInputSize(void) const;
 
-    /// \brief Sets input number pInput to the new state pState
-    /// \param pInput: The number of the changed input
-    /// \param pState: The new state of the input
-    void InputReady(uint32_t pInput, LogicState pState) override;
-
 public slots:
+    void OnCommitState(void) override;
+
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;
 
     /// \brief Initializes the logic cell's states and triggers a component repaint
     void OnWakeUp(void) override;
-
-protected:
-    LogicState mState;
 };
 
 #endif // LOGICWIRECELL_H

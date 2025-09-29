@@ -27,8 +27,6 @@
 
 LogicDecoderCell::LogicDecoderCell(uint8_t pInputCount):
     LogicBaseCell(pInputCount, std::pow(2, pInputCount)),
-    mOutputStates(std::pow(2, pInputCount), LogicState::LOW),
-    mStateChanged(true),
     mInputCount(pInputCount),
     mPreviousValue(0)
 {}
@@ -42,8 +40,14 @@ void LogicDecoderCell::LogicFunction()
         value += (mInputStates[i] == LogicState::HIGH) ? std::pow(2, i) : 0;
     }
 
-    mStateChanged |= AssureStateIf(value != mPreviousValue, mOutputStates[mPreviousValue], LogicState::LOW);
-    mStateChanged |= AssureState(mOutputStates[value], LogicState::HIGH);
+    if (value != mPreviousValue)
+    {
+        mNextOutputStates[mPreviousValue] = LogicState::LOW;
+
+        mNextOutputStates[value] = LogicState::HIGH;
+        mStateChanged = true;
+    }
+
     mPreviousValue = value;
 }
 
@@ -51,32 +55,16 @@ LogicState LogicDecoderCell::GetOutputState(uint32_t pOutput) const
 {
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mOutputStates[pOutput]);
+        return InvertState(mCurrentOutputStates[pOutput]);
     }
     else
     {
-        return mOutputStates[pOutput];
-    }
-}
-
-void LogicDecoderCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        for (size_t i = 0; i < mOutputStates.size(); i++)
-        {
-            NotifySuccessor(i, mOutputStates[i]);
-        }
-
-        emit StateChangedSignal();
+        return mCurrentOutputStates[pOutput];
     }
 }
 
 void LogicDecoderCell::OnWakeUp()
-{   
+{
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
 
     for (size_t i = 0; i < mInputStates.size(); i++)
@@ -84,14 +72,16 @@ void LogicDecoderCell::OnWakeUp()
         mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
     }
 
-    mOutputStates = std::vector<LogicState>(std::pow(2, mInputCount), LogicState::LOW),
-    mNextUpdateTime = UpdateTime::NOW;
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
+
+    mCurrentOutputStates[0] = LogicState::HIGH;
+    mNextOutputStates[0] = LogicState::HIGH;
 
     mPreviousValue = 0;
 
-    mStateChanged = true; // Successors should be notified about wake up
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicDecoderCell::OnShutdown()
@@ -99,7 +89,8 @@ void LogicDecoderCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

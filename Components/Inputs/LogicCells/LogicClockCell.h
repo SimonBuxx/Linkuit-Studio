@@ -46,9 +46,6 @@ public:
     ClockMode GetClockMode(void);
 
 public slots:
-    /// \brief Advances the simulation of this cell by one logic tick
-    void OnSimulationAdvance(void) override;
-
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;
 
@@ -56,15 +53,11 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-    LogicState mState;
-
     uint32_t mToggleTicks;
     uint32_t mPulseTicks;
 
     uint32_t mTickCountdown;
     uint32_t mPulseCountdown;
-
-    bool mStateChanged;
 
     ClockMode mMode;
 };

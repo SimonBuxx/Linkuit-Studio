@@ -23,19 +23,11 @@ public:
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
-    /// \brief Advances the simulation of this cell by one logic tick
-    void OnSimulationAdvance(void) override;
-
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;
 
     /// \brief Initializes the logic cell's states and triggers a component repaint
     void OnWakeUp(void) override;
-
-protected:
-    LogicState mPreviousState;
-    LogicState mCurrentState;
-    bool mStateChanged;
 };
 
 #endif // LOGICXORGATECELL_H
