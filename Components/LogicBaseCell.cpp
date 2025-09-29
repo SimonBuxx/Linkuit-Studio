@@ -121,10 +121,19 @@ void LogicBaseCell::SetInputState(uint32_t pInput, LogicState pState)
 {
     if (IsInputInverted(pInput))
     {
-        mInputStates[pInput] = InvertState(pState);
+        if (mInputStates[pInput] != InvertState(pState))
+        {
+            mInputStates[pInput] = InvertState(pState);
+            emit StateChangedSignal();
+        }
     }
     else
     {
-        mInputStates[pInput] = pState;
+        if (mInputStates[pInput] != pState)
+        {
+            mInputStates[pInput] = pState;
+            emit StateChangedSignal();
+        }
+
     }
 }

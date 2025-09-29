@@ -155,6 +155,10 @@ void CoreLogic::EnterSimulation()
     ConnectLogicCells();
     EndProcessing();
     SetSimulationMode(SimulationMode::STOPPED);
+
+    qDebug() << "LogicWireCells:" << mLogicWireCells.size();
+    qDebug() << "Items:" << mView.Scene()->items().size();
+
     emit SimulationStartSignal();
     StepSimulation();
 }
