@@ -1,5 +1,6 @@
 #include "JKFlipFlop.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicJKFlipFlopCell.h"
 
 JKFlipFlop::JKFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):

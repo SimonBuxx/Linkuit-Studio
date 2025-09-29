@@ -1,6 +1,7 @@
 #include "LogicInput.h"
 #include "CoreLogic.h"
 #include "Configuration.h"
+#include "HelperFunctions.h"
 
 LogicInput::LogicInput(const CoreLogic* pCoreLogic):
     IBaseComponent(pCoreLogic, std::make_shared<LogicInputCell>())

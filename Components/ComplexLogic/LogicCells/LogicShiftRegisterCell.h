@@ -60,11 +60,7 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-    std::vector<LogicState> mOutputStates;
     std::vector<LogicState> mPrevInputStates;
-
-    bool mStateChanged;
-
     uint8_t mBitWidth;
 };
 

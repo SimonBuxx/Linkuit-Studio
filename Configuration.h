@@ -63,7 +63,6 @@ static constexpr uint32_t PIE_MENU_ANIMATION_DURATION{100};
 namespace canvas
 {
 static constexpr QColor BACKGROUND_COLOR(0, 39, 43);
-//static constexpr QColor GRID_COLOR(0, 39, 43);
 static constexpr QColor GRID_COLOR(0, 45, 50);
 
 static constexpr uint8_t GRID_SIZE = 20;

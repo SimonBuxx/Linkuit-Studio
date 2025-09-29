@@ -1,6 +1,7 @@
 #include "TextLabel.h"
 #include "Configuration.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 
 TextLabel::TextLabel(const CoreLogic* pCoreLogic, const QString& pText, bool pTakeFocus):
     IBaseComponent(pCoreLogic, nullptr),

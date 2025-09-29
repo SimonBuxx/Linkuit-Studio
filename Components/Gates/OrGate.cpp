@@ -1,5 +1,6 @@
 #include "OrGate.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicOrGateCell.h"
 
 OrGate::OrGate(const CoreLogic* pCoreLogic, uint8_t pInputCount, Direction pDirection):

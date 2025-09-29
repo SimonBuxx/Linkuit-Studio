@@ -1,6 +1,7 @@
 #include "LogicButton.h"
 #include "CoreLogic.h"
 #include "Configuration.h"
+#include "HelperFunctions.h"
 
 LogicButton::LogicButton(const CoreLogic* pCoreLogic):
     IBaseComponent(pCoreLogic, std::make_shared<LogicButtonCell>())

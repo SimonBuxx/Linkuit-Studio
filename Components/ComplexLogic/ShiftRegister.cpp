@@ -1,5 +1,6 @@
 #include "ShiftRegister.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicShiftRegisterCell.h"
 
 static constexpr QPointF UNUSED_CONNECTORS_POS{2147483647, 2147483647};

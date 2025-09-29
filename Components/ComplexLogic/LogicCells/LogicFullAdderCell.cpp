@@ -24,6 +24,7 @@
  */
 
 #include "LogicFullAdderCell.h"
+#include "HelperFunctions.h"
 
 LogicFullAdderCell::LogicFullAdderCell():
     LogicBaseCell(3, 2)

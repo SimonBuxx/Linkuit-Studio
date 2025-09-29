@@ -1,5 +1,6 @@
 #include "Counter.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicCounterCell.h"
 
 Counter::Counter(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pBitWidth):

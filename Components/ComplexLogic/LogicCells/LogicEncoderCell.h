@@ -55,10 +55,6 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-    std::vector<LogicState> mOutputStates;
-
-    bool mStateChanged;
-
     uint8_t mOutputCount;
     int8_t mPreviousValue;
 };

@@ -24,12 +24,11 @@
  */
 
 #include "LogicJKFlipFlopCell.h"
+#include "HelperFunctions.h"
 
 LogicJKFlipFlopCell::LogicJKFlipFlopCell():
     LogicBaseCell(3, 2),
-    mOutputStates(2, LogicState::LOW),
-    mPrevInputStates(2, LogicState::LOW),
-    mStateChanged(true)
+    mPrevInputStates(2, LogicState::LOW)
 {}
 
 void LogicJKFlipFlopCell::LogicFunction()
@@ -38,25 +37,25 @@ void LogicJKFlipFlopCell::LogicFunction()
     {
         if (mPrevInputStates[0] == LogicState::HIGH && mPrevInputStates[2] == LogicState::HIGH) // both => toggle
         {
-            if (mOutputStates[0] == LogicState::LOW)
+            if (mCurrentOutputStates[0] == LogicState::LOW)
             {
-                mOutputStates[0] = LogicState::HIGH;
+                mNextOutputStates[0] = LogicState::HIGH;
             }
             else
             {
-                mOutputStates[0] = LogicState::LOW;
+                mNextOutputStates[0] = LogicState::LOW;
             }
         }
         else if (mPrevInputStates[0] == LogicState::HIGH && mPrevInputStates[2] == LogicState::LOW) // J => pull up
         {
-            mOutputStates[0] = LogicState::HIGH;
+            mNextOutputStates[0] = LogicState::HIGH;
         }
         else if (mPrevInputStates[0] == LogicState::LOW && mPrevInputStates[2] == LogicState::HIGH) // K => pull down
         {
-            mOutputStates[0] = LogicState::LOW;
+            mNextOutputStates[0] = LogicState::LOW;
         }
 
-        mOutputStates[1] = ((mOutputStates[0] == LogicState::HIGH) ? LogicState::LOW : LogicState::HIGH);
+        mNextOutputStates[1] = ((mNextOutputStates[0] == LogicState::HIGH) ? LogicState::LOW : LogicState::HIGH);
 
         mStateChanged = true;
     }
@@ -74,11 +73,11 @@ LogicState LogicJKFlipFlopCell::GetOutputState(uint32_t pOutput) const
     Q_ASSERT(pOutput <= 1);
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mOutputStates[pOutput]);
+        return InvertState(mCurrentOutputStates[pOutput]);
     }
     else
     {
-        return mOutputStates[pOutput];
+        return mCurrentOutputStates[pOutput];
     }
 }
 
@@ -92,14 +91,12 @@ void LogicJKFlipFlopCell::OnWakeUp()
     }
 
     mPrevInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
-
-    mOutputStates[0] = LogicState::LOW;
-    mOutputStates[1] = LogicState::HIGH;
-    mNextUpdateTime = UpdateTime::NOW;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates[0] = LogicState::LOW; // Q
+    mCurrentOutputStates[1] = LogicState::HIGH;  // Not Q
+    mNextOutputStates[0] = LogicState::LOW;
+    mNextOutputStates[1] = LogicState::HIGH;
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicJKFlipFlopCell::OnShutdown()
@@ -107,7 +104,8 @@ void LogicJKFlipFlopCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

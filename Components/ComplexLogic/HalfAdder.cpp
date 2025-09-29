@@ -1,5 +1,6 @@
 #include "HalfAdder.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicHalfAdderCell.h"
 
 HalfAdder::HalfAdder(const CoreLogic* pCoreLogic, Direction pDirection):

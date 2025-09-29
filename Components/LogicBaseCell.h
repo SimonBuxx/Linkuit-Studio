@@ -1,17 +1,9 @@
 #ifndef LOGICBASECELL_H
 #define LOGICBASECELL_H
 
-#include "HelperFunctions.h"
+#include "HelperStructures.h"
 
 #include <QObject>
-
-/// \brief UpdateTime contains values to indicate when the logic cell should update its state
-enum class UpdateTime
-{
-    NOW = 0,
-    NEXT_TICK,
-    INF
-};
 
 ///
 /// \brief The LogicBaseCell class is the abstract base for all logic cells
@@ -97,26 +89,11 @@ public:
 
     virtual void SetInputState(uint32_t pInput, LogicState pState);
 
-protected:
-    /// \brief Sets the state pSubject to the state pTargetState if it isn't in that state already
-    /// Returns true if pSubject wasn't already in pTargetState
-    /// \param pSubject: Reference to the state to set
-    /// \param pTargetState: The target state
-    /// \return True, if the state has been changed
-    bool AssureState(LogicState &pSubject, const LogicState &pTargetState);
-
-    /// \brief Sets the state pSubject to the state pTargetState if it isn't in that state already
-    /// and if the given condition is true
-    /// Returns true if pSubject wasn't already in pTargetState
-    /// \param pCondition: The condition to be true for the state to be assured
-    /// \param pSubject: Reference to the state to set
-    /// \param pTargetState: The target state
-    /// \return True, if the state has been changed
-    bool AssureStateIf(bool pCondition, LogicState &pSubject, const LogicState &pTargetState);
-
 public slots:
+    /// \brief Executes the logic function to calculate the next cell state
     virtual void OnCalculateNextState(void);
 
+    /// \brief Announces the cell state to the connected cells
     virtual void OnCommitState(void);
 
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
@@ -141,11 +118,7 @@ protected:
     std::vector<LogicState> mCurrentOutputStates;
     std::vector<LogicState> mNextOutputStates;
 
-#warning remove
-    UpdateTime mNextUpdateTime;
-
     bool mIsActive;
-
     bool mStateChanged;
 };
 

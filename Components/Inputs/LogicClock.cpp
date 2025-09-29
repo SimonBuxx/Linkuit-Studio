@@ -1,6 +1,7 @@
 #include "LogicClock.h"
 #include "CoreLogic.h"
 #include "Configuration.h"
+#include "HelperFunctions.h"
 
 LogicClock::LogicClock(const CoreLogic* pCoreLogic, Direction pDirection):
     IBaseComponent(pCoreLogic, std::make_shared<LogicClockCell>()),

@@ -24,6 +24,7 @@
  */
 
 #include "LogicDecoderCell.h"
+#include "HelperFunctions.h"
 
 LogicDecoderCell::LogicDecoderCell(uint8_t pInputCount):
     LogicBaseCell(pInputCount, std::pow(2, pInputCount)),

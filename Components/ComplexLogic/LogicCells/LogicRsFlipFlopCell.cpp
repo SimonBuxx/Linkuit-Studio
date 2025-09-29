@@ -24,30 +24,29 @@
  */
 
 #include "LogicRsFlipFlopCell.h"
+#include "HelperFunctions.h"
 
 LogicRsFlipFlopCell::LogicRsFlipFlopCell():
-    LogicBaseCell(2, 2),
-    mCurrentState(2, LogicState::LOW),
-    mStateChanged(true)
+    LogicBaseCell(2, 2)
 {}
 
 void LogicRsFlipFlopCell::LogicFunction()
 {
     if (mInputStates[0] == LogicState::HIGH) // S high
     {
-        if (mCurrentState[0] != LogicState::HIGH || mCurrentState[1] != LogicState::LOW)
+        if (mCurrentOutputStates[0] != LogicState::HIGH || mCurrentOutputStates[1] != LogicState::LOW)
         {
-            mCurrentState[0] = LogicState::HIGH; // Q
-            mCurrentState[1] = LogicState::LOW; // Not Q
+            mNextOutputStates[0] = LogicState::HIGH; // Q
+            mNextOutputStates[1] = LogicState::LOW; // Not Q
             mStateChanged = true;
         }
     }
     if (mInputStates[1] == LogicState::HIGH) // R high
     {
-        if (mCurrentState[0] != LogicState::LOW || mCurrentState[1] != LogicState::HIGH)
+        if (mCurrentOutputStates[0] != LogicState::LOW || mCurrentOutputStates[1] != LogicState::HIGH)
         {
-            mCurrentState[0] = LogicState::LOW; // Q
-            mCurrentState[1] = LogicState::HIGH; // Not Q
+            mNextOutputStates[0] = LogicState::LOW; // Q
+            mNextOutputStates[1] = LogicState::HIGH; // Not Q
             mStateChanged = true;
         }
     }
@@ -58,27 +57,13 @@ LogicState LogicRsFlipFlopCell::GetOutputState(uint32_t pOutput) const
     Q_ASSERT(pOutput <= 1);
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mCurrentState[pOutput]);
+        return InvertState(mCurrentOutputStates[pOutput]);
     }
     else
     {
-        return mCurrentState[pOutput];
+        return mCurrentOutputStates[pOutput];
     }
 }
-
-/*void LogicRsFlipFlopCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        NotifySuccessor(0, mCurrentState[0]);
-        NotifySuccessor(1, mCurrentState[1]);
-
-        emit StateChangedSignal();
-    }
-}*/
 
 void LogicRsFlipFlopCell::OnWakeUp()
 {
@@ -89,13 +74,12 @@ void LogicRsFlipFlopCell::OnWakeUp()
         mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
     }
 
-    mCurrentState[0] = LogicState::LOW; // Q
-    mCurrentState[1] = LogicState::HIGH; // Not Q
-    mNextUpdateTime = UpdateTime::NOW;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates[0] = LogicState::LOW; // Q
+    mCurrentOutputStates[1] = LogicState::HIGH;  // Not Q
+    mNextOutputStates[0] = LogicState::LOW;
+    mNextOutputStates[1] = LogicState::HIGH;
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicRsFlipFlopCell::OnShutdown()
@@ -103,7 +87,8 @@ void LogicRsFlipFlopCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mCurrentState = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

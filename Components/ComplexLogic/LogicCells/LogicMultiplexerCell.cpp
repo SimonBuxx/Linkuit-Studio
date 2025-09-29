@@ -24,6 +24,7 @@
  */
 
 #include "LogicMultiplexerCell.h"
+#include "HelperFunctions.h"
 
 LogicMultiplexerCell::LogicMultiplexerCell(uint8_t pDigitCount):
     LogicBaseCell(pDigitCount + std::pow(2, pDigitCount), 1),

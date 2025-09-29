@@ -1,5 +1,6 @@
 #include "Decoder.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicDecoderCell.h"
 
 Decoder::Decoder(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pInputCount):

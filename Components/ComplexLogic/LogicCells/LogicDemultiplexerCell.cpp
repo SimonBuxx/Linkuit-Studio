@@ -24,6 +24,7 @@
  */
 
 #include "LogicDemultiplexerCell.h"
+#include "HelperFunctions.h"
 
 LogicDemultiplexerCell::LogicDemultiplexerCell(uint8_t pDigitCount):
     LogicBaseCell(pDigitCount + 1, std::pow(2, pDigitCount)),
@@ -52,8 +53,6 @@ void LogicDemultiplexerCell::LogicFunction()
         mStateChanged = true;
     }
 
-    //mStateChanged |= AssureStateIf(output != mPreviousOutput, mOutputStates[mPreviousOutput], LogicState::LOW);
-    //mStateChanged |= AssureState(mOutputStates[output], mInputStates[mDigitCount]);
     mPreviousOutput = output;
 }
 

@@ -33,9 +33,6 @@ void LogicDiodeCell::SetInputState(uint32_t pInput, LogicState pState)
     }
 }
 
-void LogicDiodeCell::OnCommitState()
-{}
-
 LogicState LogicDiodeCell::GetOutputState(uint32_t pOutput) const
 {
     Q_UNUSED(pOutput);
@@ -52,13 +49,13 @@ void LogicDiodeCell::OnWakeUp()
 
 void LogicDiodeCell::OnShutdown()
 {
-    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
-    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>{LogicState::LOW};
-    //mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mOutputInverted = std::vector<bool>{false};
-    mInputInverted = std::vector<bool>{false};
+    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
+    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    //mOutputInverted = std::vector<bool>{false};
+    //mInputInverted = std::vector<bool>{false};
     mIsActive = false;
     mStateChanged = true;
 }

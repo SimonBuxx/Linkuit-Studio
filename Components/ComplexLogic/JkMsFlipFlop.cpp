@@ -1,4 +1,5 @@
 #include "JkMsFlipFlop.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicJkMsFlipFlopCell.h"
 
 JkMasterSlaveFlipFlop::JkMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):

@@ -24,13 +24,12 @@
  */
 
 #include "LogicRsMsFlipFlopCell.h"
+#include "HelperFunctions.h"
 
 LogicRsMsFlipFlopCell::LogicRsMsFlipFlopCell():
     LogicBaseCell(3, 2),
-    mOutputStates(2, LogicState::LOW),
     mPrevInputStates(3, LogicState::LOW),
-    mInternalState(LogicState::LOW),
-    mStateChanged(true)
+    mInternalState(LogicState::LOW)
 {}
 
 void LogicRsMsFlipFlopCell::LogicFunction()
@@ -49,8 +48,8 @@ void LogicRsMsFlipFlopCell::LogicFunction()
     }
     else if (mPrevInputStates[1] == LogicState::HIGH && mInputStates[1] == LogicState::LOW) // falling edge
     {
-        mOutputStates[0] = mInternalState;
-        mOutputStates[1] = ((mOutputStates[0] == LogicState::HIGH) ? LogicState::LOW : LogicState::HIGH);
+        mNextOutputStates[0] = mInternalState;
+        mNextOutputStates[1] = ((mNextOutputStates[0] == LogicState::HIGH) ? LogicState::LOW : LogicState::HIGH);
     }
 
     if (mPrevInputStates[1] != mInputStates[1]) // Trigger repaint on every clock change
@@ -66,11 +65,11 @@ LogicState LogicRsMsFlipFlopCell::GetOutputState(uint32_t pOutput) const
     Q_ASSERT(pOutput <= 1);
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mOutputStates[pOutput]);
+        return InvertState(mCurrentOutputStates[pOutput]);
     }
     else
     {
-        return mOutputStates[pOutput];
+        return mCurrentOutputStates[pOutput];
     }
 }
 
@@ -85,13 +84,12 @@ void LogicRsMsFlipFlopCell::OnWakeUp()
 
     mPrevInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
 
-    mOutputStates[0] = LogicState::LOW;
-    mOutputStates[1] = LogicState::HIGH;
-    mNextUpdateTime = UpdateTime::NOW;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates[0] = LogicState::LOW; // Q
+    mCurrentOutputStates[1] = LogicState::HIGH;  // Not Q
+    mNextOutputStates[0] = LogicState::LOW;
+    mNextOutputStates[1] = LogicState::HIGH;
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicRsMsFlipFlopCell::OnShutdown()
@@ -99,7 +97,8 @@ void LogicRsMsFlipFlopCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mOutputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

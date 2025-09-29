@@ -1,4 +1,5 @@
 #include "LogicClockCell.h"
+#include "HelperFunctions.h"
 
 LogicClockCell::LogicClockCell():
     LogicBaseCell(0, 1),
@@ -72,6 +73,8 @@ void LogicClockCell::OnWakeUp()
 void LogicClockCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
+    mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mIsActive = false;

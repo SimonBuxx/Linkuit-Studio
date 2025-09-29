@@ -24,11 +24,10 @@
  */
 
 #include "LogicEncoderCell.h"
+#include "HelperFunctions.h"
 
 LogicEncoderCell::LogicEncoderCell(uint8_t pOutputCount):
     LogicBaseCell(std::pow(2, pOutputCount), pOutputCount),
-    mOutputStates(pOutputCount, LogicState::LOW),
-    mStateChanged(true),
     mOutputCount(pOutputCount),
     mPreviousValue(-1)
 {}
@@ -47,8 +46,17 @@ void LogicEncoderCell::LogicFunction()
 
     if (value != mPreviousValue)
     {
-        mStateChanged |= AssureStateIf(value >= 0, mOutputStates[mOutputCount - 1], LogicState::HIGH);
-        mStateChanged |= AssureStateIf(value < 0, mOutputStates[mOutputCount - 1], LogicState::LOW);
+        if (value >= 0 && mCurrentOutputStates[mOutputCount - 1] != LogicState::HIGH)
+        {
+            mNextOutputStates[mOutputCount - 1] = LogicState::HIGH;
+            mStateChanged = true;
+        }
+
+        if (value < 0 && mCurrentOutputStates[mOutputCount - 1] != LogicState::LOW)
+        {
+            mNextOutputStates[mOutputCount - 1] = LogicState::LOW;
+            mStateChanged = true;
+        }
 
         uint8_t remainder = 0;
         uint8_t val = (value >= 0) ? value : 0;
@@ -57,7 +65,12 @@ void LogicEncoderCell::LogicFunction()
             remainder = val % 2;
             val /= 2;
             auto newState = (remainder == 1) ? LogicState::HIGH : LogicState::LOW;
-            mStateChanged |= AssureState(mOutputStates[i], newState);
+
+            if (mCurrentOutputStates[i] != newState)
+            {
+                mNextOutputStates[i] = newState;
+                mStateChanged = true;
+            }
         }
     }
 
@@ -68,29 +81,13 @@ LogicState LogicEncoderCell::GetOutputState(uint32_t pOutput) const
 {
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mOutputStates[pOutput]);
+        return InvertState(mCurrentOutputStates[pOutput]);
     }
     else
     {
-        return mOutputStates[pOutput];
+        return mCurrentOutputStates[pOutput];
     }
 }
-
-/*void LogicEncoderCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        for (size_t i = 0; i < mOutputStates.size(); i++)
-        {
-            NotifySuccessor(i, mOutputStates[i]);
-        }
-
-        emit StateChangedSignal();
-    }
-}*/
 
 void LogicEncoderCell::OnWakeUp()
 {
@@ -101,14 +98,12 @@ void LogicEncoderCell::OnWakeUp()
         mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
     }
 
-    //mOutputStates = std::vector<LogicState>(std::pow(2, mInputCount), LogicState::LOW),
-    mNextUpdateTime = UpdateTime::NOW;
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
 
     mPreviousValue = -1;
-
-    mStateChanged = true; // Successors should be notified about wake up
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicEncoderCell::OnShutdown()
@@ -116,8 +111,9 @@ void LogicEncoderCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 

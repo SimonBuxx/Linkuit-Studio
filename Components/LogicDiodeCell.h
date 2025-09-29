@@ -24,7 +24,7 @@ public:
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
 public slots:
-    void OnCommitState(void) override;
+    void OnCommitState(void) override {};
 
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;

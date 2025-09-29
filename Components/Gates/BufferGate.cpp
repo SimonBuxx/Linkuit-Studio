@@ -1,5 +1,6 @@
 #include "BufferGate.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicBufferGateCell.h"
 
 BufferGate::BufferGate(const CoreLogic* pCoreLogic, Direction pDirection):

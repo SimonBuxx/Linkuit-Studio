@@ -24,12 +24,11 @@
  */
 
 #include "LogicShiftRegisterCell.h"
+#include "HelperFunctions.h"
 
 LogicShiftRegisterCell::LogicShiftRegisterCell(uint8_t pBitWidth):
     LogicBaseCell(2, pBitWidth),
-    mOutputStates(pBitWidth, LogicState::LOW),
     mPrevInputStates(pBitWidth, LogicState::LOW),
-    mStateChanged(true),
     mBitWidth(pBitWidth)
 {}
 
@@ -37,8 +36,8 @@ void LogicShiftRegisterCell::LogicFunction()
 {
     if (mPrevInputStates[1] == LogicState::LOW && mInputStates[1] == LogicState::HIGH)
     {
-        mOutputStates.insert(mOutputStates.begin(), mInputStates[0]);
-        mOutputStates.pop_back();
+        mNextOutputStates.insert(mNextOutputStates.begin(), mInputStates[0]);
+        mNextOutputStates.pop_back();
     }
 
     if (mPrevInputStates[1] != mInputStates[1]) // Trigger repaint on every clock change
@@ -54,18 +53,18 @@ LogicState LogicShiftRegisterCell::GetOutputState(uint32_t pOutput) const
     Q_ASSERT(pOutput <= mBitWidth);
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mOutputStates[pOutput]);
+        return InvertState(mCurrentOutputStates[pOutput]);
     }
     else
     {
-        return mOutputStates[pOutput];
+        return mCurrentOutputStates[pOutput];
     }
 }
 
 LogicState LogicShiftRegisterCell::GetOutputStateUninverted(uint32_t pOutput) const
 {
     Q_ASSERT(pOutput <= mBitWidth);
-    return mOutputStates[pOutput];
+    return mCurrentOutputStates[pOutput];
 }
 
 void LogicShiftRegisterCell::OnWakeUp()
@@ -78,13 +77,10 @@ void LogicShiftRegisterCell::OnWakeUp()
     }
 
     mPrevInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
-
-    mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
-    mNextUpdateTime = UpdateTime::NOW;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicShiftRegisterCell::OnShutdown()
@@ -92,7 +88,8 @@ void LogicShiftRegisterCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

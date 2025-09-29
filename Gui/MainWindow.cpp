@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "HelperFunctions.h"
 #include "ui_MainWindow.h"
 
 #include <QDesktopServices>

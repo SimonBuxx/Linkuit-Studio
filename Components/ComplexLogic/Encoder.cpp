@@ -1,5 +1,6 @@
 #include "Encoder.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicEncoderCell.h"
 
 Encoder::Encoder(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pOutputCount):

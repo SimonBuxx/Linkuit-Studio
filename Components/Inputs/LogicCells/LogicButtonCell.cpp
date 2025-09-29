@@ -27,6 +27,19 @@ void LogicButtonCell::ButtonClick()
         mNextOutputStates[0] = LogicState::HIGH;
         mStateChanged = true;
     }
+    else // Allows buttons to be disabled again, especially during pause
+    {
+        mRemainingTicks = 0;
+        mNextOutputStates[0] = LogicState::LOW;
+        mStateChanged = true;
+    }
+
+    // Keep states synced and trigger immediate repaint to make buttons responsive during pause
+    if (mCurrentOutputStates[0] != mNextOutputStates[0])
+    {
+        mCurrentOutputStates[0] = mNextOutputStates[0];
+        emit StateChangedSignal();
+    }
 }
 
 LogicState LogicButtonCell::GetOutputState(uint32_t pOutput) const
@@ -46,6 +59,8 @@ void LogicButtonCell::OnWakeUp()
 void LogicButtonCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
+    mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mIsActive = false;

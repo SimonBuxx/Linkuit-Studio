@@ -52,10 +52,6 @@ public slots:
 
     /// \brief Initializes the logic cell's states and triggers a component repaint
     void OnWakeUp(void) override;
-
-protected:
-    std::vector<LogicState> mCurrentState;
-    bool mStateChanged;
 };
 
 #endif // LOGICRSFLIPFLOPCELL_H

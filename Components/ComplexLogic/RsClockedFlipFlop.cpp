@@ -1,5 +1,6 @@
 #include "RsClockedFlipFlop.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicRsClockedFlipFlopCell.h"
 
 RsClockedFlipFlop::RsClockedFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):

@@ -1,4 +1,5 @@
 #include "LogicBaseCell.h"
+#include "HelperFunctions.h"
 
 #include <QThread>
 #include <QDebug>
@@ -11,7 +12,6 @@ LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mOutputCells(pOutputs, std::make_pair(nullptr, 0)),
     mCurrentOutputStates(pOutputs, LogicState::LOW),
     mNextOutputStates(pOutputs, LogicState::LOW),
-    mNextUpdateTime(UpdateTime::INF),
     mIsActive(false),
     mStateChanged(false)
 {}
@@ -86,28 +86,6 @@ void LogicBaseCell::InvertOutput(uint32_t pOutput)
     mOutputInverted[pOutput] = !mOutputInverted[pOutput];
 }
 
-bool LogicBaseCell::AssureState(LogicState &pSubject, const LogicState &pTargetState)
-{
-    if (pSubject != pTargetState)
-    {
-        pSubject = pTargetState;
-        return true;
-    }
-
-    return false;
-}
-
-bool LogicBaseCell::AssureStateIf(bool pCondition, LogicState &pSubject, const LogicState &pTargetState)
-{
-    if (pCondition && pSubject != pTargetState)
-    {
-        pSubject = pTargetState;
-        return true;
-    }
-
-    return false;
-}
-
 void LogicBaseCell::OnCalculateNextState()
 {
     LogicFunction();
@@ -127,13 +105,14 @@ void LogicBaseCell::OnCommitState()
     {
         if (mOutputCells[i].first != nullptr)
         {
-            LogicState stateToSend = mCurrentOutputStates[i];
             if (IsOutputInverted(i))
             {
-                stateToSend = InvertState(stateToSend);
+                mOutputCells[i].first->SetInputState(mOutputCells[i].second, InvertState(mCurrentOutputStates[i]));
             }
-
-            mOutputCells[i].first->SetInputState(mOutputCells[i].second, stateToSend);
+            else
+            {
+                mOutputCells[i].first->SetInputState(mOutputCells[i].second, mCurrentOutputStates[i]);
+            }
         }
     }
 }
@@ -144,7 +123,8 @@ void LogicBaseCell::SetInputState(uint32_t pInput, LogicState pState)
     {
         mInputStates[pInput] = InvertState(pState);
     }
-    else {
+    else
+    {
         mInputStates[pInput] = pState;
     }
 }

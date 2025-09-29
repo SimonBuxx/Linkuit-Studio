@@ -1,6 +1,7 @@
 #include "LogicConstant.h"
 #include "CoreLogic.h"
 #include "Configuration.h"
+#include "HelperFunctions.h"
 
 LogicConstant::LogicConstant(const CoreLogic* pCoreLogic, LogicState pState):
     IBaseComponent(pCoreLogic, std::make_shared<LogicConstantCell>(pState))

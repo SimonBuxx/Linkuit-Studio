@@ -1,4 +1,5 @@
 #include "LogicAndGateCell.h"
+#include "HelperFunctions.h"
 
 LogicAndGateCell::LogicAndGateCell(uint32_t pInputs):
     LogicBaseCell(pInputs, 1)

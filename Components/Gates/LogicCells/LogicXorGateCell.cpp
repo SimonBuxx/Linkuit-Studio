@@ -1,4 +1,5 @@
 #include "LogicXorGateCell.h"
+#include "HelperFunctions.h"
 
 LogicXorGateCell::LogicXorGateCell(uint32_t pInputs):
     LogicBaseCell(pInputs, 1)

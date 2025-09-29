@@ -36,9 +36,6 @@ void LogicWireCell::SetInputState(uint32_t pInput, LogicState pState)
     }
 }
 
-void LogicWireCell::OnCommitState()
-{}
-
 void LogicWireCell::AppendOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput)
 {
     mOutputCells.push_back(std::make_pair(pLogicCell, pInput));
@@ -73,11 +70,11 @@ void LogicWireCell::OnWakeUp()
 
 void LogicWireCell::OnShutdown()
 {
-    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
-    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
-    mInputConnected.clear();
     mOutputCells.clear();
     mInputStates.clear();
+    mInputConnected.clear();
+    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mOutputInverted.clear();
     mInputInverted.clear();
     mIsActive = false;

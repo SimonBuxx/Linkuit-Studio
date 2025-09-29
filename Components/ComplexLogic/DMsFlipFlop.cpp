@@ -1,4 +1,5 @@
 #include "DMsFlipFlop.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicDMsFlipFlopCell.h"
 
 DMasterSlaveFlipFlop::DMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):

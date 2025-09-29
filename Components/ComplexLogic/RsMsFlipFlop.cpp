@@ -1,5 +1,6 @@
 #include "RsMsFlipFlop.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicRsMsFlipFlopCell.h"
 
 RsMasterSlaveFlipFlop::RsMasterSlaveFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):

@@ -24,6 +24,7 @@
  */
 
 #include "LogicTFlipFlopCell.h"
+#include "HelperFunctions.h"
 
 LogicTFlipFlopCell::LogicTFlipFlopCell():
     LogicBaseCell(2, 2),

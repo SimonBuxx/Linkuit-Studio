@@ -1,4 +1,5 @@
 #include "LogicNotGateCell.h"
+#include "HelperFunctions.h"
 
 LogicNotGateCell::LogicNotGateCell():
     LogicBaseCell(1, 1)
@@ -8,7 +9,11 @@ LogicNotGateCell::LogicNotGateCell():
 
 void LogicNotGateCell::LogicFunction()
 {
-    mStateChanged = AssureState(mNextOutputStates[0], mInputStates[0]);
+    if (mCurrentOutputStates[0] != mInputStates[0])
+    {
+        mNextOutputStates[0] = mInputStates[0];
+        mStateChanged = true;
+    }
 }
 
 LogicState LogicNotGateCell::GetOutputState(uint32_t pOutput) const

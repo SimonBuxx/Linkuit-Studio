@@ -1,5 +1,6 @@
 #include "Multiplexer.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicMultiplexerCell.h"
 
 Multiplexer::Multiplexer(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pBitWidth):

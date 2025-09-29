@@ -1,4 +1,5 @@
 #include "LogicOrGateCell.h"
+#include "HelperFunctions.h"
 
 LogicOrGateCell::LogicOrGateCell(uint32_t pInputs):
     LogicBaseCell(pInputs, 1)

@@ -1,6 +1,7 @@
 #include "LogicOutput.h"
 #include "CoreLogic.h"
 #include "Configuration.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicOutputCell.h"
 
 LogicOutput::LogicOutput(const CoreLogic* pCoreLogic, OutputColor pColor):

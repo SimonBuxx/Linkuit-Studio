@@ -1,6 +1,7 @@
 #include "LogicWire.h"
 #include "CoreLogic.h"
 #include "Configuration.h"
+#include "HelperFunctions.h"
 
 LogicWire::LogicWire(const CoreLogic* pCoreLogic, WireDirection pDirection, uint32_t pLength):
     IBaseComponent(pCoreLogic, nullptr),

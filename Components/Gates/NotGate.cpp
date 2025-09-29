@@ -1,5 +1,6 @@
 #include "NotGate.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicNotGateCell.h"
 
 NotGate::NotGate(const CoreLogic* pCoreLogic, Direction pDirection):

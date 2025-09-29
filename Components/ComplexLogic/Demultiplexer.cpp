@@ -1,5 +1,6 @@
 #include "Demultiplexer.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicDemultiplexerCell.h"
 
 Demultiplexer::Demultiplexer(const CoreLogic* pCoreLogic, Direction pDirection, uint8_t pBitWidth):

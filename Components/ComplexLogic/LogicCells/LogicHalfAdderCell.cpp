@@ -24,11 +24,10 @@
  */
 
 #include "LogicHalfAdderCell.h"
+#include "HelperFunctions.h"
 
 LogicHalfAdderCell::LogicHalfAdderCell():
-    LogicBaseCell(2, 2),
-    mOutputStates(2, LogicState::LOW),
-    mStateChanged(true)
+    LogicBaseCell(2, 2)
 {}
 
 void LogicHalfAdderCell::LogicFunction()
@@ -36,18 +35,45 @@ void LogicHalfAdderCell::LogicFunction()
     if ((mInputStates[0] == LogicState::HIGH && mInputStates[1] == LogicState::LOW) // One input high
         || (mInputStates[0] == LogicState::LOW && mInputStates[1] == LogicState::HIGH))
     {
-        mStateChanged |= AssureState(mOutputStates[0], LogicState::HIGH);
-        mStateChanged |= AssureState(mOutputStates[1], LogicState::LOW);
+        if (mCurrentOutputStates[0] != LogicState::HIGH)
+        {
+            mNextOutputStates[0] = LogicState::HIGH;
+            mStateChanged = true;
+        }
+
+        if (mCurrentOutputStates[1] != LogicState::LOW)
+        {
+            mNextOutputStates[1] = LogicState::LOW;
+            mStateChanged = true;
+        }
     }
     else if (mInputStates[0] == LogicState::HIGH) // Both inputs high
     {
-        mStateChanged |= AssureState(mOutputStates[0], LogicState::LOW);
-        mStateChanged |= AssureState(mOutputStates[1], LogicState::HIGH);
+        if (mCurrentOutputStates[0] != LogicState::LOW)
+        {
+            mNextOutputStates[0] = LogicState::LOW;
+            mStateChanged = true;
+        }
+
+        if (mCurrentOutputStates[1] != LogicState::HIGH)
+        {
+            mNextOutputStates[1] = LogicState::HIGH;
+            mStateChanged = true;
+        }
     }
     else // No input high
     {
-        mStateChanged |= AssureState(mOutputStates[0], LogicState::LOW);
-        mStateChanged |= AssureState(mOutputStates[1], LogicState::LOW);
+        if (mCurrentOutputStates[0] != LogicState::LOW)
+        {
+            mNextOutputStates[0] = LogicState::LOW;
+            mStateChanged = true;
+        }
+
+        if (mCurrentOutputStates[1] != LogicState::LOW)
+        {
+            mNextOutputStates[1] = LogicState::LOW;
+            mStateChanged = true;
+        }
     }
 }
 
@@ -56,27 +82,13 @@ LogicState LogicHalfAdderCell::GetOutputState(uint32_t pOutput) const
     Q_ASSERT(pOutput <= 1);
     if (mOutputInverted[pOutput] && mIsActive)
     {
-        return InvertState(mOutputStates[pOutput]);
+        return InvertState(mCurrentOutputStates[pOutput]);
     }
     else
     {
-        return mOutputStates[pOutput];
+        return mCurrentOutputStates[pOutput];
     }
 }
-
-/*void LogicHalfAdderCell::OnSimulationAdvance()
-{
-    AdvanceUpdateTime();
-
-    if (mStateChanged)
-    {
-        mStateChanged = false;
-        NotifySuccessor(0, mOutputStates[0]);
-        NotifySuccessor(1, mOutputStates[1]);
-
-        emit StateChangedSignal();
-    }
-}*/
 
 void LogicHalfAdderCell::OnWakeUp()
 {
@@ -87,13 +99,12 @@ void LogicHalfAdderCell::OnWakeUp()
         mInputStates[i] = mInputInverted[i] ? LogicState::HIGH : LogicState::LOW;
     }
 
-    mOutputStates[0] = LogicState::LOW;
-    mOutputStates[1] = LogicState::LOW;
-    mNextUpdateTime = UpdateTime::NOW;
-
-    mStateChanged = true; // Successors should be notified about wake up
+    mCurrentOutputStates[0] = LogicState::LOW;
+    mCurrentOutputStates[1] = LogicState::LOW;
+    mNextOutputStates[0] = LogicState::LOW;
+    mNextOutputStates[1] = LogicState::LOW;
     mIsActive = true;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }
 
 void LogicHalfAdderCell::OnShutdown()
@@ -101,7 +112,8 @@ void LogicHalfAdderCell::OnShutdown()
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
     mInputConnected = std::vector<bool>(mInputConnected.size(), false);
-    mOutputStates = std::vector<LogicState>(mOutputStates.size(), LogicState::LOW);
+    mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+    mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
     mIsActive = false;
-    emit StateChangedSignal();
+    mStateChanged = true;
 }

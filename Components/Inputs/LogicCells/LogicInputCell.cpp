@@ -7,7 +7,13 @@ LogicInputCell::LogicInputCell():
 void LogicInputCell::ToggleState()
 {
     mNextOutputStates[0] = ((mCurrentOutputStates[0] == LogicState::HIGH) ? LogicState::LOW : LogicState::HIGH);
-    mStateChanged = true;
+
+    // Keep states synced and trigger immediate repaint to make inputs responsive during pause
+    if (mCurrentOutputStates[0] != mNextOutputStates[0])
+    {
+        mCurrentOutputStates[0] = mNextOutputStates[0];
+        emit StateChangedSignal();
+    }
 }
 
 LogicState LogicInputCell::GetOutputState(uint32_t pOutput) const
@@ -27,6 +33,8 @@ void LogicInputCell::OnWakeUp()
 void LogicInputCell::OnShutdown()
 {
     mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
+    mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mIsActive = false;

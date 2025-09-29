@@ -12,8 +12,6 @@ void LogicOutputCell::LogicFunction()
         mState = mInputStates[0];
         mStateChanged = true;
     }
-
-    qDebug() << (int) mState;
 }
 
 LogicState LogicOutputCell::GetOutputState(uint32_t pOutput) const

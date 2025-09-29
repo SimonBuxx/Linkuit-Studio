@@ -1,4 +1,5 @@
 #include "LogicBufferGateCell.h"
+#include "HelperFunctions.h"
 
 LogicBufferGateCell::LogicBufferGateCell():
     LogicBaseCell(1, 1)
@@ -6,7 +7,11 @@ LogicBufferGateCell::LogicBufferGateCell():
 
 void LogicBufferGateCell::LogicFunction()
 {
-    mStateChanged = AssureState(mNextOutputStates[0], mInputStates[0]);
+    if (mCurrentOutputStates[0] != mInputStates[0])
+    {
+        mNextOutputStates[0] = mInputStates[0];
+        mStateChanged = true;
+    }
 }
 
 LogicState LogicBufferGateCell::GetOutputState(uint32_t pOutput) const

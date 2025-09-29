@@ -54,11 +54,8 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-    std::vector<LogicState> mOutputStates;
     std::vector<LogicState> mPrevInputStates;
     LogicState mInternalState;
-
-    bool mStateChanged;
 };
 
 #endif // LOGICDMSFLIPFLOPCELL_H

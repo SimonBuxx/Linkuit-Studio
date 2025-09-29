@@ -1,5 +1,6 @@
 #include "FullAdder.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicFullAdderCell.h"
 
 FullAdder::FullAdder(const CoreLogic* pCoreLogic, Direction pDirection):

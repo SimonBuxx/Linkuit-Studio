@@ -1,5 +1,6 @@
 #include "TFlipFlop.h"
 #include "CoreLogic.h"
+#include "HelperFunctions.h"
 #include "LogicCells/LogicTFlipFlopCell.h"
 
 TFlipFlop::TFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
