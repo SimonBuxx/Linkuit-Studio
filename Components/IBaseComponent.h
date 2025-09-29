@@ -77,6 +77,12 @@ public:
     /// \return Smart pointer to the logic cell
     std::shared_ptr<LogicBaseCell> GetLogicCell(void);
 
+    /// \brief Deregisters the component so that it does not update when not in use
+    void Deregister(void);
+
+    /// \brief Registers the component so that it updates when in use
+    void Register(void);
+
     /// \brief Inverts the logic connector at the given positiion
     /// \param pPoint: A point in the scene's coordinates
     /// \return Pointer to the inverted logic connector if it exists

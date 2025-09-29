@@ -710,14 +710,7 @@ void MainWindow::UpdateZoomLabelAndSlider(uint8_t pPercentage, uint32_t pValue)
 
 void MainWindow::OnAdvanceTutorialStepRequest(TutorialStep pStep)
 {
-    if (mCoreLogic.IsTutorialConditionTrue(pStep))
-    {
-        mTutorialFrame.OnAdvanceStepApproved(pStep);
-    }
-    else
-    {
-        mTutorialFrame.OnAdvanceStepDeclined(pStep);
-    }
+    mTutorialFrame.OnAdvanceStepApproved(pStep);
 }
 
 void MainWindow::OnTutorialStepChanged(TutorialStep pStep)

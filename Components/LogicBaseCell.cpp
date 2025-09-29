@@ -1,9 +1,6 @@
 #include "LogicBaseCell.h"
 #include "HelperFunctions.h"
 
-#include <QThread>
-#include <QDebug>
-
 LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mInputStates(pInputs, LogicState::LOW),
     mInputConnected(pInputs, false),
@@ -13,7 +10,8 @@ LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mCurrentOutputStates(pOutputs, LogicState::LOW),
     mNextOutputStates(pOutputs, LogicState::LOW),
     mIsActive(false),
-    mStateChanged(false)
+    mStateChanged(false),
+    mIsRegistered(true)
 {}
 
 void LogicBaseCell::ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput)
@@ -88,11 +86,21 @@ void LogicBaseCell::InvertOutput(uint32_t pOutput)
 
 void LogicBaseCell::OnCalculateNextState()
 {
+    if (!mIsRegistered)
+    {
+        return;
+    }
+
     LogicFunction();
 }
 
 void LogicBaseCell::OnCommitState()
 {
+    if (!mIsRegistered)
+    {
+        return;
+    }
+
     mCurrentOutputStates = mNextOutputStates;
 
     if (mStateChanged)
@@ -119,6 +127,11 @@ void LogicBaseCell::OnCommitState()
 
 void LogicBaseCell::SetInputState(uint32_t pInput, LogicState pState)
 {
+    if (!mIsRegistered)
+    {
+        return;
+    }
+
     if (IsInputInverted(pInput))
     {
         if (mInputStates[pInput] != InvertState(pState))
@@ -136,4 +149,15 @@ void LogicBaseCell::SetInputState(uint32_t pInput, LogicState pState)
         }
 
     }
+}
+
+
+void LogicBaseCell::Deregister()
+{
+    mIsRegistered = false;
+}
+
+void LogicBaseCell::Register()
+{
+    mIsRegistered = true;
 }

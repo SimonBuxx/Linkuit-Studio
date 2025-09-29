@@ -86,6 +86,16 @@ std::shared_ptr<LogicBaseCell> IBaseComponent::GetLogicCell()
     return mLogicCell;
 }
 
+void IBaseComponent::Deregister()
+{
+    mLogicCell->Deregister();
+}
+
+void IBaseComponent::Register()
+{
+    mLogicCell->Register();
+}
+
 std::optional<const LogicConnector*> IBaseComponent::InvertConnectorByPoint(QPointF pPoint)
 {
     Q_ASSERT(mLogicCell);

@@ -89,6 +89,12 @@ public:
 
     virtual void SetInputState(uint32_t pInput, LogicState pState);
 
+    /// \brief Deregisters the logic cell so that it does not update when not in use
+    void Deregister(void);
+
+    /// \brief Registers the logic cell so that it updates when in use
+    void Register(void);
+
 public slots:
     /// \brief Executes the logic function to calculate the next cell state
     virtual void OnCalculateNextState(void);
@@ -120,6 +126,7 @@ protected:
 
     bool mIsActive;
     bool mStateChanged;
+    bool mIsRegistered;
 };
 
 #endif // LOGICBASECELL_H

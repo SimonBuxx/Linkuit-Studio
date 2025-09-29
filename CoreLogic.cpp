@@ -155,10 +155,6 @@ void CoreLogic::EnterSimulation()
     ConnectLogicCells();
     EndProcessing();
     SetSimulationMode(SimulationMode::STOPPED);
-
-    qDebug() << "LogicWireCells:" << mLogicWireCells.size();
-    qDebug() << "Items:" << mView.Scene()->items().size();
-
     emit SimulationStartSignal();
     StepSimulation();
 }
@@ -665,6 +661,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
                 deletedComponents.push_back(static_cast<IBaseComponent*>(startAdjacent.value()));
                 Q_ASSERT(startAdjacent.value());
                 mView.Scene()->removeItem(startAdjacent.value());
+                startAdjacent.value()->Deregister();
             }
 
             if (endAdjacent.has_value())
@@ -672,6 +669,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
                 deletedComponents.push_back(static_cast<IBaseComponent*>(endAdjacent.value()));
                 Q_ASSERT(endAdjacent.value());
                 mView.Scene()->removeItem(endAdjacent.value());
+                endAdjacent.value()->Deregister();
             }
 
             mView.Scene()->addItem(horizontalWire);
@@ -716,12 +714,15 @@ void CoreLogic::AddWires(QPointF pEndPoint)
             {
                 deletedComponents.push_back(static_cast<IBaseComponent*>(startAdjacent.value()));
                 mView.Scene()->removeItem(startAdjacent.value());
+                static_cast<IBaseComponent*>(startAdjacent.value())->Deregister();
+
             }
 
             if (endAdjacent.has_value())
             {
                 deletedComponents.push_back(static_cast<IBaseComponent*>(endAdjacent.value()));
                 mView.Scene()->removeItem(endAdjacent.value());
+                static_cast<IBaseComponent*>(endAdjacent.value())->Deregister();
             }
 
             mView.Scene()->addItem(verticalWire);
@@ -845,17 +846,20 @@ void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::
         Q_ASSERT(w->scene() == mView.Scene());
         pDeletedComponents.push_back(w);
         mView.Scene()->removeItem(w);
+        w->Deregister();
 
         if (startAdjacent.has_value() && std::find(pAddedComponents.begin(), pAddedComponents.end(), startAdjacent) == pAddedComponents.end())
         {
             pDeletedComponents.push_back(static_cast<LogicWire*>(startAdjacent.value()));
             mView.Scene()->removeItem(startAdjacent.value());
+            startAdjacent.value()->Deregister();
         }
 
         if (endAdjacent.has_value() && std::find(pAddedComponents.begin(), pAddedComponents.end(), endAdjacent) == pAddedComponents.end())
         {
             pDeletedComponents.push_back(static_cast<LogicWire*>(endAdjacent.value()));
             mView.Scene()->removeItem(endAdjacent.value());
+            endAdjacent.value()->Deregister();
         }
     }
 }
@@ -884,6 +888,7 @@ std::vector<LogicWire*> CoreLogic::DeleteContainedWires(const LogicWire* pWire)
         {
             deletedComponents.push_back(static_cast<LogicWire*>(comp));
             mView.Scene()->removeItem(comp);
+            static_cast<IBaseComponent*>(comp)->Deregister();
         }
     }
 
@@ -1456,6 +1461,7 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
         for (const auto& comp : deletedComponents) // Revert deleting
         {
             mView.Scene()->addItem(comp);
+            comp->Register();
         }
 
         AbortPastingIfInCopy();
@@ -1512,6 +1518,7 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
             Q_ASSERT(collidingComp->scene() == mView.Scene());
             mView.Scene()->removeItem(collidingComp);
             pDeletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
+            static_cast<IBaseComponent*>(collidingComp)->Deregister();
         }
         ProcessingHeartbeat();
     }
@@ -1522,6 +1529,7 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
         Q_ASSERT(pComponent->scene() == mView.Scene());
         mView.Scene()->removeItem(pComponent);
         pDeletedComponents.push_back(pComponent);
+        pComponent->Deregister();
     }
 
     // Add ConPoints to all T Crossings
@@ -1698,6 +1706,7 @@ void CoreLogic::OnConnectionTypeChanged(ConPoint* pConPoint, ConnectionType pPre
         pConPoint->setSelected(false);
         pConPoint->SetConnectionType(pPreviousType); // Restore old connection type in case delete is undone
         mView.Scene()->removeItem(pConPoint);
+        pConPoint->Deregister();
 
         auto deleted = std::vector<IBaseComponent*>{pConPoint};
         AppendUndo(new UndoDeleteType(deleted));
@@ -1802,6 +1811,7 @@ void CoreLogic::DeleteSelectedComponents()
         if (dynamic_cast<ConPoint*>(comp) == nullptr || IsXCrossingPoint(comp->pos()))
         {
             mView.Scene()->removeItem(comp);
+            static_cast<IBaseComponent*>(comp)->Deregister();
             deletedComponents.push_back(static_cast<IBaseComponent*>(comp));
         }
     }
@@ -1815,6 +1825,7 @@ void CoreLogic::DeleteSelectedComponents()
             {
                 mView.Scene()->removeItem(collidingComp);
                 deletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
+                static_cast<IBaseComponent*>(collidingComp)->Deregister();
             }
         }
     }
@@ -2147,11 +2158,13 @@ void CoreLogic::Undo()
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->removeItem(comp);
+                    comp->Deregister();
                 }
                 for (const auto& comp : static_cast<UndoAddType*>(undoObject)->DeletedComponents())
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->addItem(comp);
+                    comp->Register();
                 }
                 AppendToUndoQueue(undoObject, mRedoQueue);
                 break;
@@ -2162,6 +2175,7 @@ void CoreLogic::Undo()
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->addItem(comp);
+                    comp->Register();
                 }
                 AppendToUndoQueue(undoObject, mRedoQueue);
                 break;
@@ -2173,11 +2187,13 @@ void CoreLogic::Undo()
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->addItem(comp);
+                    comp->Register();
                 }
                 for (const auto& comp : static_cast<UndoMoveType*>(undoObject)->AddedComponents())
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->removeItem(comp);
+                    comp->Deregister();
                 }
                 for (const auto& comp : undoMoveObject->MovedComponents())
                 {
@@ -2227,11 +2243,13 @@ void CoreLogic::Undo()
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->addItem(comp);
+                    comp->Register();
                 }
                 for (const auto& comp : static_cast<UndoCopyType*>(undoObject)->AddedComponents())
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->removeItem(comp);
+                    comp->Deregister();
                 }
                 for (const auto& comp : undoCopyObject->MovedComponents())
                 {
@@ -2269,11 +2287,13 @@ void CoreLogic::Redo()
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->addItem(comp);
+                    comp->Register();
                 }
                 for (const auto& comp : static_cast<UndoAddType*>(redoObject)->DeletedComponents())
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->removeItem(comp);
+                    comp->Deregister();
                 }
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
@@ -2284,6 +2304,7 @@ void CoreLogic::Redo()
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->removeItem(comp);
+                    comp->Deregister();
                 }
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
@@ -2300,11 +2321,13 @@ void CoreLogic::Redo()
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->addItem(comp);
+                    comp->Register();
                 }
                 for (const auto& comp : static_cast<UndoMoveType*>(redoObject)->DeletedComponents())
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->removeItem(comp);
+                    comp->Deregister();
                 }
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
@@ -2354,11 +2377,13 @@ void CoreLogic::Redo()
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->addItem(comp);
+                    comp->Register();
                 }
                 for (const auto& comp : static_cast<UndoCopyType*>(redoObject)->DeletedComponents())
                 {
                     Q_ASSERT(comp);
                     mView.Scene()->removeItem(comp);
+                    comp->Deregister();
                 }
                 AppendToUndoQueue(redoObject, mUndoQueue);
                 break;
@@ -2371,16 +2396,4 @@ void CoreLogic::Redo()
         mCircuitFileParser.MarkAsModified();
     }
     ClearSelection();
-}
-
-#warning remove when all steps are automated
-bool CoreLogic::IsTutorialConditionTrue(uint8_t pStep) const
-{
-    switch (pStep)
-    {
-        default:
-        {
-            return true;
-        }
-    }
 }
