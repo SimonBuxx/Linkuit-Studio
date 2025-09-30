@@ -149,7 +149,11 @@ void IBaseComponent::mouseReleaseEvent(QGraphicsSceneMouseEvent *pEvent)
 
         if (offset.manhattanLength() > 0)
         {
-            emit SelectedComponentMovedSignal(offset);
+            // singleShot to emit SelectedComponentMovedSignal after all mouseReleaseEvents have been processed
+            // Otherwise, mouseReleaseEvent might be called on components which are no longer in scene
+            QTimer::singleShot(0, this, [this, offset]() {
+                emit SelectedComponentMovedSignal(offset);
+            });
         }
         ResetZValue();
         update();
