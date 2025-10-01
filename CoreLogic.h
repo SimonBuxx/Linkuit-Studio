@@ -483,9 +483,6 @@ protected:
     /// \brief Called at the start of a longer process to keep the GUI responsive
     void StartProcessing(void);
 
-    /// \brief Handles events while processing, call periodically during longer processes
-    void ProcessingHeartbeat(void);
-
     /// \brief Called when the longer process has been finished
     void EndProcessing(void);
 

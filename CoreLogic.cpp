@@ -802,8 +802,6 @@ void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::
 {
     for (const auto& w : pWires)
     {
-        ProcessingHeartbeat();
-
         const auto&& containedWires = DeleteContainedWires(w);
         pDeletedComponents.insert(pDeletedComponents.end(), containedWires.begin(), containedWires.end());
 
@@ -823,7 +821,6 @@ void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::
                 endAdjacent = std::nullopt;
             }
 
-            mView.Scene()->addItem(horizontalWire);
             pAddedComponents.push_back(static_cast<LogicWire*>(horizontalWire));
         }
         else
@@ -839,27 +836,20 @@ void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::
                 endAdjacent = std::nullopt;
             }
 
-            mView.Scene()->addItem(verticalWire);
             pAddedComponents.push_back(static_cast<LogicWire*>(verticalWire));
         }
 
         Q_ASSERT(w->scene() == mView.Scene());
         pDeletedComponents.push_back(w);
-        mView.Scene()->removeItem(w);
-        w->Deregister();
 
         if (startAdjacent.has_value() && std::find(pAddedComponents.begin(), pAddedComponents.end(), startAdjacent) == pAddedComponents.end())
         {
             pDeletedComponents.push_back(static_cast<LogicWire*>(startAdjacent.value()));
-            mView.Scene()->removeItem(startAdjacent.value());
-            startAdjacent.value()->Deregister();
         }
 
         if (endAdjacent.has_value() && std::find(pAddedComponents.begin(), pAddedComponents.end(), endAdjacent) == pAddedComponents.end())
         {
             pDeletedComponents.push_back(static_cast<LogicWire*>(endAdjacent.value()));
-            mView.Scene()->removeItem(endAdjacent.value());
-            endAdjacent.value()->Deregister();
         }
     }
 }
@@ -887,8 +877,6 @@ std::vector<LogicWire*> CoreLogic::DeleteContainedWires(const LogicWire* pWire)
         if (dynamic_cast<LogicWire*>(comp) != nullptr && static_cast<LogicWire*>(comp)->GetDirection() == pWire->GetDirection() && comp != pWire)
         {
             deletedComponents.push_back(static_cast<LogicWire*>(comp));
-            mView.Scene()->removeItem(comp);
-            static_cast<IBaseComponent*>(comp)->Deregister();
         }
     }
 
@@ -1124,7 +1112,6 @@ void CoreLogic::ParseWireGroups(void)
             mWireGroups.push_back(std::vector<IBaseComponent*>());
             ExploreGroup(static_cast<LogicWire*>(comp), mWireGroups.size() - 1);
         }
-        ProcessingHeartbeat();
     }
 
     // Push ConPoints into groups of the wires below; done here because ExploreGroup doesn't catch all ConPoints
@@ -1143,7 +1130,6 @@ void CoreLogic::ParseWireGroups(void)
                 }
             }
         }
-        ProcessingHeartbeat();
     }
 }
 
@@ -1170,7 +1156,6 @@ void CoreLogic::ExploreGroup(LogicWire* pWire, int32_t pGroupIndex)
                 }
             }
         }
-        ProcessingHeartbeat();
     }
 }
 
@@ -1255,7 +1240,6 @@ void CoreLogic::CreateWireLogicCells()
             {
                 static_cast<ConPoint*>(comp)->SetLogicCell(logicCell);
             }
-            ProcessingHeartbeat();
         }
     }
 }
@@ -1264,8 +1248,6 @@ void CoreLogic::ConnectLogicCells()
 {
     for (auto& comp : mView.Scene()->items())
     {
-        ProcessingHeartbeat();
-
         if (nullptr == dynamic_cast<IBaseComponent*>(comp) || nullptr != dynamic_cast<LogicWire*>(comp))
         {
             continue; //  Skip if no non-wire component
@@ -1275,8 +1257,6 @@ void CoreLogic::ConnectLogicCells()
 
         for (auto& coll : mView.Scene()->collidingItems(comp, Qt::IntersectsItemBoundingRect))
         {
-            ProcessingHeartbeat();
-
             if (nullptr == dynamic_cast<LogicWire*>(coll))
             {
                 continue; // Skip if no wire
@@ -1330,15 +1310,11 @@ void CoreLogic::ConnectLogicCells()
     }
 }
 
+#warning Processing overlay will not be displayed because events are no longer processed during circuit parsing etc.
 void CoreLogic::StartProcessing()
 {
     mProcessingTimer.start(gui::PROCESSING_OVERLAY_TIMEOUT);
     mIsProcessing = true;
-}
-
-void CoreLogic::ProcessingHeartbeat()
-{
-    QCoreApplication::processEvents(); // User input during processing will be handled but ignored
 }
 
 void CoreLogic::OnProcessingTimeout()
@@ -1377,7 +1353,7 @@ void CoreLogic::ClearSelection()
 }
 
 void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
-{   
+{
     StartProcessing();
 
     if (pOffset.manhattanLength() <= 0 && mControlMode != ControlMode::COPY) // No effective movement
@@ -1400,22 +1376,19 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
     {
         for (const auto& comp : mCurrentPaste)
         {
+            Q_ASSERT(static_cast<IBaseComponent*>(comp)->scene() == mView.Scene());
             affectedComponents.push_back(static_cast<IBaseComponent*>(comp));
 
             if (nullptr != dynamic_cast<LogicWire*>(comp))
             {
                 affectedWires.push_back(static_cast<LogicWire*>(comp));
             }
-
-            ProcessingHeartbeat();
         }
     }
     else
     {
         for (const auto& comp : mView.Scene()->selectedItems())
         {
-            ProcessingHeartbeat();
-
             if (nullptr == dynamic_cast<IBaseComponent*>(comp))
             {
                 continue;
@@ -1436,6 +1409,17 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
 
     MergeWiresAfterMove(affectedWires, addedComponents, deletedComponents); // Ca. 25% of total cost
 
+    for (const auto& comp : deletedComponents)
+    {
+        mView.Scene()->removeItem(comp);
+        comp->Deregister();
+    }
+
+    for (const auto& comp : addedComponents)
+    {
+        mView.Scene()->addItem(comp);
+    }
+
     // Insert merged wires to recognize T-crossings
     affectedComponents.insert(affectedComponents.end(), addedComponents.begin(), addedComponents.end());
     // In theory, we should remove deletedComponents from movedComponents here, but that would be costly and
@@ -1443,8 +1427,6 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
 
     for (const auto& comp : affectedComponents) // Ca. 75% of total cost
     {
-        ProcessingHeartbeat();
-
         if (ManageConPointsOneStep(comp, pOffset, movedComponents, addedComponents, deletedComponents))
         {
             continue;
@@ -1473,7 +1455,6 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
     }
 
     ClearSelection();
-
 
     if (movedComponents.size() > 0 || mControlMode == ControlMode::COPY) // Create undo copy actions also when no components were moved
     {
@@ -1521,7 +1502,6 @@ bool CoreLogic::ManageConPointsOneStep(IBaseComponent* pComponent, QPointF& pOff
             pDeletedComponents.push_back(static_cast<IBaseComponent*>(collidingComp));
             static_cast<IBaseComponent*>(collidingComp)->Deregister();
         }
-        ProcessingHeartbeat();
     }
 
     // Delete all ConPoints of the moved components that are not valid anymore (plus ConPoints that already exist the position; needed when copying)
@@ -1549,8 +1529,6 @@ void CoreLogic::AddConPointsToTCrossings(LogicWire* pWire, std::vector<IBaseComp
 
     for (const auto& collidingComp : collidingComponents)
     {
-        ProcessingHeartbeat();
-
         if (dynamic_cast<LogicWire*>(collidingComp) == nullptr)
         {
             continue;
@@ -1685,6 +1663,7 @@ void CoreLogic::FinishPaste()
     }
 
     mCurrentPaste.clear();
+    mCurrentCopyUndoType.reset();
 }
 
 void CoreLogic::RemoveCurrentPaste()

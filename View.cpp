@@ -144,7 +144,6 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *pEvent)
     {
         if (mCoreLogic.GetControlMode() == ControlMode::COPY)
         {
-            mCoreLogic.FinishPaste();
             mCoreLogic.EnterControlMode(ControlMode::EDIT);
         }
     }
