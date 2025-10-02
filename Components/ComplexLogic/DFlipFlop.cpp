@@ -1,10 +1,11 @@
 #include "DFlipFlop.h"
 #include "CoreLogic.h"
 #include "HelperFunctions.h"
-#include "LogicCells/LogicDFlipFlopCell.h"
+//#include "LogicCells/LogicDFlipFlopCell.h"
+#include "LogicCells/LogicCustomTestCell.h"
 
 DFlipFlop::DFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
-    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicDFlipFlopCell>(), 2, 2, pDirection)
+    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicCustomTestCell>(), 2, 2, pDirection)
 {
     mComponentText = components::complex_logic::D_FLIPFLOP_TEXT;
     mInputLabels = {"D", ">"};

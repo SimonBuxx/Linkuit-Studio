@@ -147,10 +147,8 @@ void LogicBaseCell::SetInputState(uint32_t pInput, LogicState pState)
             mInputStates[pInput] = pState;
             emit StateChangedSignal();
         }
-
     }
 }
-
 
 void LogicBaseCell::Deregister()
 {
