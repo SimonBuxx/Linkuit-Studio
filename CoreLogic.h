@@ -351,10 +351,10 @@ protected:
     /// \return A new LogicWire to replace all of the given wires
     LogicWire* MergeWires(LogicWire* pNewWire, std::optional<LogicWire*> pLeftTopAdjacent, std::optional<LogicWire*> pRightBottomAdjacent) const;
 
-    /// \brief Removes all wires from the scene that are completely contained in the given wire
+    /// \brief Returns all wires from the scene that are completely contained in the given wire
     /// \param pWire: The wire to look for contained wires below
-    /// \return A vector containing pointers to all deleted wires
-    std::vector<LogicWire*> DeleteContainedWires(const LogicWire* pWire);
+    /// \return A vector containing pointers to all contained wires
+    std::vector<LogicWire*> GetContainedWires(const LogicWire* pWire);
 
 
     /// \brief Checks if the given wire is fully contained in another existing wire to prevent unnecessary undos
@@ -370,8 +370,8 @@ protected:
 
     /// \brief Merges all wires that have been moved if they are now adjacent with or overlapping others
     /// \param pWires: The wires that have been moved
-    /// \param pAddedComponents: Vector to add newly created wires to
-    /// \param pDeletedComponents: Vector to add deleted wires to
+    /// \param pAddedComponents: Vector to add newly created to add to
+    /// \param pDeletedComponents: Vector to add wires to delete to
     void MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::vector<IBaseComponent*> &pAddedComponents, std::vector<IBaseComponent*> &pDeletedComponents);
 
     /// \brief One step of the algorithm to create a valid ConPoint state in OnSelectedComponentsMovedOrPasted

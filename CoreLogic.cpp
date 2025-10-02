@@ -640,8 +640,14 @@ void CoreLogic::AddWires(QPointF pEndPoint)
         if (!IsWireContainedInIntersectingWires(item))
         {
             // Delete wires that are completely behind the new wire
-            const auto containedWires = DeleteContainedWires(item);
+            const auto containedWires = GetContainedWires(item);
             deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
+
+            for (const auto& comp : deletedComponents)
+            {
+                mView.Scene()->removeItem(comp);
+                comp->Deregister();
+            }
 
             // Find wires left or right of the new wire (those may be partly behind the new wire)
             auto startAdjacent = GetAdjacentWire(QPointF(item->x() - 2, item->y()), WireDirection::HORIZONTAL);
@@ -694,8 +700,14 @@ void CoreLogic::AddWires(QPointF pEndPoint)
         if (!IsWireContainedInIntersectingWires(item))
         {
             // Delete wires that are completely behind the new wire
-            const auto containedWires = DeleteContainedWires(item);
+            const auto containedWires = GetContainedWires(item);
             deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
+
+            for (const auto& comp : deletedComponents)
+            {
+                mView.Scene()->removeItem(comp);
+                comp->Deregister();
+            }
 
             // Find wires above or below of the new wire (those may be partly behind the new wire)
             auto startAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() - 2), WireDirection::VERTICAL);
@@ -802,7 +814,7 @@ void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::
 {
     for (const auto& w : pWires)
     {
-        const auto&& containedWires = DeleteContainedWires(w);
+        const auto&& containedWires = GetContainedWires(w);
         pDeletedComponents.insert(pDeletedComponents.end(), containedWires.begin(), containedWires.end());
 
         std::optional<LogicWire*> startAdjacent = std::nullopt;
@@ -854,9 +866,9 @@ void CoreLogic::MergeWiresAfterMove(const std::vector<LogicWire*> &pWires, std::
     }
 }
 
-std::vector<LogicWire*> CoreLogic::DeleteContainedWires(const LogicWire* pWire)
+std::vector<LogicWire*> CoreLogic::GetContainedWires(const LogicWire* pWire)
 {
-    std::vector<LogicWire*> deletedComponents;
+    std::vector<LogicWire*> containedWires;
 
     QRectF collisionRect; // CollisionRect is oversized for ContainsItemShape request
     if (pWire->GetDirection() == WireDirection::HORIZONTAL)
@@ -876,11 +888,11 @@ std::vector<LogicWire*> CoreLogic::DeleteContainedWires(const LogicWire* pWire)
     {
         if (dynamic_cast<LogicWire*>(comp) != nullptr && static_cast<LogicWire*>(comp)->GetDirection() == pWire->GetDirection() && comp != pWire)
         {
-            deletedComponents.push_back(static_cast<LogicWire*>(comp));
+            containedWires.push_back(static_cast<LogicWire*>(comp));
         }
     }
 
-    return deletedComponents;
+    return containedWires;
 }
 
 bool CoreLogic::IsWireContainedInIntersectingWires(const LogicWire* pWire) const
@@ -1409,6 +1421,7 @@ void CoreLogic::OnSelectedComponentsMovedOrPasted(QPointF pOffset)
 
     MergeWiresAfterMove(affectedWires, addedComponents, deletedComponents); // Ca. 25% of total cost
 
+    // MergeWiresAfterMove doe not add/delete the wires, so we do that here
     for (const auto& comp : deletedComponents)
     {
         mView.Scene()->removeItem(comp);
