@@ -84,7 +84,7 @@ void LogicBaseCell::InvertOutput(uint32_t pOutput)
     mOutputInverted[pOutput] = !mOutputInverted[pOutput];
 }
 
-void LogicBaseCell::OnCalculateNextState()
+void LogicBaseCell::CalculateNextState()
 {
     if (!mIsRegistered)
     {
@@ -94,7 +94,7 @@ void LogicBaseCell::OnCalculateNextState()
     LogicFunction();
 }
 
-void LogicBaseCell::OnCommitState()
+void LogicBaseCell::CommitState()
 {
     if (!mIsRegistered)
     {

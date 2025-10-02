@@ -283,8 +283,21 @@ bool CoreLogic::IsSimulationRunning() const
 
 void CoreLogic::OnPropagationTimeout()
 {
-    emit CalculateNextStateSignal();
-    emit CommitStateSignal();
+    for (auto& comp : mView.Scene()->items())
+    {
+        if (dynamic_cast<IBaseComponent*>(comp) != nullptr && static_cast<IBaseComponent*>(comp)->GetLogicCell() != nullptr)
+        {
+            static_cast<IBaseComponent*>(comp)->GetLogicCell()->CalculateNextState();
+        }
+    }
+
+    for (auto& comp : mView.Scene()->items())
+    {
+        if (dynamic_cast<IBaseComponent*>(comp) != nullptr && static_cast<IBaseComponent*>(comp)->GetLogicCell() != nullptr)
+        {
+            static_cast<IBaseComponent*>(comp)->GetLogicCell()->CommitState();
+        }
+    }
 }
 
 bool CoreLogic::IsUndoQueueEmpty() const
@@ -304,11 +317,11 @@ void CoreLogic::SelectComponentType(ComponentType pComponentType)
     emit ComponentTypeChangedSignal(mComponentType);
 }
 
-std::optional<IBaseComponent*> CoreLogic::GetItem() const
+std::optional<IBaseComponent*> CoreLogic::CreateComponent(ComponentType pType) const
 {
     IBaseComponent* item = nullptr;
 
-    switch(mComponentType)
+    switch(pType)
     {
         case ComponentType::AND_GATE:
         {
@@ -487,21 +500,22 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
         return false;
     }
 
-    auto item = GetItem();
-    Q_ASSERT(item.has_value());
+    auto comp = CreateComponent(mComponentType);
+    Q_ASSERT(comp.has_value());
 
-    item.value()->setPos(SnapToGrid(pPosition));
+    comp.value()->setPos(SnapToGrid(pPosition));
 
-    if (!GetCollidingComponents(item.value(), false).empty())
+    if (!GetCollidingComponents(comp.value(), false).empty())
     {
-        delete item.value();
+#warning avoid delete
+        delete comp.value();
         return false;
     }
 
     mView.Scene()->clearFocus(); // Remove focus from components like labels that can be edited while in ADD mode
-    mView.Scene()->addItem(item.value());
+    mView.Scene()->addItem(comp.value());
 
-    auto addedComponents = std::vector<IBaseComponent*>{static_cast<IBaseComponent*>(item.value())};
+    auto addedComponents = std::vector<IBaseComponent*>{static_cast<IBaseComponent*>(comp.value())};
     AppendUndo(new UndoAddType(addedComponents));
 
     emit ComponentAddedSignal(mComponentType);
@@ -626,7 +640,8 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     // Add horizontal wire
     if (mPreviewWireStart.x() != snappedEndPoint.x())
     {
-        auto item = new LogicWire(this, WireDirection::HORIZONTAL, std::abs(mPreviewWireStart.x() - snappedEndPoint.x()));
+        // Item is only used as a data container and deleted when going out of scope
+        std::shared_ptr<LogicWire> item = std::make_shared<LogicWire>(this, WireDirection::HORIZONTAL, std::abs(mPreviewWireStart.x() - snappedEndPoint.x()));
 
         if (mWireStartDirection == WireDirection::HORIZONTAL)
         {
@@ -637,10 +652,10 @@ void CoreLogic::AddWires(QPointF pEndPoint)
             item->setPos(std::min(mPreviewWireStart.x(), snappedEndPoint.x()), snappedEndPoint.y());
         }
 
-        if (!IsWireContainedInIntersectingWires(item))
+        if (!IsWireContainedInIntersectingWires(item.get())) // Skip wire creation if this wire is fully contained in another wire
         {
             // Delete wires that are completely behind the new wire
-            const auto containedWires = GetContainedWires(item);
+            const auto containedWires = GetContainedWires(item.get());
             deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
 
             for (const auto& comp : deletedComponents)
@@ -653,9 +668,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
             auto startAdjacent = GetAdjacentWire(QPointF(item->x() - 2, item->y()), WireDirection::HORIZONTAL);
             auto endAdjacent = GetAdjacentWire(QPointF(item->x() + item->GetLength() + 2, item->y()), WireDirection::HORIZONTAL);
 
-            auto horizontalWire = MergeWires(item, startAdjacent, endAdjacent);
-
-            delete item;
+            auto horizontalWire = MergeWires(item.get(), startAdjacent, endAdjacent);
 
             if (startAdjacent == endAdjacent)
             {
@@ -686,7 +699,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
     // Add vertical wire
     if (mPreviewWireStart.y() != snappedEndPoint.y())
     {
-        auto item = new LogicWire(this, WireDirection::VERTICAL, std::abs(mPreviewWireStart.y() - snappedEndPoint.y()));
+        std::shared_ptr<LogicWire> item = std::make_shared<LogicWire>(this, WireDirection::VERTICAL, std::abs(mPreviewWireStart.y() - snappedEndPoint.y()));
 
         if (mWireStartDirection == WireDirection::VERTICAL)
         {
@@ -697,10 +710,10 @@ void CoreLogic::AddWires(QPointF pEndPoint)
             item->setPos(snappedEndPoint.x(), std::min(mPreviewWireStart.y(), snappedEndPoint.y()));
         }
 
-        if (!IsWireContainedInIntersectingWires(item))
+        if (!IsWireContainedInIntersectingWires(item.get())) // Skip wire creation if this wire is fully contained in another wire
         {
             // Delete wires that are completely behind the new wire
-            const auto containedWires = GetContainedWires(item);
+            const auto containedWires = GetContainedWires(item.get());
             deletedComponents.insert(deletedComponents.end(), containedWires.begin(), containedWires.end());
 
             for (const auto& comp : deletedComponents)
@@ -713,9 +726,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
             auto startAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() - 2), WireDirection::VERTICAL);
             auto endAdjacent = GetAdjacentWire(QPointF(item->x(), item->y() + item->GetLength() + 2), WireDirection::VERTICAL);
 
-            auto verticalWire = MergeWires(item, startAdjacent, endAdjacent);
-
-            delete item;
+            auto verticalWire = MergeWires(item.get(), startAdjacent, endAdjacent);
 
             if (startAdjacent == endAdjacent)
             {
@@ -742,6 +753,7 @@ void CoreLogic::AddWires(QPointF pEndPoint)
         }
     }
 
+    // Add new ConPoints (adding wires never removes ConPoints)
     std::vector<IBaseComponent*> addedConPoints;
 
     for (const auto& wire : addedComponents)
@@ -775,13 +787,15 @@ void CoreLogic::AddWires(QPointF pEndPoint)
 
     addedComponents.insert(addedComponents.end(), addedConPoints.begin(), addedConPoints.end());
 
+    // Only append undo action when components have been modified
     if (!addedComponents.empty() || !deletedComponents.empty())
     {
         AppendUndo(new UndoAddType(addedComponents, deletedComponents));
     }
+
     mWireStartDirection = WireDirection::UNSET;
 
-    emit WireAddedSignal();
+    emit WireAddedSignal(); // To advance in the tutorial
 }
 
 template<typename T>
@@ -895,6 +909,7 @@ std::vector<LogicWire*> CoreLogic::GetContainedWires(const LogicWire* pWire)
     return containedWires;
 }
 
+// Is our wire fully contained in any other wire?
 bool CoreLogic::IsWireContainedInIntersectingWires(const LogicWire* pWire) const
 {
     QRectF collisionRect; // CollisionRect is undersized for IntersectsItemShape request
@@ -1236,8 +1251,6 @@ void CoreLogic::CreateWireLogicCells()
     {
         auto logicCell = std::make_shared<LogicWireCell>();
 
-        QObject::connect(this, &CoreLogic::CalculateNextStateSignal, logicCell.get(), &LogicBaseCell::OnCalculateNextState);
-        QObject::connect(this, &CoreLogic::CommitStateSignal, logicCell.get(), &LogicBaseCell::OnCommitState);
         QObject::connect(this, &CoreLogic::SimulationStopSignal, logicCell.get(), &LogicBaseCell::OnShutdown);
         QObject::connect(this, &CoreLogic::SimulationStartSignal, logicCell.get(), &LogicBaseCell::OnWakeUp);
 

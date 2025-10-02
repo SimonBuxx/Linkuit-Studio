@@ -3,6 +3,8 @@
 
 /build
 
+*.bak
+
 # QMake User files
 *.pro.user*
 

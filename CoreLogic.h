@@ -45,8 +45,9 @@ public:
     void SelectAll(void);
 
     /// \brief Creates a new scene component
+    /// \param pType: The type of the component to create
     /// \return Optional pointer to the new component
-    std::optional<IBaseComponent*> GetItem(void) const;
+    std::optional<IBaseComponent*> CreateComponent(ComponentType pType) const;
 
     /// \brief Changes the control mode to the given mode and kicks off all
     /// neccessary steps to enter this mode
@@ -246,11 +247,6 @@ signals:
     /// \brief Emitted when the core logic has started the simulation
     void SimulationStartSignal(void);
 
-    /// \brief Emitted when the simulation should advance by one step
-    void CalculateNextStateSignal(void);
-
-    void CommitStateSignal(void);
-
     /// \brief Emitted when the core logic has stopped the simulation
     void SimulationStopSignal(void);
 
@@ -355,7 +351,6 @@ protected:
     /// \param pWire: The wire to look for contained wires below
     /// \return A vector containing pointers to all contained wires
     std::vector<LogicWire*> GetContainedWires(const LogicWire* pWire);
-
 
     /// \brief Checks if the given wire is fully contained in another existing wire to prevent unnecessary undos
     /// \param pWire: The wire to check

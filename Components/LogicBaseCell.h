@@ -95,13 +95,13 @@ public:
     /// \brief Registers the logic cell so that it updates when in use
     void Register(void);
 
-public slots:
     /// \brief Executes the logic function to calculate the next cell state
-    virtual void OnCalculateNextState(void);
+    virtual void CalculateNextState(void);
 
     /// \brief Announces the cell state to the connected cells
-    virtual void OnCommitState(void);
+    virtual void CommitState(void);
 
+public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     virtual void OnShutdown(void) {};
 

@@ -37,9 +37,9 @@ public:
     /// \return The number of inputs to this wire cell
     uint32_t GetInputSize(void) const;
 
-public slots:
-    void OnCommitState(void) override {};
+    void CommitState(void) override {};
 
+public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;
 
