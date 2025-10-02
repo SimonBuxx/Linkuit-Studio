@@ -24,27 +24,37 @@
  */
 
 #include "LogicCustomTestCell.h"
-#include "Components/Gates/LogicCells/LogicAndGateCell.h"
-#include "Components/Gates/LogicCells/LogicXorGateCell.h"
+#include "Components/ComplexLogic/LogicCells/LogicHalfAdderCell.h"
+#include "Components/Gates/LogicCells/LogicOrGateCell.h"
 #include "Components/LogicWireCell.h"
 #include "HelperFunctions.h"
 
 LogicCustomTestCell::LogicCustomTestCell():
-    LogicBaseCell(2, 2)
+    LogicBaseCell(3, 2)
 {
-    auto xorCell = std::make_shared<LogicXorGateCell>(2);
-    auto andCell = std::make_shared<LogicAndGateCell>(2);
+    auto ha1Cell = std::make_shared<LogicHalfAdderCell>();
+    auto ha2Cell = std::make_shared<LogicHalfAdderCell>();
+    auto orCell = std::make_shared<LogicOrGateCell>(2);
+
     auto wire1Cell = std::make_shared<LogicWireCell>();
     auto wire2Cell = std::make_shared<LogicWireCell>();
+    auto wire3Cell = std::make_shared<LogicWireCell>();
 
-    mLogicCells.push_back(xorCell);
-    mLogicCells.push_back(andCell);
-    //mLogicCells.push_back(wire1Cell);
-    //mLogicCells.push_back(wire2Cell);
+    mLogicCells.push_back(ha1Cell);
+    mLogicCells.push_back(ha2Cell);
+    mLogicCells.push_back(orCell);
+
+    mLogicCells.push_back(wire1Cell);
+    mLogicCells.push_back(wire2Cell);
+    mLogicCells.push_back(wire3Cell);
 }
 
 void LogicCustomTestCell::LogicFunction()
 {
+    mLogicCells[0]->SetInputState(0, mInputStates[1]);
+    mLogicCells[0]->SetInputState(1, mInputStates[2]);
+    mLogicCells[1]->SetInputState(0, mInputStates[0]);
+
     for (auto& cell : mLogicCells)
     {
         cell->CalculateNextState();
@@ -55,8 +65,8 @@ void LogicCustomTestCell::LogicFunction()
         cell->CommitState();
     }
 
-    mNextOutputStates[0] = mLogicCells[0]->GetOutputState(0);
-    mNextOutputStates[1] = mLogicCells[1]->GetOutputState(0);
+    mNextOutputStates[0] = mLogicCells[1]->GetOutputState(0);
+    mNextOutputStates[1] = mLogicCells[2]->GetOutputState(0);
     mStateChanged = true;
 }
 
@@ -73,53 +83,19 @@ LogicState LogicCustomTestCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
-void LogicCustomTestCell::SetInputState(uint32_t pInput, LogicState pState)
-{
-    if (!mIsRegistered)
-    {
-        return;
-    }
-
-    if (IsInputInverted(pInput))
-    {
-        if (mInputStates[pInput] != InvertState(pState))
-        {
-            mInputStates[pInput] = InvertState(pState);
-            emit StateChangedSignal();
-        }
-    }
-    else
-    {
-        if (mInputStates[pInput] != pState)
-        {
-            mInputStates[pInput] = pState;
-            emit StateChangedSignal();
-        }
-    }
-
-    // Pass states to inner logic cells
-    if (pInput == 0)
-    {
-        mLogicCells[0]->SetInputState(0, mInputStates[0]);
-        mLogicCells[1]->SetInputState(0, mInputStates[0]);
-    }
-    else if (pInput == 1)
-    {
-        mLogicCells[0]->SetInputState(1, mInputStates[1]);
-        mLogicCells[1]->SetInputState(1, mInputStates[1]);
-    }
-}
-
 void LogicCustomTestCell::OnWakeUp()
 {
-    // Rewire
-    //static_cast<LogicWireCell*>(mLogicCells[2].get())->AddInputSlot();
-    //static_cast<LogicWireCell*>(mLogicCells[3].get())->AddInputSlot();
+    static_cast<LogicWireCell*>(mLogicCells[3].get())->AddInputSlot();
+    static_cast<LogicWireCell*>(mLogicCells[3].get())->AppendOutput(mLogicCells[1], 1);
+    mLogicCells[0]->ConnectOutput(mLogicCells[3], 0, 0);
 
-    /*static_cast<LogicWireCell*>(mLogicCells[2].get())->AppendOutput(mLogicCells[0], 0);
-    static_cast<LogicWireCell*>(mLogicCells[2].get())->AppendOutput(mLogicCells[1], 0);
-    static_cast<LogicWireCell*>(mLogicCells[3].get())->AppendOutput(mLogicCells[0], 1);
-    static_cast<LogicWireCell*>(mLogicCells[3].get())->AppendOutput(mLogicCells[1], 1);*/
+    static_cast<LogicWireCell*>(mLogicCells[4].get())->AddInputSlot();
+    static_cast<LogicWireCell*>(mLogicCells[4].get())->AppendOutput(mLogicCells[2], 1);
+    mLogicCells[0]->ConnectOutput(mLogicCells[4], 0, 1);
+
+    static_cast<LogicWireCell*>(mLogicCells[5].get())->AddInputSlot();
+    static_cast<LogicWireCell*>(mLogicCells[5].get())->AppendOutput(mLogicCells[2], 0);
+    mLogicCells[1]->ConnectOutput(mLogicCells[5], 0, 1);
 
     for (auto& cell : mLogicCells) // Wake up all inner cells
     {

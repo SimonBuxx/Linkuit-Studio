@@ -5,10 +5,10 @@
 #include "LogicCells/LogicCustomTestCell.h"
 
 DFlipFlop::DFlipFlop(const CoreLogic* pCoreLogic, Direction pDirection):
-    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicCustomTestCell>(), 2, 2, pDirection)
+    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicCustomTestCell>(), 3, 2, pDirection)
 {
     mComponentText = components::complex_logic::D_FLIPFLOP_TEXT;
-    mInputLabels = {"D", ">"};
+    mInputLabels = {"A", "D", ">"};
     mOutputLabels = {"Q", "Q̅"};
 }
 
