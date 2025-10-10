@@ -16,6 +16,37 @@ AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, const st
     mInputsTrapezoidOffset(0),
     mOutputsTrapezoidOffset(0)
 {
+    Init(pInputCount, pOutputCount, pDirection, pTopInputCount, pStrechTwoPins, pTrapezoidShape);
+}
+
+AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell)
+    : IBaseComponent(pCoreLogic, pLogicCell),
+    mInputCount(0),
+    mOutputCount(0),
+    mDirection(Direction::RIGHT),
+    mInputsSpacing(1),
+    mOutputsSpacing(1),
+    mTopInputCount(0),
+    mDescriptionFontSize(components::complex_logic::DEFAULT_DESCRIPTION_FONT_SIZE),
+    mTrapezoidShape(false),
+    mInputsTrapezoidOffset(0),
+    mOutputsTrapezoidOffset(0)
+{
+}
+
+void AbstractComplexLogic::Init(uint8_t pInputCount, uint8_t pOutputCount, Direction pDirection, uint8_t pTopInputCount, bool pStrechTwoPins, bool pTrapezoidShape)
+{
+    mInputCount = pInputCount;
+    mOutputCount = pOutputCount;
+    mDirection = pDirection;
+    mInputsSpacing = 1;
+    mOutputsSpacing = 1;
+    mTopInputCount = pTopInputCount;
+    mDescriptionFontSize = components::complex_logic::DEFAULT_DESCRIPTION_FONT_SIZE;
+    mTrapezoidShape = pTrapezoidShape;
+    mInputsTrapezoidOffset = 0;
+    mOutputsTrapezoidOffset = 0;
+
     Q_ASSERT(!mTrapezoidShape || abs(mInputCount - mOutputCount) >= 4); // Assert that the in- and output count fits the trapezoid shape
     Q_ASSERT(!mTrapezoidShape || mTopInputCount == 0);                  // Assert that trapezoid components have no top inputs
 
@@ -65,58 +96,58 @@ AbstractComplexLogic::AbstractComplexLogic(const CoreLogic* pCoreLogic, const st
     {
         switch (mDirection)
         {
-            case Direction::RIGHT:
+        case Direction::RIGHT:
+        {
+            if (mInputCount < mOutputCount)
             {
-                if (mInputCount < mOutputCount)
-                {
-                    mTrapezoid << QPoint(0, 2 * canvas::GRID_SIZE) << QPoint(mWidth, 0) << QPoint(mWidth, mHeight) << QPoint(0, mHeight - 2 * canvas::GRID_SIZE);
-                }
-                else
-                {
-                    mTrapezoid << QPoint(0, 0) << QPoint(mWidth, 2 * canvas::GRID_SIZE) << QPoint(mWidth, mHeight - 2 * canvas::GRID_SIZE) << QPoint(0, mHeight);
-                }
-                break;
+                mTrapezoid << QPoint(0, 2 * canvas::GRID_SIZE) << QPoint(mWidth, 0) << QPoint(mWidth, mHeight) << QPoint(0, mHeight - 2 * canvas::GRID_SIZE);
             }
-            case Direction::DOWN:
+            else
             {
-                if (mInputCount < mOutputCount)
-                {
-                    mTrapezoid << QPoint(2 * canvas::GRID_SIZE, 0) << QPoint(mWidth - 2 * canvas::GRID_SIZE, 0) << QPoint(mWidth, mHeight) << QPoint(0, mHeight);
-                }
-                else
-                {
-                    mTrapezoid << QPoint(0, 0) << QPoint(mWidth, 0) << QPoint(mWidth - 2 * canvas::GRID_SIZE, mHeight) << QPoint(2 * canvas::GRID_SIZE, mHeight);
-                }
-                break;
+                mTrapezoid << QPoint(0, 0) << QPoint(mWidth, 2 * canvas::GRID_SIZE) << QPoint(mWidth, mHeight - 2 * canvas::GRID_SIZE) << QPoint(0, mHeight);
             }
-            case Direction::LEFT:
+            break;
+        }
+        case Direction::DOWN:
+        {
+            if (mInputCount < mOutputCount)
             {
-                if (mInputCount < mOutputCount)
-                {
-                    mTrapezoid << QPoint(0, 0) << QPoint(mWidth, 2 * canvas::GRID_SIZE) << QPoint(mWidth, mHeight - 2 * canvas::GRID_SIZE) << QPoint(0, mHeight);
-                }
-                else
-                {
-                    mTrapezoid << QPoint(0, 2 * canvas::GRID_SIZE) << QPoint(mWidth, 0) << QPoint(mWidth, mHeight) << QPoint(0, mHeight - 2 * canvas::GRID_SIZE);
-                }
-                break;
+                mTrapezoid << QPoint(2 * canvas::GRID_SIZE, 0) << QPoint(mWidth - 2 * canvas::GRID_SIZE, 0) << QPoint(mWidth, mHeight) << QPoint(0, mHeight);
             }
-            case Direction::UP:
+            else
             {
-                if (mInputCount < mOutputCount)
-                {
-                    mTrapezoid << QPoint(0, 0) << QPoint(mWidth, 0) << QPoint(mWidth - 2 * canvas::GRID_SIZE, mHeight) << QPoint(2 * canvas::GRID_SIZE, mHeight);
-                }
-                else
-                {
-                    mTrapezoid << QPoint(2 * canvas::GRID_SIZE, 0) << QPoint(mWidth - 2 * canvas::GRID_SIZE, 0) << QPoint(mWidth, mHeight) << QPoint(0, mHeight);
-                }
-                break;
+                mTrapezoid << QPoint(0, 0) << QPoint(mWidth, 0) << QPoint(mWidth - 2 * canvas::GRID_SIZE, mHeight) << QPoint(2 * canvas::GRID_SIZE, mHeight);
             }
-            default:
+            break;
+        }
+        case Direction::LEFT:
+        {
+            if (mInputCount < mOutputCount)
             {
-                throw std::logic_error("Invalid direction");
+                mTrapezoid << QPoint(0, 0) << QPoint(mWidth, 2 * canvas::GRID_SIZE) << QPoint(mWidth, mHeight - 2 * canvas::GRID_SIZE) << QPoint(0, mHeight);
             }
+            else
+            {
+                mTrapezoid << QPoint(0, 2 * canvas::GRID_SIZE) << QPoint(mWidth, 0) << QPoint(mWidth, mHeight) << QPoint(0, mHeight - 2 * canvas::GRID_SIZE);
+            }
+            break;
+        }
+        case Direction::UP:
+        {
+            if (mInputCount < mOutputCount)
+            {
+                mTrapezoid << QPoint(0, 0) << QPoint(mWidth, 0) << QPoint(mWidth - 2 * canvas::GRID_SIZE, mHeight) << QPoint(2 * canvas::GRID_SIZE, mHeight);
+            }
+            else
+            {
+                mTrapezoid << QPoint(2 * canvas::GRID_SIZE, 0) << QPoint(mWidth - 2 * canvas::GRID_SIZE, 0) << QPoint(mWidth, mHeight) << QPoint(0, mHeight);
+            }
+            break;
+        }
+        default:
+        {
+            throw std::logic_error("Invalid direction");
+        }
         }
 
         mShape.addPolygon(mTrapezoid);
@@ -573,6 +604,9 @@ void AbstractComplexLogic::DrawConnectorDescriptionsRight(QPainter *pPainter, co
     Q_ASSERT(pPainter);
     Q_ASSERT(pItem);
 
+    Q_ASSERT(mInputLabels.size() >= mInputCount);
+    Q_ASSERT(mOutputLabels.size() >= mOutputCount);
+
     for (size_t i = 0; i < mTopInputCount; i++)
     {
         if (mInputLabels[mTopInputCount - i - 1] == components::complex_logic::CLOCK_SYMBOL_STRING)
@@ -616,6 +650,9 @@ void AbstractComplexLogic::DrawConnectorDescriptionsDown(QPainter *pPainter, con
 {
     Q_ASSERT(pPainter);
     Q_ASSERT(pItem);
+
+    Q_ASSERT(mInputLabels.size() >= mInputCount);
+    Q_ASSERT(mOutputLabels.size() >= mOutputCount);
 
     for (size_t i = 0; i < mTopInputCount; i++)
     {
@@ -661,6 +698,9 @@ void AbstractComplexLogic::DrawConnectorDescriptionsLeft(QPainter *pPainter, con
     Q_ASSERT(pPainter);
     Q_ASSERT(pItem);
 
+    Q_ASSERT(mInputLabels.size() >= mInputCount);
+    Q_ASSERT(mOutputLabels.size() >= mOutputCount);
+
     for (size_t i = 0; i < mTopInputCount; i++)
     {
         if (mInputLabels[mTopInputCount - i - 1] == components::complex_logic::CLOCK_SYMBOL_STRING)
@@ -704,6 +744,9 @@ void AbstractComplexLogic::DrawConnectorDescriptionsUp(QPainter *pPainter, const
 {
     Q_ASSERT(pPainter);
     Q_ASSERT(pItem);
+
+    Q_ASSERT(mInputLabels.size() >= mInputCount);
+    Q_ASSERT(mOutputLabels.size() >= mOutputCount);
 
     for (size_t i = 0; i < mTopInputCount; i++)
     {

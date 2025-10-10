@@ -11,8 +11,12 @@ LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mNextOutputStates(pOutputs, LogicState::LOW),
     mIsActive(false),
     mStateChanged(false),
-    mIsRegistered(true)
-{}
+    mIsRegistered(true),
+    mIsInnerCell(false),
+    mNextUid(0)
+{
+    mUid = mNextUid++;
+}
 
 void LogicBaseCell::ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput)
 {
@@ -158,4 +162,29 @@ void LogicBaseCell::Deregister()
 void LogicBaseCell::Register()
 {
     mIsRegistered = true;
+}
+
+void LogicBaseCell::SetUid(uint32_t pUid)
+{
+    mUid = pUid;
+}
+
+uint32_t LogicBaseCell::GetUid() const
+{
+    return mUid;
+}
+
+uint32_t LogicBaseCell::GetNumInputs() const
+{
+    return mInputStates.size();
+}
+
+uint32_t LogicBaseCell::GetNumOutputs() const
+{
+    return mCurrentOutputStates.size();
+}
+
+void LogicBaseCell::SetInnerCell()
+{
+    mIsInnerCell = true;
 }

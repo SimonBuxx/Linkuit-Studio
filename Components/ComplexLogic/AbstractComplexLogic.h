@@ -19,8 +19,10 @@ public:
     /// \param pTopInputCount: The input number up to which the inputs should be drawn on top of the component (exclusive)
     /// \param pStretchTwoPins: If enabled, pin spacing will be increased for components with two inputs or outputs
     /// \param pTrapezoidShape: If true, the component will have a trapezoid shape instead of the rectangular
-    AbstractComplexLogic(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell, uint8_t pInputCount, uint8_t pOutputCount,
+    explicit AbstractComplexLogic(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell, uint8_t pInputCount, uint8_t pOutputCount,
                          Direction pDirection, uint8_t pTopInputCount = 0, bool pStretchTwoPins = true, bool pTrapezoidShape = false);
+
+    explicit AbstractComplexLogic(const CoreLogic* pCoreLogic, const std::shared_ptr<LogicBaseCell>& pLogicCell);
 
     /// \brief Clone function for the component
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
@@ -43,6 +45,8 @@ public:
     SwVersion GetMinVersion(void) const override = 0;
 
 protected:
+    void Init(uint8_t pInputCount, uint8_t pOutputCount, Direction pDirection, uint8_t pTopInputCount = 0, bool pStretchTwoPins = true, bool pTrapezoidShape = false);
+
     /// \brief Paints the abstract complex logic component
     /// \param pPainter: The painter to use
     /// \param pItem: Contains drawing parameters

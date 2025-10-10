@@ -109,11 +109,16 @@ void LogicHalfAdderCell::OnWakeUp()
 
 void LogicHalfAdderCell::OnShutdown()
 {
-    mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
-    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
     mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
+
+    if (!mIsInnerCell)
+    {
+        mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
+        mInputConnected = std::vector<bool>(mInputConnected.size(), false);
+    }
+
     mIsActive = false;
     mStateChanged = true;
 }

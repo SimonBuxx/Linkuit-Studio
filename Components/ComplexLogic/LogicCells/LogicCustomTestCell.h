@@ -1,8 +1,8 @@
 /*!
- * \file LogicCustomTestCell.h
- * \brief Logic Cell class for the custom test component
+ * \file LogicCustomCell.h
+ * \brief Logic Cell class for custom logic
  * \author Simon Buchholz
- * \copyright Copyright (c) 2023, Simon Buchholz
+ * \copyright Copyright (c) 2025, Simon Buchholz
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 #ifndef LOGICCUSTOMTESTCELL_H
 #define LOGICCUSTOMTESTCELL_H
 
 #include "Components/LogicBaseCell.h"
+#include "CustomsLibrary.h"
+#include <QJsonObject>
+#include <QJsonArray>
 
 ///
-/// \brief Logic Cell class for the D Flip-Flop
+/// \brief Logic Cell class for the custom logic cell
 ///
 class LogicCustomTestCell : public LogicBaseCell
 {
     Q_OBJECT
 public:
-    /// \brief Constructor for the D flip-flop logic cell
-    LogicCustomTestCell(void);
+    /// \brief Constructor for the custom logic cell
+    LogicCustomTestCell(const QString& pFileId, const CustomsLibrary& pLibrary);
 
     /// \brief The logic function that determines the output states based on the inputs
     void LogicFunction(void) override;
 
     /// \brief Getter for the current output state number pOutput of this cell
-    /// \param pOutput: The number of the output to retreive
+    /// \param pOutput: The number of the output to retrieve
     /// \return The logic state of this cell's output number pOutput
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
+
+protected:
+    void CreateInnerCellsFromJson(const QJsonObject& pConfig);
+
+    void ConnectInnerCells(const QJsonObject& pConfig);
 
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
@@ -54,7 +61,13 @@ public slots:
     void OnWakeUp(void) override;
 
 protected:
-    std::vector<std::shared_ptr<LogicBaseCell>> mLogicCells;
+    std::map<uint32_t, std::shared_ptr<LogicBaseCell>> mInnerCells; // {UID, Cell}
+
+    std::map<uint32_t, uint32_t> mInputCellUids; // {UID, Input#}
+    std::map<uint32_t, uint32_t> mOutputCellUids; // {UID, Output#}
+
+    QString mFileId;
+    const CustomsLibrary& mLibrary;
 };
 
 #endif // LOGICCUSTOMTESTCELL_H

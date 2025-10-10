@@ -1607,6 +1607,10 @@ void MainWindow::InitializeToolboxTree()
     mCategoryConvertersItem->setSelectable(false);
     mToolboxTreeModel.appendRow(mCategoryConvertersItem);
 
+    mCategoryCustomLogicItem = new QStandardItem(QIcon(":/images/icons/material_symbols/expand_more_FILL0_wght600_GRAD0_opsz20.svg"), "Custom Logic");
+    mCategoryCustomLogicItem->setSelectable(false);
+    mToolboxTreeModel.appendRow(mCategoryCustomLogicItem);
+
     auto textLabelItem = new QStandardItem(labelIcon, "Text Label");
     mToolboxTreeModel.appendRow(textLabelItem);
 
@@ -1636,6 +1640,8 @@ void MainWindow::InitializeToolboxTree()
     mCategoryConvertersItem->appendRow(new QStandardItem(demultiplexerIcon, "Demultiplexer"));
     mCategoryConvertersItem->appendRow(new QStandardItem(decoderIcon, "Decoder"));
     mCategoryConvertersItem->appendRow(new QStandardItem(encoderIcon, "Encoder"));
+
+    mCategoryCustomLogicItem->appendRow(new QStandardItem(gateIcon, "Custom Logic"));
 
     mUi->uToolboxTree->setModel(&mToolboxTreeModel);
     mUi->uToolboxTree->setExpanded(mCategoryGatesItem->index(), true);
@@ -2115,6 +2121,23 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                         qDebug() << "Unknown converter";
                         break;
                     }
+                }
+                break;
+            }
+            case 6: // Custom logic
+            {
+                switch(pIndex.row())
+                {
+                case 0: // Custom logic
+                {
+                    mCoreLogic.EnterAddControlMode(ComponentType::CUSTOM_LOGIC);
+                    break;
+                }
+                default:
+                {
+                    qDebug() << "Unknown custom logic";
+                    break;
+                }
                 }
                 break;
             }

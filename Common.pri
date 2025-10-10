@@ -1,6 +1,7 @@
 HEADERS += \
     $$PWD/CircuitFileParser.h \
     $$PWD/Components/ComplexLogic/Counter.h \
+    $$PWD/Components/ComplexLogic/CustomLogic.h \
     $$PWD/Components/ComplexLogic/DMsFlipFlop.h \
     $$PWD/Components/ComplexLogic/Decoder.h \
     $$PWD/Components/ComplexLogic/Demultiplexer.h \
@@ -10,6 +11,7 @@ HEADERS += \
     $$PWD/Components/ComplexLogic/JKFlipFlop.h \
     $$PWD/Components/ComplexLogic/JkMsFlipFlop.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicCounterCell.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicCustomTestCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDMsFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.h \
@@ -35,6 +37,7 @@ HEADERS += \
     $$PWD/Components/Inputs/LogicClock.h \
     $$PWD/Components/Inputs/LogicConstant.h \
     $$PWD/Components/LogicDiodeCell.h \
+    $$PWD/CustomsLibrary.h \
     $$PWD/Gui/PieMenu.h \
     $$PWD/RuntimeConfigParser.h \
     $$PWD/Undo/UndoCopyType.h \
@@ -83,6 +86,7 @@ HEADERS += \
 SOURCES += \
     $$PWD/CircuitFileParser.cpp \
     $$PWD/Components/ComplexLogic/Counter.cpp \
+    $$PWD/Components/ComplexLogic/CustomLogic.cpp \
     $$PWD/Components/ComplexLogic/DMsFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/Decoder.cpp \
     $$PWD/Components/ComplexLogic/Demultiplexer.cpp \
@@ -92,6 +96,7 @@ SOURCES += \
     $$PWD/Components/ComplexLogic/JKFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/JkMsFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicCounterCell.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicCustomTestCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDMsFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.cpp \
@@ -117,6 +122,7 @@ SOURCES += \
     $$PWD/Components/Inputs/LogicClock.cpp \
     $$PWD/Components/Inputs/LogicConstant.cpp \
     $$PWD/Components/LogicDiodeCell.cpp \
+    $$PWD/CustomsLibrary.cpp \
     $$PWD/Gui/PieMenu.cpp \
     $$PWD/RuntimeConfigParser.cpp \
     $$PWD/Undo/UndoCopyType.cpp \

@@ -15,7 +15,7 @@ public:
     /// \brief Constructor for LogicBaseCell
     /// \param pInputs: The amount of inputs to this cell
     /// \param pOutputs: The amount of outputs from this cell
-    LogicBaseCell(uint32_t pInputs, uint32_t pOutputs);
+    LogicBaseCell(uint32_t pInputs = 0, uint32_t pOutputs = 0);
 
     /// \brief Default destructor for LogicBaseCell
     ~LogicBaseCell() override = default;
@@ -44,7 +44,7 @@ public:
     bool IsOutputConnected(uint32_t pOutput);
 
     /// \brief Getter for the current input state number pInput of this cell
-    /// \param pInput: The number of the input to retreive
+    /// \param pInput: The number of the input to retrieve
     /// \return The logic state of this cell's input number pInput
     LogicState GetInputState(uint32_t pInput) const;
 
@@ -83,7 +83,7 @@ public:
     void SetOutputInversions(const std::vector<bool>& pOutputInversions);
 
     /// \brief Getter for the current output state number pOutput of this cell
-    /// \param pOutput: The number of the output to retreive
+    /// \param pOutput: The number of the output to retrieve
     /// \return The logic state of this cell's output number pOutput
     virtual LogicState GetOutputState(uint32_t pOutput = 0) const = 0;
 
@@ -100,6 +100,16 @@ public:
 
     /// \brief Announces the cell state to the connected cells
     virtual void CommitState(void);
+
+    void SetInnerCell(void);
+
+    void SetUid(uint32_t pUid);
+
+    uint32_t GetUid(void) const;
+
+    uint32_t GetNumInputs(void) const;
+
+    uint32_t GetNumOutputs(void) const;
 
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
@@ -127,6 +137,10 @@ protected:
     bool mIsActive;
     bool mStateChanged;
     bool mIsRegistered;
+    bool mIsInnerCell;
+
+    uint32_t mUid;
+    uint32_t mNextUid;
 };
 
 #endif // LOGICBASECELL_H

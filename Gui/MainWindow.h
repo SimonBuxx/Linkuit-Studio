@@ -309,6 +309,7 @@ protected:
     QStandardItem* mCategoryAddersItem;
     QStandardItem* mCategoryMemoryItem;
     QStandardItem* mCategoryConvertersItem;
+    QStandardItem* mCategoryCustomLogicItem;
 
     // Global shortcuts
     QShortcut* mOneGateInputShortcut;

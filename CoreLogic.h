@@ -11,6 +11,7 @@
 #include "Configuration.h"
 #include "RuntimeConfigParser.h"
 #include "CircuitFileParser.h"
+#include "CustomsLibrary.h"
 
 #include <QGraphicsItem>
 #include <QTimer>
@@ -544,6 +545,7 @@ protected:
 
     CircuitFileParser mCircuitFileParser;
     RuntimeConfigParser mRuntimeConfigParser;
+    CustomsLibrary mCustomsLibrary;
 };
 
 #endif // CORELOGIC_H

@@ -31,8 +31,13 @@ void LogicOutputCell::OnWakeUp()
 void LogicOutputCell::OnShutdown()
 {
     mInputStates = std::vector<LogicState>{1, LogicState::LOW};
-    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mState = LogicState::LOW;
+
+    if (!mIsInnerCell)
+    {
+        mInputConnected = std::vector<bool>(mInputConnected.size(), false);
+    }
+
     mIsActive = false;
     mStateChanged = true;
 }

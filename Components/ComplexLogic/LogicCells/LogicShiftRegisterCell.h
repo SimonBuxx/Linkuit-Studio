@@ -43,12 +43,12 @@ public:
     void LogicFunction(void) override;
 
     /// \brief Getter for the current output state number pOutput of this cell
-    /// \param pOutput: The number of the output to retreive
+    /// \param pOutput: The number of the output to retrieve
     /// \return The logic state of this cell's output number pOutput
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
     /// \brief Getter for the current output state number pOutput of this cell (ignoring inversion)
-    /// \param pOutput: The number of the output to retreive
+    /// \param pOutput: The number of the output to retrieve
     /// \return The logic state of this cell's output number pOutput (ignoring inversion)
     LogicState GetOutputStateUninverted(uint32_t pOutput = 0) const;
 

@@ -60,7 +60,8 @@ namespace file
         RS_MS_FLIPFLOP,
         RS_CLOCKED_FLIPFLOP,
         D_MS_FLIPFLOP,
-        JK_MS_FLIPFLOP // only append!
+        JK_MS_FLIPFLOP,
+        CUSTOM_LOGIC // only append!
     };
 } // namespace file
 
@@ -93,7 +94,8 @@ enum class ComponentType
     DECODER,
     ENCODER,
     SHIFTREGISTER,
-    COUNTER
+    COUNTER,
+    CUSTOM_LOGIC
 };
 
 enum class Direction
@@ -217,6 +219,22 @@ enum class ConfigType
     CONNECTION_TYPE = 0,
     TEXTLABEL_CONTENT,
     CONNECTOR_INVERSION
+};
+} // namespace
+
+namespace customs
+{
+
+struct CellTransferObject
+{
+    std::string identifier;
+    uint32_t inputs;
+    uint32_t outputs;
+    std::vector<bool> inputInverted;
+    std::vector<bool> outputInverted;
+
+    // Pairs of connected LogicCell UIDs and input number of that cell
+    std::vector<std::pair<uint32_t, uint32_t>> outputCells;
 };
 } // namespace
 

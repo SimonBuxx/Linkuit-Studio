@@ -62,21 +62,41 @@ LogicState LogicWireCell::GetOutputState(uint32_t pOutput) const
 
 void LogicWireCell::OnWakeUp()
 {
-    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
-    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    if (!mIsInnerCell)
+    {
+        mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+        mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    }
+    else
+    {
+        mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+        mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
+    }
     mIsActive = true;
     mStateChanged = true;
 }
 
 void LogicWireCell::OnShutdown()
 {
-    mOutputCells.clear();
-    mInputStates.clear();
-    mInputConnected.clear();
-    mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
-    mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
-    mOutputInverted.clear();
-    mInputInverted.clear();
+    if (!mIsInnerCell)
+    {
+        mOutputCells.clear();
+        mInputStates.clear();
+        mInputConnected.clear();
+        mOutputInverted.clear();
+        mInputInverted.clear();
+        mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+        mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+    }
+    else
+    {
+        mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
+        /*mInputConnected = std::vector<bool>(mInputConnected.size(), false);
+        mOutputInverted = std::vector<bool>(mOutputInverted.size(), false);
+        mInputInverted = std::vector<bool>(mInputInverted.size(), false);*/
+        mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
+        mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
+    }
     mIsActive = false;
     mStateChanged = true;
 }

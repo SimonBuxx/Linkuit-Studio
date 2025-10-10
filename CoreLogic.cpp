@@ -27,6 +27,7 @@
 #include "Components/ComplexLogic/Encoder.h"
 #include "Components/ComplexLogic/ShiftRegister.h"
 #include "Components/ComplexLogic/Counter.h"
+#include "Components/ComplexLogic/CustomLogic.h"
 
 #include "Undo/UndoAddType.h"
 #include "Undo/UndoDeleteType.h"
@@ -43,7 +44,9 @@ CoreLogic::CoreLogic(View &pView):
     mVerticalPreviewWire(this, WireDirection::VERTICAL, 0),
     mPropagationTimer(this),
     mProcessingTimer(this),
-    mCircuitFileParser(mRuntimeConfigParser)
+    mCircuitFileParser(mRuntimeConfigParser),
+    mRuntimeConfigParser(),
+    mCustomsLibrary(this)
 {
     mView.Init();
 
@@ -471,6 +474,11 @@ std::optional<IBaseComponent*> CoreLogic::CreateComponent(ComponentType pType) c
         case ComponentType::COUNTER:
         {
             item = new Counter(this, mComponentDirection, mCounterBitWidth);
+            break;
+        }
+        case ComponentType::CUSTOM_LOGIC:
+        {
+            item = new CustomLogic(this, mComponentDirection, mCustomsLibrary, "Test");
             break;
         }
         default:
@@ -2102,6 +2110,11 @@ bool CoreLogic::CreateComponent(const QJsonObject &pJson)
             case file::ComponentId::COUNTER:
             {
                 item = new Counter(this, pJson);
+                break;
+            }
+            case file::ComponentId::CUSTOM_LOGIC:
+            {
+                item = new CustomLogic(this, pJson, mCustomsLibrary);
                 break;
             }
             default:
