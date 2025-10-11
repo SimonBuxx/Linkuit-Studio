@@ -35,15 +35,17 @@ public:
 
     /// \brief Getter for the toggle speed of this clock logic cell
     /// \return The toggle speed in ticks
-    uint32_t GetToggleTicks(void);
+    uint32_t GetToggleTicks(void) const;
 
     /// \brief Getter for the pulse duration of this clock logic cell
     /// \return The pulse duration in ticks
-    uint32_t GetPulseTicks(void);
+    uint32_t GetPulseTicks(void) const;
 
     /// \brief Getter for the clock mode of this clock logic cell
     /// \return The clock mode (toggle or pulse)
-    ClockMode GetClockMode(void);
+    ClockMode GetClockMode(void) const;
+
+    QJsonObject ExportCell(void) const override;
 
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint

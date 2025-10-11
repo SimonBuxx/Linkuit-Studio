@@ -1,10 +1,10 @@
 #include "CustomLogic.h"
 #include "CoreLogic.h"
 #include "HelperFunctions.h"
-#include "LogicCells/LogicCustomTestCell.h"
+#include "LogicCells/LogicCustomCell.h"
 
 CustomLogic::CustomLogic(const CoreLogic* pCoreLogic, Direction pDirection, const CustomsLibrary& pLibrary, const CircuitId& pCircuitId):
-    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicCustomTestCell>(pCircuitId, pLibrary)),
+    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicCustomCell>(pCircuitId, pLibrary)),
     mCircuitId(pCircuitId),
     mLibrary(pLibrary)
 {
@@ -91,7 +91,7 @@ void CustomLogic::ConfigureAppearance(const CircuitId& pCircuitId)
     {
         QJsonObject cellObj = cellValue.toObject();
 
-        if (cellObj["Type"].toInt() == file::ComponentId::INPUT && cellObj.contains("Label") && (*json)["Label"].isString())
+        if ((cellObj["Type"].toInt() == file::ComponentId::INPUT || cellObj["Type"].toInt() == file::ComponentId::BUTTON) && cellObj.contains("Label") && (*json)["Label"].isString())
         {
             mInputLabels.push_back(cellObj["Label"].toString(""));
         }

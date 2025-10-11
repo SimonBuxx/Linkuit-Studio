@@ -22,8 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef LOGICCUSTOMTESTCELL_H
-#define LOGICCUSTOMTESTCELL_H
+#ifndef LOGICCUSTOMCELL_H
+#define LOGICCUSTOMCELL_H
 
 #include "Components/LogicBaseCell.h"
 #include "CustomsLibrary.h"
@@ -33,12 +33,12 @@
 ///
 /// \brief Logic Cell class for the custom logic cell
 ///
-class LogicCustomTestCell : public LogicBaseCell
+class LogicCustomCell : public LogicBaseCell
 {
     Q_OBJECT
 public:
     /// \brief Constructor for the custom logic cell
-    LogicCustomTestCell(const CircuitId& pCircuitId, const CustomsLibrary& pLibrary);
+    LogicCustomCell(const CircuitId& pCircuitId, const CustomsLibrary& pLibrary);
 
     /// \brief The logic function that determines the output states based on the inputs
     void LogicFunction(void) override;
@@ -51,9 +51,45 @@ public:
     QJsonObject ExportCell(void) const override;
 
 protected:
+    /// \brief This function creates all inner logic cell from the JSON provided
+    /// \param pConfig: The JSON object to create the logic cells from
     void CreateInnerCellsFromJson(const QJsonObject& pConfig);
 
+    /// \brief This function connects the existing inner logic cells according to the JSON provided
+    /// \param pConfig: The JSON object according to which to connect the logic cells
     void ConnectInnerCells(const QJsonObject& pConfig);
+
+    /// \brief Creates and insert a logic cell for a logic wire
+    /// \param pConfig: The configuration for the logic cell
+    void CreateWireCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and insert a logic cell for an AND gate
+    /// \param pConfig: The configuration for the logic cell
+    void CreateAndGateCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and insert a logic cell for a logic input
+    /// \param pConfig: The configuration for the logic cell
+    void CreateInputCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and insert a logic cell for a logic button
+    /// \param pConfig: The configuration for the logic cell
+    void CreateButtonCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and insert a logic cell for a logic clock
+    /// \param pConfig: The configuration for the logic cell
+    void CreateClockCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and insert a logic cell for a logic output
+    /// \param pConfig: The configuration for the logic cell
+    void CreateOutputCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and insert a logic cell for a half adder
+    /// \param pConfig: The configuration for the logic cell
+    void CreateHalfAdderCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and insert a logic cell for custom logic
+    /// \param pConfig: The configuration for the logic cell
+    void CreateCustomLogicCell(const QJsonObject& pConfig);
 
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
@@ -72,4 +108,4 @@ protected:
     const CustomsLibrary& mLibrary;
 };
 
-#endif // LOGICCUSTOMTESTCELL_H
+#endif // LOGICCUSTOMCELL_H

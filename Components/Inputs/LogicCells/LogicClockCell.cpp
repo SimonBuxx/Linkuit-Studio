@@ -1,5 +1,6 @@
 #include "LogicClockCell.h"
 #include "HelperFunctions.h"
+#include <QJsonArray>
 
 LogicClockCell::LogicClockCell():
     LogicBaseCell(0, 1),
@@ -58,6 +59,40 @@ LogicState LogicClockCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
+QJsonObject LogicClockCell::ExportCell() const
+{
+    QJsonObject obj;
+
+    obj["UID"] = (int32_t) mUid;
+    obj["Type"] = (int32_t) file::ComponentId::CLOCK;
+
+    // Store connections
+    QJsonArray outputCells;
+
+    for (size_t output = 0; output < mOutputCells.size(); output++)
+    {
+        if (mOutputCells[output].first != nullptr) // Output connected
+        {
+            QJsonArray connection;
+
+            connection.append((int32_t) mOutputCells[output].first->GetUid()); // UID
+            connection.append((int32_t) mOutputCells[output].second); // Remote input
+            connection.append((int32_t) output); // Local output
+
+            outputCells.append(connection);
+        }
+    }
+
+    obj["OutputCells"] = outputCells;
+    obj["mode"] = static_cast<int32_t>(GetClockMode());
+    obj["toggle"] = static_cast<int32_t>(GetToggleTicks());
+    obj["pulse"] = static_cast<int32_t>(GetPulseTicks());
+
+    obj["outinv"] = QJsonValue(GetOutputInversions()[0]);
+
+    return obj;
+}
+
 void LogicClockCell::OnWakeUp()
 {
     mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
@@ -72,11 +107,16 @@ void LogicClockCell::OnWakeUp()
 
 void LogicClockCell::OnShutdown()
 {
-    mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
-    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+
+    if (!mIsInnerCell)
+    {
+        mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
+        mInputConnected = std::vector<bool>(mInputConnected.size(), false);
+    }
+
     mIsActive = false;
     mStateChanged = true;
 }
@@ -96,17 +136,17 @@ void LogicClockCell::SetClockMode(ClockMode pMode)
     mMode = pMode;
 }
 
-uint32_t LogicClockCell::GetToggleTicks()
+uint32_t LogicClockCell::GetToggleTicks() const
 {
     return mToggleTicks;
 }
 
-uint32_t LogicClockCell::GetPulseTicks()
+uint32_t LogicClockCell::GetPulseTicks() const
 {
    return  mPulseTicks;
 }
 
-ClockMode LogicClockCell::GetClockMode()
+ClockMode LogicClockCell::GetClockMode() const
 {
     return mMode;
 }

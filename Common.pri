@@ -11,7 +11,7 @@ HEADERS += \
     $$PWD/Components/ComplexLogic/JKFlipFlop.h \
     $$PWD/Components/ComplexLogic/JkMsFlipFlop.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicCounterCell.h \
-    $$PWD/Components/ComplexLogic/LogicCells/LogicCustomTestCell.h \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicCustomCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDMsFlipFlopCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.h \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.h \
@@ -96,7 +96,7 @@ SOURCES += \
     $$PWD/Components/ComplexLogic/JKFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/JkMsFlipFlop.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicCounterCell.cpp \
-    $$PWD/Components/ComplexLogic/LogicCells/LogicCustomTestCell.cpp \
+    $$PWD/Components/ComplexLogic/LogicCells/LogicCustomCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDMsFlipFlopCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDecoderCell.cpp \
     $$PWD/Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.cpp \
