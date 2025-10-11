@@ -4,6 +4,7 @@
 #include "HelperStructures.h"
 
 #include <QObject>
+#include <QJsonObject>
 
 ///
 /// \brief The LogicBaseCell class is the abstract base for all logic cells
@@ -103,6 +104,8 @@ public:
 
     void SetInnerCell(void);
 
+    virtual std::optional<file::ComponentId> GetType(void) const {return std::nullopt;};
+
     void SetUid(uint32_t pUid);
 
     uint32_t GetUid(void) const;
@@ -110,6 +113,8 @@ public:
     uint32_t GetNumInputs(void) const;
 
     uint32_t GetNumOutputs(void) const;
+
+    virtual QJsonObject ExportCell(void) const {return QJsonObject{};};
 
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
@@ -140,7 +145,6 @@ protected:
     bool mIsInnerCell;
 
     uint32_t mUid;
-    uint32_t mNextUid;
 };
 
 #endif // LOGICBASECELL_H

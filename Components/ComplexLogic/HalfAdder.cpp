@@ -73,7 +73,7 @@ QJsonObject HalfAdder::GetJson() const
     return json;
 }
 
-SwVersion HalfAdder::GetMinVersion(void) const
+SwVersion HalfAdder::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

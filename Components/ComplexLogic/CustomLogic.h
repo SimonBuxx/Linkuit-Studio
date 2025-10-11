@@ -14,7 +14,7 @@ public:
     /// \brief Constructor for CustomLogic
     /// \param pCoreLogic: Pointer to the core logic, used to connect the component's signals and slots
     /// \param pDirection: The direction of the component
-    CustomLogic(const CoreLogic* pCoreLogic, Direction pDirection, const CustomsLibrary& pLibrary, const QString& pFileId);
+    CustomLogic(const CoreLogic* pCoreLogic, Direction pDirection, const CustomsLibrary& pLibrary, const CircuitId& pCircuitId);
 
     /// \brief Copy constructor for CustomLogic
     /// \param pObj: The object to be copied
@@ -40,11 +40,10 @@ public:
     SwVersion GetMinVersion(void) const override;
 
 protected:
-    void ConfigureAppearance(const QString& pFileId);
+    void ConfigureAppearance(const CircuitId& pCircuitId);
 
 protected:
-#warning replace with complete circuit ID
-    QString mFileId;
+    CircuitId mCircuitId;
 
     const CustomsLibrary& mLibrary;
 };

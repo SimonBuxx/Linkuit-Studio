@@ -73,7 +73,7 @@ QJsonObject DFlipFlop::GetJson() const
     return json;
 }
 
-SwVersion DFlipFlop::GetMinVersion(void) const
+SwVersion DFlipFlop::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

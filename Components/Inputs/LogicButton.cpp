@@ -118,7 +118,7 @@ QJsonObject LogicButton::GetJson() const
     return json;
 }
 
-SwVersion LogicButton::GetMinVersion(void) const
+SwVersion LogicButton::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

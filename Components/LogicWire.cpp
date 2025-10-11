@@ -155,7 +155,7 @@ QJsonObject LogicWire::GetJson() const
     return json;
 }
 
-SwVersion LogicWire::GetMinVersion(void) const
+SwVersion LogicWire::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

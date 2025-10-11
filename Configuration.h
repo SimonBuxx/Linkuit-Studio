@@ -22,6 +22,8 @@ namespace file
 static constexpr const SaveFormat SAVE_FORMAT = SaveFormat::BINARY;
 
 static constexpr auto JSON_COMPONENTS_IDENTIFIER = "components";
+static constexpr auto JSON_CUSTOMS_IDENTIFIER = "customs";
+static constexpr auto JSON_COMPONENT_INFO_IDENTIFIER = "component_info";
 static constexpr auto JSON_TYPE_IDENTIFIER = "type";
 static constexpr auto JSON_MAJOR_VERSION_IDENTIFIER = "major";
 static constexpr auto JSON_MINOR_VERSION_IDENTIFIER = "minor";
@@ -241,7 +243,9 @@ static constexpr auto COUNTER_TEXT = "COUNT";
 static constexpr auto CLOCK_SYMBOL_STRING{">"};
 
 static const QFont FONT("Source Sans Pro");
+static constexpr uint8_t MAX_CHARS_FOR_BIG_DESCRIPTION = 3;
 static constexpr uint8_t DEFAULT_DESCRIPTION_FONT_SIZE = 20;
+static constexpr uint8_t SMALL_DESCRIPTION_FONT_SIZE = 8;
 static const QFont CONNECTOR_FONT("Calibri", 10, QFont::Light);
 static constexpr QColor FONT_COLOR(255, 255, 255);
 static constexpr QColor SMALL_TEXT_FONT_COLOR(225, 225, 225);

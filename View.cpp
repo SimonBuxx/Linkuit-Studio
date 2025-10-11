@@ -280,13 +280,13 @@ void View::SetScene(QGraphicsScene &pScene)
     });
 }
 
-QGraphicsScene* View::Scene(void) const
+QGraphicsScene* View::Scene() const
 {
     Q_ASSERT(mScene);
     return mScene;
 }
 
-QList<QGraphicsItem*> View::Components(void) const
+QList<QGraphicsItem*> View::Components() const
 {
     Q_ASSERT(mScene);
     return mScene->items();

@@ -65,7 +65,7 @@ QJsonObject AndGate::GetJson() const
     return json;
 }
 
-SwVersion AndGate::GetMinVersion(void) const
+SwVersion AndGate::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

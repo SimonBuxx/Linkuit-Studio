@@ -83,7 +83,7 @@ QJsonObject Decoder::GetJson() const
     return json;
 }
 
-SwVersion Decoder::GetMinVersion(void) const
+SwVersion Decoder::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

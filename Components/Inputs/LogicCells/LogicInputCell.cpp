@@ -1,4 +1,5 @@
 #include "LogicInputCell.h"
+#include <QJsonArray>
 
 LogicInputCell::LogicInputCell():
     LogicBaseCell(0, 1)
@@ -31,6 +32,35 @@ LogicState LogicInputCell::GetOutputState(uint32_t pOutput) const
 {
     Q_UNUSED(pOutput);
     return mCurrentOutputStates[0];
+}
+
+QJsonObject LogicInputCell::ExportCell() const
+{
+    QJsonObject obj;
+
+    obj["UID"] = (int32_t) mUid;
+    obj["Type"] = (int32_t) file::ComponentId::INPUT;
+
+    // Store connections
+    QJsonArray outputCells;
+
+    for (size_t output = 0; output < mOutputCells.size(); output++)
+    {
+        if (mOutputCells[output].first != nullptr) // Output connected
+        {
+            QJsonArray connection;
+
+            connection.append((int32_t) mOutputCells[output].first->GetUid()); // UID
+            connection.append((int32_t) mOutputCells[output].second); // Remote input
+            connection.append((int32_t) output); // Local output
+
+            outputCells.append(connection);
+        }
+    }
+
+    obj["OutputCells"] = outputCells;
+
+    return obj;
 }
 
 void LogicInputCell::OnWakeUp()

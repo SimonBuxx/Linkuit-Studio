@@ -39,6 +39,8 @@ public:
 
     void CommitState(void) override {};
 
+    QJsonObject ExportCell(void) const override;
+
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;

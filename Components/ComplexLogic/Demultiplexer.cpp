@@ -92,7 +92,7 @@ QJsonObject Demultiplexer::GetJson() const
     return json;
 }
 
-SwVersion Demultiplexer::GetMinVersion(void) const
+SwVersion Demultiplexer::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

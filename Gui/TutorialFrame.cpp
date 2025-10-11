@@ -120,7 +120,7 @@ void TutorialFrame::StartTutorial()
     SetCurrentStep(TutorialStep::INTRODUCTION);
 }
 
-uint8_t TutorialFrame::GetCurrentStep(void) const
+uint8_t TutorialFrame::GetCurrentStep() const
 {
     return mCurrentStep;
 }

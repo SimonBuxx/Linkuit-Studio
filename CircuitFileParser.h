@@ -52,6 +52,8 @@ public:
     /// \brief Emits a signal if the circuit is newly modified
     void MarkAsModified(void);
 
+    const QString& GetUuid(void) const;
+
 signals:
     /// \brief Emitted when a circuit file has been opened successfully
     /// \param pFileInfo: Info about the opened file
@@ -77,6 +79,8 @@ signals:
 protected:
     std::optional<QFileInfo> mCurrentFile;
     bool mIsCircuitModified;
+
+    QString mUuid;
 
     RuntimeConfigParser& mRuntimeConfigParser;
 };

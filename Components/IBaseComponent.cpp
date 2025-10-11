@@ -163,7 +163,7 @@ QPainterPath IBaseComponent::shape() const
     return mShape;
 }
 
-IBaseComponent::~IBaseComponent(void)
+IBaseComponent::~IBaseComponent()
 {
 
 }

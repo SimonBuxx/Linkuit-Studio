@@ -32,6 +32,16 @@ void CircuitFileParser::LoadJson(const QFileInfo& pFileInfo, bool pIsFromRecents
         auto jsonDoc = QJsonDocument(QCborValue::fromCbor(rawData).toMap().toJsonObject());
 
         mCurrentFile = pFileInfo;
+        if (jsonDoc.object().contains("uuid"))
+        {
+            // Load ID if it exists in file
+            mUuid = jsonDoc.object()["uuid"].toString();
+        }
+        else
+        {
+            // Create new ID
+            mUuid = QUuid::createUuid().toString();
+        }
         mRuntimeConfigParser.AddRecentFilePath(mCurrentFile.value());
         emit LoadCircuitFileSuccessSignal(mCurrentFile.value(), jsonDoc.object());
     }
@@ -40,6 +50,16 @@ void CircuitFileParser::LoadJson(const QFileInfo& pFileInfo, bool pIsFromRecents
         auto jsonDoc = QJsonDocument::fromJson(rawData);
 
         mCurrentFile = pFileInfo;
+        if (jsonDoc.object().contains("uuid"))
+        {
+            // Load ID if it exists in file
+            mUuid = jsonDoc.object()["uuid"].toString();
+        }
+        else
+        {
+            // Create new ID
+            mUuid = QUuid::createUuid().toString();
+        }
         mRuntimeConfigParser.AddRecentFilePath(mCurrentFile.value());
         emit LoadCircuitFileSuccessSignal(mCurrentFile.value(), jsonDoc.object());
     }
@@ -107,6 +127,11 @@ void CircuitFileParser::MarkAsModified()
         mIsCircuitModified = true;
         emit CircuitModifiedSignal();
     }
+}
+
+const QString& CircuitFileParser::GetUuid() const
+{
+    return mUuid;
 }
 
 std::optional<QFileInfo> CircuitFileParser::GetFileInfo() const

@@ -286,7 +286,7 @@ QJsonObject ConPoint::GetJson() const
     return json;
 }
 
-SwVersion ConPoint::GetMinVersion(void) const
+SwVersion ConPoint::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

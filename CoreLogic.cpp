@@ -37,6 +37,7 @@
 #include "HelperFunctions.h"
 
 #include <QCoreApplication>
+#include <QFileDialog>
 
 CoreLogic::CoreLogic(View &pView):
     mView(pView),
@@ -320,7 +321,7 @@ void CoreLogic::SelectComponentType(ComponentType pComponentType)
     emit ComponentTypeChangedSignal(mComponentType);
 }
 
-std::optional<IBaseComponent*> CoreLogic::CreateComponent(ComponentType pType) const
+std::optional<IBaseComponent*> CoreLogic::CreateComponent(ComponentType pType)
 {
     IBaseComponent* item = nullptr;
 
@@ -478,7 +479,18 @@ std::optional<IBaseComponent*> CoreLogic::CreateComponent(ComponentType pType) c
         }
         case ComponentType::CUSTOM_LOGIC:
         {
-            item = new CustomLogic(this, mComponentDirection, mCustomsLibrary, "Test");
+            //QFileInfo file("C:\\Users\\Simon\\OneDrive\\Dokumente\\Circuits\\HA_json.lsc");
+            const auto fileInfo = QFileInfo(QFileDialog::getOpenFileName(nullptr, tr(gui::OPEN_FILE_DIALOG_TITLE), "", tr("Linkuit Studio Circuit Files (*.lsc)")));
+            auto id = LoadCustomLogicFromFile(fileInfo);
+
+            if (id.has_value())
+            {
+                item = new CustomLogic(this, mComponentDirection, mCustomsLibrary, id.value());
+            }
+            else
+            {
+                qDebug() << "Error: File to be imported as custom logic does not contain UUID and timestamp";
+            }
             break;
         }
         default:
@@ -489,6 +501,62 @@ std::optional<IBaseComponent*> CoreLogic::CreateComponent(ComponentType pType) c
 
     Q_ASSERT(item);
     return item;
+}
+
+std::optional<CircuitId> CoreLogic::LoadCustomLogicFromFile(const QFileInfo& pFileInfo)
+{
+    QFile loadFile(pFileInfo.absoluteFilePath());
+
+    if (!loadFile.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Could not load file" << pFileInfo.absoluteFilePath() << "as custom logic";
+        return std::nullopt;
+    }
+
+    QByteArray rawData = loadFile.readAll();
+
+    QJsonDocument jsonDoc;
+
+    if (file::SAVE_FORMAT == file::SaveFormat::BINARY)
+    {
+        rawData = qUncompress(rawData);
+
+        if (rawData.isEmpty())
+        {
+            // if the data could not be decompressed
+            qDebug() << "Could not load file" << pFileInfo.absoluteFilePath() << "as custom logic";
+            return std::nullopt;
+        }
+
+        jsonDoc = QJsonDocument(QCborValue::fromCbor(rawData).toMap().toJsonObject());
+    }
+    else
+    {
+        jsonDoc = QJsonDocument::fromJson(rawData);
+    }
+
+    auto&& json = jsonDoc.object();
+
+    LoadCustomLogicFromJson(jsonDoc.object());
+
+    // Fetch circuit ID if it exists in component_info
+    if (json.contains(file::JSON_COMPONENT_INFO_IDENTIFIER) && json[file::JSON_COMPONENT_INFO_IDENTIFIER].isObject())
+    {
+        auto&& component_info = json[file::JSON_COMPONENT_INFO_IDENTIFIER].toObject();
+        if (!component_info.contains("uuid") || !component_info["uuid"].isString())
+        {
+            return std::nullopt;
+        }
+
+        if (!component_info.contains("timestamp"))
+        {
+            return std::nullopt;
+        }
+
+        return CircuitId(component_info["uuid"].toString(), component_info["timestamp"].toInt());
+    }
+
+    return std::nullopt;
 }
 
 ControlMode CoreLogic::GetControlMode() const
@@ -1134,7 +1202,7 @@ LogicWire* CoreLogic::MergeWires(LogicWire* pNewWire, std::optional<LogicWire*> 
     }
 }
 
-void CoreLogic::ParseWireGroups(void)
+void CoreLogic::ParseWireGroups()
 {
     mWireGroups.clear();
     mWireMap.clear();
@@ -1851,7 +1919,7 @@ void CoreLogic::DeleteSelectedComponents()
     ClearSelection();
 }
 
-QJsonObject CoreLogic::GetJson() const
+QJsonObject CoreLogic::GetJson()
 {
     QJsonObject json;
     QJsonArray components;
@@ -1867,6 +1935,7 @@ QJsonObject CoreLogic::GetJson() const
         }
     }
 
+    json[file::JSON_CUSTOMS_IDENTIFIER] = mCustomsLibrary.ExportJson();
     json[file::JSON_COMPONENTS_IDENTIFIER] = components;
 
     json[file::JSON_MAJOR_VERSION_IDENTIFIER] = MAJOR_VERSION;
@@ -1876,6 +1945,61 @@ QJsonObject CoreLogic::GetJson() const
     json[file::JSON_COMPATIBLE_MAJOR_VERSION_IDENTIFIER] = minVersion.major;
     json[file::JSON_COMPATIBLE_MINOR_VERSION_IDENTIFIER] = minVersion.minor;
     json[file::JSON_COMPATIBLE_PATCH_VERSION_IDENTIFIER] = minVersion.patch;
+
+    json[file::JSON_COMPONENT_INFO_IDENTIFIER] = GetComponentInfo();
+
+    return json;
+}
+
+QJsonObject CoreLogic::GetComponentInfo()
+{
+    ParseWireGroups();
+    CreateWireLogicCells();
+    ConnectLogicCells();
+
+    QJsonObject json;
+
+    if (mCircuitFileParser.IsFileOpen())
+    {
+        json["uuid"] = mCircuitFileParser.GetUuid();
+    }
+    else
+    {
+        json["uuid"] = QUuid::createUuid().toString();
+    }
+    json["timestamp"] = (int32_t) QDateTime::currentSecsSinceEpoch();
+
+    QJsonArray cells;
+
+    // Assign UIDs to all top level logic cells
+    uint32_t nextUid = 0;
+    for (auto& item : mView.Scene()->items())
+    {
+        if (nullptr != dynamic_cast<IBaseComponent*>(item))
+        {
+            LogicBaseCell* cell = static_cast<IBaseComponent*>(item)->GetLogicCell().get();
+            if (nullptr != cell)
+            {
+                cell->SetUid(nextUid++);
+            }
+        }
+    }
+
+    for (auto& item : mView.Scene()->items())
+    {
+        if (nullptr != dynamic_cast<IBaseComponent*>(item))
+        {
+            LogicBaseCell* cell = static_cast<IBaseComponent*>(item)->GetLogicCell().get();
+            if (nullptr != cell)
+            {
+                cells.append(cell->ExportCell());
+            }
+        }
+    }
+
+    json["Cells"] = cells;
+
+    LeaveSimulation();
 
     return json;
 }
@@ -1893,11 +2017,14 @@ void CoreLogic::NewCircuit()
     mUndoQueue.clear();
     mRedoQueue.clear();
 
+    mCustomsLibrary.Clear();
+
     emit UpdateUndoRedoEnabledSignal();
 
     mCircuitFileParser.ResetCurrentFileInfo();
 }
 
+#warning ReadJson should use NewCircuit instead of code reuse
 void CoreLogic::ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson)
 {
     EnterControlMode(ControlMode::EDIT); // Always start in edit mode after loading
@@ -1936,6 +2063,21 @@ void CoreLogic::ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson)
 
     mView.ResetViewport();
 
+    mCustomsLibrary.Clear();
+
+    // Create library entries
+    if (pJson.contains(file::JSON_CUSTOMS_IDENTIFIER) && pJson[file::JSON_CUSTOMS_IDENTIFIER].isArray())
+    {
+        auto customs = pJson[file::JSON_CUSTOMS_IDENTIFIER].toArray();
+
+        for (uint32_t custIndex = 0; custIndex < customs.size(); custIndex++)
+        {
+            auto custom = customs[custIndex].toObject();
+
+            mCustomsLibrary.AddCustomJson(custom);
+        }
+    }
+
     // Create components
     if (pJson.contains(file::JSON_COMPONENTS_IDENTIFIER) && pJson[file::JSON_COMPONENTS_IDENTIFIER].isArray())
     {
@@ -1958,6 +2100,30 @@ void CoreLogic::ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson)
 
     emit UpdateUndoRedoEnabledSignal();
     emit OpeningFileSuccessfulSignal(pFileInfo);
+}
+
+void CoreLogic::LoadCustomLogicFromJson(const QJsonObject& pJson)
+{
+    // Extract customs and add them to the library
+    if (pJson.contains(file::JSON_CUSTOMS_IDENTIFIER) && pJson[file::JSON_CUSTOMS_IDENTIFIER].isArray())
+    {
+        auto customs = pJson[file::JSON_CUSTOMS_IDENTIFIER].toArray();
+
+        for (uint32_t custIndex = 0; custIndex < customs.size(); custIndex++)
+        {
+            auto custom = customs[custIndex].toObject();
+
+            mCustomsLibrary.AddCustomJson(custom);
+        }
+    }
+
+    // Add component info to the library
+    if (pJson.contains(file::JSON_COMPONENT_INFO_IDENTIFIER))
+    {
+        auto info = pJson[file::JSON_COMPONENT_INFO_IDENTIFIER].toObject();
+
+        mCustomsLibrary.AddCustomJson(info);
+    }
 }
 
 bool CoreLogic::CreateComponent(const QJsonObject &pJson)

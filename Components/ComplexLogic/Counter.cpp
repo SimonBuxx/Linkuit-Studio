@@ -85,7 +85,7 @@ QJsonObject Counter::GetJson() const
     return json;
 }
 
-SwVersion Counter::GetMinVersion(void) const
+SwVersion Counter::GetMinVersion() const
 {
     return SwVersion(0, 9, 7);
 }

@@ -38,7 +38,7 @@ class LogicCustomTestCell : public LogicBaseCell
     Q_OBJECT
 public:
     /// \brief Constructor for the custom logic cell
-    LogicCustomTestCell(const QString& pFileId, const CustomsLibrary& pLibrary);
+    LogicCustomTestCell(const CircuitId& pCircuitId, const CustomsLibrary& pLibrary);
 
     /// \brief The logic function that determines the output states based on the inputs
     void LogicFunction(void) override;
@@ -47,6 +47,8 @@ public:
     /// \param pOutput: The number of the output to retrieve
     /// \return The logic state of this cell's output number pOutput
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
+
+    QJsonObject ExportCell(void) const override;
 
 protected:
     void CreateInnerCellsFromJson(const QJsonObject& pConfig);
@@ -66,7 +68,7 @@ protected:
     std::map<uint32_t, uint32_t> mInputCellUids; // {UID, Input#}
     std::map<uint32_t, uint32_t> mOutputCellUids; // {UID, Output#}
 
-    QString mFileId;
+    CircuitId mCircuitId;
     const CustomsLibrary& mLibrary;
 };
 

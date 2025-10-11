@@ -9,7 +9,7 @@ undo::Type UndoConfigureType::Type() const
     return undo::Type::CONFIGURE;
 }
 
-std::shared_ptr<undo::ConfigChangedData> UndoConfigureType::Data(void)
+std::shared_ptr<undo::ConfigChangedData> UndoConfigureType::Data()
 {
     return mData;
 }

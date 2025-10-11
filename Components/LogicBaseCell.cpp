@@ -12,10 +12,8 @@ LogicBaseCell::LogicBaseCell(uint32_t pInputs, uint32_t pOutputs):
     mIsActive(false),
     mStateChanged(false),
     mIsRegistered(true),
-    mIsInnerCell(false),
-    mNextUid(0)
+    mIsInnerCell(false)
 {
-    mUid = mNextUid++;
 }
 
 void LogicBaseCell::ConnectOutput(const std::shared_ptr<LogicBaseCell>& pLogicCell, uint32_t pInput, uint32_t pOutput)

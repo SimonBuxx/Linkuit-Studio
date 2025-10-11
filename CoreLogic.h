@@ -48,7 +48,7 @@ public:
     /// \brief Creates a new scene component
     /// \param pType: The type of the component to create
     /// \return Optional pointer to the new component
-    std::optional<IBaseComponent*> CreateComponent(ComponentType pType) const;
+    std::optional<IBaseComponent*> CreateComponent(ComponentType pType);
 
     /// \brief Changes the control mode to the given mode and kicks off all
     /// neccessary steps to enter this mode
@@ -210,7 +210,9 @@ public:
 
     /// \brief Returns a JSON representation of the current circuit
     /// \return A JSON object containing the circuit information
-    QJsonObject GetJson(void) const;
+    QJsonObject GetJson(void);
+
+    QJsonObject GetComponentInfo(void);
 
     /// \brief Resets the canvas
     void NewCircuit(void);
@@ -490,6 +492,10 @@ protected:
     /// \param pFileInfo: The file info of the loaded file
     /// \param pJson: The JSON data of the circuit to load
     void ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson);
+
+    void LoadCustomLogicFromJson(const QJsonObject& pJson);
+
+    std::optional<CircuitId> LoadCustomLogicFromFile(const QFileInfo& pFileInfo);
 
     /// \brief Creates a circuit component using the provided JSON data
     /// \param pJson: The JSON data of the circuit component

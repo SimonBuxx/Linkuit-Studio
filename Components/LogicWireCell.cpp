@@ -1,4 +1,5 @@
 #include "LogicWireCell.h"
+#include <QJsonArray>
 
 LogicWireCell::LogicWireCell():
     LogicBaseCell(0, 1)
@@ -49,7 +50,7 @@ void LogicWireCell::AddInputSlot()
     mInputInverted.push_back(false);
 }
 
-uint32_t LogicWireCell::GetInputSize(void) const
+uint32_t LogicWireCell::GetInputSize() const
 {
     return mInputStates.size();
 }
@@ -58,6 +59,35 @@ LogicState LogicWireCell::GetOutputState(uint32_t pOutput) const
 {
     Q_UNUSED(pOutput);
     return mCurrentOutputStates[0];
+}
+
+QJsonObject LogicWireCell::ExportCell() const
+{
+    QJsonObject obj;
+
+    obj["UID"] = (int32_t) mUid;
+    obj["Type"] = (int32_t) file::ComponentId::WIRE;
+
+    // Store connections
+    QJsonArray outputCells;
+
+    for (size_t output = 0; output < mOutputCells.size(); output++)
+    {
+        if (mOutputCells[output].first != nullptr) // Output connected
+        {
+            QJsonArray connection;
+
+            connection.append((int32_t) mOutputCells[output].first->GetUid()); // UID
+            connection.append((int32_t) mOutputCells[output].second); // Remote input
+            connection.append((int32_t) output); // Local output
+
+            outputCells.append(connection);
+        }
+    }
+
+    obj["OutputCells"] = outputCells;
+
+    return obj;
 }
 
 void LogicWireCell::OnWakeUp()

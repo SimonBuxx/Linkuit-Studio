@@ -75,7 +75,7 @@ QJsonObject RsMasterSlaveFlipFlop::GetJson() const
     return json;
 }
 
-SwVersion RsMasterSlaveFlipFlop::GetMinVersion(void) const
+SwVersion RsMasterSlaveFlipFlop::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

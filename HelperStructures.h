@@ -222,20 +222,6 @@ enum class ConfigType
 };
 } // namespace
 
-namespace customs
-{
-
-struct CellTransferObject
-{
-    std::string identifier;
-    uint32_t inputs;
-    uint32_t outputs;
-    std::vector<bool> inputInverted;
-    std::vector<bool> outputInverted;
-
-    // Pairs of connected LogicCell UIDs and input number of that cell
-    std::vector<std::pair<uint32_t, uint32_t>> outputCells;
-};
-} // namespace
+using CircuitId = std::tuple<QString, int32_t>; // UUID + Timestamp in seconds;
 
 #endif // HELPERSTRUCTURES_H

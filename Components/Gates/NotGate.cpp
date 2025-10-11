@@ -48,7 +48,7 @@ QJsonObject NotGate::GetJson() const
     return json;
 }
 
-SwVersion NotGate::GetMinVersion(void) const
+SwVersion NotGate::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }

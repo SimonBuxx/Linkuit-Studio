@@ -20,6 +20,16 @@ LogicState LogicOutputCell::GetOutputState(uint32_t pOutput) const
     return mState;
 }
 
+QJsonObject LogicOutputCell::ExportCell() const
+{
+    QJsonObject obj;
+
+    obj["UID"] = (int32_t) mUid;
+    obj["Type"] = (int32_t) file::ComponentId::OUTPUT;
+
+    return obj;
+}
+
 void LogicOutputCell::OnWakeUp()
 {
     mInputStates = std::vector<LogicState>{1, LogicState::LOW};

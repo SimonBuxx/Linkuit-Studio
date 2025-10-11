@@ -30,12 +30,12 @@
 #include "Components/Outputs/LogicCells/LogicOutputCell.h"
 #include "HelperFunctions.h"
 
-LogicCustomTestCell::LogicCustomTestCell(const QString& pFileId, const CustomsLibrary& pLibrary):
+LogicCustomTestCell::LogicCustomTestCell(const CircuitId& pCircuitId, const CustomsLibrary& pLibrary):
     LogicBaseCell(), // in-/outputs are set later
-    mFileId(pFileId),
+    mCircuitId(pCircuitId),
     mLibrary(pLibrary)
 {
-    const auto optJson = mLibrary.GetCustomJson(pFileId);
+    const auto optJson = mLibrary.GetCustomJson(pCircuitId);
 
     if (!optJson.has_value())
     {
@@ -145,9 +145,9 @@ void LogicCustomTestCell::CreateInnerCellsFromJson(const QJsonObject& pConfig)
         }
         case file::ComponentId::CUSTOM_LOGIC:
         {
-            qDebug() << "Creating custom cell with UID" << cellObj["UID"].toInt() << "and file name" << cellObj["FileName"].toString();
+            qDebug() << "Creating custom cell with UID" << cellObj["UID"].toInt() << "and file name" << cellObj["file"].toString();
 
-            auto cell = std::make_shared<LogicCustomTestCell>(cellObj["FileName"].toString(), mLibrary);
+            auto cell = std::make_shared<LogicCustomTestCell>(CircuitId(cellObj["uuid"].toString(), cellObj["timestamp"].toInt()), mLibrary);
             cell->SetInnerCell();
 
             // Set input inversions
@@ -260,6 +260,53 @@ void LogicCustomTestCell::LogicFunction()
     }
 
     mStateChanged = true;
+}
+
+QJsonObject LogicCustomTestCell::ExportCell() const
+{
+    QJsonObject obj;
+
+    obj["UID"] = (int32_t) mUid;
+    obj["Type"] = (int32_t) file::ComponentId::CUSTOM_LOGIC;
+
+    QJsonArray ininv, outinv;
+
+    for(const bool& inv : GetInputInversions())
+    {
+        ininv.append(inv);
+    }
+
+    obj["InputInversions"] = ininv;
+
+    for(const bool& inv : GetOutputInversions())
+    {
+        outinv.append(inv);
+    }
+
+    obj["OutputInversions"] = outinv;
+
+    // Store connections
+    QJsonArray outputCells;
+
+    for (size_t output = 0; output < mOutputCells.size(); output++)
+    {
+        if (mOutputCells[output].first != nullptr) // Output connected
+        {
+            QJsonArray connection;
+
+            connection.append((int32_t) mOutputCells[output].first->GetUid()); // UID
+            connection.append((int32_t) mOutputCells[output].second); // Remote input
+            connection.append((int32_t) output); // Local output
+
+            outputCells.append(connection);
+        }
+    }
+
+    obj["OutputCells"] = outputCells;
+    obj["uuid"] = std::get<0>(mCircuitId);
+    obj["timestamp"] = std::get<1>(mCircuitId);
+
+    return obj;
 }
 
 LogicState LogicCustomTestCell::GetOutputState(uint32_t pOutput) const

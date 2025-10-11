@@ -3,15 +3,15 @@
 #include "HelperFunctions.h"
 #include "LogicCells/LogicCustomTestCell.h"
 
-CustomLogic::CustomLogic(const CoreLogic* pCoreLogic, Direction pDirection, const CustomsLibrary& pLibrary, const QString& pFileId):
-    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicCustomTestCell>(pFileId, pLibrary)),
-    mFileId(pFileId),
+CustomLogic::CustomLogic(const CoreLogic* pCoreLogic, Direction pDirection, const CustomsLibrary& pLibrary, const CircuitId& pCircuitId):
+    AbstractComplexLogic(pCoreLogic, std::make_shared<LogicCustomTestCell>(pCircuitId, pLibrary)),
+    mCircuitId(pCircuitId),
     mLibrary(pLibrary)
 {
     Init(mLogicCell->GetNumInputs(), mLogicCell->GetNumOutputs(), pDirection);
     mDescriptionFontSize = 8;
 
-    ConfigureAppearance(mFileId);
+    ConfigureAppearance(mCircuitId);
 
     while (mInputLabels.size() < mInputCount)
     {
@@ -25,36 +25,36 @@ CustomLogic::CustomLogic(const CoreLogic* pCoreLogic, Direction pDirection, cons
 }
 
 CustomLogic::CustomLogic(const CustomLogic& pObj, const CoreLogic* pCoreLogic):
-    CustomLogic(pCoreLogic, pObj.mDirection, pObj.mLibrary, pObj.mFileId)
+    CustomLogic(pCoreLogic, pObj.mDirection, pObj.mLibrary, pObj.mCircuitId)
 {
     mLogicCell->SetInputInversions(pObj.mLogicCell->GetInputInversions());
     mLogicCell->SetOutputInversions(pObj.mLogicCell->GetOutputInversions());
 };
 
 CustomLogic::CustomLogic(const CoreLogic* pCoreLogic, const QJsonObject& pJson, const CustomsLibrary& pLibrary):
-    CustomLogic(pCoreLogic, static_cast<Direction>(pJson["dir"].toInt()), pLibrary, pJson["FileName"].toString())
+    CustomLogic(pCoreLogic, static_cast<Direction>(pJson["dir"].toInt()), pLibrary, CircuitId(pJson["uuid"].toString(), pJson["timestamp"].toInt()))
 {
     setPos(SnapToGrid(QPointF(pJson["x"].toInt(), pJson["y"].toInt())));
 
     std::vector<bool> ininv, outinv;
     auto ininvArray = pJson["ininv"].toArray();
-    for (const auto& inv : ininvArray)
+    for (const auto& inv : std::as_const(ininvArray))
     {
         ininv.push_back(inv.toBool());
     }
     GetLogicCell()->SetInputInversions(ininv);
 
     auto outinvArray = pJson["outinv"].toArray();
-    for (const auto& inv : outinvArray)
+    for (const auto& inv : std::as_const(outinvArray))
     {
         outinv.push_back(inv.toBool());
     }
     GetLogicCell()->SetOutputInversions(outinv);
 }
 
-void CustomLogic::ConfigureAppearance(const QString& pFileId)
+void CustomLogic::ConfigureAppearance(const CircuitId& pCircuitId)
 {
-    const auto optJson = mLibrary.GetCustomJson(pFileId);
+    const auto optJson = mLibrary.GetCustomJson(pCircuitId);
 
     if (!optJson.has_value())
     {
@@ -73,14 +73,13 @@ void CustomLogic::ConfigureAppearance(const QString& pFileId)
     if (json->contains("Label") && (*json)["Label"].isString())
     {
         mComponentText = (*json)["Label"].toString("");
-#warning magic numbers, make constants
-        if (mComponentText.size() <= 3)
+        if (mComponentText.size() <= components::complex_logic::MAX_CHARS_FOR_BIG_DESCRIPTION)
         {
             mDescriptionFontSize = components::complex_logic::DEFAULT_DESCRIPTION_FONT_SIZE;
         }
         else
         {
-            mDescriptionFontSize = 8;
+            mDescriptionFontSize = components::complex_logic::SMALL_DESCRIPTION_FONT_SIZE;
         }
     }
 
@@ -88,9 +87,7 @@ void CustomLogic::ConfigureAppearance(const QString& pFileId)
 
     QJsonArray cellsArray = (*json)["Cells"].toArray();
 
-#warning In-/output order should be configurable
-#warning Implement setter for in-/output labels that appends empty strings if necessary
-    for (const QJsonValue& cellValue : cellsArray)
+    for (const QJsonValue& cellValue : std::as_const(cellsArray))
     {
         QJsonObject cellObj = cellValue.toObject();
 
@@ -135,11 +132,14 @@ QJsonObject CustomLogic::GetJson() const
 
         json["outinv"] = outinv;
     }
+    
+    json["uuid"] = std::get<0>(mCircuitId);
+    json["timestamp"] = std::get<1>(mCircuitId);
 
     return json;
 }
 
-SwVersion CustomLogic::GetMinVersion(void) const
+SwVersion CustomLogic::GetMinVersion() const
 {
     return SwVersion(1, 1, 0);
 }

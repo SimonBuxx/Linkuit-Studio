@@ -103,7 +103,7 @@ QJsonObject ShiftRegister::GetJson() const
     return json;
 }
 
-SwVersion ShiftRegister::GetMinVersion(void) const
+SwVersion ShiftRegister::GetMinVersion() const
 {
     return SwVersion(0, 9, 7);
 }

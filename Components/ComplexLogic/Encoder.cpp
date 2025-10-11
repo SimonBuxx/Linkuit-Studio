@@ -85,7 +85,7 @@ QJsonObject Encoder::GetJson() const
     return json;
 }
 
-SwVersion Encoder::GetMinVersion(void) const
+SwVersion Encoder::GetMinVersion() const
 {
     return SwVersion(0, 0, 0);
 }
