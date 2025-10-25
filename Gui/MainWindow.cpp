@@ -1940,7 +1940,7 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                 mCoreLogic.EnterAddControlMode(ComponentType::OUTPUT);
                 break;
             }
-            case 6: // Text label
+            case 7: // Text label
             {
                 mCoreLogic.EnterAddControlMode(ComponentType::TEXT_LABEL);
                 break;

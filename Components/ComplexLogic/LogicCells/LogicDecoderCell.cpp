@@ -25,6 +25,7 @@
 
 #include "LogicDecoderCell.h"
 #include "HelperFunctions.h"
+#include <QJsonArray>
 
 LogicDecoderCell::LogicDecoderCell(uint8_t pInputCount):
     LogicBaseCell(pInputCount, std::pow(2, pInputCount)),
@@ -64,6 +65,52 @@ LogicState LogicDecoderCell::GetOutputState(uint32_t pOutput) const
     }
 }
 
+QJsonObject LogicDecoderCell::ExportCell() const
+{
+    QJsonObject obj;
+
+    obj["UID"] = (int32_t) mUid;
+    obj["Type"] = (int32_t) file::ComponentId::DECODER;
+
+    QJsonArray ininv, outinv;
+
+    for(const bool& inv : GetInputInversions())
+    {
+        ininv.append(inv);
+    }
+
+    obj["InputInversions"] = ininv;
+
+    for(const bool& inv : GetOutputInversions())
+    {
+        outinv.append(inv);
+    }
+
+    obj["OutputInversions"] = outinv;
+
+    // Store connections
+    QJsonArray outputCells;
+
+    for (size_t output = 0; output < mOutputCells.size(); output++)
+    {
+        if (mOutputCells[output].first != nullptr) // Output connected
+        {
+            QJsonArray connection;
+
+            connection.append((int32_t) mOutputCells[output].first->GetUid()); // UID
+            connection.append((int32_t) mOutputCells[output].second); // Remote input
+            connection.append((int32_t) output); // Local output
+
+            outputCells.append(connection);
+        }
+    }
+
+    obj["OutputCells"] = outputCells;
+    obj["inputs"] = static_cast<int32_t>(mInputCount);
+
+    return obj;
+}
+
 void LogicDecoderCell::OnWakeUp()
 {
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
@@ -87,11 +134,16 @@ void LogicDecoderCell::OnWakeUp()
 
 void LogicDecoderCell::OnShutdown()
 {
-    mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>(mInputStates.size(), LogicState::LOW);
-    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mCurrentOutputStates = std::vector<LogicState>{mCurrentOutputStates.size(), LogicState::LOW};
     mNextOutputStates = std::vector<LogicState>{mNextOutputStates.size(), LogicState::LOW};
+
+    if (!mIsInnerCell)
+    {
+        mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
+        mInputConnected = std::vector<bool>(mInputConnected.size(), false);
+    }
+
     mIsActive = false;
     mStateChanged = true;
 }

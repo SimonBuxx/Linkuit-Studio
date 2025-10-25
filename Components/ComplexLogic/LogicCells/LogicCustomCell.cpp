@@ -24,10 +24,21 @@
  */
 
 #include "LogicCustomCell.h"
+#include "Components/ComplexLogic/LogicCells/LogicCounterCell.h"
+#include "Components/ComplexLogic/LogicCells/LogicDecoderCell.h"
+#include "Components/ComplexLogic/LogicCells/LogicDemultiplexerCell.h"
+#include "Components/ComplexLogic/LogicCells/LogicFullAdderCell.h"
 #include "Components/ComplexLogic/LogicCells/LogicHalfAdderCell.h"
+#include "Components/ComplexLogic/LogicCells/LogicMultiplexerCell.h"
 #include "Components/Gates/LogicCells/LogicAndGateCell.h"
+#include "Components/Gates/LogicCells/LogicBufferGateCell.h"
+#include "Components/Gates/LogicCells/LogicNotGateCell.h"
+#include "Components/Gates/LogicCells/LogicOrGateCell.h"
+#include "Components/Gates/LogicCells/LogicXorGateCell.h"
 #include "Components/Inputs/LogicCells/LogicClockCell.h"
+#include "Components/Inputs/LogicCells/LogicConstantCell.h"
 #include "Components/Inputs/LogicCells/LogicInputCell.h"
+#include "Components/LogicDiodeCell.h"
 #include "Components/LogicWireCell.h"
 #include "Components/Outputs/LogicCells/LogicOutputCell.h"
 #include "HelperFunctions.h"
@@ -50,7 +61,6 @@ LogicCustomCell::LogicCustomCell(const CircuitId& pCircuitId, const CustomsLibra
     ConnectInnerCells(*json);
 }
 
-#warning split into separate functions
 void LogicCustomCell::CreateInnerCellsFromJson(const QJsonObject& pConfig)
 {
     if (!pConfig.contains("Cells") || !pConfig["Cells"].isArray())
@@ -84,14 +94,34 @@ void LogicCustomCell::CreateInnerCellsFromJson(const QJsonObject& pConfig)
             CreateWireCell(cellObj);
             break;
         }
-        case file::ComponentId::AND_GATE:
+        case file::ComponentId::CONPOINT:
         {
-            CreateAndGateCell(cellObj);
+            CreateConPointCell(cellObj);
             break;
         }
-        case file::ComponentId::HALF_ADDER:
+        case file::ComponentId::AND_GATE:
         {
-            CreateHalfAdderCell(cellObj);
+            CreateAbstractGateCellVariableInputs<LogicAndGateCell>(cellObj);
+            break;
+        }
+        case file::ComponentId::OR_GATE:
+        {
+            CreateAbstractGateCellVariableInputs<LogicOrGateCell>(cellObj);
+            break;
+        }
+        case file::ComponentId::XOR_GATE:
+        {
+            CreateAbstractGateCellVariableInputs<LogicXorGateCell>(cellObj);
+            break;
+        }
+        case file::ComponentId::NOT_GATE:
+        {
+            CreateAbstractGateCell<LogicNotGateCell>(cellObj);
+            break;
+        }
+        case file::ComponentId::BUFFER_GATE:
+        {
+            CreateAbstractGateCell<LogicBufferGateCell>(cellObj);
             break;
         }
         case file::ComponentId::INPUT:
@@ -112,6 +142,65 @@ void LogicCustomCell::CreateInnerCellsFromJson(const QJsonObject& pConfig)
         case file::ComponentId::OUTPUT:
         {
             CreateOutputCell(cellObj);
+            break;
+        }
+        case file::ComponentId::TEXT_LABEL:
+        {
+            break; // Ignore inner text labels
+        }
+        case file::ComponentId::HALF_ADDER:
+        {
+            CreateAbstractComplexLogicCell<LogicHalfAdderCell>(cellObj);
+            break;
+        }
+        case file::ComponentId::FULL_ADDER:
+        {
+            CreateAbstractComplexLogicCell<LogicFullAdderCell>(cellObj);
+            break;
+        }
+        case file::ComponentId::RS_FLIPFLOP:
+        case file::ComponentId::D_FLIPFLOP:
+        case file::ComponentId::MULTIPLEXER:
+        {
+            CreateMultiplexerLogicCell(cellObj);
+            break;
+        }
+        case file::ComponentId::DEMULTIPLEXER:
+        {
+            CreateDemultiplexerLogicCell(cellObj);
+            break;
+        }
+        case file::ComponentId::T_FLIPFLOP:
+        case file::ComponentId::JK_FLIPFLOP:
+        case file::ComponentId::DECODER:
+        {
+            CreateAbstractGateCellVariableInputs<LogicDecoderCell>(cellObj);
+            break;
+        }
+        case file::ComponentId::ENCODER:
+        case file::ComponentId::SHIFTREGISTER:
+        {
+            break;
+        }
+        case file::ComponentId::CONSTANT:
+        {
+            // Only generate logic cell for constant if it is HIGH, as LOW is not necessary in two-state logic
+            if (pConfig.contains("state") && pConfig["state"].isDouble() && pConfig["state"].toInt() == static_cast<int32_t>(LogicState::HIGH))
+            {
+                CreateHighConstantLogicCell(cellObj);
+            }
+            break;
+        }
+        case file::ComponentId::COUNTER:
+        {
+            CreateCounterLogicCell(cellObj);
+            break;
+        }
+        case file::ComponentId::RS_MS_FLIPFLOP:
+        case file::ComponentId::RS_CLOCKED_FLIPFLOP:
+        case file::ComponentId::D_MS_FLIPFLOP:
+        case file::ComponentId::JK_MS_FLIPFLOP:
+        {
             break;
         }
         case file::ComponentId::CUSTOM_LOGIC:
@@ -137,14 +226,60 @@ void LogicCustomCell::CreateWireCell(const QJsonObject& pConfig)
     mInnerCells.insert(std::pair{cell->GetUid(), cell});
 }
 
-void LogicCustomCell::CreateAndGateCell(const QJsonObject& pConfig)
+void LogicCustomCell::CreateConPointCell(const QJsonObject& pConfig)
 {
+    auto cell = std::make_shared<LogicDiodeCell>();
+    cell->SetInnerCell();
+
+    cell->SetUid(pConfig["UID"].toInt());
+    mInnerCells.insert(std::pair{cell->GetUid(), cell});
+}
+
+template <typename T>
+void LogicCustomCell::CreateAbstractGateCellVariableInputs(const QJsonObject& pConfig)
+{
+    // Fetch input count, if available
     uint8_t inputs = components::gates::DEFAULT_INPUT_COUNT;
     if (pConfig.contains("inputs") && pConfig["inputs"].isDouble())
     {
         inputs = pConfig["inputs"].toInt();
     }
-    auto cell = std::make_shared<LogicAndGateCell>(inputs);
+
+    auto cell = std::make_shared<T>(inputs);
+    cell->SetInnerCell();
+
+    // Set input inversions
+    if (pConfig.contains("InputInversions") && pConfig["InputInversions"].isArray())
+    {
+        std::vector<bool> inversions{};
+        const QJsonArray ininv = pConfig["InputInversions"].toArray();
+        for (const QJsonValue& val : ininv)
+        {
+            inversions.push_back(val.toBool());
+        }
+        cell->SetInputInversions(inversions);
+    }
+
+    // Set output inversions
+    if (pConfig.contains("OutputInversions") && pConfig["OutputInversions"].isArray())
+    {
+        std::vector<bool> inversions{};
+        const QJsonArray outinv = pConfig["OutputInversions"].toArray();
+        for (const QJsonValue& val : outinv)
+        {
+            inversions.push_back(val.toBool());
+        }
+        cell->SetOutputInversions(inversions);
+    }
+
+    cell->SetUid(pConfig["UID"].toInt());
+    mInnerCells.insert(std::pair{cell->GetUid(), cell});
+}
+
+template <typename T>
+void LogicCustomCell::CreateAbstractGateCell(const QJsonObject& pConfig)
+{
+    auto cell = std::make_shared<T>();
     cell->SetInnerCell();
 
     // Set input inversions
@@ -252,9 +387,141 @@ void LogicCustomCell::CreateOutputCell(const QJsonObject& pConfig)
     mOutputCellUids.insert(std::pair{cell->GetUid(), mCurrentOutputStates.size() - 1});
 }
 
-void LogicCustomCell::CreateHalfAdderCell(const QJsonObject& pConfig)
+void LogicCustomCell::CreateHighConstantLogicCell(const QJsonObject& pConfig)
 {
-    auto cell = std::make_shared<LogicHalfAdderCell>();
+    auto cell = std::make_shared<LogicConstantCell>(LogicState::HIGH);
+    cell->SetInnerCell();
+
+    cell->SetUid(pConfig["UID"].toInt());
+    mInnerCells.insert(std::pair{cell->GetUid(), cell});
+
+    // Note: Constants are not brought out of the custom logic as inputs
+}
+
+template <typename T>
+void LogicCustomCell::CreateAbstractComplexLogicCell(const QJsonObject& pConfig)
+{
+    auto cell = std::make_shared<T>();
+    cell->SetInnerCell();
+
+    // Set input inversions
+    if (pConfig.contains("InputInversions") && pConfig["InputInversions"].isArray())
+    {
+        std::vector<bool> inversions{};
+        const QJsonArray ininv = pConfig["InputInversions"].toArray();
+        for (const QJsonValue& val : ininv)
+        {
+            inversions.push_back(val.toBool());
+        }
+        cell->SetInputInversions(inversions);
+    }
+
+    // Set output inversions
+    if (pConfig.contains("OutputInversions") && pConfig["OutputInversions"].isArray())
+    {
+        std::vector<bool> inversions{};
+        const QJsonArray outinv = pConfig["OutputInversions"].toArray();
+        for (const QJsonValue& val : outinv)
+        {
+            inversions.push_back(val.toBool());
+        }
+        cell->SetOutputInversions(inversions);
+    }
+
+    cell->SetUid(pConfig["UID"].toInt());
+    mInnerCells.insert(std::pair{cell->GetUid(), cell});
+}
+
+void LogicCustomCell::CreateCounterLogicCell(const QJsonObject& pConfig)
+{
+    // Fetch bit width, if available
+    uint8_t bits = components::counter::DEFAULT_BIT_WIDTH;
+    if (pConfig.contains("bits") && pConfig["bits"].isDouble())
+    {
+        bits = pConfig["bits"].toInt();
+    }
+
+    auto cell = std::make_shared<LogicCounterCell>(bits);
+    cell->SetInnerCell();
+
+    // Set input inversions
+    if (pConfig.contains("InputInversions") && pConfig["InputInversions"].isArray())
+    {
+        std::vector<bool> inversions{};
+        const QJsonArray ininv = pConfig["InputInversions"].toArray();
+        for (const QJsonValue& val : ininv)
+        {
+            inversions.push_back(val.toBool());
+        }
+        cell->SetInputInversions(inversions);
+    }
+
+    // Set output inversions
+    if (pConfig.contains("OutputInversions") && pConfig["OutputInversions"].isArray())
+    {
+        std::vector<bool> inversions{};
+        const QJsonArray outinv = pConfig["OutputInversions"].toArray();
+        for (const QJsonValue& val : outinv)
+        {
+            inversions.push_back(val.toBool());
+        }
+        cell->SetOutputInversions(inversions);
+    }
+
+    cell->SetUid(pConfig["UID"].toInt());
+    mInnerCells.insert(std::pair{cell->GetUid(), cell});
+}
+
+void LogicCustomCell::CreateDemultiplexerLogicCell(const QJsonObject& pConfig)
+{
+    // Fetch bit width, if available
+    uint8_t bits = components::multiplexer::DEFAULT_BIT_WIDTH;
+    if (pConfig.contains("bits") && pConfig["bits"].isDouble())
+    {
+        bits = pConfig["bits"].toInt();
+    }
+
+    auto cell = std::make_shared<LogicDemultiplexerCell>(bits);
+    cell->SetInnerCell();
+
+    // Set input inversions
+    if (pConfig.contains("InputInversions") && pConfig["InputInversions"].isArray())
+    {
+        std::vector<bool> inversions{};
+        const QJsonArray ininv = pConfig["InputInversions"].toArray();
+        for (const QJsonValue& val : ininv)
+        {
+            inversions.push_back(val.toBool());
+        }
+        cell->SetInputInversions(inversions);
+    }
+
+    // Set output inversions
+    if (pConfig.contains("OutputInversions") && pConfig["OutputInversions"].isArray())
+    {
+        std::vector<bool> inversions{};
+        const QJsonArray outinv = pConfig["OutputInversions"].toArray();
+        for (const QJsonValue& val : outinv)
+        {
+            inversions.push_back(val.toBool());
+        }
+        cell->SetOutputInversions(inversions);
+    }
+
+    cell->SetUid(pConfig["UID"].toInt());
+    mInnerCells.insert(std::pair{cell->GetUid(), cell});
+}
+
+void LogicCustomCell::CreateMultiplexerLogicCell(const QJsonObject& pConfig)
+{
+    // Fetch bit width, if available
+    uint8_t bits = components::multiplexer::DEFAULT_BIT_WIDTH;
+    if (pConfig.contains("bits") && pConfig["bits"].isDouble())
+    {
+        bits = pConfig["bits"].toInt();
+    }
+
+    auto cell = std::make_shared<LogicMultiplexerCell>(bits);
     cell->SetInnerCell();
 
     // Set input inversions

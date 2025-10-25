@@ -5,7 +5,7 @@
 
 ConPoint::ConPoint(const CoreLogic* pCoreLogic):
     IBaseComponent(pCoreLogic, nullptr),
-    mLogicDiodeCell(std::make_shared<LogicDiodeCell>(pCoreLogic))
+    mLogicDiodeCell(std::make_shared<LogicDiodeCell>())
 {
     setZValue(components::zvalues::CONPOINT);
 
@@ -36,6 +36,8 @@ ConPoint::ConPoint(const CoreLogic* pCoreLogic):
     mShape.addRect(-components::wires::BOUNDING_RECT_SIZE / 2.0f, -components::wires::BOUNDING_RECT_SIZE / 2.0f,
                  components::wires::BOUNDING_RECT_SIZE, components::wires::BOUNDING_RECT_SIZE);
 
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStopSignal, mLogicDiodeCell.get(), &LogicBaseCell::OnShutdown);
+    QObject::connect(pCoreLogic, &CoreLogic::SimulationStartSignal,mLogicDiodeCell.get(), &LogicBaseCell::OnWakeUp);
     QObject::connect(mLogicDiodeCell.get(), &LogicBaseCell::StateChangedSignal, this, &ConPoint::OnLogicStateChanged);
 }
 

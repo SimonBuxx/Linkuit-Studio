@@ -13,8 +13,7 @@ class LogicDiodeCell : public LogicBaseCell
     Q_OBJECT
 public:
     /// \brief Constructor for LogicDiodeCell
-    /// \param pCoreLogic: Pointer to the core logic
-    LogicDiodeCell(const CoreLogic* pCoreLogic);
+    LogicDiodeCell(void);
 
     void SetInputState(uint32_t pInput, LogicState pState) override;
 
@@ -24,6 +23,8 @@ public:
     LogicState GetOutputState(uint32_t pOutput = 0) const override;
 
     void CommitState(void) override {};
+
+    QJsonObject ExportCell(void) const override;
 
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint

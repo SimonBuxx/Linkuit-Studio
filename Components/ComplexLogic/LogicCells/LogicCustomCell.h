@@ -59,35 +59,60 @@ protected:
     /// \param pConfig: The JSON object according to which to connect the logic cells
     void ConnectInnerCells(const QJsonObject& pConfig);
 
-    /// \brief Creates and insert a logic cell for a logic wire
+    /// \brief Creates and inserts a logic cell for a logic wire
     /// \param pConfig: The configuration for the logic cell
     void CreateWireCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and insert a logic cell for an AND gate
-    /// \param pConfig: The configuration for the logic cell
-    void CreateAndGateCell(const QJsonObject& pConfig);
+    void CreateConPointCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and insert a logic cell for a logic input
+    /// \brief Creates and inserts a logic cell for an abstract gate
+    /// \param pConfig: The configuration for the logic cell
+    template <typename T>
+    void CreateAbstractGateCellVariableInputs(const QJsonObject& pConfig);
+
+    /// \brief Creates and inserts a logic cell for an abstract gate
+    /// \param pConfig: The configuration for the logic cell
+    template <typename T>
+    void CreateAbstractGateCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and inserts a logic cell for a logic input
     /// \param pConfig: The configuration for the logic cell
     void CreateInputCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and insert a logic cell for a logic button
+    /// \brief Creates and inserts a logic cell for a logic button
     /// \param pConfig: The configuration for the logic cell
     void CreateButtonCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and insert a logic cell for a logic clock
+    /// \brief Creates and inserts a logic cell for a logic clock
     /// \param pConfig: The configuration for the logic cell
     void CreateClockCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and insert a logic cell for a logic output
+    /// \brief Creates and inserts a logic cell for a logic output
     /// \param pConfig: The configuration for the logic cell
     void CreateOutputCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and insert a logic cell for a half adder
+    /// \brief Creates and inserts a logic cell for a HIGH logic constant
     /// \param pConfig: The configuration for the logic cell
-    void CreateHalfAdderCell(const QJsonObject& pConfig);
+    void CreateHighConstantLogicCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and insert a logic cell for custom logic
+    /// \brief Creates and inserts a logic cell for an abstract complex logic component
+    /// \param pConfig: The configuration for the logic cell
+    template <typename T>
+    void CreateAbstractComplexLogicCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and inserts a logic cell for a counter
+    /// \param pConfig: The configuration for the logic cell
+    void CreateCounterLogicCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and inserts a logic cell for a multiplexer
+    /// \param pConfig: The configuration for the logic cell
+    void CreateMultiplexerLogicCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and inserts a logic cell for a demultiplexer
+    /// \param pConfig: The configuration for the logic cell
+    void CreateDemultiplexerLogicCell(const QJsonObject& pConfig);
+
+    /// \brief Creates and inserts a logic cell for custom logic
     /// \param pConfig: The configuration for the logic cell
     void CreateCustomLogicCell(const QJsonObject& pConfig);
 
