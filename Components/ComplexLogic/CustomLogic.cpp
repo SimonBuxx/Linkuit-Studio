@@ -141,5 +141,6 @@ QJsonObject CustomLogic::GetJson() const
 
 SwVersion CustomLogic::GetMinVersion() const
 {
-    return SwVersion(1, 2, 0);
+#warning change to 1.2.0
+    return SwVersion(1, 1, 0);
 }

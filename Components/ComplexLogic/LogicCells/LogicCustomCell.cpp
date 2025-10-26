@@ -429,7 +429,7 @@ void LogicCustomCell::CreateCustomLogicCell(const QJsonObject& pConfig)
         return;
     }
 
-    if (!pConfig.contains("timestamp") || !pConfig["timestamp"].isString())
+    if (!pConfig.contains("timestamp") || !pConfig["timestamp"].isDouble())
     {
         qDebug() << "Error: Nested custom logic does not contain a timestamp";
         return;

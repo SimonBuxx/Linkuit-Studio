@@ -1394,8 +1394,11 @@ void CoreLogic::ConnectLogicCells()
                 {
                     if (wire->contains(wire->mapFromScene(compBase->pos() + compBase->GetOutConnectors()[out].pos)))
                     {
-                        std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
-                        compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, out);
+                        if (!compBase->GetLogicCell()->IsOutputConnected(out))
+                        {
+                            std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->AddInputSlot();
+                            compBase->GetLogicCell()->ConnectOutput(wire->GetLogicCell(), std::static_pointer_cast<LogicWireCell>(wire->GetLogicCell())->GetInputSize() - 1, out);
+                        }
                     }
                 }
 
@@ -1973,26 +1976,32 @@ QJsonObject CoreLogic::GetComponentInfo()
 
     // Assign UIDs to all top level logic cells
     uint32_t nextUid = 0;
-    for (auto& item : mView.Scene()->items())
-    {
-        if (nullptr != dynamic_cast<IBaseComponent*>(item))
-        {
-            LogicBaseCell* cell = static_cast<IBaseComponent*>(item)->GetLogicCell().get();
-            if (nullptr != cell)
-            {
-                cell->SetUid(nextUid++);
-            }
-        }
-    }
+    std::set<LogicBaseCell*> processed;
 
     for (auto& item : mView.Scene()->items())
     {
         if (nullptr != dynamic_cast<IBaseComponent*>(item))
         {
             LogicBaseCell* cell = static_cast<IBaseComponent*>(item)->GetLogicCell().get();
-            if (nullptr != cell)
+            if (nullptr != cell && processed.count(cell) == 0)
+            {
+                cell->SetUid(nextUid++);
+                processed.insert(cell);
+            }
+        }
+    }
+
+    processed.clear();
+
+    for (auto& item : mView.Scene()->items())
+    {
+        if (nullptr != dynamic_cast<IBaseComponent*>(item))
+        {
+            LogicBaseCell* cell = static_cast<IBaseComponent*>(item)->GetLogicCell().get();
+            if (nullptr != cell && processed.count(cell) == 0)
             {
                 cells.append(cell->ExportCell());
+                processed.insert(cell);
             }
         }
     }

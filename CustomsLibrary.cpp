@@ -43,7 +43,7 @@ std::optional<std::shared_ptr<QJsonObject>> CustomsLibrary::GetCustomJson(const 
 void CustomsLibrary::AddCustomJson(const QJsonObject& pJson)
 {
 #warning At some point, there should be a warning if a newer version of a circuit is detected
-    qDebug() << "Inserting custom logic" << pJson["file"].toString();
+    qDebug() << "Inserting custom logic" << CircuitId(pJson["uuid"].toString(), pJson["timestamp"].toInt());
     mCustoms.insert(std::make_pair(CircuitId(pJson["uuid"].toString(), pJson["timestamp"].toInt()), pJson));
 }
 
