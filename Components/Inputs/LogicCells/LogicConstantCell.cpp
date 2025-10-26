@@ -1,4 +1,5 @@
 #include "LogicConstantCell.h"
+#include <QJsonArray>
 
 LogicConstantCell::LogicConstantCell(LogicState pConstantState):
     LogicBaseCell(0, 1),
@@ -11,6 +12,36 @@ LogicState LogicConstantCell::GetOutputState(uint32_t pOutput) const
     return mCurrentOutputStates[0];
 }
 
+QJsonObject LogicConstantCell::ExportCell() const
+{
+    QJsonObject obj;
+
+    obj["UID"] = (int32_t) mUid;
+    obj["Type"] = (int32_t) file::ComponentId::CONSTANT;
+
+    // Store connections
+    QJsonArray outputCells;
+
+    for (size_t output = 0; output < mOutputCells.size(); output++)
+    {
+        if (mOutputCells[output].first != nullptr) // Output connected
+        {
+            QJsonArray connection;
+
+            connection.append((int32_t) mOutputCells[output].first->GetUid()); // UID
+            connection.append((int32_t) mOutputCells[output].second); // Remote input
+            connection.append((int32_t) output); // Local output
+
+            outputCells.append(connection);
+        }
+    }
+
+    obj["OutputCells"] = outputCells;
+    obj["state"] = static_cast<int32_t>(mConstantState);
+
+    return obj;
+}
+
 void LogicConstantCell::OnWakeUp()
 {
     mCurrentOutputStates = std::vector<LogicState>{1, mConstantState};
@@ -21,11 +52,16 @@ void LogicConstantCell::OnWakeUp()
 
 void LogicConstantCell::OnShutdown()
 {
-    mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
     mInputStates = std::vector<LogicState>{mInputStates.size(), LogicState::LOW};
-    mInputConnected = std::vector<bool>(mInputConnected.size(), false);
     mCurrentOutputStates = std::vector<LogicState>{1, LogicState::LOW};
     mNextOutputStates = std::vector<LogicState>{1, LogicState::LOW};
+
+    if (!mIsInnerCell)
+    {
+        mOutputCells = std::vector<std::pair<std::shared_ptr<LogicBaseCell>, uint32_t>>(mOutputCells.size(), std::make_pair(nullptr, 0));
+        mInputConnected = std::vector<bool>(mInputConnected.size(), false);
+    }
+
     mIsActive = false;
     mStateChanged = true;
 }

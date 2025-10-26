@@ -22,6 +22,8 @@ public:
     /// \return the constant logic state of this logic cell
     LogicState GetConstantState(void) const;
 
+    QJsonObject ExportCell(void) const override;
+
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;

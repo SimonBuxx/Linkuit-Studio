@@ -51,37 +51,40 @@ public:
     QJsonObject ExportCell(void) const override;
 
 protected:
-    /// \brief This function creates all inner logic cell from the JSON provided
-    /// \param pConfig: The JSON object to create the logic cells from
-    void CreateInnerCellsFromJson(const QJsonObject& pConfig);
-
-    /// \brief This function connects the existing inner logic cells according to the JSON provided
-    /// \param pConfig: The JSON object according to which to connect the logic cells
-    void ConnectInnerCells(const QJsonObject& pConfig);
-
     /// \brief Creates and inserts a logic cell for a logic wire
     /// \param pConfig: The configuration for the logic cell
     void CreateWireCell(const QJsonObject& pConfig);
 
+    /// \brief Creates and inserts a logic cell for a ConPoint
+    /// \param pConfig: The configuration for the logic cell
     void CreateConPointCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and inserts a logic cell for an abstract gate
+    /// \brief Creates and inserts a logic cell for a component with no additional configuration parameters
     /// \param pConfig: The configuration for the logic cell
     template <typename T>
-    void CreateAbstractGateCellVariableInputs(const QJsonObject& pConfig);
+    void CreateLogicCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and inserts a logic cell for an abstract gate
+    /// \brief Creates and inserts a logic cell for a component with an "inputs" parameter
     /// \param pConfig: The configuration for the logic cell
+    /// \param pDefaultInputCount: The input count to use if no "inputs" parameter is present
     template <typename T>
-    void CreateAbstractGateCell(const QJsonObject& pConfig);
+    void CreateLogicCell_VariableInputCount(const QJsonObject& pConfig, uint8_t pDefaultInputCount);
+
+    /// \brief Creates and inserts a logic cell for a component with an "outputs" parameter
+    /// \param pConfig: The configuration for the logic cell
+    /// \param pDefaultOutputCount: The output count to use if no "output" parameter is present
+    template <typename T>
+    void CreateLogicCell_VariableOutputCount(const QJsonObject& pConfig, uint8_t pDefaultOutputCount);
+
+    /// \brief Creates and inserts a logic cell for a component with a "bits" parameter
+    /// \param pConfig: The configuration for the logic cell
+    /// \param pDefaultBitWidth: The bit width to use if no "bits" parameter is present
+    template <typename T>
+    void CreateLogicCell_VariableBitWidth(const QJsonObject& pConfig, uint8_t pDefaultBitWidth);
 
     /// \brief Creates and inserts a logic cell for a logic input
     /// \param pConfig: The configuration for the logic cell
     void CreateInputCell(const QJsonObject& pConfig);
-
-    /// \brief Creates and inserts a logic cell for a logic button
-    /// \param pConfig: The configuration for the logic cell
-    void CreateButtonCell(const QJsonObject& pConfig);
 
     /// \brief Creates and inserts a logic cell for a logic clock
     /// \param pConfig: The configuration for the logic cell
@@ -91,30 +94,26 @@ protected:
     /// \param pConfig: The configuration for the logic cell
     void CreateOutputCell(const QJsonObject& pConfig);
 
-    /// \brief Creates and inserts a logic cell for a HIGH logic constant
+    /// \brief Creates and inserts a logic cell for a logic constant
     /// \param pConfig: The configuration for the logic cell
-    void CreateHighConstantLogicCell(const QJsonObject& pConfig);
-
-    /// \brief Creates and inserts a logic cell for an abstract complex logic component
-    /// \param pConfig: The configuration for the logic cell
-    template <typename T>
-    void CreateAbstractComplexLogicCell(const QJsonObject& pConfig);
-
-    /// \brief Creates and inserts a logic cell for a counter
-    /// \param pConfig: The configuration for the logic cell
-    void CreateCounterLogicCell(const QJsonObject& pConfig);
-
-    /// \brief Creates and inserts a logic cell for a multiplexer
-    /// \param pConfig: The configuration for the logic cell
-    void CreateMultiplexerLogicCell(const QJsonObject& pConfig);
-
-    /// \brief Creates and inserts a logic cell for a demultiplexer
-    /// \param pConfig: The configuration for the logic cell
-    void CreateDemultiplexerLogicCell(const QJsonObject& pConfig);
+    void CreateConstantLogicCell(const QJsonObject& pConfig);
 
     /// \brief Creates and inserts a logic cell for custom logic
     /// \param pConfig: The configuration for the logic cell
     void CreateCustomLogicCell(const QJsonObject& pConfig);
+
+    /// \brief Sets the input and output inversions if the given logic cell according to the configuration
+    /// \param pConfig: The configuration for the logic cell
+    /// \param pCell: The logic cell to configure
+    void SetCellInversions(const QJsonObject& pConfig, std::shared_ptr<LogicBaseCell>& pCell);
+
+    /// \brief This function creates all inner logic cell from the JSON provided
+    /// \param pConfig: The JSON object to create the logic cells from
+    void CreateInnerCellsFromJson(const QJsonObject& pConfig);
+
+    /// \brief This function connects the existing inner logic cells according to the JSON provided
+    /// \param pConfig: The JSON object according to which to connect the logic cells
+    void ConnectInnerCells(const QJsonObject& pConfig);
 
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint

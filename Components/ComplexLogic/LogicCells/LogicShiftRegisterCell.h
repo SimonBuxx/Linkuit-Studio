@@ -52,6 +52,8 @@ public:
     /// \return The logic state of this cell's output number pOutput (ignoring inversion)
     LogicState GetOutputStateUninverted(uint32_t pOutput = 0) const;
 
+    QJsonObject ExportCell(void) const override;
+
 public slots:
     /// \brief Sets the in- and outputs low for edit mode and triggers a component repaint
     void OnShutdown(void) override;
