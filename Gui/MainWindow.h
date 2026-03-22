@@ -130,42 +130,6 @@ protected slots:
 
     // Item configuration
 
-    /// \brief Sets the direction for new items to right if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnItemRightButtonToggled(bool pChecked);
-
-    /// \brief Sets the direction for new items to down if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnItemDownButtonToggled(bool pChecked);
-
-    /// \brief Sets the direction for new items to left if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnItemLeftButtonToggled(bool pChecked);
-
-    /// \brief Sets the direction for new items to up if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnItemUpButtonToggled(bool pChecked);
-
-    /// \brief Sets the output color for new outputs to default if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnOutputColorDefaultButtonToggled(bool pChecked);
-
-    /// \brief Sets the output color for new outputs to green if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnOutputColorGreenButtonToggled(bool pChecked);
-
-    /// \brief Sets the output color for new outputs to red if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnOutputColorRedButtonToggled(bool pChecked);
-
-    /// \brief Sets the output color for new outputs to blue if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnOutputColorBlueButtonToggled(bool pChecked);
-
-    /// \brief Sets the output color for new outputs to yellow if the button is checked
-    /// \param pChecked: True, if the button is checked
-    void OnOutputColorYellowButtonToggled(bool pChecked);
-
     /// \brief Sets the constant state for new constant inputs to HIGH if the button is checked
     /// \param pChecked: True, if the button is checked
     void OnConstantHighButtonToggled(bool pChecked);

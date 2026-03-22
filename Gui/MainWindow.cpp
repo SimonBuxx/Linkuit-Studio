@@ -38,8 +38,6 @@ MainWindow::MainWindow(QWidget *pParent) :
 
     UpdateUndoRedoEnabled(false);
 
-    mUi->uItemRightButton->setChecked(true); // Button for component direction RIGHT
-    mUi->uOutputColorDefaultButton->setChecked(true); // Button for output color DEFAULT
 
     mUi->uItemConfigurator->hide();
     mUi->uClockConfigurator->hide();
@@ -263,16 +261,9 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     // Connect widgets from item configuration GUI
 
-    QObject::connect(mUi->uItemRightButton, &QPushButton::toggled, this, &MainWindow::OnItemRightButtonToggled);
-    QObject::connect(mUi->uItemDownButton, &QPushButton::toggled, this, &MainWindow::OnItemDownButtonToggled);
-    QObject::connect(mUi->uItemLeftButton, &QPushButton::toggled, this, &MainWindow::OnItemLeftButtonToggled);
-    QObject::connect(mUi->uItemUpButton, &QPushButton::toggled, this, &MainWindow::OnItemUpButtonToggled);
+    QObject::connect(mUi->uItemDirectionConfigurator, &ItemDirectionConfigurator::ComponentDirectionChangedSignal, this, &MainWindow::SetComponentDirectionIfInAddMode);
 
-    QObject::connect(mUi->uOutputColorDefaultButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorDefaultButtonToggled);
-    QObject::connect(mUi->uOutputColorGreenButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorGreenButtonToggled);
-    QObject::connect(mUi->uOutputColorRedButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorRedButtonToggled);
-    QObject::connect(mUi->uOutputColorBlueButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorBlueButtonToggled);
-    QObject::connect(mUi->uOutputColorYellowButton, &QPushButton::toggled, this, &MainWindow::OnOutputColorYellowButtonToggled);
+    QObject::connect(mUi->uOutputColorConfigurator, &OutputColorConfigurator::OutputColorChangedSignal, this, &MainWindow::SetOutputColorIfInAddMode);
 
     QObject::connect(mUi->uGateInputCountSlider, &QSlider::valueChanged, this, &MainWindow::SetGateInputCountIfAllowed);
     QObject::connect(mUi->uEncoderDecoderInputCountSlider, &QSlider::valueChanged, this, &MainWindow::SetEncoderDecoderInputCountIfAllowed);
@@ -786,7 +777,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         }
         case ConfiguratorMode::DIRECTION_ONLY:
         {
-            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemDirectionConfigurator->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -795,12 +786,12 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
             break;
         }
         case ConfiguratorMode::DIRECTION_AND_INPUT_COUNT:
         {
-            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemDirectionConfigurator->show();
             mUi->uGateInputCountFrame->show();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -809,12 +800,12 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
             break;
         }
         case ConfiguratorMode::MULTIPLEXER_BITS:
         {
-            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemDirectionConfigurator->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->show();
@@ -823,12 +814,12 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
             break;
         }
         case ConfiguratorMode::ENCODER_DECODER:
         {
-            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemDirectionConfigurator->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->show();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -837,7 +828,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
 
             // To update the label to "ouputs" or "inputs"
             SetEncoderDecoderInputCountIfAllowed(mUi->uEncoderDecoderInputCountSlider->value());
@@ -845,7 +836,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         }
         case ConfiguratorMode::SHIFTREGISTER_BITS:
         {
-            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemDirectionConfigurator->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -854,12 +845,12 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
             break;
         }
         case ConfiguratorMode::CONSTANT_STATE:
         {
-            mUi->uItemDirectionButtonsFrame->hide();
+            mUi->uItemDirectionConfigurator->hide();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -868,12 +859,12 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
             break;
         }
         case ConfiguratorMode::COUNTER_BITS:
         {
-            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemDirectionConfigurator->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -882,12 +873,12 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->show();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
             break;
         }
         case ConfiguratorMode::RS_FLIPFLOP_TYPE:
         {
-            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemDirectionConfigurator->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -896,12 +887,12 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->show();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
             break;
         }
         case ConfiguratorMode::MASTER_SLAVE:
         {
-            mUi->uItemDirectionButtonsFrame->show();
+            mUi->uItemDirectionConfigurator->show();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -909,7 +900,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uConstantButtonsFrame->hide();
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
-            mUi->uOutputColorButtonsFrame->hide();
+            mUi->uOutputColorConfigurator->hide();
 
             switch (mCoreLogic.GetSelectedComponentType())
             {
@@ -947,7 +938,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
         }
         case ConfiguratorMode::OUTPUT_COLOR:
         {
-            mUi->uItemDirectionButtonsFrame->hide();
+            mUi->uItemDirectionConfigurator->hide();
             mUi->uGateInputCountFrame->hide();
             mUi->uEncoderDecoderInputCountFrame->hide();
             mUi->uMultiplexerBitWidthFrame->hide();
@@ -956,7 +947,7 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
             mUi->uCounterBitWidthFrame->hide();
             mUi->uFlipFlopTypesFrame->hide();
             mUi->uMasterSlaveFrame->hide();
-            mUi->uOutputColorButtonsFrame->show();
+            mUi->uOutputColorConfigurator->show();
             break;
         }
         default:
@@ -976,82 +967,6 @@ void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
 
     /*auto mousePos = QWidget::mapFromGlobal(QCursor::pos());
     mUi->uItemConfigContainer->move(mUi->uItemConfigContainer->x(), mousePos.y() - mUi->menuBar->height() - mUi->uItemConfigContainer->height() / 2);*/
-}
-
-void MainWindow::OnItemRightButtonToggled(bool pChecked)
-{
-    mUi->uItemRightButton->setIcon(mAwesome.icon(fa::arrowright, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
-    if (pChecked)
-    {
-        SetComponentDirectionIfInAddMode(Direction::RIGHT);
-    }
-}
-
-void MainWindow::OnItemDownButtonToggled(bool pChecked)
-{
-    mUi->uItemDownButton->setIcon(mAwesome.icon(fa::arrowdown, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
-    if (pChecked)
-    {
-        SetComponentDirectionIfInAddMode(Direction::DOWN);
-    }
-}
-
-void MainWindow::OnItemLeftButtonToggled(bool pChecked)
-{
-    mUi->uItemLeftButton->setIcon(mAwesome.icon(fa::arrowleft, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
-    if (pChecked)
-    {
-        SetComponentDirectionIfInAddMode(Direction::LEFT);
-    }
-}
-
-void MainWindow::OnItemUpButtonToggled(bool pChecked)
-{
-    mUi->uItemUpButton->setIcon(mAwesome.icon(fa::arrowup, pChecked ? mWhiteIconVariant : mConfigButtonIconVariant));
-    if (pChecked)
-    {
-        SetComponentDirectionIfInAddMode(Direction::UP);
-    }
-}
-
-void MainWindow::OnOutputColorDefaultButtonToggled(bool pChecked)
-{
-    if (pChecked)
-    {
-        SetOutputColorIfInAddMode(OutputColor::DEFAULT);
-    }
-}
-
-void MainWindow::OnOutputColorGreenButtonToggled(bool pChecked)
-{
-    if (pChecked)
-    {
-        SetOutputColorIfInAddMode(OutputColor::GREEN);
-    }
-}
-
-void MainWindow::OnOutputColorRedButtonToggled(bool pChecked)
-{
-    if (pChecked)
-    {
-        SetOutputColorIfInAddMode(OutputColor::RED);
-    }
-}
-
-void MainWindow::OnOutputColorBlueButtonToggled(bool pChecked)
-{
-    if (pChecked)
-    {
-        SetOutputColorIfInAddMode(OutputColor::BLUE);
-    }
-}
-
-void MainWindow::OnOutputColorYellowButtonToggled(bool pChecked)
-{
-    if (pChecked)
-    {
-        SetOutputColorIfInAddMode(OutputColor::YELLOW);
-    }
 }
 
 void MainWindow::OnConstantHighButtonToggled(bool pChecked)
@@ -1660,10 +1575,17 @@ void MainWindow::InitializeGuiIcons()
     mUi->uResetButton->SetIcon(QImage(":/images/icons/material_symbols/restart_alt_FILL0_wght400_GRAD0_opsz24.svg"));
 
     // Icons for configuration elements
-    mUi->uItemRightButton->setIcon(mAwesome.icon(fa::arrowright, mConfigButtonIconVariant));
-    mUi->uItemDownButton->setIcon(mAwesome.icon(fa::arrowdown, mConfigButtonIconVariant));
-    mUi->uItemLeftButton->setIcon(mAwesome.icon(fa::arrowleft, mConfigButtonIconVariant));
-    mUi->uItemUpButton->setIcon(mAwesome.icon(fa::arrowup, mConfigButtonIconVariant));
+    mUi->uItemDirectionConfigurator->SetUncheckedIcons(mAwesome.icon(fa::arrowright, mConfigButtonIconVariant),
+                                              mAwesome.icon(fa::arrowdown, mConfigButtonIconVariant),
+                                              mAwesome.icon(fa::arrowleft, mConfigButtonIconVariant),
+                                              mAwesome.icon(fa::arrowup, mConfigButtonIconVariant));
+
+    mUi->uItemDirectionConfigurator->SetCheckedIcons(mAwesome.icon(fa::arrowright, mWhiteIconVariant),
+                                              mAwesome.icon(fa::arrowdown, mWhiteIconVariant),
+                                              mAwesome.icon(fa::arrowleft, mWhiteIconVariant),
+                                              mAwesome.icon(fa::arrowup, mWhiteIconVariant));
+
+    mUi->uItemDirectionConfigurator->InitIcons();
 
     // Icons for menu bar elements
     mUi->uActionNew->setIcon(mAwesome.icon(fa::fileo, mMenuBarIconVariant));
