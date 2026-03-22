@@ -62,7 +62,7 @@ LogicCustomCell::LogicCustomCell(const CircuitId& pCircuitId, const CustomsLibra
 
     if (!optJson.has_value())
     {
-        qDebug() << "Error: Could not configure component logic";
+        qWarning() << "Could not configure component logic";
         return;
     }
 
@@ -87,13 +87,13 @@ void LogicCustomCell::CreateInnerCellsFromJson(const QJsonObject& pConfig)
 
         if (!cellObj.contains("UID") || !cellObj["UID"].isDouble())
         {
-            qDebug() << "Error: Logic cell to load has no UID";
+            qWarning() << "Logic cell to load has no UID";
             continue;
         }
 
         if (!cellObj.contains("Type") || !cellObj["Type"].isDouble())
         {
-            qDebug() << "Error: Logic cell to load has no type";
+            qWarning() << "Logic cell to load has no type";
             continue;
         }
 
@@ -250,7 +250,7 @@ void LogicCustomCell::CreateInnerCellsFromJson(const QJsonObject& pConfig)
         }
         default:
         {
-            qDebug() << "Error: Component inside a custom logic component has unknown type";
+            qWarning() << "Component inside a custom logic component has unknown type";
             continue;
         }
         }
@@ -425,13 +425,13 @@ void LogicCustomCell::CreateCustomLogicCell(const QJsonObject& pConfig)
 {
     if (!pConfig.contains("uuid") || !pConfig["uuid"].isString())
     {
-        qDebug() << "Error: Nested custom logic does not contain a UUID";
+        qWarning() << "Nested custom logic does not contain a UUID";
         return;
     }
 
     if (!pConfig.contains("timestamp") || !pConfig["timestamp"].isDouble())
     {
-        qDebug() << "Error: Nested custom logic does not contain a timestamp";
+        qWarning() << "Nested custom logic does not contain a timestamp";
         return;
     }
 
@@ -477,7 +477,7 @@ void LogicCustomCell::ConnectInnerCells(const QJsonObject& pConfig)
 {
     if (!pConfig.contains("Cells") || !pConfig["Cells"].isArray())
     {
-        qDebug() << "Error: Cancelling inner logic cell connection because Cells field is missing";
+        qWarning() << "Cancelling inner logic cell connection because Cells field is missing";
         return;
     }
 
@@ -488,13 +488,13 @@ void LogicCustomCell::ConnectInnerCells(const QJsonObject& pConfig)
 
         if (!cellObj.contains("UID") || !cellObj["UID"].isDouble())
         {
-            qDebug() << "Error: Could not connect inner logic cells because a cell does not contain a UID";
+            qWarning() << "Could not connect inner logic cells because a cell does not contain a UID";
             continue;
         }
 
         if (!cellObj.contains("Type") || !cellObj["Type"].isDouble())
         {
-            qDebug() << "Error: Could not connect inner logic cells because a cell does not contain a type";
+            qWarning() << "Could not connect inner logic cells because a cell does not contain a type";
             continue;
         }
 

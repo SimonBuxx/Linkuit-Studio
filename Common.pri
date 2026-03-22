@@ -81,7 +81,8 @@ HEADERS += \
     $${PWD}/Gui/AboutDialog.h \
     $${PWD}/Gui/WelcomeDialog.h \
     $${PWD}/Gui/IconToolButton.h \
-    $${PWD}/Gui/TutorialFrame.h
+    $${PWD}/Gui/TutorialFrame.h \
+    $${PWD}/Gui/ClockConfigurator.h
 
 SOURCES += \
     $$PWD/CircuitFileParser.cpp \
@@ -163,7 +164,8 @@ SOURCES += \
     $${PWD}/Gui/AboutDialog.cpp \
     $${PWD}/Gui/WelcomeDialog.cpp \
     $${PWD}/Gui/IconToolButton.cpp \
-    $${PWD}/Gui/TutorialFrame.cpp
+    $${PWD}/Gui/TutorialFrame.cpp \
+    $${PWD}/Gui/ClockConfigurator.cpp
 
 INCLUDEPATH += $${PWD}
 
@@ -171,5 +173,6 @@ FORMS += \
     $$PWD/Gui/MainWindow.ui \
     $$PWD/Gui/AboutDialog.ui \
     $${PWD}/Gui/WelcomeDialog.ui \
-    $${PWD}/Gui/TutorialFrame.ui
+    $${PWD}/Gui/TutorialFrame.ui \
+    $${PWD}/Gui/ClockConfigurator.ui
 

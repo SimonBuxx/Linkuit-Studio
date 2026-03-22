@@ -193,19 +193,6 @@ public:
     /// \brief Redos the last undone undo action if existant
     void Redo(void);
 
-    // Functions for item configuration
-    /// \brief Sets the toggle value of the selected clock to the new value
-    /// \param pValue: The new toggle value
-    void OnToggleValueChanged(uint32_t pValue);
-
-    /// \brief Sets the clock mode of the selected clock to the new mode
-    /// \param pMode: The new clock mode
-    void OnClockModeChanged(ClockMode pMode);
-
-    /// \brief Sets the master-slave state for flip-flops with master-slave capability
-    /// \param pChecked: Whether master-slave should be enabled or disabled
-    void OnMasterSlaveToggled(bool pChecked);
-
     // Functions for saving and loading
 
     /// \brief Returns a JSON representation of the current circuit
@@ -264,6 +251,9 @@ signals:
     /// \param pVersion: The software version of the file
     void FileHasNewerIncompatibleVersionSignal(QString pVersion);
 
+    /// \brief Emitted when a file could not be added as a custom logic component
+    void FailedToAddCustomLogicSignal(void);
+
     /// \brief Emitted when a file has been opened and parsed successfully
     /// \param pFileInfo: Reference to the associated file info
     void OpeningFileSuccessfulSignal(const QFileInfo &pFileInfo);
@@ -295,9 +285,23 @@ public slots:
     /// \param pPulse: The pulse duration
     void OnShowClockConfiguratorRequest(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
 
+    // Functions for item configuration
+
     /// \brief Sets the pulse value of the selected clock to the new value
     /// \param pValue: The new pulse value
     void OnPulseValueChanged(uint32_t pValue);
+
+    /// \brief Sets the toggle value of the selected clock to the new value
+    /// \param pValue: The new toggle value
+    void OnToggleValueChanged(uint32_t pValue);
+
+    /// \brief Sets the clock mode of the selected clock to the new mode
+    /// \param pMode: The new clock mode
+    void OnClockModeChanged(ClockMode pMode);
+
+    /// \brief Sets the master-slave state for flip-flops with master-slave capability
+    /// \param pChecked: Whether master-slave should be enabled or disabled
+    void OnMasterSlaveToggled(bool pChecked);
 
     // Slots for configuration events
 
@@ -493,7 +497,7 @@ protected:
     /// \param pJson: The JSON data of the circuit to load
     void ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson);
 
-    void LoadCustomLogicFromJson(const QJsonObject& pJson);
+    bool LoadCustomLogicFromJson(const QJsonObject& pJson);
 
     std::optional<CircuitId> LoadCustomLogicFromFile(const QFileInfo& pFileInfo);
 

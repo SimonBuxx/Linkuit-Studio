@@ -169,6 +169,7 @@ void MainWindow::ConnectGuiSignalsAndSlots()
     QObject::connect(&mCoreLogic, &CoreLogic::OpeningFileSuccessfulSignal, this, &MainWindow::OnCircuitFileOpenedSuccessfully);
     QObject::connect(&mCoreLogic, &CoreLogic::FileHasNewerCompatibleVersionSignal, this, &MainWindow::OnCircuitFileHasNewerCompatibleVersion);
     QObject::connect(&mCoreLogic, &CoreLogic::FileHasNewerIncompatibleVersionSignal, this, &MainWindow::OnCircuitFileHasNewerIncompatibleVersion);
+    QObject::connect(&mCoreLogic, &CoreLogic::FailedToAddCustomLogicSignal, this, &MainWindow::OnFailedToAddCustomLogic);
 
     // Connect to core logic signals
 
@@ -286,15 +287,9 @@ void MainWindow::ConnectGuiSignalsAndSlots()
 
     // Connect widgets from clock configuration GUI
 
-    QObject::connect(mUi->uButtonToggle, &QPushButton::toggled, this, &MainWindow::OnToggleButtonToggled);
-    QObject::connect(mUi->uToggleSpinBox, &QSpinBox::editingFinished, this, [this](){
-        mUi->uPulseSpinBox->setMaximum(mUi->uToggleSpinBox->value());
-        mCoreLogic.OnToggleValueChanged(mUi->uToggleSpinBox->value());
-        mCoreLogic.OnPulseValueChanged(mUi->uPulseSpinBox->value());
-    });
-    QObject::connect(mUi->uPulseSpinBox, &QSpinBox::editingFinished, this, [this](){
-        mCoreLogic.OnPulseValueChanged(mUi->uPulseSpinBox->value());
-    });
+    QObject::connect(mUi->uClockConfigurator, &ClockConfigurator::ClockModeChangedSignal, &mCoreLogic, &CoreLogic::OnClockModeChanged);
+    QObject::connect(mUi->uClockConfigurator, &ClockConfigurator::ToggleValueChangedSignal, &mCoreLogic, &CoreLogic::OnToggleValueChanged);
+    QObject::connect(mUi->uClockConfigurator, &ClockConfigurator::PulseValueChangedSignal, &mCoreLogic, &CoreLogic::OnPulseValueChanged);
 
     QObject::connect(mUi->uDeleteButton, &QAbstractButton::clicked, mUi->uActionDelete, &QAction::trigger);
     QObject::connect(mUi->uUndoButton, &QAbstractButton::clicked, mUi->uActionUndo, &QAction::trigger);
@@ -614,6 +609,19 @@ void MainWindow::OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersio
     mNewerVersionIncompatibleBox.exec();
 }
 
+void MainWindow::OnFailedToAddCustomLogic()
+{
+    mFailedToAddCustomLogicBox.setIcon(QMessageBox::Icon::Critical);
+    mFailedToAddCustomLogicBox.setWindowTitle("Linkuit Studio");
+    mFailedToAddCustomLogicBox.setWindowIcon(QIcon(":/images/icons/icon_default.png"));
+    mFailedToAddCustomLogicBox.setText(tr("The file could not be imported as a custom logic component."));
+    mFailedToAddCustomLogicBox.setInformativeText(QString("This file does not contain correct logic information. "
+                                                            "Please open and resave the file to regenerate the logic information."));
+    mFailedToAddCustomLogicBox.setStandardButtons(QMessageBox::Ok);
+    mFailedToAddCustomLogicBox.setDefaultButton(QMessageBox::Ok);
+    mFailedToAddCustomLogicBox.exec();
+}
+
 void MainWindow::OnCircuitFileOpeningFailed(const QFileInfo& pFileInfo, bool pIsFromRecents)
 {
     if (pIsFromRecents)
@@ -753,22 +761,6 @@ void MainWindow::OnTutorialStepChanged(TutorialStep pStep)
     }
 }
 
-void MainWindow::OnToggleButtonToggled(bool pChecked)
-{
-    if (pChecked)
-    {
-        // Set to toggle
-        mUi->uPulseFrame->hide();
-        mCoreLogic.OnClockModeChanged(ClockMode::TOGGLE);
-    }
-    else
-    {
-        // Set to pulse
-        mUi->uPulseFrame->show();
-        mCoreLogic.OnClockModeChanged(ClockMode::PULSE);
-    }
-}
-
 void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32_t pPulse)
 {
     if (!mIsGuiHidden)
@@ -780,19 +772,7 @@ void MainWindow::ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32
         mIsClockConfiguratorVisible = true;
     }
 
-    if (pMode == ClockMode::TOGGLE)
-    {
-        mUi->uPulseFrame->hide();
-        mUi->uButtonToggle->setChecked(true);
-    }
-    else
-    {
-        mUi->uPulseFrame->show();
-        mUi->uButtonPulse->setChecked(true);
-    }
-
-    mUi->uToggleSpinBox->setValue(pToggle);
-    mUi->uPulseSpinBox->setValue(pPulse);
+    mUi->uClockConfigurator->Configure(pMode, pToggle, pPulse);
 }
 
 void MainWindow::ShowItemConfigurator(ConfiguratorMode pMode)
@@ -1989,7 +1969,7 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     }
                     default:
                     {
-                        qDebug() << "Unknown gate";
+                        qWarning() << "Unknown gate";
                         break;
                     }
                 }
@@ -2022,7 +2002,7 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     }
                     default:
                     {
-                        qDebug() << "Unknown input";
+                        qWarning() << "Unknown input";
                         break;
                     }
                 }
@@ -2044,7 +2024,7 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     }
                     default:
                     {
-                        qDebug() << "Unknown adder";
+                        qWarning() << "Unknown adder";
                         break;
                     }
                 }
@@ -2086,7 +2066,7 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     }
                     default:
                     {
-                        qDebug() << "Unknown memory";
+                        qWarning() << "Unknown memory";
                         break;
                     }
                 }
@@ -2118,7 +2098,7 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                     }
                     default:
                     {
-                        qDebug() << "Unknown converter";
+                        qWarning() << "Unknown converter";
                         break;
                     }
                 }
@@ -2135,7 +2115,7 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
                 }
                 default:
                 {
-                    qDebug() << "Unknown custom logic";
+                    qWarning() << "Unknown custom logic";
                     break;
                 }
                 }
@@ -2145,6 +2125,6 @@ void MainWindow::OnToolboxTreeClicked(const QModelIndex &pIndex)
     }
     else
     {
-        qDebug() << "Unknown higher level item";
+        qWarning() << "Unknown higher level item";
     }
 }

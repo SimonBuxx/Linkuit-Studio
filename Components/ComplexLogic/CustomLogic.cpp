@@ -58,7 +58,7 @@ void CustomLogic::ConfigureAppearance(const CircuitId& pCircuitId)
 
     if (!optJson.has_value())
     {
-        qDebug() << "Error: Could not configure component appearance";
+        qWarning() << "Could not configure component appearance";
         return;
     }
 
@@ -66,7 +66,7 @@ void CustomLogic::ConfigureAppearance(const CircuitId& pCircuitId)
 
     if (!json->contains("Cells") || !(*json)["Cells"].isArray())
     {
-        qWarning("JSON object does not contain a 'Cells' array.");
+        qWarning() << "JSON object does not contain a 'Cells' array.";
         return;
     }
 
@@ -141,6 +141,5 @@ QJsonObject CustomLogic::GetJson() const
 
 SwVersion CustomLogic::GetMinVersion() const
 {
-#warning change to 1.2.0
-    return SwVersion(1, 1, 0);
+    return SwVersion(1, 2, 0);
 }

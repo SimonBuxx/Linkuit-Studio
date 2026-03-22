@@ -60,7 +60,7 @@ CoreLogic::CoreLogic(View &pView):
 
     if (!mRuntimeConfigParser.LoadRuntimeConfig(GetRuntimeConfigAbsolutePath()))
     {
-        qDebug() << "Could not open runtime config file, using defaults";
+        qWarning() << "Could not open runtime config file, using defaults";
     }
 }
 
@@ -479,7 +479,6 @@ std::optional<IBaseComponent*> CoreLogic::CreateComponent(ComponentType pType)
         }
         case ComponentType::CUSTOM_LOGIC:
         {
-            //QFileInfo file("C:\\Users\\Simon\\OneDrive\\Dokumente\\Circuits\\HA_json.lsc");
             const auto fileInfo = QFileInfo(QFileDialog::getOpenFileName(nullptr, tr(gui::OPEN_FILE_DIALOG_TITLE), "", tr("Linkuit Studio Circuit Files (*.lsc)")));
             auto id = LoadCustomLogicFromFile(fileInfo);
 
@@ -489,7 +488,9 @@ std::optional<IBaseComponent*> CoreLogic::CreateComponent(ComponentType pType)
             }
             else
             {
-                qDebug() << "Error: File to be imported as custom logic does not contain UUID and timestamp";
+                //qWarning() << "File to be imported as custom logic does not contain UUID and timestamp";
+                emit FailedToAddCustomLogicSignal();
+                return std::nullopt;
             }
             break;
         }
@@ -509,7 +510,7 @@ std::optional<CircuitId> CoreLogic::LoadCustomLogicFromFile(const QFileInfo& pFi
 
     if (!loadFile.open(QIODevice::ReadOnly))
     {
-        qDebug() << "Could not load file" << pFileInfo.absoluteFilePath() << "as custom logic";
+        //qWarning() << "Could not load file" << pFileInfo.absoluteFilePath() << "as custom logic";
         return std::nullopt;
     }
 
@@ -524,7 +525,7 @@ std::optional<CircuitId> CoreLogic::LoadCustomLogicFromFile(const QFileInfo& pFi
         if (rawData.isEmpty())
         {
             // if the data could not be decompressed
-            qDebug() << "Could not load file" << pFileInfo.absoluteFilePath() << "as custom logic";
+            //qWarning() << "Could not load file" << pFileInfo.absoluteFilePath() << "as custom logic";
             return std::nullopt;
         }
 
@@ -537,7 +538,10 @@ std::optional<CircuitId> CoreLogic::LoadCustomLogicFromFile(const QFileInfo& pFi
 
     auto&& json = jsonDoc.object();
 
-    LoadCustomLogicFromJson(jsonDoc.object());
+    if (!LoadCustomLogicFromJson(jsonDoc.object()))
+    {
+        return std::nullopt;
+    }
 
     // Fetch circuit ID if it exists in component_info
     if (json.contains(file::JSON_COMPONENT_INFO_IDENTIFIER) && json[file::JSON_COMPONENT_INFO_IDENTIFIER].isObject())
@@ -577,7 +581,10 @@ bool CoreLogic::AddCurrentTypeComponent(QPointF pPosition)
     }
 
     auto comp = CreateComponent(mComponentType);
-    Q_ASSERT(comp.has_value());
+    if (!comp.has_value())
+    {
+        return false;
+    }
 
     comp.value()->setPos(SnapToGrid(pPosition));
 
@@ -2098,7 +2105,7 @@ void CoreLogic::ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson)
 
             if (!CreateComponent(component))
             {
-                qDebug() << "Component unknown";
+                qWarning() << "Could not create component: Component unknown";
             }
         }
     }
@@ -2111,7 +2118,7 @@ void CoreLogic::ReadJson(const QFileInfo& pFileInfo, const QJsonObject& pJson)
     emit OpeningFileSuccessfulSignal(pFileInfo);
 }
 
-void CoreLogic::LoadCustomLogicFromJson(const QJsonObject& pJson)
+bool CoreLogic::LoadCustomLogicFromJson(const QJsonObject& pJson)
 {
     // Extract customs and add them to the library
     if (pJson.contains(file::JSON_CUSTOMS_IDENTIFIER) && pJson[file::JSON_CUSTOMS_IDENTIFIER].isArray())
@@ -2125,14 +2132,24 @@ void CoreLogic::LoadCustomLogicFromJson(const QJsonObject& pJson)
             mCustomsLibrary.AddCustomJson(custom);
         }
     }
+    else
+    {
+        return false;
+    }
 
     // Add component info to the library
-    if (pJson.contains(file::JSON_COMPONENT_INFO_IDENTIFIER))
+    if (pJson.contains(file::JSON_COMPONENT_INFO_IDENTIFIER) && pJson[file::JSON_COMPONENT_INFO_IDENTIFIER].isObject())
     {
         auto info = pJson[file::JSON_COMPONENT_INFO_IDENTIFIER].toObject();
 
         mCustomsLibrary.AddCustomJson(info);
     }
+    else
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool CoreLogic::CreateComponent(const QJsonObject &pJson)

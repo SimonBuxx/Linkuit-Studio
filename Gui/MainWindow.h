@@ -71,6 +71,9 @@ protected slots:
     /// \param pVersion: The newer file version
     void OnCircuitFileHasNewerIncompatibleVersion(const QString& pVersion);
 
+    /// \brief Raises an error that a file could not be added as a custom logic component
+    void OnFailedToAddCustomLogic(void);
+
     /// \brief Shows an error dialog box when opening the circuit file failed
     /// \param pFileInfo: Info about the circuit file that could not be opened
     /// \param pIsFromRecents: Whether the file is from the recent files list
@@ -124,10 +127,6 @@ protected slots:
     /// \param pToggle: The toggle speed
     /// \param pPulse: The pulse duration
     void ShowClockConfigurator(ClockMode pMode, uint32_t pToggle, uint32_t pPulse);
-
-    /// \brief Show or hides the pulse value box and forwards the new clock mode
-    /// \param pChecked: True, if the toggle button is checked
-    void OnToggleButtonToggled(bool pChecked);
 
     // Item configuration
 
@@ -334,6 +333,7 @@ protected:
     QMessageBox mErrorSaveFileBox;
     QMessageBox mNewerVersionCompatibleBox;
     QMessageBox mNewerVersionIncompatibleBox;
+    QMessageBox mFailedToAddCustomLogicBox;
 
     // Icon color variants
 
